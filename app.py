@@ -8,7 +8,7 @@ import os
 # -------------------------------------------------------------
 # API Key (Consider rotating this key if it gets overused!)
 # -------------------------------------------------------------
-API_KEY = os.environ.get("NEWS_API_KEY", "")
+API_KEY = os.environ.get("API_KEY", "")
 
 SECTIONS = {
     "US": {"country": "us"},
