@@ -27,10 +27,10 @@ jobs:
       - name: Back up previous edition
         run: |
           YESTERDAY=$(date -d "yesterday" +%Y-%m-%d)
-          if [ -f retro_newspaper_responsive.html ]; then
+          if [ -f index.html ]; then
             mkdir -p backup
-            cp retro_newspaper_responsive.html backup/retro_newspaper_${YESTERDAY}.html
-            echo "Backed up to backup/retro_newspaper_${YESTERDAY}.html"
+            cp index.html backup/index_${YESTERDAY}.html
+            echo "Backed up to backup/index_${YESTERDAY}.html"
           else
             echo "No previous edition to back up."
           fi
@@ -44,6 +44,6 @@ jobs:
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add retro_newspaper_responsive.html backup/
+          git add index.html backup/
           git diff --cached --quiet || git commit -m "📰 Daily edition $(date +%Y-%m-%d)"
           git push
