@@ -37,7 +37,7 @@ jobs:
 
       - name: Generate today's newspaper
         env:
-          NEWS_API_KEY: ${{ secrets.NEWS_API_KEY }}
+          API_KEY: ${{ secrets.API_KEY }}
         run: python app.py
 
       - name: Commit and push
