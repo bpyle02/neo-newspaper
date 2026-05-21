@@ -449,7 +449,7 @@ def generate_newspaper_html():
 </html>
 """
 
-    out_path = "retro_newspaper_responsive.html"
+    out_path = "index.html"
     with open(out_path, "w", encoding="utf-8") as f:
         f.write(html_content)
     print(f"\nSuccess! '{out_path}' has been generated.")
