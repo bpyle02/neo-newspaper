@@ -1,0 +1,49 @@
+name: Generate Daily Newspaper
+
+on:
+  schedule:
+    - cron: '0 9 * * *'   # 5 AM ET (GitHub Actions cron runs in UTC)
+  workflow_dispatch:        # also lets you trigger it manually from the GitHub UI
+
+permissions:
+  contents: write           # needed to commit the generated HTML back to the repo
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install requests beautifulsoup4
+
+      - name: Back up previous edition
+        run: |
+          YESTERDAY=$(date -d "yesterday" +%Y-%m-%d)
+          if [ -f retro_newspaper_responsive.html ]; then
+            mkdir -p backup
+            cp retro_newspaper_responsive.html backup/retro_newspaper_${YESTERDAY}.html
+            echo "Backed up to backup/retro_newspaper_${YESTERDAY}.html"
+          else
+            echo "No previous edition to back up."
+          fi
+
+      - name: Generate today's newspaper
+        env:
+          NEWS_API_KEY: ${{ secrets.NEWS_API_KEY }}
+        run: python newspaper_fixed.py
+
+      - name: Commit and push
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add retro_newspaper_responsive.html backup/
+          git diff --cached --quiet || git commit -m "📰 Daily edition $(date +%Y-%m-%d)"
+          git push
