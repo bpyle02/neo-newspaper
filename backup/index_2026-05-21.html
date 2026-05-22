@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        /* ── HEADER ── */
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        /* ── CSS COLUMN FLOW ── */
+        .front-page-columns {
+            column-count: 1;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        @media (min-width: 600px)  { .front-page-columns { column-count: 2; } }
+        @media (min-width: 900px)  { .front-page-columns { column-count: 3; } }
+
+        /* ── STANDARD SECTION ── */
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        /* ── FULL-WIDTH SECTIONS (US + Science & Tech) ── */
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        /* ── SECTION BANNER ── */
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        /* ── LEAD STORY ── */
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        /* ── MINOR STORIES ── */
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        /* ── CREDITS & PHOTO ── */
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>THURSDAY, MAY 21, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://www.washingtonpost.com/wp-apps/imrs.php?src=https://arc-anglerfish-washpost-prod-washpost.s3.amazonaws.com/public/VYYFSXFYK3XYQTG572Q23DCBFY_size-normalized.jpg&w=1440" alt="Lead Story Image" class="news-photo">
+                <h3>30-second bursts of exercise may help reduce panic attacks, study finds</h3>
+                <p class="lead-summary"><strong class="drop-cap">E</strong>xperts are hopeful that 30-second bursts of activity could be an effective therapy for those with panic disorder.</p>
+                <p class="source-credit">— The Washington Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Harry Styles’ Team Responds to Fan Complaints About Obstructed ‘Together, Together’ Tour Sightlines - Yahoo</h4>
+                <p>UPDATE (MAY 20): HSHQ, the official Instagram account representing Harry Styles’ team, has issued a statement via Instagram Stories confirming that adjustments will be made to the height of Together, Together tour stage following fan criticism.The update comes after concerns were raised on social media regarding visibility at recent shows in Amsterdam. HSHQ has publicly acknowledged the feedback, noting that revisions are being implemented to improve the concert experience for attendees.“We’ve heard concerns from some fans regarding sightline obstructions on the floor. We want every person in the room to have the best experience possible, and we are actively working on making adjustments to improve visibility, while keeping everyone’s safety a priority,” the statement began.“Beginning Friday, the front bridges will be altered in Amsterdam and London. For future venues, we are working as quickly as possible to make adjustments that also fit within safety code and local compliance. In the meantime, temporary barricade adjustments have been made to the left and right front GA pits for tonight’s show to improve stage visibility.”It concluded by thanking fans for their “patience and understanding”, before making reference to a lyric from “Dance No More,” Styles’ latest single: “We love dancing with all our friends.”
+
+
+
+
+
+
+	
+	
+		
+					Related		
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+		
+					Bruno Mars Soars on Latin Charts With 'Lo Arriesgo Todo,' Spanish Rendition of 'Risk It All'		
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+		
+					Chance the Rapper Performs Stirring Muhammad Ali Tribute 'I Was a Rock' at Gordon Parks Foundation Annual Awards		
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+		
+					Which Drake Song From His Three New Albums Is Leading the Way on Streaming?</p>
+                <p class="source-credit">— Billboard</p>
+            </div>
+            <div class="story-minor">
+                <h4>‘Even better than tech.’ A scramble into this sector is coming, warns veteran wealth manager.</h4>
+                <p>Ted Oakley says ‘own the whole gamut’ Its a pinnacle day for earnings, with all eyes on the tech sector as Nvidia earnings come after the close.
+Are investors too blinded by AI that theyre ignoring opportunity elsewhere?</p>
+                <p class="source-credit">— MarketWatch</p>
+            </div>
+            <div class="story-minor">
+                <h4>More die of suspected Ebola as WHO warns that numbers will rise further - BBC</h4>
+                <p>The World Health Organization (WHO) says it could take up to nine months before a vaccine against this particular species of Ebola is ready. Two possible "candidate vaccines" against the Bundibugyo species are being developed, but neither had gone through clinical trials yet, WHO advisor Dr Vasee Moorthy said on Wednesday. WHO chief Dr Tedros Adhanom Ghebreyesus said there have been 600 suspected cases of Ebola and 139 suspected deaths but numbers are expected to rise given the time taken to detect the virus. Speaking to journalists in Geneva, he said 51 cases have been confirmed in the Democratic Republic of Congo - where the first case was reported - and two in neighbouring Uganda.</p>
+                <p class="source-credit">— BBC News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://ichef.bbci.co.uk/ace/branded_news/1200/cpsprodpb/959a/live/e216d3b0-5436-11f1-97ae-1b4b9bb4c9eb.jpg" alt="Lead Story Image" class="news-photo">
+                <h3>Ebola outbreak in DR Congo: More die as WHO warns that numbers will rise further</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>he World Health Organization (WHO) says it could take up to nine months before a vaccine against this particular species of Ebola is ready. Two possible "candidate vaccines" against the Bundibugyo species are being developed, but neither had gone through clinical trials yet, WHO advisor Dr Vasee Moorthy said on Wednesday. WHO chief Dr Tedros Adhanom Ghebreyesus said there have been 600 suspected cases of Ebola and 139 suspected deaths but numbers are expected to rise given the time taken to detect the virus. Speaking to journalists in Geneva, he said 51 cases have been confirmed in the Democratic Republic of Congo - where the first case was reported - and two in neighbouring Uganda. On Sunday, the WHO declared a public health emergency of international concern, but said it was not at pandemic level. Tedros said that after meeting on Tuesday, the health organisation's emergency committee agreed the situation was "not a pandemic emergency". "WHO assesses the risk of the epidemic as high at the national and regional levels and low at the global level," he explained. The 51 cases confirmed in DR Congo are in its eastern Ituri province - the epicentre of the outbreak - as well as North Kivu province. Of the two confirmed in Uganda's capital, Kampala, both had travelled from DR Congo, one of whom has died. "We know the scale of the epidemic in DRC is much larger," the WHO chief said, adding that healthcare workers were among those who had died, which was a particular concern.</p>
+                <p class="source-credit">— BBC News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Married At First Sight: Channel 4 boss 'deeply sorry' over rape allegations</h4>
+                <p>Channel 4's CEO has said she is "deeply sorry" over the rape allegations from cast members on Married at First Sight UK, adding that the women's distress was "clear". An investigation by BBC Panorama heard from two women who said they were  raped by their on-screen husbands, and a third who alleged a non-consensual sex act. Channel 4 boss Priya Dogra previously declined to apologise when asked by a reporter following the broadcast of Panorama on Monday, although she did express her "sympathy" for those who had spoken up. But speaking at a press briefing on Wednesday to mark the release of the network's annual report, she apologised and said she had found the women's accounts "very troubling" to watch.</p>
+                <p class="source-credit">— BBC News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Adenomyosis: Painful periods 'It's just being a woman, isn't it?'</h4>
+                <p>At least one in 10 women live with adenomyosis, a womb condition that can cause heavy, painful and irregular periods, with one sufferer saying her pain got so bad she felt like she had a "chainsaw" inside her. Mathilde Barker, a content creator from Surrey who has both adenomyosis and endometriosis, said: "When I was at my worst, it genuinely felt like I had a mass in my uterus and that it was dragging behind me." Adenomyosis is a condition where the lining of the uterus begins to grow into the muscle of the womb. A spokesperson from the Department for Health and Social Care told the BBC: "It is deeply concerning that so many women feel dismissed when they come forward with pain."</p>
+                <p class="source-credit">— BBC News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Trump exerts iron grip on Republican Party with Massie defeated</h4>
+                <p>The past few weeks had been billed as a retribution tour for Donald Trump, as he settles old scores with his critics within the Republican party. Call it what you will, but the evidence is now overwhelming that the Republican party is Trump's party and nothing - not an unpopular war in Iran, not sagging poll numbers among the general public, not rising consumer prices, not concerns about billion-dollar White House ballrooms - has changed that. Thomas Massie, the independent-minded congressman from Kentucky, was  comfortably defeated on Tuesday in the Republican primary race to decide who goes forward to take on the Democrats in November's midterms. The Trump-backed candidate Ed Gallrein is heading towards a 55% share of the vote.</p>
+                <p class="source-credit">— BBC News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://ichef.bbci.co.uk/ace/branded_sport/1200/cpsprodpb/c4ff/live/58971fe0-4a0f-11f1-a5ee-8d3af4522d8c.jpg" alt="Lead Story Image" class="news-photo">
+                <h3>Empty rooms and Fifa cancellations - US hotels fear World Cup washout - BBC</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>he World Cup was supposed to provide a tourism boom for the US, but now the fear is it may never materialise. A report, external produced by the American Hotel & Lodging Association (AHLA) has found that bookings are well below expectations in almost every host city. The AHLA said this does not align with Fifa's statement that more than five million tickets have been sold,, external and it creates a risk that "the anticipated economic lift may fall short". The AHLA is the largest hotel association in the US, representing more than 32,000 properties and over 80% of all franchised hotels. Its report partially puts the blame at the door of Fifa, accusing world football's governing body of block-booking far too many rooms for its own use and creating false demand. This, the AHLA said, led to artificially high pricing which, after Fifa cancelled a large number of rooms, has been replaced by a vacuum of availability. Hotels said high match ticket pricing, local transport and tax costs, and the political backdrop have put visitors off. The AHLA said hotels spent years preparing and have made "significant investments" based upon official projections. A study commissioned by Fifa,, external released last year, predicted that in the US the World Cup could create 185,000 jobs, adding $17.2bn (Â£12.7bn) in gross domestic product. The hotels were planning for an influx of international travellers, who book longer stays with a higher spend.</p>
+                <p class="source-credit">— BBC News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>NASCAR Hall of Fame Class of 2027 unveiled</h4>
+                <p>Kevin Harvick, Jeff Burton and Larry Phillips will soon be enshrined into the NASCAR Hall of Fame. On Tuesday, members of the NASCAR Hall of Fame Voting Panel met for an in-person closed session at the Charlotte Convention Center to debate upon the 15 nominees. This Class of 2027 was determined by votes cast from the 50-member panel. The panel includes current living members of the Hall of Fame, track owners, media members, manufacturer representatives and reigning Cup Series champion Kyle Larson. Fans also received a single collective vote collected through NASCAR.com. Harvick received 92 percent of the Modern Era ballot votes and Burton received 32 percent. Others receiving votes included driver Neil Bonnett, engine builder Randy Dorton and driver Greg Biffle. Phillips received 38 percent of the Pioneer ballot votes.</p>
+                <p class="source-credit">— Motorsport.com</p>
+            </div>
+            <div class="story-minor">
+                <h4>Senators think they hold the key to a college athletics bill demanded by Trump</h4>
+                <p>The Senate’s key negotiators are talking daily on how to clinch a deal to help regulate a beleaguered, multibillion-dollar industry. Cantwell, in a separate interview Tuesday, agreed talks were progressing: Everybodys working hard.</p>
+                <p class="source-credit">— Politico</p>
+            </div>
+            <div class="story-minor">
+                <h4>Cam Skattebo shooting for a 2,000-yard season - NBC Sports</h4>
+                <p>Cam Skattebo insists he will be “ready to go” Week 1 as he continues his rehab from a gruesome leg injury. That is good news for the Giants as the running back had 125 carries for 617 yards and seven touchdowns as a rookie. “I do not consider that successful for me,” Skattebo said of his rookie season, via Stephen Whyno of the Associated Press. “I had 400 yards on 100 carries. When I play 17-plus games this year, it’s going to be 300 carries for over 2,000 yards.” Nine running backs have had a 2,000-yard season, the most recent coming by Saquon Barkley in 2024. Eric Dickerson owns the NFL record with his 2,105 rushing yards in 1984.</p>
+                <p class="source-credit">— NBCSports.com</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://www.billboard.com/wp-content/uploads/2026/03/P104EOAB-e1774012729739.jpg?w=1024" alt="Lead Story Image" class="news-photo">
+                <h3>Harry Styles’ Team Responds to Fan Complaints About Obstructed ‘Together, Together’ Tour Sightlines - Yahoo</h3>
+                <p class="lead-summary"><strong class="drop-cap">U</strong>PDATE (MAY 20): HSHQ, the official Instagram account representing Harry Styles’ team, has issued a statement via Instagram Stories confirming that adjustments will be made to the height of Together, Together tour stage following fan criticism.The update comes after concerns were raised on social media regarding visibility at recent shows in Amsterdam. HSHQ has publicly acknowledged the feedback, noting that revisions are being implemented to improve the concert experience for attendees.“We’ve heard concerns from some fans regarding sightline obstructions on the floor. We want every person in the room to have the best experience possible, and we are actively working on making adjustments to improve visibility, while keeping everyone’s safety a priority,” the statement began.“Beginning Friday, the front bridges will be altered in Amsterdam and London. For future venues, we are working as quickly as possible to make adjustments that also fit within safety code and local compliance. In the meantime, temporary barricade adjustments have been made to the left and right front GA pits for tonight’s show to improve stage visibility.”It concluded by thanking fans for their “patience and understanding”, before making reference to a lyric from “Dance No More,” Styles’ latest single: “We love dancing with all our friends.”
+
+
+
+
+
+
+	
+	
+		
+					Related		
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+		
+					Bruno Mars Soars on Latin Charts With 'Lo Arriesgo Todo,' Spanish Rendition of 'Risk It All'		
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+		
+					Chance the Rapper Performs Stirring Muhammad Ali Tribute 'I Was a Rock' at Gordon Parks Foundation Annual Awards		
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+		
+					Which Drake Song From His Three New Albums Is Leading the Way on Streaming?</p>
+                <p class="source-credit">— Billboard</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>MPs ask Channel 4 for answers over 'horrifying' Married At First Sight allegations - BBC</h4>
+                <p>Channel 4's CEO has said she is "deeply sorry" over the rape allegations from cast members on Married at First Sight UK, adding that the women's distress was "clear". An investigation by BBC Panorama heard from two women who said they were  raped by their on-screen husbands, and a third who alleged a non-consensual sex act. Channel 4 boss Priya Dogra previously declined to apologise when asked by a reporter following the broadcast of Panorama on Monday, although she did express her "sympathy" for those who had spoken up. But speaking at a press briefing on Wednesday to mark the release of the network's annual report, she apologised and said she had found the women's accounts "very troubling" to watch.</p>
+                <p class="source-credit">— BBC News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Cannes 2026 fashion keeps delivering. Bella Hadid and Sofia Carson dazzled, while Demi Moore tried something different. - Yahoo</h4>
+                <p>Demi Moore, John Travolta, Sebastian Stan and Bella Hadid are just a handful of the stars currently lighting up the French Riviera as the Cannes Film Festival returns for its 79th year. Hot on the heels of the Met Gala, the historic festival has once again transformed the Croisette into a global stage where film, fashion, celebrity and culture collide — with Hollywood royalty, supermodels, directors and fashion houses all descending on the South of France. While there were concerns this year’s festival might miss its usual injection of Hollywood glamour due to major studios skipping the event, that hasn’t been the case. Barbra Streisand — one recipient of the prestigious Palme d'Or awards for lifetime achievement — may be a no-show due to an injury, but other stars have joined jury members Demi Moore, Chloé Zhao and Ruth Negga on the red carpet.</p>
+                <p class="source-credit">— Yahoo Entertainment</p>
+            </div>
+            <div class="story-minor">
+                <h4>Billy Joel Blasts Unauthorized Biopic: “Legally and Professionally Misguided” - The Hollywood Reporter</h4>
+                <p>Joel said the project, which is being directed by 'Michael' and 'Bohemian Rhapsody' editor John Ottman, doesn't have his music or life rights. A biopic chronicling the early life of legendary rockstar Billy Joel is in the works, though the piano man himself isn’t affiliated with the project, and he’s calling out the film as “both legally and professionally misguided.” John Ottman, who edited the recently released Michael, is directing Billy & Me, and Adam Ripp is writing the screenplay. For the project, Ottman and Ripp secured the life rights of Billy Joel‘s former manager, Irwin Mazur, as well as Jon Small, a longtime friend of Joel’s. But as a rep for Joel says, the singer has been in touch with the filmmakers for several years to confirm that they do not have his own rights for the picture.
+
+	
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+		
+					Related Stories		
+	
+
+
+
+
+
+
+
+
+
+
+
+	
+	The AI Issue
+	
+
+
+	
+		
+					Is Trey Parker and Matt Stone's Deep Voodoo the Rare Company Doing AI Right?</p>
+                <p class="source-credit">— Hollywood Reporter</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://us.advfn-editors.com/wp-content/uploads/2025/12/google-logo-on-wall.png" alt="Lead Story Image" class="news-photo">
+                <h3>Google expands AI push at I/O with enterprise-focused Gemini upgrades and smarter search tools - Yahoo Finance</h3>
+                <p class="lead-summary"><strong class="drop-cap">A</strong>lphabet Inc.’s Google 					(NASDAQ:GOOG) on Tuesday introduced a range of new artificial intelligence tools at its annual I/O developer conference, including AI agents integrated directly into Search and a faster, lower-cost Gemini model aimed at enterprise customers. The announcements come as Google intensifies competition with rivals including Anthropic and OpenAI in the race to attract high-value corporate AI users. Google also showcased new AI agents designed to autonomously carry out tasks such as purchasing products, monitoring ticket availability and organising schedules in real time across its ecosystem of consumer services. “When people use our AI-powered features in Search, they use Search more,” Alphabet chief executive Sundar Pichai said. The I/O conference in Mountain View, California marked Google’s first major AI showcase since the release of the updated Gemini model last winter, which helped the company regain momentum in the intensifying AI race. Executives used the event to present Google’s long-term vision for artificial intelligence after previous conferences had focused heavily on the disruptive threat posed by emerging AI competitors. “When we look back at this time, I think we will realize that we were standing in the foothills of the singularity,” said Demis Hassabis, head of Google DeepMind. “It will be a profound moment for humanity.” Google unveiled multiple tools powered by its Gemini 3.5 model family, including Gemini 3.5 Flash, a model designed specifically for coding and automated workflows. Pichai also confirmed that Gemini 3.5 Pro is scheduled for release next month. Google also reduced pricing for its premium AI Ultra subscription plan, lowering the monthly cost from $250 to $200. The package provides access to higher usage limits and advanced AI models. As competition increasingly centres on enterprise AI spending, Google is emphasising cost efficiency as a key differentiator. “We’ve heard that many companies are already blowing through their annual token budgets, and it’s only May,” Pichai said. Pichai added that large corporate customers could potentially save more than $1 billion annually by switching to Google’s AI models, which he said could deliver comparable performance to rival frontier models at roughly one-third of the cost. Google also introduced a new version of its coding assistant Antigravity, positioning it against Anthropic’s Claude Code platform. The company strengthened its AI coding ambitions further last year by hiring senior staff from AI coding startup Windsurf.</p>
+                <p class="source-credit">— Advfn.com</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Five Games Are Available Today Across Multiple Tiers Of Xbox Game Pass (May 20)</h4>
+                <p>Welcome to your latest Xbox Game Pass update! Today, five games are coming to the service across multiple tiers; with three moving over to Premium alongside two new additions to Ultimate, Premium and PC. On this page: Five Games Are Available Today Across Multiple Tiers Of Xbox Game Pass (May 20) "Dead Static Drive is Grand Theft Cthulhu. An indie survival-horror game following a nightmarish road trip across a 1980s Americana. Evade police. Equip yourself and those close to you, and follow your own moral code. Learn how—and who—to trust. And learn it fast, the monsters are gaining on you." "Start a fun-filled adventure with Peppa Pig. Create your style, meet favorite characters, and play in Peppa’s world. It’s just like being in the TV show!"</p>
+                <p class="source-credit">— Pure Xbox</p>
+            </div>
+            <div class="story-minor">
+                <h4>An AI system to help scientists write expert-level empirical software - Nature</h4>
+                <p>Thank you for visiting nature.com. You are using a browser version with limited support for CSS. To obtain
+            the best experience, we recommend you use a more up to date browser (or turn off compatibility mode in
+            Internet Explorer). In the meantime, to ensure continued support, we are displaying the site without styles
+            and JavaScript. We are providing an unedited version of this manuscript to give early access to its
+                            findings. Before final publication, the manuscript will undergo further editing. Please note
+                            there may be errors present which affect the content, and all legal disclaimers apply.</p>
+                <p class="source-credit">— Nature.com</p>
+            </div>
+            <div class="story-minor">
+                <h4>S. 'Soma' Somasegar, 1966-2026: Microsoft and Madrona leader was a champion of developers and startups</h4>
+                <p>S. “Soma” Somasegar, a fixture in the Seattle tech community who led Microsoft’s Developer Division as part of his 27-year tenure at the company before supporting a generation of cloud and AI startups as an investor, board member and advisor, has passed away. The news was confirmed Tuesday afternoon by Microsoft and Madrona, the Seattle-based venture capital firm where Somasegar had been a key figure for the past 11 years. Microsoft CEO Satya Nadella, who first met Somasegar at Microsoft in the early 1990s, remembered him in a statement as “a remarkable leader who helped grow and shape Microsoft’s developer ecosystem, and a dear friend and colleague that I valued greatly.</p>
+                <p class="source-credit">— GeekWire</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
