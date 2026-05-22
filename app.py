@@ -2,62 +2,94 @@ import datetime
 import requests
 import sys
 import re
-from bs4 import BeautifulSoup
 import os
+import random
+import feedparser
+from urllib.parse import urlparse
+from bs4 import BeautifulSoup
+import datetime
+from dateutil import parser as dateutil_parser  # pip install python-dateutil
 
 # -------------------------------------------------------------
-# API Key (Consider rotating this key if it gets overused!)
+# RSS Feeds for each section (adjust URLs as needed)
 # -------------------------------------------------------------
-API_KEY = os.environ.get("API_KEY", "")
-
-SECTIONS = {
-    "US": {"country": "us"},
-    "World": {"sources": "bbc-news,al-jazeera-english,reuters"},
-    "Sports": {"country": "us", "category": "sports"},
-    "Entertainment": {"country": "us", "category": "entertainment"},
-    "Science & Tech": {"country": "us", "category": "technology"}
+RSS_FEEDS = {
+    "US": [
+        "https://moxie.foxnews.com/google-publisher/politics.xml",
+        "https://www.nationalreview.com/feed",
+        "https://www.washingtontimes.com/rss/headlines/news/politics/",
+        "https://www.theblaze.com/feeds/feed.rss",
+        "https://townhall.com/feed",
+        "https://thefederalist.com/feed/",
+        "https://feeds.washingtonpost.com/rss/politics",
+        "https://rsshub.netlify.app/apnews/rss",
+        "https://www.dailywire.com/feeds/rss.xml",
+        "https://nypost.com/feed/",
+    ],
+    "World": [
+        "https://moxie.foxnews.com/google-publisher/world.xml",
+        "https://feeds.washingtonpost.com/rss/world",
+        "https://rsshub.netlify.app/apnews/rss",
+    ],
+    "Sports": [
+        "https://moxie.foxnews.com/google-publisher/sports.xml",
+        "https://nypost.com/sports/feed/",
+    ],
+    "Entertainment": [
+        "https://moxie.foxnews.com/google-publisher/entertainment.xml",
+        "https://nypost.com/entertainment/feed/",
+    ],
+    "Science & Tech": [
+        "https://moxie.foxnews.com/google-publisher/tech.xml",
+        "https://feeds.washingtonpost.com/rss/business/technology",
+    ],
 }
 
-# Sections that span full width with a 2-column internal layout (lead + sidebar)
 FULL_WIDTH_SECTIONS = {"US", "Science & Tech"}
+USER_AGENT = (
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+    "AppleWebKit/537.36 (KHTML, like Gecko) "
+    "Chrome/120.0.0.0 Safari/537.36"
+)
 
+def get_source_name(url):
+    if "foxnews" in url:
+        return "Fox News"
+    elif "washingtonpost" in url:
+        return "Washington Post"
+    elif "apnews" in url:
+        return "AP News"
+    elif "dailywire" in url:
+        return "Daily Wire"
+    elif "nypost" in url:
+        return "New York Post"
+    elif "nationalreview" in url:
+        return "National Review"
+    elif "washingtontimes" in url:
+        return "Washington Times"
+    elif "theblaze" in url:
+        return "The Blaze"
+    elif "townhall" in url:
+        return "Townhall"
+    elif "thefederalist" in url:
+        return "The Federalist"
+    else:
+        return url.split('.')[0].capitalize() if url else "Unknown Source"
 
 def trim_to_sentence(text):
-    """
-    Trims text so it always ends on a sentence-closing punctuation mark
-    (. ! ? or a closing quote/paren after one).
-    If no such boundary is found, returns the text as-is.
-    """
-    # Walk backwards to find the last '.', '!', or '?' (optionally followed
-    # by a closing quote or parenthesis, e.g. '."' or '!')
     match = re.search(r'[.!?]["\')]?\s*$', text)
     if match:
         return text[:match.end()].strip()
-
-    # No terminal punctuation found — find the last occurrence anywhere
     last = max(text.rfind('.'), text.rfind('!'), text.rfind('?'))
     if last != -1:
         return text[:last + 1].strip()
-
     return text.strip()
 
 
-def scrape_article_text(url, description, content, max_chars=1800):
-    """
-    Scrapes the article URL for body paragraphs.
-    Returns progressively more text the higher max_chars is set,
-    falling back gracefully to the NewsAPI description + content fields.
-    Always ends on a complete sentence.
-    """
+def scrape_article_text(url, description, max_chars=1800):
     if url:
         try:
-            headers = {
-                'User-Agent': (
-                    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) '
-                    'AppleWebKit/537.36 (KHTML, like Gecko) '
-                    'Chrome/120.0.0.0 Safari/537.36'
-                )
-            }
+            headers = {'User-Agent': USER_AGENT}
             res = requests.get(url, headers=headers, timeout=6)
             if res.status_code == 200:
                 soup = BeautifulSoup(res.text, 'html.parser')
@@ -65,119 +97,208 @@ def scrape_article_text(url, description, content, max_chars=1800):
                 long_text = ""
                 for p in paragraphs:
                     text = p.get_text().strip()
-                    # Skip navigation snippets, bylines, etc.
                     if len(text.split()) > 15:
                         long_text += text + " "
                     if len(long_text) >= max_chars:
                         break
+
+                if get_source_name(url) == "Fox News":
+                    print("Fox News article detected, applying special cleaning.")
+                if "data provided by LSEG." in long_text:
+                    long_text = long_text.split("data provided by LSEG.")[1]
+                    print("Success")
+                else:
+                    print("Data could not be cleaned")
+
                 if len(long_text) > 200:
                     return trim_to_sentence(long_text)
         except Exception:
             pass
+    clean = BeautifulSoup(description, "html.parser").get_text() if description else ""
 
-    # Fallback: stitch description + NewsAPI's truncated content
-    clean_content = re.sub(r'\[\+\d+\s*chars\]', '', content if content else "").strip()
-    fallback = f"{description} {clean_content}".strip()
-    return trim_to_sentence(fallback) if fallback else "Wire report details currently unavailable."
+    return trim_to_sentence(clean) if clean else "Wire report details currently unavailable."
 
 
-def fetch_section_news(section_name, params):
-    """Fetches articles from NewsAPI, filtering out 'Live Updates' titles."""
-    url = "https://newsapi.org/v2/top-headlines"
-    req_params = {**params, "apiKey": API_KEY}
+def extract_image(entry):
+    if "media_content" in entry:
+        for media in entry.media_content:
+            if media.get("type", "").startswith("image/"):
+                return media.get("url")
+    if "enclosures" in entry:
+        for enc in entry.enclosures:
+            if enc.get("type", "").startswith("image/"):
+                return enc.get("href")
+    summary = entry.get("summary", "") or entry.get("description", "")
+    if summary:
+        soup = BeautifulSoup(summary, "html.parser")
+        img = soup.find("img")
+        if img and img.get("src"):
+            return img["src"]
+    return None
 
+
+def get_domain(url):
+    """Extract domain from a URL, e.g., 'https://www.foxnews.com/...' -> 'foxnews.com'"""
     try:
-        response = requests.get(url, params=req_params, timeout=10)
-        data = response.json()
-        if data.get("status") == "error":
-            print(f"  NewsAPI error [{section_name}]: {data.get('message')}")
-            return []
-    except requests.RequestException as e:
-        print(f"  Network error [{section_name}]: {e}")
-        return []
+        parsed = urlparse(url)
+        domain = parsed.netloc.lower()
+        if domain.startswith("www."):
+            domain = domain[4:]
+        return domain
+    except:
+        return url
 
+def parse_to_utc_aware(date_str):
+    """Try hard to return a timezone‑aware datetime, or None on failure."""
+    if not date_str:
+        return None
+    # 1) Standard RFC 2822 with explicit offset
+    try:
+        return datetime.datetime.strptime(date_str, "%a, %d %b %Y %H:%M:%S %z")
+    except ValueError:
+        pass
+    # 2) With timezone abbreviation (naive!) – use dateutil for proper tz handling
+    try:
+        # dateutil.parser is very flexible and will produce an aware datetime
+        # if the string contains a timezone abbreviation or offset.
+        dt = dateutil_parser.parse(date_str)
+        if dt.tzinfo is None:
+            dt = dt.replace(tzinfo=datetime.timezone.utc)  # assume UTC if none given
+        return dt.astimezone(datetime.timezone.utc)
+    except Exception:
+        pass
+    # 3) Last resort: strip timezone info and assume UTC
+    try:
+        dt = datetime.datetime.strptime(date_str[:25], "%a, %d %b %Y %H:%M:%S")
+        return dt.replace(tzinfo=datetime.datetime.timezone.utc)
+    except Exception:
+        return None
+
+def fetch_section_news(feed_urls, seen_urls):
     articles = []
-    for item in data.get("articles", []):
-        title       = (item.get("title") or "").strip()
-        description = (item.get("description") or "").strip()
-        content     = item.get("content")
-        art_url     = item.get("url")
-        image_url   = item.get("urlToImage")
-        source_name = item.get("source", {}).get("name", "Wire Report")
+    for url in feed_urls:
+        try:
+            feed = feedparser.parse(url, agent=USER_AGENT)
+            for entry in feed.entries[:15]:
+                title = entry.get("title", "").strip()
+                link = entry.get("link", "")
+                if not title or not link or link in seen_urls:
+                    continue
+                seen_urls.add(link)
 
-        # ── FIX 1: Skip "Live Updates" articles ──
-        if "live update" in title.lower():
-            continue
+                raw_desc = entry.get("summary", "") or entry.get("description", "")
+                clean_desc = BeautifulSoup(raw_desc, "html.parser").get_text().strip()
 
-        if "jazeera" in source_name.lower():
-            continue
+                image_url = extract_image(entry)
+                source_name = get_source_name(link)
+                domain = get_domain(link)
 
-        if not (title and description):
-            continue
+                date_str = entry.get("published", "")
+                dt_obj = parse_to_utc_aware(date_str)
+                if dt_obj is None:
+                    print(f"  Skipping article due to unparseable date: {title} ({date_str})")
+                    continue
 
-        # Strip trailing " - Source Name" appended by NewsAPI
-        if title.endswith(f" - {source_name}"):
-            title = title[:-(len(source_name) + 3)]
+                now_utc = datetime.datetime.now(datetime.timezone.utc)
 
-        articles.append({
-            "title":     title,
-            "summary":   description,
-            "content":   content,
-            "url":       art_url,
-            "image_url": image_url,
-            "source":    source_name,
-        })
+                if now_utc - dt_obj > datetime.timedelta(hours=24):
+                    continue
 
+                articles.append({
+                    "title": title,
+                    "url": link,
+                    "published": date_str,
+                    "summary": clean_desc,
+                    "image_url": image_url,
+                    "source": source_name,
+                    "domain": domain,
+                })
+        except Exception as e:
+            print(f"  Error parsing RSS feed {url}: {e}")
     return articles
 
 
+def select_diverse_articles(articles, count=4):
+    """
+    Groups articles by domain, then picks one from each domain (round‑robin)
+    until we have 'count' articles, ensuring source diversity.
+    Returns a list of selected articles (max length = min(count, total_articles)).
+    """
+    if not articles:
+        return []
+
+    # Group by domain
+    domain_map = {}
+    for art in articles:
+        domain = art.get("domain", "unknown")
+        domain_map.setdefault(domain, []).append(art)
+
+    # Shuffle the domain order to avoid always starting with the same source
+    domains = list(domain_map.keys())
+    random.shuffle(domains)
+
+    selected = []
+    indices = {d: 0 for d in domains}
+
+    # Round‑robin selection
+    while len(selected) < count:
+        added = False
+        for d in domains:
+            lst = domain_map[d]
+            if indices[d] < len(lst):
+                selected.append(lst[indices[d]])
+                indices[d] += 1
+                added = True
+                if len(selected) >= count:
+                    break
+        if not added:  # no more articles left in any domain
+            break
+
+    return selected
+
+
 def generate_newspaper_html():
-    if API_KEY == "YOUR_API_KEY_HERE":
-        print("ERROR: Insert your NewsAPI key into the script.")
-        sys.exit(1)
-
-    print("Fetching wire reports from NewsAPI…")
-    today_str    = datetime.date.today().strftime("%A, %B %d, %Y").upper()
+    print("Fetching news from RSS feeds…")
+    today_str = datetime.date.today().strftime("%A, %B %d, %Y").upper()
     sections_html = ""
+    seen_urls = set()
 
-    for section_name, params in SECTIONS.items():
+    for section_name, feed_urls in RSS_FEEDS.items():
         print(f" - Processing {section_name} desk…")
-        articles = fetch_section_news(section_name, params)
+        all_articles = fetch_section_news(feed_urls, seen_urls)
 
-        if not articles:
-            print(f"   (No articles found for {section_name})")
+        if len(all_articles) < 2:
+            print(f"   (Not enough articles for {section_name}, skipping)")
             continue
 
-        # ── Pick lead article (prefer one with a photo) ──
+        # Get a diverse set of up to 4 articles (1 lead + up to 3 secondaries)
+        diverse = select_diverse_articles(all_articles, count=4)
+        if len(diverse) < 2:
+            print(f"   (Not enough diverse sources for {section_name}, skipping)")
+            continue
+
+        # Pick the lead article, preferring one with an image
         lead_article = None
-        for i, art in enumerate(articles):
+        for i, art in enumerate(diverse):
             if art.get("image_url"):
-                lead_article = articles.pop(i)
+                lead_article = diverse.pop(i)
                 break
         if not lead_article:
-            lead_article = articles.pop(0)
+            lead_article = diverse.pop(0)
 
-        # ── FIX 2: Scrape more body text to fill whitespace ──
-        # Full-width sections get even more text (they have room for it)
+        secondary_articles = diverse[:3]  # up to 3
+
         max_chars = 2400 if section_name in FULL_WIDTH_SECTIONS else 1400
         lead_article["long_summary"] = scrape_article_text(
-            lead_article.get("url"),
-            lead_article.get("summary"),
-            lead_article.get("content"),
-            max_chars=max_chars,
+            lead_article["url"], lead_article["summary"], max_chars=max_chars
         )
 
-        # Secondary articles also get scraped body text (more than before)
-        secondary_articles = articles[:3]
         for art in secondary_articles:
             art["long_summary"] = scrape_article_text(
-                art.get("url"),
-                art.get("summary"),
-                art.get("content"),
-                max_chars=600,   # enough to fill gaps without overwhelming
+                art["url"], art["summary"], max_chars=600
             )
 
-        # ── Build secondary story HTML ──
+        # Build HTML (identical to previous version)
         secondary_html = ""
         for art in secondary_articles:
             secondary_html += f"""
@@ -187,7 +308,6 @@ def generate_newspaper_html():
                 <p class="source-credit">— {art['source']}</p>
             </div>"""
 
-        # ── Build image HTML ──
         image_html = ""
         if lead_article.get("image_url"):
             image_html = (
@@ -195,14 +315,11 @@ def generate_newspaper_html():
                 f'alt="Lead Story Image" class="news-photo">'
             )
 
-        # Drop-cap setup
-        lead_text    = lead_article["long_summary"].strip()
+        lead_text = lead_article["long_summary"].strip()
         first_letter = lead_text[0] if lead_text else ""
         rest_of_text = lead_text[1:] if lead_text else ""
 
         safe_class = section_name.replace(" ", "").replace("&", "").replace("/", "")
-
-        # ── FIX 3: Science & Tech gets same full-width layout as US ──
         is_full_width = section_name in FULL_WIDTH_SECTIONS
 
         if is_full_width:
@@ -230,7 +347,7 @@ def generate_newspaper_html():
             {f'<div class="minor-stories-container">{secondary_html}</div>' if secondary_html else ''}
         </section>"""
 
-    # ── Full HTML document ──
+    # ── Full HTML (unchanged styling) ──
     html_content = f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -264,7 +381,6 @@ def generate_newspaper_html():
             box-shadow: 0 4px 20px rgba(0,0,0,0.35);
         }}
 
-        /* ── HEADER ── */
         header {{
             text-align: center;
             border-bottom: 5px double var(--ink);
@@ -294,7 +410,6 @@ def generate_newspaper_html():
             letter-spacing: 0.04em;
         }}
 
-        /* ── CSS COLUMN FLOW ── */
         .front-page-columns {{
             column-count: 1;
             column-gap: 0;
@@ -303,7 +418,6 @@ def generate_newspaper_html():
         @media (min-width: 600px)  {{ .front-page-columns {{ column-count: 2; }} }}
         @media (min-width: 900px)  {{ .front-page-columns {{ column-count: 3; }} }}
 
-        /* ── STANDARD SECTION ── */
         .news-section {{
             break-inside: avoid-column;
             border-top: 2px solid var(--ink);
@@ -313,7 +427,6 @@ def generate_newspaper_html():
             gap: 8px;
         }}
 
-        /* ── FULL-WIDTH SECTIONS (US + Science & Tech) ── */
         .section-fullwidth {{
             column-span: all;
             border-top: 3px solid var(--ink);
@@ -340,7 +453,6 @@ def generate_newspaper_html():
             }}
         }}
 
-        /* ── SECTION BANNER ── */
         .section-banner {{
             text-align: center;
             font-family: 'Playfair Display', serif;
@@ -353,7 +465,6 @@ def generate_newspaper_html():
             margin-bottom: 4px;
         }}
 
-        /* ── LEAD STORY ── */
         .story-lead h3 {{
             font-family: 'Playfair Display', serif;
             font-size: clamp(1.15rem, 2.4vw, 1.85rem);
@@ -377,7 +488,6 @@ def generate_newspaper_html():
             padding-top: 3px;
         }}
 
-        /* ── MINOR STORIES ── */
         .minor-stories-container {{
             border-top: 1px dashed var(--ink);
             padding-top: 8px;
@@ -404,7 +514,6 @@ def generate_newspaper_html():
             hyphens: auto;
         }}
 
-        /* ── CREDITS & PHOTO ── */
         .source-credit {{
             font-size: 0.67rem !important;
             font-style: italic;
