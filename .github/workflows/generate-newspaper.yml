@@ -22,7 +22,7 @@ jobs:
           python-version: '3.12'
 
       - name: Install dependencies
-        run: pip install requests python-dateutil feedparser beautifulsoup
+        run: pip install requests python-dateutil feedparser beautifulsoup4
 
       - name: Back up previous edition
         run: |
