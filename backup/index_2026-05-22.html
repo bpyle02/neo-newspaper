@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 1;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        @media (min-width: 600px)  { .front-page-columns { column-count: 2; } }
+        @media (min-width: 900px)  { .front-page-columns { column-count: 3; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>FRIDAY, MAY 22, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://media.townhall.com/cdn/hodl/2025/238/37a3374c-4577-414b-9f8b-3fa342dce6de.jpg" alt="Lead Story Image" class="news-photo">
+                <h3>BREAKING: Tulsi Gabbard Resigns</h3>
+                <p class="lead-summary"><strong class="drop-cap">D</strong>irector of National Intelligence Tulsi Gabbard has resigned. It wasn’t over any deep disagreement with President Trump over policy, nor was it some shambolic exit a la Joe Kent from the National Counterterrorism Center. It was over family reasons: her husband was diagnosed with bone cancer. Her last day on the job will be on June 30 (via Fox News): 🚨 BREAKING: TULSI GABBARD RESIGNS AS DNI — FoxGabbard is resigning as President Trump's Director of National Intelligence to support her husband "through his battle with 'an extremely rare form of bone cancer,'" Fox reportedHer last day is JUNE 30, and Trump has been… pic.twitter.com/ORWOc03iMs Tulsi Gabbard is resigning from her post as Director of National Intelligence to support her husband through his battle with "an extremely rare form of bone cancer," Fox News Digital learned. Gabbard notified President Trump during a meeting in the Oval Office Friday. Her last day at ODNI is expected to be June 30. Fox News Digital exclusively obtained her formal resignation letter, in which Gabbard says she is "deeply grateful for the trust you placed in me and for the opportunity to lead the Office of the Director of National Intelligence for the last year and a half." "At this time, I must step away from public service to be by his side and fully support him through this battle," she said. Gabbard added: "Abraham has been my rock throughout our eleven years of marriage — standing steadfast through my deployment to East Africa on a Joint Special Operations mission, multiple political campaigns and now my service in this role." Editor's Note: Do you enjoy Townhall's conservative reporting that takes on the radical left and woke media? Support our work so that we can continue to bring you the truth. Copyright © Townhall.com/Salem Media.
+                            All Rights Reserved.</p>
+                <p class="source-credit">— Townhall</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Paxton crushing Cornyn in new Texas runoff poll taken post-Trump endorsement</h4>
+                <p>Texas Attorney General Ken Paxton opened up a mammoth lead in the Senate Republican runoff, according to a poll taken after President Trump endorsed Mr. Paxton in the race. Mr. Paxton is routing his opponent, incumbent Sen. John Cornyn, 57% to 35%, according to the survey of 700 likely voters conducted by SoCal Strategies. The poll was taken Wednesday-Thursday. Mr. Trump endorsed Mr. Paxton on Tuesday in a move some analysts viewed as a political death blow to Mr. Cornyn, who is running for a fifth term and was already behind in several internal GOP surveys. After failing to win the president’s coveted nod, Mr. Cornyn has ramped up his scorched-earth campaign against Mr. Paxton with a new ad that trashes his competitor over allegations of extramarital affairs, claims of profiting from his position in state government and a string of scandals that, the Cornyn camp warned, will make him an easy target for defeat in November.</p>
+                <p class="source-credit">— Washington Times</p>
+            </div>
+            <div class="story-minor">
+                <h4>Why Tesla’s latest road test could be BAD NEWS for Washington</h4>
+                <p>Tesla now has millions of vehicles gathering real-world driving information every day. No competitor comes close to that level of data collection. But on a recent episode of "The Drive," my co-host Karl Brauer and I sat down with automotive journalist Roman Mica — and the story he told us had us thinking the future is closer than we realize. After spending roughly 2,000 miles using Tesla’s latest Full Self-Driving system across highways, city traffic, parking lots, and construction zones, Mica said the technology behaved very differently from earlier versions. The old “until moment” — where the system suddenly did something unpredictable or dangerous — barely appeared.</p>
+                <p class="source-credit">— The Blaze</p>
+            </div>
+            <div class="story-minor">
+                <h4>EXCLUSIVE: Tulsi Gabbard resigns from Trump Cabinet</h4>
+                <p>Director of National Intelligence Tulsi Gabbard reflects on the energy Charlie Kirk had and says she is ‘in awe of’ Erika Kirk’s strength in the face of ‘the toughest times’ at TPUSA's AmericaFest 2025 (Credit: Turning Point USA). EXCLUSIVE: Tulsi Gabbard is resigning from her post as Director of National Intelligence to support her husband through his battle with "an extremely rare form of bone cancer," Fox News Digital learned.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/05/931/523/ebola-treatment-center-fire-congo.jpeg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Ebola treatment center set on fire in Congo after residents clash with authorities over victim's body</h3>
+                <p class="lead-summary"><strong class="drop-cap">D</strong>r. Amesh Adalja, an infectious disease physician, details the public health emergency in the Democratic Republic of Congo, Uganda and South Sudan. He stresses the low risk to the United States but highlights the critical need for international resources and coordination to extinguish the outbreak at its source. An Ebola treatment center in the epicenter of the deadly outbreak in eastern Congo was set on fire Thursday after angry residents clashed with authorities over the body of a suspected victim. Rwampara Hospital was attacked by local youths attempting to retrieve the body of a friend who had reportedly died of Ebola, a witness told The Associated Press. "The police intervened to try to calm the situation, but unfortunately they were unsuccessful," Alexis Burata, a local student who said he was in the area, told the outlet. "The young people ended up setting fire to the center. That’s the situation." The AP reported that people broke into the center and set fire to objects inside. A reporter also witnessed what appeared to be the body of at least one suspected Ebola victim being burned inside the facility.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>NATO allies grapple with U.S. pullback, confusion over its military plans</h4>
+                <p>As Secretary of State Marco Rubio meets with NATO foreign ministers in Sweden, the focus is on the U.S. moving to reduce its military footprint in Europe.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>US arrests sister of powerful Cuban official over alleged ties to communist regime</h4>
+                <p>The United States has arrested the sister of the executive president of GAESA, a sprawling conglomerate of military-run businesses in Cuba, due to her alleged ties to the communist regime. GAESA has been cited for reportedly diverting millions in aid meant for the Cuban people "at the behest of the regime," Secretary of State Marco Rubio said in a post on X Thursday.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Police urge new witnesses to speak out in Andrew Mountbatten-Windsor inquiry</h4>
+                <p>The appeal marked the first significant update since the former British prince was arrested in February over allegations of misconduct while in office.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/05/931/523/white-sox-mound-visit-chicago-fox-news-001.jpeg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>White Sox surprise season faces struggling Giants as Davis Martin's dominant pitching takes center stage</h3>
+                <p class="lead-summary"><strong class="drop-cap">R</strong>icky Cobb breaks down some of the most creative (and wild) MLB giveaway nights happening right now — from Shohei Ohtani must-have promos to Ichiro’s statue in Seattle, plus some hilarious curveballs like the Bobby Valentine disguise and Going into seasons, we form opinions based on last season and whatever they did during the offseason. As the season progresses, we need to figure out if those opinions are valid or not. Sometimes it can be a challenge to let it go, but as a sports bettor, we absolutely cannot hang onto thoughts and be stubborn. Two teams on different ends of my opinions are the Chicago White Sox and the San Francisco Giants, who play Friday night. Coming into this year, I did expect that the White Sox would be better, but I didn’t expect that they would be this good. They are above .500, which isn’t exactly going to launch them into the playoffs, but for a team that has been awful the past few years, this is progress. There is still work to be done, but the good news for them is that they have assets to trade or bring guys in if they want. Additionally, they are in a very winnable division.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Kyle Busch was so much more than the NASCAR villain he portrayed</h4>
+                <p>The driver nicknamed Wild Thing, Outlaw, Rowdy and KFB over his 26-year NASCAR career was more comfortable than anyone might imagine with a checkered flag in one hand and fans jeering all around. He leaned into the villain role as the wins mounted — and boy did they — and even started encouraging his haters, trying to get the howling to a fever pitch before delivering his signature bow. The two-time Cup Series champion, who won more races than anyone across NASCAR’s three national series, died Thursday at age 41. Tributes poured in, with many echoing the sentiment that racing had lost one of its fiercest competitors.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>WWE fans pay tribute to Kyle Busch, the one-time 24/7 champion</h4>
+                <p>The racing community, including Chris Myers and Jim Gray, mourns Kyle Busch's tragic passing as he leaves behind his wife and two young children. Kyle Busch will be remembered for his success on the racetrack as one of the most dominant NASCAR drivers at any level of the sport.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Indianapolis Motor Speedway honors NASCAR icon Kyle Busch after death at 41</h4>
+                <p>A memorial to Busch is being displayed Friday at the venue on the famous scoring pylon after he died Thursday at 41. “Everyone at Indianapolis Motor Speedway is heartbroken to learn of the passing of Kyle Busch. Kyle was one of the most dominant racers in IMS history,” J. Douglas Boles, the president of the racetrack, said in a statement Thursday. “He was a fan favorite loved for his competitive spirit and passion. He understood what racing and winning at Indianapolis means. “Our thoughts and deepest sympathies are with his wife, Samantha, children Brexton and Lennix, the entire Busch family, Richard Childress Racing, and the entire NASCAR family.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/04/931/523/Andrew-Mountbatten-Windsor-Move.jpeg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Former Prince Andrew faces widening misconduct probe as police launch witness hunt</h3>
+                <p class="lead-summary"><strong class="drop-cap">P</strong>rince William is unlikely to allow Andrew Mountbatten-Windsor back into royal life, while remaining mindful of his struggles and the family’s responsibility, royal author Robert Hardman claims. Former Prince Andrew is seemingly under renewed police scrutiny as British investigators assess allegations tied to Jeffrey Epstein and alleged sex crimes at royal properties. Thames Valley Police said detectives are urging potential witnesses to come forward as they examine claims that Epstein allegedly sent a woman to have sex with a man, seemingly Andrew, at a residence in Windsor in 2010. "On 19 February 2026, a man in his sixties from Norfolk was arrested on suspicion of misconduct in public office," police said in Friday’s statement. "He was interviewed under caution and released under investigation on the same day. Two addresses, in Berkshire and in Norfolk, were searched." Thames Valley Police say they are assessing allegations that Jeffrey Epstein allegedly sent a woman to have sex with Andrew at his residence in 2010.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>How to watch ‘The Late Show with Stephen Colbert’ final show for free: Time, livestream</h4>
+                <p>“The Late Show with Stephen Colbert” will air its final episode tonight. Though “The Late Show” dates back to 1993, Colbert has been the host since 2015, when he took over for original host David Letterman. CBS announced “The Late Show”s cancellation in July 2025, stating it was “purely a financial decision.” “We consider Stephen Colbert irreplaceable and will retire ‘The Late Show’ franchise in May of 2026,” CBS executives’ statement read. “We are proud that Stephen called CBS home. He and the broadcast will be remembered in the pantheon of greats that graced late night television.” The final weeks of “The Late Show” has featured star-studded lineups, including Oprah Winfrey, Letterman, former president Barack Obama, “Daily Show” host Jon Stewart, and Bruce Springsteen. Colbert also welcomed four current late-night hosts — Jimmy Kimmel, Jimmy Fallon, Seth Meyers, and John Oliver  — to the Ed Sullivan Theater as the show entered its last two weeks.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Ken Jennings on the 'Jeopardy!' prep trick he swears by and the category that made even him sweat</h4>
+                <p>The host and champion told Fox News Digital the surprisingly simple way to get ready for a tryout. "I would say watching the show is the best way to prep for the show," the host explained to Fox News Digital on the red carpet for the TCM Classic Film Festival. "If you watch ‘Jeopardy!’ like the rhythm of the host's voice will kind of get into your pulse. You'll know the kind of stuff that comes up, the kind of material. That's how you become a good ‘Jeopardy!’ player."</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Chelsea Handler isn’t just petty and hypocritical — now she thinks she’s a white savior</h4>
+                <p>Yes, that Handler who rose to fame with her unsparing and withering insult comedy, which spared no sacred cows. Now, after a lifetime of offending … well, everyone, the abrasive abortion enthusiast has deputized herself the head of the Joke Police. How rich that is. The 51-year-old comedian appeared on Wednesday’s episode of “Deon Cole’s Funny Knowing You” podcast to whine about the jokes in the Hart roast, reserving all her vitriol for Shane Gillis and Tony Hinchliffe. “I knew enough about Tony and Shane — they’re racists, they’re bigots, they’re sexist,” she said. She criticized the pair for thinking they were invincible because they had both weathered industry cancellations. Handler also took aim at the “Tires” star for dropping a very dark joke about the suicide of comedian Sheryl Underwood’s late husband, Michael Sparkman.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/05/931/523/woman-talks-on-phone-at-table.jpeg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Inheritance scam email looks real but steals your data</h3>
+                <p class="lead-summary"><strong class="drop-cap">I</strong>t starts with something that feels exciting. An email lands in your inbox claiming you may be entitled to an inheritance. No warning. No backstory. Just a formal message and a ticking clock. I received an email this afternoon that I have never received before. Just wondering if you have seen anything like this before. I think it is a scam, but it sure looks real. Tim trusted his instincts. This is a scam. And it is one of the more convincing ones making the rounds right now. This inheritance email looks official, but the vague details, fake registry and 48-hour deadline are major red flags. (Kurt "CyberGuy" Knutsson) This email looks official at first glance. Every part of it is designed to build trust fast and push you to click before you question it. The message claims you are a "Primary Potential Beneficiary" tied to an unclaimed estate. It warns that the funds could be reassigned to the state if you do not act within 48 hours. There is also a button that says "Check My Unclaimed Inheritance." That button is the trap. This version is more polished than the typical scam email. That is what makes it dangerous. "Tim C" makes it feel targeted and legitimate. Scammers often pull names from leaked data or public records. Scammers rely on quick reactions, so taking a moment to question unexpected messages can help you avoid costly mistakes. (Kurt "CyberGuy" Knutsson) You are told there is an estate, but not who it belongs to or how you are connected. This isn’t about giving you money. It is about getting your information. If you click the link, a few things can happen: Once scammers have your data, they can use it for identity theft, financial fraud or future scams. Clicking a single link in a scam email can expose your personal data and open the door to identity theft or financial fraud. (Kurt "CyberGuy" Knutsson) A quick reality check makes this easier to spot. Legitimate inheritance notices follow a very different process: If you receive an email like this, take a step back and follow these steps. Scammers rely on speed. Your best defense is slowing down.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>AI leaders see mass job loss coming. They want government’s help solving it.</h4>
+                <p>Elon Musk, Dario Amodei and other tech leaders back public benefits as AI threatens jobs. But critics question whether billionaires would support the massive redistribution needed to fund an AI welfare state.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Fox News AI Newsletter: AI girlfriend dumps Hollywood filmmaker</h4>
+                <p>Paul Schrader attends a special screening of "Oh, Canada" at IFC Center in New York City on Dec. 5, 2024. (Dia Dipasupil/Getty Images) - Nvidia CEO Jensen Huang warns China has ‘all the chips they need’ despite US bans BAD BREAK-UP: Dating in the digital era isn't easy, as one Oscar-nominated filmmaker learned the hard way. Paul Schrader, the screenwriter of Martin Scorsese classics like "Taxi Driver" and "Raging Bull," revealed in a Facebook post that he had dabbled in developing an "AI girlfriend."</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>AI layoffs may be backfiring on companies</h4>
+                <p>A lot of workers have had the same uneasy thought lately: "Is AI coming for my job?" It is a fair question. Companies keep talking about automation, AI agents and lower costs. Some workers hear that and wonder whether their next performance review will come with a chatbot-shaped shadow in the room.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
