@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 1;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        @media (min-width: 600px)  { .front-page-columns { column-count: 2; } }
+        @media (min-width: 900px)  { .front-page-columns { column-count: 3; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>SATURDAY, MAY 23, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://media.townhall.com/cdn/hodl/2026/62/34c63c73-6eb1-40a8-95c6-2986e7c6c3cc.jpeg" alt="Lead Story Image" class="news-photo">
+                <h3>Memorial Day Weekend Could Mark Next Chapter in U.S.-Iran Conflict</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>he U.S. is reportedly preparing to attack Iran this weekend, according to multiple reports on social media. President Donald Trump posted on Truth Social that he couldn’t attend his son’s wedding this weekend in the Bahamas because of “circumstances pertaining to Government.” “While I very much wanted to be with my son, Don Jr., and the newest member of the Trump Family, his soon to be wife, Bettina, circumstances pertaining to Government, and my love for the United States of America, do not allow me to do so," Trump wrote. "I feel it is important for me to remain in Washington, D.C., at the White House during this important period of time.” NEW: Trump convened a meeting with his senior national security team on the war with Iran this morning.He is seriously considering launching new strikes against Iran barring a last-minute breakthrough in negotiations, sources say. https://t.co/dN7UuWUcGe Earlier this month, Trump slammed Iran's response to a peace proposal. He said that Iran can't have a nuclear weapon. Per Axios’ report on U.S. President Donald J. Trump’s National Security Team meeting, in the absence of a last minute deal, President Trump is seriously considering resuming strikes, with speculation rising that the bank holiday weekend for Memorial Day offers a good opportunity… pic.twitter.com/F6M6f7PH8W 🚨 NOW: President Trump is now BACK in Washington, DC after CANCELLING his weekend plans in New JerseyCBS is reporting intelligence officials have ALSO canceled Memorial Day plans, and are on standby.Something may be imminent 👀 pic.twitter.com/Aa889FA8u2 #BREAKING: Iran threatens to escalate the war as airspace closures in western Iran are issued until Monday. I ran is backing out of the nuclear talks, Trump is skipping his kid’s wedding and heading back to the White House.Do the math. https://t.co/URMeeytVDa 🚨 NOW: President Trump just STEPPED OFF Air Force One, headed back to the White House for the weekend after canceling his New Jersey tripThe man of the moment is back where he could make some BIG decisions in the next 72 hours! 🇺🇸47 is a MACHINE, and hasn't slowed down 🔥 pic.twitter.com/fouuQnCelD Editor's Note: For decades, former presidents have been all talk and no action. Now, Donald Trump is eliminating the threat from Iran once and for all. Help us report the truth about the Trump administration’s decisive actions to keep Americans safe and bring peace to the world. Join Townhall VIP and use promo code FIGHT to get 60% off your VIP membership.</p>
+                <p class="source-credit">— Townhall</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Mr. Market Does Fair Hopping and Art Pricing</h4>
+                <p>Pollock and Rothko go through the roof, plus ghostly spaces, sublime seas, and the power of yarn.</p>
+                <p class="source-credit">— National Review</p>
+            </div>
+            <div class="story-minor">
+                <h4>‘Cherish Them All’: Racing Fans Will Never Forget NASCAR Legend Kyle Busch</h4>
+                <p>Busch’s words after his last win now seem eerily prescient: ‘You never know when the last one is going to be, so cherish them all — trust me.’ For fans of auto racing, the Memorial Day weekend usually brings feelings resembling Christmas. On Sunday, the largest single-day sporting event in the world, the Indianapolis 500, will precede NASCAR’s longest race, the Coca-Cola 600. But this year, fans watching both races may do so through tears. Kyle Busch, a two-time champion of NASCAR’s premier Cup Series, died on Thursday at the age of just 41 following an undisclosed illness. The announcement shocked the motorsports community with its suddenness. Busch had just won a NASCAR Truck Series race at Dover Motor Speedway less than a week earlier. For such a giant of the sport to die while still a major motorsports presence (albeit not in a racing incident) brings echoes of Dale Earnhardt’s death a quarter-century ago.</p>
+                <p class="source-credit">— The Federalist</p>
+            </div>
+            <div class="story-minor">
+                <h4>Fraudsters abused Biden's lax policies to steal billions, financial watchdog claims</h4>
+                <p>State Financial Officers Foundation President O.J. Oleka joins Fox News Digital to discuss the $6 billion in taxpayer funds lost to fraud and how state treasurers are leading the fight to reclaim billions for the American people. As pervasive fraud schemes continue to sweep across the U.S., a group that seeks to preserve economic freedoms at the state level says that former President Joe Biden's policies were a main driver for the proliferation of the issue.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                
+                <h3>Studying sports and disability, he laid the groundwork for the Special Olympics</h3>
+                <p class="lead-summary"><strong class="drop-cap">F</strong>rank Hayden, who has died at 96, saw sports as a gateway to opportunity for people with special needs.</p>
+                <p class="source-credit">— Washington Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>NATO allies grapple with U.S. pullback, confusion over its military plans</h4>
+                <p>As Secretary of State Marco Rubio meets with NATO foreign ministers in Sweden, the focus is on the U.S. moving to reduce its military footprint in Europe.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Police urge new witnesses to speak out in Andrew Mountbatten-Windsor inquiry</h4>
+                <p>The appeal marked the first significant update since the former British prince was arrested in February over allegations of misconduct while in office.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F05%2Fnewspress-collage-59925pmo4-1779510511560.jpg?quality%3D90%26strip%3Dall%261779496146" alt="Lead Story Image" class="news-photo">
+                <h3>Yankees’ Jose Caballero makes costly error in first game off injury list as Anthony Volpe sat</h3>
+                <p class="lead-summary"><strong class="drop-cap">N</strong>ow that José Caballero is healthy and Anthony Volpe is still on the roster, the Yankees have to figure out how to use both infielders. In Friday’s series opener against the Rays in The Bronx, Caballero — in his first game off the injured list after recovering from a fractured middle finger — was at shortstop and Volpe was not in the lineup. Caballero’s defense impressed the Yankees at short this season, but he made an error on Chandler Simpson’s grounder to lead off the top of the eighth and the Yankees leading by a run. Join Post Sports+ for exciting subscriber-only features, including real-time texting with Greg Joyce about the inside buzz on the Yankees. Caballero noted it was a low liner that was a bit of a short hop, but agreed he should have come up with the ball. Before the game, Boone declined to name either the regular starter at the spot — and added that Volpe would get work in at second base, a position he hasn’t played in a regular season game since a pair of minor league games in 2021. “On days Anthony is not playing [shortstop], we’ll have him working a little at second base,” Boone said. There had been thought that Volpe could be optioned back to Triple-A Scranton/Wilkes-Barre with Caballero in the lineup again. Instead, the Yankees opted to send outfield prospect Spencer Jones back to SWB after he mostly struggled at the plate. “Both guys are gonna play,’’ Boone said. “[Caballero’s] versatility comes into play again with Anthony here.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>WWE star Austin Theory says injury was 'low moment' as he talks getting back to ring, developing new look</h4>
+                <p>WWE star Austin Theory talks to Fox News Digital about going through his injury rehab and returning with a shaved head. Austin Theory burst onto the WWE main roster in 2021 after two years on the NXT brand. He made his mark when he won the Money in the Bank Ladder Match in July 2022, earning himself an opportunity for a title shot anywhere, any time. However, he became one of only a few people to unsuccessfully cash-in when he lost his impromptu United States Championship match against Seth Rollins.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Mulivai Levu’s ninth-inning heroics propel UCLA baseball into Big Ten semifinals</h4>
+                <p>Beyond the absurdity of playing the Big Ten Tournament in the rainy Midwest when perfect Southern California weather was available, the top-ranked UCLA baseball team had to contend with something far more menacing Friday. Falling behind early after a couple of blunders and trailing deep into the eighth inning, the Bruins eventually summoned some magic, as if those rainbows in the sky before the first pitch had finally unveiled their treasure. HEY BRUINS, WELCOME TO THE BIG 10 SEMIFINALS 😋A rally by UCLA in the last two innings to give them this 4-3 win!#NCAABaseball x 🎥 BTN / @UCLABaseball pic.twitter.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>AEW star Darby Allin reacts to Mick Foley's upcoming pre-show appearance at Double or Nothing</h4>
+                <p>All Elite Wrestling star MVP talks to Fox News Digital about Tony Khan's leadership, working with the Hurt Syndicate. Pro wrestling legend Mick Foley will make his All Elite Wrestling (AEW) debut on Sunday at Double or Nothing. Foley will join Renee Paquette on the Buy In portion of the show before the pay-per-view begins.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F05%2FKenny-Chesney.jpg?quality%3D90%26strip%3Dall" alt="Lead Story Image" class="news-photo">
+                <h3>We found surprisingly cheap Kenny Chesney Las Vegas Sphere tickets</h3>
+                <p class="lead-summary"><strong class="drop-cap">F</strong>rom June 19 through July 11, Kenny Chesney is returning to Las Vegas Sphere for the second straight summer. This time around, the country artist — the first in Sphere’s history — is conducting a nine-show residency over 2.5 weeks. If you’d like to be there, it isn’t too late to grab last-minute tickets to see the “No Shoes Nation’s” fearless leader live at the visually spectacular Sin City venue. Based on our findings, seats are available for all shows and prices start as low as $81 including fees on SeatGeek at the time of publication. In the event you saw Chesney on the Strip last year, be rest assured that the 58-year-old Tennessee crooner has some tricks up his sleeve for this year’s go-round. “My first summer at Sphere was so special,” Chesney shared via Instagram last October. “Watching you guys experience the magic gave me so many ideas- reworking some songs from last year and adding a few that deserved this 4-D treatment.” More recently, he added “The band and I have been back in rehearsals getting ready to make this show bigger and better than ever. Summer of Sphere can’t come soon enough” on social media. While we don’t know what a “bigger and better” version of Chesney’s show looks like just yet, we do know that the 2025 concerts often consisted of 28 songs per gig including fan favorites “Get Along,” “When the Sun Goes Down,” “Somewhere With You,” “Summertime” and, of course, “American Kids,” according to Set List FM.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>'It Takes Two' rapper Rob Base dead at 59 after cancer fight he kept hidden from friends</h4>
+                <p>Rob Base, member of Rob Base & DJ E-Z Rock, has died just days after his 59th birthday. A joint Instagram post was shared on Friday announcing that Base, whose real name is Robert Ginyard, died after a private battle with cancer. "Today, we share the heartbreaking news that hip-hop legend Rob Base passed away peacefully on May 22, 2026, surrounded by family after a private battle with cancer," the statement began.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Earth Wind and Fire has a new documentary. How much are tickets to see them live?</h4>
+                <p>In addition to their nationwide co-headlining ‘Sing A Song All Night Long Tour’ with Lionel Richie, the Rock Hall of Famers are the subject of Questlove’s new documentary “Earth,Wind & Fire: (To Be Celestial vs That’s the Weight of the World),” which premieres at the Tribeca Film Festival on Wednesday, June 3. The doc, which drops on HBO on June 7, traces the legendary group’s origins to their ’70s highs all the way to today with insights from group members Philip Bailey, Verdine White, and Ralph Johnson along with contemporaries like Richie as well as Stevie Wonder and high-profile fans Barack Obama and Michelle Obama.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Miley Cyrus dares to bare in sheer Versace dress as she's honored with Hollywood Walk of Fame star</h4>
+                <p>The 33-year-old singer and actress received a star on the Hollywood Walk of Fame on Friday and wore an eye-catching dress to accept the honor. She posed for photos at the ceremony in a figure-hugging black Versace dress with a halter neckline, sheer cutouts and intricate web-like lace designs strategically placed to cover specific areas on her body.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/05/931/523/woman-talks-on-phone-at-table.jpeg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Inheritance scam email looks real but steals your data</h3>
+                <p class="lead-summary"><strong class="drop-cap">I</strong>t starts with something that feels exciting. An email lands in your inbox claiming you may be entitled to an inheritance. No warning. No backstory. Just a formal message and a ticking clock. I received an email this afternoon that I have never received before. Just wondering if you have seen anything like this before. I think it is a scam, but it sure looks real. Tim trusted his instincts. This is a scam. And it is one of the more convincing ones making the rounds right now. This inheritance email looks official, but the vague details, fake registry and 48-hour deadline are major red flags. (Kurt "CyberGuy" Knutsson) This email looks official at first glance. Every part of it is designed to build trust fast and push you to click before you question it. The message claims you are a "Primary Potential Beneficiary" tied to an unclaimed estate. It warns that the funds could be reassigned to the state if you do not act within 48 hours. There is also a button that says "Check My Unclaimed Inheritance." That button is the trap. This version is more polished than the typical scam email. That is what makes it dangerous. "Tim C" makes it feel targeted and legitimate. Scammers often pull names from leaked data or public records. Scammers rely on quick reactions, so taking a moment to question unexpected messages can help you avoid costly mistakes. (Kurt "CyberGuy" Knutsson) You are told there is an estate, but not who it belongs to or how you are connected. This isn’t about giving you money. It is about getting your information. If you click the link, a few things can happen: Once scammers have your data, they can use it for identity theft, financial fraud or future scams. Clicking a single link in a scam email can expose your personal data and open the door to identity theft or financial fraud. (Kurt "CyberGuy" Knutsson) A quick reality check makes this easier to spot. Legitimate inheritance notices follow a very different process: If you receive an email like this, take a step back and follow these steps. Scammers rely on speed. Your best defense is slowing down.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>‘Remove illegals,’ the campaign ad said. Its funder: The AI lobby.</h4>
+                <p>Deep-pocketed super PACs funded by rival factions inside the tech industry are intervening in congressional primaries in a bid to shape the midterms.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Fox News AI Newsletter: AI girlfriend dumps Hollywood filmmaker</h4>
+                <p>Paul Schrader attends a special screening of "Oh, Canada" at IFC Center in New York City on Dec. 5, 2024. (Dia Dipasupil/Getty Images) - Nvidia CEO Jensen Huang warns China has ‘all the chips they need’ despite US bans BAD BREAK-UP: Dating in the digital era isn't easy, as one Oscar-nominated filmmaker learned the hard way. Paul Schrader, the screenwriter of Martin Scorsese classics like "Taxi Driver" and "Raging Bull," revealed in a Facebook post that he had dabbled in developing an "AI girlfriend."</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
