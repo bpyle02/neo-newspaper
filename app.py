@@ -364,6 +364,10 @@ def generate_newspaper_html():
 
         * {{ box-sizing: border-box; margin: 0; padding: 0; }}
 
+        @page {{
+            margin: 0;
+        }}
+
         body {{
             background-color: #c8c0a8;
             color: var(--ink);
@@ -411,12 +415,12 @@ def generate_newspaper_html():
         }}
 
         .front-page-columns {{
-            column-count: 1;
+            column-count: 3;
             column-gap: 0;
             column-rule: 1px solid var(--ink);
         }}
-        @media (min-width: 600px)  {{ .front-page-columns {{ column-count: 2; }} }}
-        @media (min-width: 900px)  {{ .front-page-columns {{ column-count: 3; }} }}
+        @media (max-width: 600px)  {{ .front-page-columns {{ column-count: 1; }} }}
+        @media (max-width: 900px)  {{ .front-page-columns {{ column-count: 2; }} }}
 
         .news-section {{
             break-inside: avoid-column;
