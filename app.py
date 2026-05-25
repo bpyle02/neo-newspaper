@@ -419,6 +419,7 @@ def generate_newspaper_html():
             column-gap: 0;
             column-rule: 1px solid var(--ink);
         }}
+        
         @media (max-width: 600px)  {{ .front-page-columns {{ column-count: 1; }} }}
         @media (max-width: 900px)  {{ .front-page-columns {{ column-count: 2; }} }}
 
