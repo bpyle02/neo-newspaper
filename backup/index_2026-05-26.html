@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>MONDAY, MAY 25, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/05/931/523/Graham-Platner-energy-event-Ellsworth-Maine-May-11-2026.jpeg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Vets torch Dem Senate hopeful who called Army ‘fat, lazy trash,’ mocked soldier shot four times</h3>
+                <p class="lead-summary"><strong class="drop-cap">F</strong>ox News Digital spoke to Rob O’Neill about the social media controversy that has rocked the Graham Platner Senate campaign. Veterans are ripping Democratic Senate candidate Graham Platner after resurfaced posts showed him calling the Army "full of fat, lazy trash" and mocking a soldier who was shot multiple times in combat before receiving a Purple Heart. "I am a decorated veteran, and people need to understand what serving in the Army cost me: congestive heart failure, bilateral hearing loss, COPD, sleep apnea, high blood pressure, hypothyroidism and PTSD," Holland "Ricky" White, a Vietnam War veteran who served in the Army’s 173rd Airborne Brigade, told Fox News Digital. The 173rd Airborne Brigade, also known as "The Herd," was one of the first ground combat units to deploy to Vietnam, where it endured some of the war’s most intense fighting. "I understand ridicule better than most. I was ridiculed not only as a Vietnam veteran, but as a black man as well," White continued. "I lost friends over there, and it still hurts to talk about them. I often ask God, ‘Why did You spare me and not my friends?’ I believe God wasn’t done with me when I came home, and that’s why I continue trying to make a difference today." Graham Platner, the Democrats' presumptive Senate nominee in Maine, holds an energy event in Ellsworth, Maine on Monday May 11, 2026. (Paul Steinhauser/Fox News) The backlash adds to a mounting controversy over Platner’s deleted Reddit account as the veteran-turned-oyster farmer seeks to challenge Sen. Susan Collins, R-Maine, in one of the nation’s most closely watched 2026 Senate races. Platner has leaned heavily on his military background in pitching himself to Maine voters, but the resurfaced posts threaten to derail his campaign as his use of slurs, embrace of socialism and criticism of the armed forces come under scrutiny. Perhaps Platner’s most controversial Reddit post came in 2019 when he sharply criticized a soldier who was shot multiple times by the Taliban in 2012. "Dumb motherf---er didn't deserve to live. At least his stupidity and fat a-- wheezing are available for all future infantrymen to witness and hold in contempt," Platner wrote on Reddit, reacting to combat footage another user had posted. "Poor marksmanship on the Taliban's part is the only reason this mouthbreather made it home."</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Here's What Tulsi Gabbard Will Disclose Before She Leaves Her Post</h4>
+                <p>Director of National Intelligence Tulsi Gabbard is stepping down. She resigned before the Memorial Day weekend, citing her husband’s health as the reason; he was diagnosed with bone cancer. Of course, the Left responded poorly because they are just miserable people. Gabbard has done well to expose the deep state conspiracy against President Trump, particularly regarding the trove of documents related to the Russian collusion hoax. She’s reportedly not done, planning to release more files before her June 30 exit.</p>
+                <p class="source-credit">— Townhall</p>
+            </div>
+            <div class="story-minor">
+                <h4>Life, Liberty, and Fried Chicken: Honoring the Heroes Who Gave All for Freedom</h4>
+                <p>We have the little joys of life because of the men and women who have sacrificed everything.</p>
+                <p class="source-credit">— National Review</p>
+            </div>
+            <div class="story-minor">
+                <h4>‘Real Housewives Of Atlanta’ Star K. Michelle Will Not Collab With Any Bravo Singers: “I’m Super Successful”</h4>
+                <p>Stream It Or Skip It: ‘You, Me and Tuscany’ on VOD, a Paint-by-Numbers Romantic Comedy Led by Halle Bailey Stream It Or Skip It: 'All's Fair In Love And Mahjong' On The Hallmark Channel, Where A Woman Finds Love And A Sense Of Purpose Via Mahjong 'You Me and Tuscany' Comes to Digital, But When Will the 'You Me and Tuscany' Movie Be Streaming on Peacock?</p>
+                <p class="source-credit">— Https://decider</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/05/931/523/china-coal-mine-explosion-2.jpeg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>At least 82 killed after massive gas explosion rips through coal mine in China</h3>
+                <p class="lead-summary"><strong class="drop-cap">A</strong>t least 82 people were killed and more than 120 others hospitalized after a massive gas explosion ripped through a coal mine in China late Friday, according to the Associated Press (AP). Two people remained missing. The catastrophic blast at the Liushenyu coal mine in Qinyuan County, located in China’s northern Shanxi province, marked the country’s deadliest mining disaster in recent years. Local officials, who have launched an investigation into the incident, said they uncovered "serious violations" by the mine’s operator, Shanxi Tongzhou Coal & Coke Group. The explosion also triggered a wave of heightened safety inspections across China’s coal sector, tightening the supply outlook for coking coal and sending prices soaring Monday, according to Reuters. Rescuers work at the site following a gas explosion at Liushenyu coal mine in Qinyuan county, Shanxi province, China May 23, 2026. (cnsphoto via REUTERS) According to the AP, the explosion triggered a chaotic scene where thick smoke engulfed the mine and suffocated many victims underground. One miner lost consciousness, while many others suffered from toxic gas exposure, the outlet added, citing state broadcaster CCTV.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Russia’s overnight barrage on Ukraine includes use of powerful Oreshnik missile</h4>
+                <p>At least two people died in Kyiv, which faced the brunt of the attack, Ukrainian officials said. It was one of the biggest overnight aerial assaults since the beginning of Russia's invasion.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Deadly suicide blast rips through Pakistan train route, killing at least 23</h4>
+                <p>At least 23 people were killed and about 70 others wounded in a major attack Sunday morning after a suicide bomber targeted a passenger train in Pakistan, according to The Associated Press (AP). The assault — in Quetta, the capital of southwestern Balochistan province — occurred when an explosives-laden vehicle detonated near a railway line as a passenger train passed, causing two train cars to overturn and catch fire. The region has long been the site of a low-level but persistent insurgency involving separatist and militant groups.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>'Bibi's hair on fire': Trump-Netanyahu public 'rift' masked unified front against Iran, analyst says</h4>
+                <p>Fox News senior White House correspondent Aishah Hasnie reports on President Donald Trump’s upcoming meeting with Israeli Prime Minister Benjamin Netanyahu in Washington, D.C. on ‘Fox & Friends.’ Intensifying leaks and tense phone calls between President Donald Trump and Israeli Prime Minister Benjamin Netanyahu suggesting a relationship breakdown over Iran were part of a calculated strategic effort to keep Tehran guessing, a leading defense analyst told Fox News Digital on Sunday.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F05%2Fnewspress-collage-zptt8yy4y-1779708814919.jpg?quality%3D90%26strip%3Dall%261779694528" alt="Lead Story Image" class="news-photo">
+                <h3>Arthur Gea exits mid-match for bathroom break in wild French Open scene: ‘I’m gonna s–t’</h3>
+                <p class="lead-summary"><strong class="drop-cap">A</strong>rthur Gea’s singles debut in the French Open will forever be remembered for him taking a mid-match bathroom break after warning the umpire that something bad could happen if he did relieve himself. The video of Arthur Gea pleading to go to the bathroom during his match against Khachanov at Roland Garros.“Who’s the doctor? I’m gonna sh*t on the f*cking court”💀💀💀💀💀💀💀 pic.twitter.com/UnA4uw9kWX Gea, the World No. 135 player, became sick to his stomach during an eventual 6-3, 7-6, 6-0 loss to Karen Khachanovat Court Suzanne-Lenglen. The Frenchman said he did not fell well after waking up Sunday, and added that the 88-degree heat in France exacerbated the situation, according to the Associated Press. Mid-match breaks are not usually permitted, with players instead having to wait for the time between sets. Gea, though, tried to make it clear that he needed to exit, telling the umpire, per the AP: “I need to go to the bathroom. I can’t move anymore. I’m going to (go) on the court.” The official apparently wanted Gea to wait, telling him, “After the game,” but the 21-year-old Frenchman insisted he had to go now. “I can’t, I can’t. Just explain the situation please,” said an exasperated Gea, with the latter remark seemingly referring to the official informing his opponent of the grim situation. Two men eventually made their way over to Gea, who asked which one was the doctor before telling them in vulgar detail how he may not make it to the restroom.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Victor Wembanyama scores 33 as Spurs dominate Thunder in Game 4 to even Western Conference Finals</h4>
+                <p>Nick Wright joins Colin Cowherd to discuss Victor Wembanyama’s incredible Game 1 performance and win over the Oklahoma City Thunder, his MVP snub, and to ask how far the Los Angeles Lakers are from contending. The San Antonio Spurs have evened up the Western Conference Finals in dominant fashion, defeating the Oklahoma City Thunder, 103-82, on Sunday night.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>What New York’s most title-starved teams can take from the Knicks’ path to this Finals shot</h4>
+                <p>Upon hearing that he and his girlfriend have won the Nobel Prize for physics, “Big Bang Theory” protagonist and notable worrywart Sheldon Cooper begins to panic that he might be dreaming. So, his roommate slaps his face to prove that he is awake — and Cooper’s reaction while clasping his cheek is to scream, “We won the Nobel Prize!” We’re not advocating slapping a Knicks fan — maybe try pinching first? — but you can understand if there is a state of disbelief over a 10-game playoff winning streak that has produced the most-efficient offense in NBA history. You can practically hear the “We’re going to be in the NBA Finals!” screams entering tonight’s chance to sweep the Cavaliers out of the Eastern Conference finals. Either way, the Knicks have up to four more chances — two at home — to win one game and reach the title round for the first time since 1999.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Knicks fans already paying nearly $280K for courtside NBA Finals tickets as team nears historic berth</h4>
+                <p>Dan Dakich can't understand why Cleveland Cavaliers head coach Kenny Atkinson said he was proud of his team after blowing a 22-point lead to the New York Knicks. The New York Knicks are one win away from their first NBA Finals appearance since 1999, and if the mobs around Madison Square Garden after victories are any indication, it will be pandemonium in New York City if it happens.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F05%2FComp-Lost-Horror-Film-02.jpg?quality%3D90%26strip%3Dall" alt="Lead Story Image" class="news-photo">
+                <h3>Film buff finds lost 1968 vampire TV movie that was rumored to be so scary, it was ordered destroyed</h3>
+                <p class="lead-summary"><strong class="drop-cap">A</strong> film buff found a lost 1968 British TV movie about vampires that sparked a legend that it was so terrifying, it was marked for destruction, a preservation group announced. “No Such Thing as a Vampire” — one of six episodes from the short-lived 1960s BBC anthology series “Late Night Horror” — has been missing for more than half a century after it scarred viewers and caused an uproar that prompted the network to not only kill the show. But what is believed to be the last surviving copy of the gory movie was recently discovered by English film buff and cinematic engineer Darren Payne, the film preservation group Film is Fabulous! announced on Saturday. “I am really passionate about this episode being seen again,” Payne said, according to the group. The newly rediscovered horror film will screen publicly for the first time since 1969 at Europe’s “Grindfest” horror festival this September, the group said. From the 1950s through the 1970s, BBC routinely erased old broadcasts to reuse expensive tapes, a cost-cutting policy that wiped out an estimated 70% of its programming throughout those two decades, according to an estimate by the British Film Institute. But the total disappearance of the six episodes of “Late Night Horror,” which was canceled by the BBC after numerous viewers called in to the network complain it was far too horrific, fueled a darker theory that the network deliberately destroyed the copies because the content was too disturbing at the time, according to Atlas Obscura.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Brandi Glanville believes she contracted 'sexually transmitted ringworm' in her throat</h4>
+                <p>Glanville, 53, disclosed her medical concerns with former adult film star Lisa Ann while on the "Brandi Glanville Unfiltered" podcast. The "Real Housewives of Beverly Hills" star believed she contracted the infection while she was dating someone in the adult industry.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Comedian recalls 'most terrifying night' of her life after 600-pound fridge fell on her while her kids slept</h4>
+                <p>The comedian admitted her "biggest fear came true" after she was "very seriously hurt and stuck while home alone with my two young kids," in a video shared on Instagram. Clery, 39, praised God and thanked the first responders who rescued her after a 600-pound fridge fell and pinned her to the counter.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Helena Christensen soaks up the sun in strapless swimsuit after turning heads at Cannes Film Festival</h4>
+                <p>The 57-year-old Danish model was photographed near the swimming area at the Hotel du Cap-Eden-Roc in France following her time at the Cannes Film Festival. In the photos, Christensen sported a strapless patterned one-piece swimsuit with a cutout in the back. She was all smiles as she walked down the stairs toward the water with her hair tied up into a bun.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
