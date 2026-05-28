@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>WEDNESDAY, MAY 27, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/03/931/523/new-york-governor-kathy-hochul-march-2026.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>New York sheriffs 'mad as hell' as Hochul pushes to ban key law enforcement partnership</h3>
+                <p class="lead-summary"><strong class="drop-cap">F</strong>ox News covers ongoing anti-ICE protests in Newark, New Jersey, where demonstrators clash with agents and block roads, demanding the closure of a detention facility and the unconditional release of all detainees. Podcast host Ben Ferguson critiques the Democratic Party's alignment with these demands, including calls to release serious criminals, arguing it prioritizes illegal immigrants over American citizens and undermines law enforcement. Nassau County Executive Bruce Blakeman and sheriffs across New York are threatening legal action against Democratic Gov. Kathy Hochul over her push to ban local cooperation agreements with ICE, arguing the agreements lead to the safer removal of criminal illegal immigrants from the community. The backlash comes as Hochul pushes to include sweeping sanctuary policies in New York’s 2027 fiscal budget, including a ban on 287(g) agreements, limits on ICE access to schools, hospitals and churches, and restrictions on informal cooperation with ICE. But Blakeman, who is also the Republican nominee for governor, said he has been in discussions with sheriffs across the state about filing a lawsuit. "Kathy Hochul can make my day, because as far as I'm concerned, we're enforcing federal law in Nassau County, and a lot of the sheriffs throughout the state feel the same way," Blakeman told Fox News Digital. "They're mad as hell." New York Gov. Kathy Hochul speaks during a news conference at the WIN NYC family shelter in New York on March 5, 2026. (Adam Gray/Bloomberg via Getty Images) One of the New York sheriffs opposed to the push to make New York a sanctuary state is Blakeman's running mate, Todd Hood. He is the sheriff of Madison County, which signed a 287(g) agreement with ICE last July. "I have sheriffs from all over the state contacting me, and they are all very upset about this," Hood told Fox News Digital. "Almost all of them disagree. There's very few sheriffs who are on board." A 287(g) agreement permits local and state law enforcement officials to carry out certain immigration enforcement responsibilities under the direction of federal immigration enforcement agents.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Why Every DNC Member From This District Just Ripped Into Debbie Wasserman Schultz</h4>
+                <p>The new maps in Florida will not be discarded, so there will be some reshuffling among Democrats. Rep. Debbie Wasserman Schultz is among those affected, and she sparked a controversy by running in a predominantly Black district. It has the potential to become a political race war, as several Black Democrats in the 20th district—where Schultz is trying to run—believe a person of color should represent that area in Congress. Florida judge denies temporary injunction to block newly Redistricted mapRedistricted map:🔴 Republicans: 24 (+4)🔵 Democrats: 4 (-4)(+/- vs old map) pic.twitter.</p>
+                <p class="source-credit">— Townhall</p>
+            </div>
+            <div class="story-minor">
+                <h4>Conservatives Are Driving Out RINOs From The Senate</h4>
+                <p>John Cornyn’s defeat was another strong message sent by Republican primary voters: fail the MAGA movement at your own political peril. The weak-kneed Republican RINO. Elephas Minimus, or the spineless elephant. The Senate species commonly referred to as Republican in Name Only is hardly endangered, but conservative voters have been thinning their ranks. The latest to fall is bull RINO John Cornyn, a four-term Texas senator manufactured in an establishment Republican lab. Cornyn was summarily dismissed in Tuesday’s primary runoff election, suffering a 27-point shellacking to Texas Attorney General Ken Paxton. Cornyn’s crushing defeat arrived one week to the day after President Donald Trump delivered his coveted endorsement to Paxton, whom the GOP’s top dog described as a “true MAGA warrior.</p>
+                <p class="source-credit">— The Federalist</p>
+            </div>
+            <div class="story-minor">
+                <h4>‘Summer House’ star KJ Dillard reveals hospitalization, BPD diagnosis at emotional reunion</h4>
+                <p>“Summer House” star KJ Dillard revealed he was hospitalized and diagnosed with borderline personality disorder (BPD). “I actually had to go to the hospital for self-harm,” he told host Andy Cohen during part one of the Bravo show’s Season 10 reunion Tuesday. “I was there for a week. Mia [Calabrese] and Ciara [Miller] were there almost every day,” Dillard added. “I got to focus on myself. I needed that,” Dillard, 28, said before sharing that he’s in therapy and taking medication. “My whole life, I distracted myself and ran away from my issues instead of facing them head-on,” he added. The “Hit the Floor” musician said he was diagnosed with BPD, which is a mental health condition that affects the way people feel about themselves and others, making it hard to function in everyday life, per Mayo Clinic.</p>
+                <p class="source-credit">— Https://pagesix</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/05/931/523/somaliland-independence-day.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Iran and Houthi terror proxy facing Red Sea threat from pro-US African nation</h3>
+                <p class="lead-summary"><strong class="drop-cap">F</strong>lags flutter across Hargeisa as Somaliland marked its Independence Day earlier this month. (Video: Af Daily, Core News via Reuters.) Iran is said to be ‘deeply threatened’ by the small African breakaway state, Somaliland, because of the potential for U.S., Israeli and Western powers to use its deep water port and airbase. Such moves would severely disrupt Iran’s plan to use their proxy, Yemen’s Houthi terror group, to attack Red Sea shipping. Iran has been accused of pressuring the Houthis to renew their strikes on shipping, particularly in the Red Sea’s Bab-el-Mandeb Strait. The waterway has become the main route for oil to ship out of the Middle East to Asia since the Strait of Hormuz was effectively closed. A Somaliland military armed vehicle takes part in a parade during the self-declared Independence Day, with celebrations commemorating their 1991 breakaway from Somalia, amid renewed focus on Somaliland's push for global recognition after Israel became the first country to formally recognize the self‑declared Republic of Somaliland as an independent and sovereign state in East Africa, in Hargeisa, the capital of Somalia's breakaway territory of Somaliland, May 18, 2026.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Lebanon ceasefire falters as Trump pushes for Iran deal</h4>
+                <p>Israel is “deepening its operation” in Lebanon, Prime Minister Benjamin Netanyahu said.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Israeli ambassador compares France's far-left leader's rhetoric to Hitler as antisemitism surges</h4>
+                <p>Fox News contributor Ari Fleischer discusses the latest on the investigation into the killing of Israeli embassy staffers, the Trump admin's crackdown against antisemitism and the alleged cover-up of Biden's mental decline. PARIS, France — Israel's ambassador to France says far-left leader Jean-Luc Mélenchon's rhetoric against Jews "reminds me of Hitler," warning that foreign influence is fueling a surge in antisemitism that has some French Jews hiding their identities to survive daily life.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Contagion of conspiracy theories makes Ebola epidemic harder to contain</h4>
+                <p>Distrust and violence flare in the Democratic Republic of Congo as false claims spread that the outbreak — and the disease itself — is a hoax.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/05/931/523/victor-wembanyama-spurs-oklahoma-city-fox-news-001-052726-2.jpeg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Spurs' Victor Wembanyama skips media after poor performance in Game 5 loss to Thunder</h3>
+                <p class="lead-summary"><strong class="drop-cap">S</strong>an Antonio Spurs star Victor Wembanyama froze out the media on Tuesday night, following a brutal Game 5 against the Oklahoma City Thunder that resulted in a 127-114 loss. Wembanyama scored 20 points, but got 12 from the free-throw line. He was 4-of-15 from the field and missed each of the five 3-pointers he shot. He had three blocks and two steals and was minus-8 on the floor. It was his worst game of the series after helping the Spurs to two victories with 41-point and 33-point performances San Antonio Spurs forward Victor Wembanyama moves on the court against the Oklahoma City Thunder in the second half of Game 5 in the Western Conference finals NBA playoffs in Oklahoma City on May 26, 2026. (Julio Cortez/AP) "He’s got to take more than 15 shots, even with the free throws," Spurs coach Mitch Johnson told reporters after the game. "He’s going to have to score more than 20 points, for sure. ... OKC did a good job. We’ve got to do a better job." Wembanyama tried to rally his teammates with an impassioned speech after the Thunder opened an 18-point lead. Oklahoma City was able to get the lead up to 20 points before San Antonio was able to cut it to eight.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>The Rangers’ offseason options to fill their most pressing needs</h4>
+                <p>With one week until Game 1 of the Stanley Cup Final, the NHL offseason inches closer to the window when most of the league’s activity occurs. Get Mollie Walker’s text messages with the latest Rangers buzz and get your questions answered — exclusive to Sports+ subscribers. The Rangers are expected to be very involved as they continue to navigate their self-proclaimed retool in the aftermath of a second straight playoff-less season. As part of an initiative to build around the team’s core players and prospects, there’s an emphasis on youth, speed and winning pedigree. Whether it’s via free agency, a trade or their in-house options, the Blueshirts have significant holes in their lineup that need to be addressed.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Golden Knights book trip to Stanley Cup Final after controversial coach firing</h4>
+                <p>The Vegas Golden Knights punched their ticket to the Stanley Cup Final for the third time in its short history on Tuesday night as they swept the Colorado Avalanche 4-0. The Golden Knights accomplished the feat after making a bizarre move toward the end of the regular season. Vegas made the abrupt move of firing head coach Bruce Cassidy and replacing him with John Tortorella with just eight games left in the regular season.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>What John Harbaugh is trying to find in the controlled chaos of the Giants’ spring practices</h4>
+                <p>As John Harbaugh discussed what he saw during the Giants’ organized team activity practices this spring, he made it sound as if what was happening on the field was akin to airliners taking off and landing on adjoining and crisscrossing runways. Get texts from Paul Schwartz with all the latest Giants news and insights, exclusive to Sports+ subscribers. “I think one of the things that’s amazing to me … You have the advantage that the fans don’t have,” Harbaugh said to a group of reporters. “You’re standing right here on the sideline. You’re seeing how fast these guys move and how big they are. “And there are 22 guys intersecting full speed. I’m just surprised that there are not more collisions in the intersection, which goes to show you how talented these guys are. I think it’s across the league in the NFL. These guys, for them to practice fast like this on a no-contact basis and not run into each other is just an incredible thing. It’s a testament to their abilities.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F05%2FNo-Doubt.jpg?quality%3D90%26strip%3Dall" alt="Lead Story Image" class="news-photo">
+                <h3>We found shockingly cheap No Doubt Vegas Sphere tickets</h3>
+                <p class="lead-summary"><strong class="drop-cap">H</strong>owever, after doing some digging, we found some No Doubt Sphere tickets so cheap, we’d suggest you “Don’t Speak” and snag them for yourself ASAP. For the record, the deal we’re referring to are the seats going for as low as $80 including fees on SeatGeek for the ’90s icons’ Friday, May 29 concert (which is nearly $100 cheaper than what they cost when we last reported on how much they cost). To be fair, that low price is a bit of an outlier- other No Doubt Sphere shows have tickets starting anywhere from $116 to $217 including fees at the time of publication. In the event you haven’t been following the residency, Gwen Stefani and co. have played nine shows at the visually-spectacular Sin City venue thus far. That includes nostalgic fan favorite hits “Spiderwebs,” “Hey Baby,” “Hella Good,” “Just A Girl” and, of course, “Don’t Speak.” They also busted out more obscure tracks that haven’t been dusted off in 14+ years like “Tragic Kingdom,” “The Climb,” ‘Trapped In A Box” and “Running.” “The seats in the Sphere vibrated as animated figures thundered across rollercoasters, and a yearbook appeared on the screen showing old photos of the band members during their cover of Talk Talk’s ’80s hit ‘It’s My Life,'” Variety noted in their review of No Doubt’s first Sphere concert. “But the most effective moment came during ‘Simple Kind of Life,’ a mournful tune about the regret that comes with a relationship’s demise. During the performance, the screens lit up behind the band, with a colossal Stefani peering in on a smaller version of herself, envious of the contented life she’ll never have.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Kate Middleton reached 'final straw' with Prince Harry after comment about King Charles' cancer: author</h4>
+                <p>Christopher Andersen, author of "Kate!," details why the Princess of Wales reportedly reached her breaking point in the feud between Prince William and Prince Harry. Kate Middleton refused to stop trying to mend Prince William and Prince Harry’s strained relationship, but the Duke of Sussex’s remarks about King Charles’ mortality became the breaking point.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Spencer Pratt accuses LA Mayor Karen Bass of breaking election law by campaigning near ballot box</h4>
+                <p>IPolitical analysts Gerry Baker and Yemisi Egbewole discuss independent candidate Spencer Pratt's significant strides in the Los Angeles mayoral race. Polling reveals Pratt trailing Democratic incumbent Karen Bass by single digits, tapping into voter frustration over city issues.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Chelsea Handler blasts ‘unbearable’ date with A-list Hollywood star</h4>
+                <p>In a recent interview on Kristin Cavallari's podcast, "Let's Be Honest," the 51-year-old comedian shared she once went on a date with an unnamed famous A-List actor, noting "he was so boring." "We were flirting, and then I made the move," she explained. "So I made the move, and he was receptive, and we were hanging out, and I saw him, and we went on a date, and it was unbearable. And I worked hard."</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/05/931/523/woman-selfie-laguna-beach-california.jpeg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Are Apple devices spying? What your iPhone tracks</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>ech expert Kurt Knutsson urges you to use Apple’s App Privacy Report to see what your apps are really up to. It starts with a small moment that feels a little too coincidental. You say something out loud, then an ad shows up that feels way too specific. Bill recently reached out to us asking if the Apple devices in his home are actually spying on him. It is a fair concern. The short answer is no, your Apple devices are not secretly recording everything you say. But they are listening in specific ways and collecting some data. Once you understand how it works, you can decide what to change.  If you have an Android, here are the privacy settings you should review. The iPhone actually collects some data based on your settings but does not secretly record your conversations. (Anna Barclay/Getty Images) To understand what is really going on, it helps to break down how your devices listen, what data gets collected and where the bigger risks live. If you use Siri on your iPhone or other Apple devices, your device is always listening locally for the wake phrase. It isn't recording full conversations. When it hears the trigger, it starts processing your request. Siri may send that request to Apple's servers when needed, although much of the processing now happens directly on your device. Even so, accidental activations happen. That can lead to short snippets of audio being processed when you did not intend it. Apple markets itself as privacy-focused, especially compared to Google and Meta Platforms. That is generally true, but Apple still gathers certain types of data, depending on your settings, including: Apple says much of this is anonymized; simply put, that means it isn't directly tied to your name or identity, but it still exists. Most privacy exposure does not come from Apple itself. It comes from the apps you install. If you approve those permissions, apps can collect more data than you expect. Some of that data can be shared with advertisers or third parties. You have probably had this experience. You mention something out loud, then an ad appears later. That usually has nothing to do with your microphone.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>NASA picks Blue Origin to deliver lunar rovers to the moon</h4>
+                <p>NASA leaders detailed their plans for a moon base nearly two months after the successful completion of the Artemis II mission.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>FTC reveals where spam calls hit hardest</h4>
+                <p>Your phone lights up. The number looks local. You answer because maybe it is the doctor, the school, a delivery driver or someone you actually need to hear from. Then comes the pause. That tiny silence before a recorded voice kicks in has become one of the most annoying sounds. Spam calls have turned the phone in your pocket into a daily guessing game. Is this real? Is this urgent? Or is someone trying to trick me?</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
