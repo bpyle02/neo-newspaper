@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>THURSDAY, MAY 28, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://media.townhall.com/cdn/hodl/2025/144/cba05f07-df7b-4439-a22f-eb3799ede131.jpg" alt="Lead Story Image" class="news-photo">
+                <h3>This Is How Boston Plans to Celebrate Pride Month</h3>
+                <p class="lead-summary"><strong class="drop-cap">I</strong>t's almost Pride month, which means the Left will spend all of June telling the rest of us we're homophobic bigots. To add insult to injury, however, they're making sure to waste lots of taxpayer money to pay for their celebrations. This includes Boston, which has dropped nearly $1 million on the 'office of LGBTQ advancement' so they can hold a 'trans period pride' event. Boston Mayor Michelle Wu’s “office of lgbtq advancement” is holding a “trans period pride” event to discuss menstrual equity & the experiences of transgender menstruatorsThe office received nearly $1 million in taxpayer funding this yearThis is realWhat a time to be alive pic.twitter.com/nFpAuwWtw9 Yes, it is. And the stuff they do is so outlandish and crazy that normie voters have a hard time believing it's real. But it's real. No actual real trans person EVER wants to talk about PERIODS let alone a pride in it WTF For some in the trans movement, periods are yet another fetish, and something else they co-opt from women. we live in a world where government entities are posting fliers that are indistinguishable from /pol/ s***posts 10 years ago https://t.co/cP3zb8yqfD I’m just glad my property taxes are going to a good cause.Menstrual equity has always been very important to me https://t.co/Tm4ZYaJNNj Yes, it is. But it's what the present-day Democratic Party is, and what they support. There is no such thing as 'trans women.' Those are men. There's no such thing as 'trans men,' either. Those are women. Only women menstruate. We wonder what would happen if a normal woman showed up at this event. Would she be welcomed? Would she get the free underwear? Either way, June is bound to be a fascinating month as Democrats trip over themselves to alienate the rest of the country in the name of pride. Editor's Note: Do you enjoy Townhall's conservative reporting that takes on the radical left and woke media? Support our work so that we can continue to bring you the truth. Copyright © Townhall.com/Salem Media.
+                            All Rights Reserved.</p>
+                <p class="source-credit">— Townhall</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>DHS weighs travel crackdown at sanctuary city airports, Trump threatens Oman over Strait of Hormuz</h4>
+                <p>Homeland Security Secretary Markwayne Mullin is floating a plan that could disrupt international travel at major sanctuary city airports across the country. President Trump escalated tensions in the Middle East during a marathon Cabinet meeting, threatening Oman over negotiations tied to reopening the Strait of Hormuz.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Iran’s Ceasefire Move Sparks Immediate U.S. Military Rebuke</h4>
+                <p>﻿</p>
+                <p class="source-credit">— Daily Wire</p>
+            </div>
+            <div class="story-minor">
+                <h4>Protecting Humanness from AI</h4>
+                <p>It is instructive that Pope Leo’s first statement raises concerns about artificial intelligence.</p>
+                <p class="source-credit">— National Review</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/05/931/523/container-ship-strait-hormuz-iran-ap-fox-news-optimized.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>US ally pledges support for Trump's push to break Iran's grip on Hormuz: 'We are ready to contribute'</h3>
+                <p class="lead-summary"><strong class="drop-cap">S</strong>peaking at the United Nations, Petr Macinka says Prague is prepared to help secure the Strait of Hormuz, backs President Donald Trump’s push for stronger NATO defense spending and rejects European efforts to sanction Israel. UNITED NATIONS — The Czech Republic is prepared to help protect freedom of navigation in the Strait of Hormuz and is aligning closely with the Trump administration on security, NATO and Israel, Czech Foreign Minister Petr Macinka told Fox News Digital during an exclusive interview at the United Nations in New York. Prague already had begun discussions about contributing specialized capabilities to help secure the strategically vital waterway amid growing tensions with Iran, Macinka said while speaking at Security Council-related meetings at the U.N. "We were among the first countries that were ready to contribute … We have no navy, as we are in the middle of Europe," he explained, "But we have some unique passive surveillance capabilities." Czech Republic Foreign Minister Petr Macinka arrives at the 135th Session of the Committee of Ministers of the Council of Europe at the Palace of the Republic in Chisinau, Moldova, May 15, 2026.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>At Cannes, a Russian director urged Putin to end the war. Cue a Ukrainian eye roll.</h4>
+                <p>Andrei Zvyagintsev urged Russian President Vladimir Putin to end the “bloodbath”  — but in Ukraine his remarks elicited ridicule and frustration.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Crash involving speeding train, minibus in Belgium leaves 4 dead including 2 children</h4>
+                <p>A speeding passenger train tore into a minibus packed with children in Belgium on Tuesday, crushing the vehicle and killing four people — including two children — and leaving five other children critically injured. The violent collision happened during the morning rush near the town of Buggenhout, about 20 miles northwest of Brussels, in what officials described as one of the country’s worst rail accidents in recent history.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Lebanon ceasefire falters as Trump pushes for Iran deal</h4>
+                <p>Israel is “deepening its operation” in Lebanon, Prime Minister Benjamin Netanyahu said.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2025/10/931/523/nba-adam-silver-102725-1.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>NBA moving toward AI-automated officiating system to eliminate replay delays, Adam Silver says</h3>
+                <p class="lead-summary"><strong class="drop-cap">D</strong>an sounds off on NBA players being the softest pro athletes of any sport. He compares the NBA to NHL players toughness and how Adam Silver has ushered in this wave of soft players. The NBA’s primetime product has become increasingly difficult to watch, and Commissioner Adam Silver is finally waking up to the issue. During an appearance on "The Pat McAfee Show" on Wednesday, Silver confirmed the league is moving toward automation in its officiating, particularly for objective replay calls that routinely slow games to a crawl during the playoffs. "I think in terms of replay, we’re going to get to the point fairly quickly where, for example, on out-of-bounds plays … those kinds of calls will become automatic," Silver told McAfee. "We’re going to move to a system like that where that whole category of calls will be automated," Silver explained. "Those calls will be handled by an AI automated system with cameras lined around the court. It’ll be instantaneous and automatic." Additionally, fans have been increasingly frustrated with foul baiting, and flopping continues to show up on the hardwood during the Western Conference playoffs, specifically.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>How UCLA’s Lisa Fernandez built  historic offense ‘to break records’</h4>
+                <p>In the history of college softball, there might be only one thing more terrifying than facing UCLA’s Lisa Fernandez in the pitching circle. This is a lineup that includes the most fearsome slugging duo in the game. A leadoff hitter with cleanup power. A No. 9 hitter who gets on base with the regularity of a leadoff hitter. “At the end of the day,” Fernandez told The California Post, “we want to break records.” They’ve done plenty of that, led by a dreaded offense that’s about to be unleashed once more at the College World Series. Seeded eighth nationally in the double-elimination tournament, the Bruins (52-8) will face top-seeded Alabama (54-7) at 4 p.m. PT Thursday at Devon Park in Oklahoma City after having rewritten the offensive record book.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Clint Dempsey invokes broken nose, heart procedures to show how much playing for USMNT in World Cup meant</h4>
+                <p>Former U.S. men's national soccer team star Clint Dempsey, who serves as a Fox Sports analyst ahead of the 2026 FIFA World Cup, discussed Team USA's roster and their hopes to go far in the tournament this summer. Every player representing their country in the 2026 FIFA World Cup will do whatever it takes to see victory on the world’s biggest stage in soccer.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>bet365 bonus code: Bet $10, get $200 in bonus bets for Thunder vs. Spurs</h4>
+                <p>The Thunder have a shot to advance to their second straight NBA Finals in Game 6 of the Western Conference Finals against the Spurs on Thursday. You can bet on Thunder vs. Spurs using the bet365 code to activate the bet $10 get $200 in bonus bets offer. bet365 sportsbook is marking the Spurs as 3.5-point favorites to push the series the distance while the Knicks await their competitor. When you use the bet365 bonus code at sign-up, you will claim $200 in bonus bets when you bet $10 on anything. This offer is live in Arizona, Colorado, Iowa, Indiana, Kansas, Kentucky, Louisiana, Maryland, Missouri, North Carolina, New Jersey, Ohio, Pennsylvania, Tennessee and Virginia.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/05/931/523/Sarah-Ferguson-Prince-Andrew-Royal-History.jpeg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Former Prince Andrew, Sarah Ferguson dubbed royal family’s ‘Bonnie and Clyde’ as Epstein fallout grows: author</h3>
+                <p class="lead-summary"><strong class="drop-cap">A</strong>ndrew Lownie, author of "Entitled," weighs in on former Prince Andrew and Sarah Ferguson’s evolving relationship amid royal scrutiny. The exes were once known as the "happiest divorced couple." Former Prince Andrew and Sarah Ferguson were once coined the "happiest divorced couple" — but one royal author said they were more like "Bonnie and Clyde," bound by scandal, chaos and nonstop drama. Andrew Lownie’s extended version of his 2025 book, "Entitled," revisits Andrew and Sarah’s decades-long relationship as scrutiny surrounding Andrew’s ties to Epstein continues generating headlines in Britain and abroad. Fox News Digital reached out to the former couple for comment about Lownie’s book and its claims. A spokesperson for Buckingham Palace previously told Fox News Digital that it does not comment on books. Andrew Lownie, author of "Entitled," dubbed Sarah Ferguson and Andrew Mountbatten-Windsor as the royal family's "Bonnie and Clyde," as they remained deeply loyal to each other while navigating scandals and public scrutiny throughout the years.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Another Hollywood star breaks cover to back Spencer Pratt for LA mayor</h4>
+                <p>Hollywood star Dennis Quaid has come out in support of Spencer Pratt for Los Angeles mayor — in another sign Hollywood is coming around to his candidacy. The actor, who starred in “Far from Heaven,” “The Big Easy” and “The Substance,” backed the independent candidate in a Fox News interview Wednesday. The 72-year-old has been critical of LA Mayor Karen Bass in the past and has called for her to resign. He had to evacuate his home because of the Palisades Fire last year. “Mayor Bass had five days warning about what could be record Santa Ana winds, and she chose to go to Ghana anyway,” he said earlier this year.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Gayle King addresses decades-old rumors about her relationship with Oprah Winfrey</h4>
+                <p>Gayle King addressed the persistent rumors that she and best friend Oprah Winfrey are secretly in a lesbian relationship. "It used to really bother me," King told Alex Cooper on her "Call Her Daddy" podcast. "I was recently divorced and the National Enquirer did a story about ‘that's the reason for the divorce because they're secretly gay.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Shock hit ‘Obsession,’ which has made 100 times its budget, proves horror is Hollywood’s best genre</h4>
+                <p>In the summer, studios and exhibitors usually look to bread-and-butter blockbusters to boost business. This year, those sizzling titles include a new “Spider-Man” and Christopher Nolan’s “The Odyssey.” So, Hollywood wasn’t exactly obsessing over Focus Features’ springtime “Obsession,” a little indie released May 15 that was made for just $750,000 — less than a one-bedroom apartment in Manhattan. The film’s biggest name is Andy Richter. And its young and unknown writer-director, Curry Barker, is 26 (the same age as Steven Spielberg when he directed “Jaws”). A sketch comedian and former YouTuber, Barker penned the screenplay while he was serving java.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/05/931/523/healthcare-apps-logins-blockers.jpeg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Your health app may be failing you</h3>
+                <p class="lead-summary"><strong class="drop-cap">K</strong>urt "CyberGuy" Knutsson lays out how to limit what health apps used by insurance companies can track about you, the user. Healthcare has moved onto your phone. That sounds convenient until you are staring at a login screen, trying to refill a prescription, book a telehealth visit or figure out why your insurance portal will not load. For many older adults, this shift has created a new kind of health problem. It is called low digital health literacy, and it can affect much more than your patience. Digital health literacy means having the knowledge, access and confidence to use online health tools. That includes apps, patient portals, prescription refills, telehealth visits, benefit websites and digital forms. New research from CVS Health on Medicare-age adults found that many seniors want to use digital health tools. However, they often hit roadblocks that make care harder to manage. Those roadblocks include confusing portals, privacy concerns, outdated devices, spotty internet and hard-to-follow health information. That can lead to missed appointments, delayed care, prescription problems and more stress for people already managing health challenges. Older adults are increasingly managing healthcare through apps and online portals, but confusing systems and security concerns are making digital care harder to navigate. (Jaap Arriens/NurPhoto via Getty Images) Healthcare companies, insurance plans, pharmacies and doctors' offices now rely heavily on digital tools. You may need an app to check test results. You may need a portal to message your doctor. You may need a website to understand your benefits. That works well when the tool feels simple. It becomes a problem when the tool creates more confusion than clarity. The CVS Health research found that digital health literacy challenges appeared across several common areas. Many older adults struggled to navigate health information online. Others worried about whether websites or apps could protect their personal information. Some lacked reliable internet or newer devices. Many simply felt unsure about what to click next.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Are bank text codes enough to protect you?</h4>
+                <p>Bank security can feel confusing because every account seems to handle it differently. One bank sends a text. Another sends an email. Another asks you to approve a login inside its app. So when someone says, "Use stronger two-factor authentication," it is fair to wonder what that actually means.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
