@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>FRIDAY, MAY 29, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://media.townhall.com/cdn/hodl/2018/278/cc9763a3-7256-492e-b545-2c923d90e4a7.jpg" alt="Lead Story Image" class="news-photo">
+                <h3>We've Now Entered the 'Islam Is Part of the Fabric of America' Phase of Mass Migration</h3>
+                <p class="lead-summary"><strong class="drop-cap">D</strong>emocrats want to rewrite history, desperately. They have to do that so they can undermine our heritage, threaten our Constitution, and destroy America in order to rebuild it in the socialist utopia they long for. Part of that agenda involves pretending Islam was always part of America's history. "Islam in America did not begin in 1965 or in the 1800s. It's woven into the fabric of this nation."Illinois State Capitol 2026 pic.twitter.com/Hwd1yFHcEJ "We turn to you in gratitude and remembrance," the speaker said. "O Lord, remind us that the history of Islam in America is not a story that began in 1965, nor one that arrived upon distant shores in the 20th century. It is woven into the very tapestry of this nation. It is part of Black American history, a story not only of bondage but of spiritual emancipation, a freedom of the soul that existed long before its material counterpart was realized. Let us honor that truth with fortitude and clarity. O sustainer, remind us that this story is stitched into the fabric of our land, and carried in the sacred inscriptions." Ok but the First Barbary War (1801–1805) was America Vs Islam. Why do people always forget that This is unmitigated horse***t. The only role Islam played in America’s history is that the first war America fought after the American Revolution was against muslims (Tripoli) who were attacking US shipping and taking Americans hostage. #Marines @USMC https://t.co/ovnJZIjrcM If you count battling Muslim pirates off the Barbary Coast as "woven into the fabric of this nation" then sure. https://t.co/zTGHq91gSJ I like how the left can just claim any retarded nonsense and it’s immediately accepted as historical fact so simpletons don’t get their feelings hurt https://t.co/DNhB4ypV09 But Islam is not woven into the fabric and history of this nation. Not because it's said in the Illinois Capitol, or even when Minnesota Lt. Governor Peggy Flanagan claimed that, too. Islam has spilled American blood, damaged American cities, undermined our freedoms, and stolen taxpayer dollars to fund terrorism overseas. And imagine if a Christian prayer like this were said at the Illinois State Capitol. The Left would lose its mind about the separation of church and state. Editor's Note: Do you enjoy Townhall's conservative reporting that takes on the radical left and woke media? Support our work so that we can continue to bring you the truth.</p>
+                <p class="source-credit">— Townhall</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Michigan’s Whitmer walks back comment saying she won’t run for president in 2028</h4>
+                <p>Whitmer, term-limited after two gubernatorial wins in her battleground state, has been widely viewed as a potential Democratic candidate.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Blistering report exposes how national K-12 group's DEI agenda is trickling down to local schools</h4>
+                <p>Fox News senior national correspondent William La Jeunesse reports on the growing trend of eighth-grade redshirting, in which middle school athletes repeat a grade to gain an athletic advantage, on ‘America Reports.’ FIRST ON FOX: The National Parent Teacher Association (NPTA), a parent-teacher organization many families associate with bake sales, book fairs and school fundraisers, is facing scrutiny over the group's DEI and other left-wing political priorities trickling down to state and local chapters.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Two Lives Upended By Vindictive Prosecutors Underscore The Need For Anti-Weaponization Fund</h4>
+                <p>Jim Troupis and Dr. Ron Elfenbein, dragged through hell by abusive prosecutors, underscore the need for the DOJ’s Anti-Weaponization Fund. Corrupt Democrats and deep staters who have twisted justice to target their political enemies can’t stand the idea of their victims receiving restitution. It should be no surprise that D.C. creeps like Sen. Adam Schiff, D-Calif. — who should be behind bars, not in Congress — have excoriated President Donald Trump and his administration’s “anti-weaponization fund.” Nor should it be a surprise that the Trump-hating accomplice media is throwing gasoline on the Democrat-lit bonfire over the fund. Some Republican senators, ever afraid of Trump sparks, and their own shadows for that matter, have joined the pitchfork parade.</p>
+                <p class="source-credit">— The Federalist</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2025/12/931/523/hamas-terrorists-gaza-rubble-1.jpeg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Hamas struggles to fill leadership ranks as Israel hunts Oct 7 terrorists</h3>
+                <p class="lead-summary"><strong class="drop-cap">I</strong>nterviews with Gazans expressing frustration with Hamas leadership after Israel’s killing of senior commanders, as many residents say civilians — not Hamas leaders — have paid the price of the war (Credit: Jusoor News) Just before celebrations for Eid al-Adha, a major Muslim holiday, began in Gaza, an Israeli airstrike hit a building in Gaza City, killing Mohammed Odeh, the newly appointed head of Hamas’ military wing, according to Israeli officials and later confirmed by Hamas. Reports from regional media said members of Odeh’s family were also killed in the strike. Two hours later, Gaza’s markets were full. Fox News Digital reviewed video filmed in Gaza showing crowded Eid streets, children shopping and families gathering, with little visible reaction to the killing of the Hamas commander Israel described as one of the architects of the Oct. 7, 2023, attacks on Israel. The contrast underscored what many Gazans and analysts describe as a growing disconnect between Hamas leaders and civilians exhausted by nearly three years of war, which has killed more than 70,000 Palestinians, according to the Hamas-run Gaza Health Ministry — figures that do not distinguish between civilians and combatants — and displaced most of Gaza’s population.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>A court in Kenya blocks U.S. plan to quarantine Ebola patients</h4>
+                <p>A facility built by the U.S. military on a Kenyan air base was intended to isolate Americans exposed to Ebola during the growing outbreak in the Democratic Republic of Congo.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>After a brutal winter, Ukraine’s drones are breaking Russian defenses</h4>
+                <p>Russia’s advance has suddenly stalled, and Ukraine is fighting on its own terms — a comeback credited to Kyiv’s efforts to steadily strengthen the capabilities of its UAVs.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Drone strikes apartment building in NATO member Romania as Russia attacks neighboring Ukraine</h4>
+                <p>Fox News correspondent Stephanie Bennett reports on Ukrainian President Volodymyr Zelenskyy confirming a drone attack on Russia that killed three people on ‘Fox Report.’ A drone struck an apartment building Friday in Romania, a NATO member, causing an explosion and fire that injured multiple people, local authorities said.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F05%2Fnewspress-collage-98n4y0ctf-1780048678060.jpg?quality%3D90%26strip%3Dall%261780034398" alt="Lead Story Image" class="news-photo">
+                <h3>How the Mets are trying to guide Nolan McLean out of his first slump</h3>
+                <p class="lead-summary"><strong class="drop-cap">N</strong>olan McLean’s dominance last season, coupled with his rise to stardom in the World Baseball Classic, have set the bar high for the electric Mets rookie. On nights he had no-hit stuff earlier this season, it would have been hard to envision McLean sitting in his present position, trying to recover from two straight beatdowns to get his season back on track. That opportunity will arise on Sunday against the Marlins at Citi Field. The Mets certainly need their rookie co-ace to emerge from this slump if they have any shot of rising from the deep hole in which they are submerged. A refresher: McLean was handed a five-run lead in Washington two starts ago, and watched it wither. The Nationals battered him for nine runs (three of which were unearned) over 5 ⅔ innings to give the Mets their first setback during a nosedive that became seven losses in eight games.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Patrick Mahomes participates in Chiefs OTAs with heavy knee brace, still targeting Week 1 return</h4>
+                <p>The NFL on FOX crew discusses the latest on Patrick Mahomes' recovery with the playoff picture heating up, including what the Los Angeles Rams' TNF loss, Sam Darnold's QB status and more. The Kansas City Chiefs' decade-long run of playoff appearances came to an abrupt end in Week 15 last season after they came up short at Arrowhead Stadium in a game against the Los Angeles Chargers.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Yankees utilityman Max Schuemann’s lessons in making the best of an awkward situation</h4>
+                <p>WEST SACRAMENTO, Calif. — The Yankees got a taste of the Athletics’ life calling a Triple-A stadium home for a series last year, and will do so again this weekend. Don’t miss Greg Joyce’s text messages from The Bronx and beyond — he’s giving Sports+ subscribers the inside buzz on the Yankees. The Yankees utilityman, who has fared well in limited playing time in the month he has been with the big league club, spent the past two years with the Athletics at an … interesting time. He called Oakland and the Coliseum home as a rookie in 2024 and Sacramento and Sutter Health Park home in 2025. “I loved my time in Oakland,” Schuemann said this week. “It was always my goal, especially once they came out with the news that they were planning on moving away from Oakland, to debut as an Oakland A. And then to end up doing it, and also playing in the last game in the Coliseum, that was really cool. It’s an interesting transition, going from Oakland to Sacramento. I think Vegas will be really cool for those guys and whoever’s a part of it. It’s just an interesting little period over there, for sure.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Trump backs Giants QB Jaxson Dart after rally appearance backlash, says 'He's also loved more'</h4>
+                <p>President Donald Trump discusses New York Giants quarterback Jaxson Dart's appearance at a rally on 'My View with Lara Trump.' President Donald Trump is aware Jaxson Dart has come under fire from some left-wing media, some NFL fans and even a teammate after he introduced the president at a rally last week. So, of course, the leader of the free world is going to stand with the New York Giants quarterback.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/05/931/523/demi-moore-rumer-derek.jpeg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Demi Moore claims Rumer Willis' ex tried to 'dictate and control' her daughter in custody battle declaration</h3>
+                <p class="lead-summary"><strong class="drop-cap">D</strong>emi Moore fiercely defended Rumer Willis as her daughter waded into a bitter custody battle with ex Derek Richard Thomas, according to documents obtained by Fox News Digital. Thomas quietly filed for custody over their three-year-old daughter Louetta last summer, to which Willis, 37, fired back with allegations of persistent emotional abuse throughout their two-year relationship. In a declaration filed earlier this year, Moore, 63, claimed to have "firsthand, personal knowledge" of Thomas' desire to "dictate and control Rumer's environment to his needs," which became most evident while her daughter was giving birth. "His actions to control and manipulate often held two faces," Moore wrote. "One he presented to everyone else and then the flip side when he was alone with Rumer or with me and Rumer’s siblings or nannies." BRUCE WILLIS AND DEMI MOORE'S DAUGHTER DENIES LIVING OFF PARENTS' MONEY, SAYS SHE WORKS 4 JOBS AS SINGLE MOM Demi Moore defended her daughter Rumer Willis as a bitter custody battle unfolds with her ex, Derek Thomas.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Allison Janney talks about new HBO movie with Andrew Rannells: ‘It’s really spicy’</h4>
+                <p>Allison Janney and Andrew Rannells co-star in the HBO movie, “Miss You, Love You,” which follows Diane (Janney) a grieving widow who is planning her husband’s funeral with help from a stranger — her son’s assistant, Jamie (Rannells). The Oscar-winning actress exclusively told the Post that she had “fun” filming it, because she likes material that is “the messier, the better. For me, comic mixed with drama and anger … comedy [mixed with] intense hurt, that’s when it’s really spicy.” Written and directed by “Community” actor Jim Rash, the movie oscillates between comedy and drama. Diane is rude to Jamie, and they both acknowledge how strange their situation is.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Megan Moroney shows off toned abs in striped crop top and mini skirt on tropical vacation</h4>
+                <p>Country music star Megan Moroney told Fox News Digital she is not "emotionally available" for a romantic relationship, putting all her energy into her music career. The 28-year-old country music star shared a glimpse into her weekend getaway in a May 25 Instagram post, featuring her in a revealing two-piece set with the ocean behind her.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Alan Jackson’s star-studded last concert is coming up. How much are tickets?</h4>
+                <p>On May 27, the beloved country crooner will perform his farewell concert, which he’s calling ‘Last Call: One For The Road,’ at Nashville, TN’s Nissan Stadium on Saturday, June 27. To celebrate the momentous occasion, he’ll be bringing along a slew of famous friends as well. Just a few of the most notable fellow stars joining him at the one-off gig include Luke Bryan, Eric Church, Luke Combs, Carrie Underwood and George Strait. Other biggies on the bill include Lainey Wilson, Thomas Rhett, Cody Johnson, Miranda Lambert and Riley Green. Little Big Town, Jake Owen, Jon Pardi and Lee Ann Womack round out the star-studded lineup.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/05/931/523/hyundai-atlas-robot-1.jpeg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Hyundai to send 25,000 Atlas robots to the US</h3>
+                <p class="lead-summary"><strong class="drop-cap">U</strong>BTech and Zeekr unite with AI robot swarms to make car manufacturing faster and smarter. Tech expert Kurt Knutsson explains how the process works. Hyundai wants to bring humanoid robots into American car factories in a big way. The company is looking at a future where Boston Dynamics' Atlas robots work alongside people inside U.S. auto plants. These human-shaped machines can bend, lift, balance and move through spaces built for workers. That could change how cars get made. It could also raise new questions about factory jobs, safety and how much automation consumers are willing to accept. Here's what Hyundai is planning and why Atlas could become one of the most closely watched robots in American manufacturing. Hyundai Motor Group plans to bring Boston Dynamics’ Atlas humanoid robots into U.S. auto factories as early as 2028. (Hyundai) Hyundai Motor Group reportedly outlined plans to deploy more than 25,000 Atlas robots developed by Boston Dynamics across Hyundai Motor and Kia manufacturing facilities. The plan appeared in investor relations materials tied to a JPMorgan Chase-hosted session. The company also plans to build annual production capacity for 30,000 Atlas robots by 2028. Hyundai has not released a detailed public schedule for every plant. However, Kia CEO Song Ho-sung said the robots are expected to begin work in 2028 at Hyundai Motor Group Metaplant America in Georgia. Kia's Georgia plant would follow in 2029. Hyundai faces the same pressures as other automakers. It needs faster production, flexible factories and better ways to handle labor shortages. Humanoid robots may help because they can work in areas designed for people. That can reduce the need to rebuild a factory from scratch. Atlas could also help with physically demanding jobs. Lifting, carrying and moving awkward objects can wear down workers over time. If robots take on some of that work, factories could become safer. Still, this technology will need careful oversight. A humanoid robot working near people must move predictably and stop safely when something goes wrong.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Amid data center protests, a billionaire and the Trump administration see a foreign plot</h4>
+                <p>Claims by a billionaire TV star and Interior Secretary Doug Burgum that China and overseas propaganda drive American protests against data centers are based on scant evidence.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Fox News AI Newsletter: Chatbots' left-wing bias</h4>
+                <p>- Conservatives say AI chatbots are being weaponized with left-wing media bias as millions rely on them DIGITAL GATEKEEPERS: Conservatives are raising alarms over artificial intelligence chatbots, arguing they are being weaponized with left-wing media bias. As millions of Americans increasingly rely on these tools for information, critics warn that the underlying algorithms reflect partisan perspectives, shaping public discourse and potentially skewing user interactions.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Could the 7-Eleven breach affect you?</h4>
+                <p>You may stop at 7-Eleven for coffee, gas, snacks or a quick drink. What you probably do not expect is to see the company's name tied to a data breach involving personal information. That is what happened after breach notification service Have I Been Pwned added 7-Eleven to its database. The service says the breach exposed about 185,000 unique email addresses. The exposed data also included names, dates of birth, phone numbers and physical addresses.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
