@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>SUNDAY, MAY 31, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F05%2Fnewspress-collage-pq8lw2tms-1780221354068.jpg?quality%3D90%26strip%3Dall%261780207000" alt="Lead Story Image" class="news-photo">
+                <h3>Trump in ‘no hurry’ to sign deal with Iran: ‘There will be no nuclear weapons’</h3>
+                <p class="lead-summary"><strong class="drop-cap">P</strong>resident Trump said on Saturday he was in “no hurry” to reach a deal with Iran, telling Fox News that his priority remained preventing Tehran from obtaining a nuclear weapon. “Slowly but surely, we’re getting, I think, what we want,” the president said, speaking on “My View with Lara Trump.” “I’d like to say I’m in a hurry, because you know what, gasoline prices are going to come tumbling down, but if you’re going to be in a hurry, you’re not going to make a good deal,” Trump told his daughter-in-law. “The one guarantee that I have to have is that there will be no nuclear weapons. They’ve agreed to that, and it was very interesting,” he added. If the Islamic regime doesn’t agree to Washington’s demands in diplomatic talks, “we’re going to end in a different way,” Trump stressed. Trump said on Friday that he was meeting in the White House Situation Room to “make a final determination” on an agreement with the Islamic Republic. “Iran must agree that they will never have a nuclear weapon or bomb,” the president stated. “The Hormuz Strait must be immediately open, no tolls, for unrestricted shipping traffic, in both directions.” The Islamic Republic must remove all of the mines in the strait beyond the “numerous” ones that the United States hasn’t already removed “with our great underwater mine sweepers,” he said. He added that the “enriched material, sometimes referred to as ‘nuclear dust,’ which is buried deep underground with virtually collapsed mountains, caused by our powerful B2 bomber attack 11 months ago, sitting on top of it, will be unearthed by the United States,” which, he said, “it is agreed, is the only country, along with China, with the mechanical capability of doing so, in close coordination and conjunction with the Islamic Republic of Iran, plus the International Atomic Energy Agency, and destroyed.” Secretary of Defense Pete Hegseth over the weekend also reiterated that the Trump administration will only conclude a “great deal” with Iran and warned that failure to reach such an agreement could lead to renewed military action. “Only one president was willing to lay it out on the line and ensure after 47 years that Iran is not capable of having a nuclear weapon,” he told reporters. “Those goalposts haven’t shifted at all, which is the expectation of the American people and what we’ve stated to Iran. “They can either do this now through a deal, and we think we’re in a good place to make that deal, or they can deal with the War Department.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>I Lost Everything. Then One Unexpected Pregnancy Changed My Future.</h4>
+                <p>This article is part of Upstream, The Daily Wire’s new home for culture and lifestyle. Real human insight and human stories — from our featured writers to you. *** I grew up a “child on the margins,” a child of addicts and therefore a child of chaos. I had what I considered to be a normal life: ...</p>
+                <p class="source-credit">— Daily Wire</p>
+            </div>
+            <div class="story-minor">
+                <h4>The New Politics of Resentment</h4>
+                <p>Prosperity is not a fixed pie. States like Florida and Texas understand that.</p>
+                <p class="source-credit">— National Review</p>
+            </div>
+            <div class="story-minor">
+                <h4>Marine vet stuns Robertsons with biblical theory linking aliens, Nephilim, and demons</h4>
+                <p>Chad Robichaux joins the Robertsons to explain how the Book of Enoch connects ancient Nephilim to modern UFO sightings. Interest in the extraterrestrial continues to mount in the wake of President Trump’s recent order to declassify government documents on UFOs/UAPs. Theories about what aliens and flying saucers really are dominate social media every day. On a recent episode of “Unashamed,” Jase and Al Robertson along with Zach Dasher welcomed Marine veteran, Mighty Oaks founder, and author Chad Robichaux to the show to share his wild biblical theory on UFOs, giants, and demons. Whether or not what’s in the government files — historical sightings, military encounters, astronaut reports, etc. — is real or fake, Robichaux believes the church is obligated to address the subject so it doesn’t “throw people off their faith.</p>
+                <p class="source-credit">— The Blaze</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/05/931/523/abelardo-de-la-espriella-colombia-election.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Anti-cartel hardliner channels Trump in bid to end Colombia's leftist era in pivotal election</h3>
+                <p class="lead-summary"><strong class="drop-cap">P</strong>residential candidate Abelardo de la Espriella vows hardline stance on drug traffickers and armed groups in Colombia. (Video: Associated Press) A hardline, law-and-order candidate who promises to dismantle drug cartels and reset Colombia’s security doctrine is gaining traction with voters as Colombians vote in Sunday's presidential election. As the world’s largest cocaine producer and a long-standing U.S. security partner, Colombia’s internal policies directly affect narcotics flows, migration dynamics and regional stability. Analysts believe a shift in Bogotá’s leadership could reshape cooperation with Washington on drug interdiction, intelligence sharing and counter-cartel operations — issues that remain central to U.S. domestic and foreign policy. Abelardo De La Espriella, a businessman and successful defense attorney, has emerged as a leading candidate on the right with a platform focused on aggressive counternarcotics enforcement, institutional reform and a decisive break from current leftist President Gustavo Petro’s negotiation-based approach with armed rebel groups.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Ukraine turns real-life kills into video game thrills for drone pilots</h4>
+                <p>Kyiv says the Army of Drones Bonus system, in which points may be redeemed for weapons, is the first of its kind anywhere.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/05/931/523/paris-psg-celebration-fire.jpeg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>PSG Champions League victory causes chaos in Paris, with 45 arrested and fires set across city</h3>
+                <p class="lead-summary"><strong class="drop-cap">G</strong>ene Hamilton and Josh Ritter discuss Gov. Mikie Sherrill's proposal for 'protected protest zones' amid mass anti-ICE protests in Newark, New Jersey, and Gov. Kathy Hochul's law banning masks for ICE agents. At least 45 people were arrested in Paris on Saturday after celebrations over Paris Saint-Germain’s Champions League victory descended into chaos, with fires set, businesses vandalized and crowds clashing with police. Large crowds gathered near the Arc de Triomphe after the match, with some fans setting off flares and blaring car horns, according to reports from The Associated Press. POLICE ARREST FIGHT SUSPECTS AT ISRAEL-FRANCE SOCCER GAME DAYS AFTER ATTACKS ON ISRAELI FANS IN AMSTERDAM A car burns and fireworks explode as police watch PSG supporters celebrate in Paris, Saturday, May 30, 2026, after the Champions League final soccer match between Paris Saint-Germain and Arsenal that's being played in Budapest. (AP Photo/Thomas Padilla) According to authorities, a group of individuals attempted to storm a police station in the French capital late Saturday.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Ryan Weathers, Yankees sunk by home runs in loss to A’s as winning streak ends</h4>
+                <p>WEST SACRAMENTO, Calif. — The Yankees do seem to like Ryan Weathers, but they have a funny way of showing it for their new teammate. The left-hander took the mound on Saturday night and an offense that had been red-hot went cold, until it was too little, too late — just barely. Join Post Sports+ for exciting subscriber-only features, including real-time texting with Greg Joyce about the inside buzz on the Yankees. The Yankees’ one run before the ninth inning gave Weathers little margin for error, and another strong outing for him turned sour when he gave up his third home run of the night on his 107th and final pitch — resulting in five runs overall — as the Yankees snapped a five-game winning streak with a 6-4 loss to the Athletics at Sutter Health Park.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Victor Wembanyama leads Spurs past Thunder to set up 1999 NBA Finals rematch with Knicks</h4>
+                <p>Victor Wembanyama scored 28 points and 10 rebounds in the San Antonio Spurs’ 118-91 win over the Oklahoma City Thunder in Game 6 of the WCF. Jason McIntyre says that Wemby showed up in the biggest moments, and asks if he can carry this momentum into Game 7. Plus, he discusses Shai Gilgeous-Alexander’s struggles and asks if he will cost the Thunder the series.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Victor Wembanyama lets emotions flow during Spurs’ celebration after reaching his first NBA Finals</h4>
+                <p>Victor Wembanyama didn’t say anything after Game 5, ducking out of Paycom Center before speaking with reporters. He didn’t say much after the Spurs’ Game 6 victory, either, during an on-court interview with NBC. But after Game 7, after Wembanyama powered the Spurs past top-seeded Oklahoma City in a thrilling finish to the Western Conference finals and into an NBA Finals showdown against the Knicks, his emotions on the court said it all. Wembanyama was visibly emotional while embracing his San Antonio teammates following their 111-103 victory over the Thunder on Saturday in Oklahoma City, at one point placing his head in his hands and yelling in celebration as he made his way around the court immediately after the final buzzer sounded.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/02/931/523/kelsea-ballerini-grammys.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Kelsea Ballerini stuns in sheer metallic dress that leaves little to the imagination in new photos</h3>
+                <p class="lead-summary"><strong class="drop-cap">B</strong>allerini wore a sparkly silver dress at the CMA Awards, while Stokes wore a black suit. In a recent Instagram post, the 32-year-old country singer shared a series of photos showing fans what she's been up to, captioning the post, "all the things all the time!" The slideshow included pictures of her in the studio, traveling with friends, seeing a Broadway show and eating "hot girl pickles," but one picture stood out among the rest. One of the photos featured Ballerini in a long-sleeve sheer metallic dress with web-like patterns, which left her dark-colored bra and high-waisted underwear visible. Ballerini posted a series of photos, one of which featured her in a sheer dress. (Kelsea Ballerini Instagram) She paired the dress with a soft makeup look and styled her hair in a half-up/half-down look. "Alll the studio pics - can’t wait to hear what you are creating," one fan wrote in the comments section. Another added, "look at you glowing." Ballerini previously fueled speculation she was working on new music when she posted a text exchange between herself and Patrick Droney, which featured an audio file titled, "Math of Us," with both Ballerini and Patrick saying they are "so happy" with it.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>‘The Thorn Birds’ star Rachel Ward traded ‘empty’ Hollywood to run a farm in Australia</h4>
+                <p>“The Thorn Birds” star Rachel Ward candidly opened up about leaving Hollywood behind to become a farmer in Australia. Born to an aristocratic family in Britain, Ward, now 68, launched a successful modeling career across London, Paris and New York City before moving to Los Angeles in the early 1980s to pursue acting. However, during a recent episode of the Australia Broadcasting Company (ABC)’s docuseries “Australian Story,” War explained that she quickly became disillusioned with the entertainment in LA and the roles that she was being offered. “You soon find it’s a very vacuous place to inhabit … it’s very empty and it’s very unsatisfying,” Ward said. “I was just make-up, I was fantasy.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Nicolas Cage turned down parts in two big franchise movies for roles he thought were better</h4>
+                <p>Nicolas Cage admitted he turned down the opportunity to appear in two big franchise films in order to play roles he felt better suited his desires at the time. During a recent interview with Complex News, the 62-year-old actor reflected on his career choices, saying there were two instances when he had to decide between two roles, which led him to turn down parts in two franchises.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Writers of Tony nominee ‘Two Strangers (Carry A Cake Across New York)’ never lived in New York before penning the show</h4>
+                <p>The childhood friends from England who wrote “Two Strangers (Carry A Cake Across New York)” — which has been nominated for a staggering eight Tony Awards — never even lived in New York before writing the Broadway musical. Kit Buchan and Jim Barne had only visited the Big Apple as tourists, so relied heavily on films based in the city to pen the production. “All our lives, we just absorb so much of this city and felt so familiar with it, despite the fact that the majority of what we were digesting was actually movies,” Buchan told The Post. During the writing process for the show — which follows a British tourist enamored with New York City who meets a native Brooklynite immune to its charms — the pals rewatched classics set in NYC.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/05/931/523/high-tech-airport-lounge.jpeg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Will this high-tech lounge change how you wait at airports?</h3>
+                <p class="lead-summary"><strong class="drop-cap">Y</strong>ou know that feeling. You cleared security, your flight isn’t boarding yet and now you are wandering the airport terminal. You are looking for a seat, an outlet or something to eat that does not feel ridiculously overpriced. At Minneapolis-St. Paul International Airport, a new lounge wants to make that dead time feel a lot less dead. Portal Lounge, a new high-tech airport lounge from the founders of Gameway, opened May 28 at MSP. It blends gaming, dining, music, interactive design and robot-made drinks into a social space built for travelers who want a better way to spend their time before boarding. UNUSUAL AIRPORT AMENITY GAINS TRACTION AS PART OF HEALTHY TRAVEL PUSH: 'MAKES A WORLD OF DIFFERENCE' Portal Lounge’s glowing entrance gives travelers at MSP a first look at its high-tech airport lounge concept. (Portal Lounge) Portal Lounge comes from Jordan and Emma Walbridge, the entrepreneurs behind Gameway. Their airport gaming concept already operates across nine U.S. airports, with plans to reach 11 locations by the end of the year. Portal Lounge takes that gaming idea and expands it into a broader hospitality experience. Instead of building another traditional lounge around silence and exclusivity, the founders designed a social space with energy, entertainment and technology at the center. The lounge spans 3,800 square feet and can hold about 114 people. It features a portal-inspired entrance, cinematic lighting, art deco-inspired interiors, curated music, custom furnishings and social seating areas. One of the biggest tech features is the gaming setup. Portal Lounge includes 17 dedicated gaming stations with Nintendo Switch, Xbox, PlayStation and custom-built gaming PCs. Travelers can choose from nearly 30 titles across casual, multiplayer, streaming and competitive gameplay. Adults ages 30 to 39 now represent the largest gaming demographic in the U.S. That same group also includes many travelers willing to spend on better airport experiences. "Gameway really showed us how much travelers respond to environments that feel interactive and intentional," Emma told CyberGuy. "When people are traveling, especially during delays or long layovers, they're looking for ways to decompress and reset instead of just sitting in another generic waiting area."</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Your senior parents are easier to impersonate than you are</h4>
+                <p>Americans 60 and older filed 201,266 complaints with the FBI's Internet Crime Complaint Center in 2025 and reported $7.7 billion in losses, the highest total of any age group. The average loss for older victims was nearly $38,500, almost double the figure for younger filers. The Federal Trade Commission's December 2025 report to Congress estimated that the overall cost of fraud to older adults in 2024 ranged from $10.1 billion to $81.5 billion, depending on how underreporting is measured.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
