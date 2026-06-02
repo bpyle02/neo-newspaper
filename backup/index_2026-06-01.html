@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>MONDAY, JUNE 01, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://i0.wp.com/www.nationalreview.com/wp-content/uploads/2026/06/european-parliament.jpg?fit=617%2C360&ssl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Why Europe Can’t Quit Climate Alarmism</h3>
+                <p class="lead-summary"><strong class="drop-cap">W</strong>hile America gets richer, Europe doubles down on its failing climate strategy.</p>
+                <p class="source-credit">— National Review</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>What to know about California’s messy governor’s race</h4>
+                <p>Its unusual primary system, combined with scandal and a low-profile field, have made this year’s race harder to predict.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Exclusive: Meet The Kids’ Book Character Challenging The Left’s Pro-Illegal Immigration Narrative</h4>
+                <p>Amid the flood of anti-ICE messaging inundating social media feeds and classrooms, leftists are teaching kids to demonize federal agents who enforce America’s immigration laws. Now children’s book authors Mike Howell and Ryan Neuhaus are pushing back on this messaging that seeks to “indoctrinate kids into open borders ideology.” Howell and Neuhaus’ new picture book — Diego the Dingo Finds His Way Home — follows the story of an immigrant family of dingos that is illegally smuggled over the border and ultimately deported. Unlike many other children’s books about the subject, this one positively portrays migrants returning home instead of painting ICE agents as moral monsters.</p>
+                <p class="source-credit">— The Federalist</p>
+            </div>
+            <div class="story-minor">
+                <h4>Fourth US drug boat strike in a week kills more 'narco-terrorists'</h4>
+                <p>U.S. Southern Command shared this footage on social media and indicated that three 'narco-terrorists' had been killed in the May 30th strike. (Credit: @Southcom/X) The U.S. military conducted a deadly strike against a vessel in the Pacific on Saturday, killing several alleged "narco-terrorists," according to U.S. Southern Command.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/06/931/523/brad-cooper-centcom-april-2026.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>US military attacks Iran in 'self-defense strikes' over weekend</h3>
+                <p class="lead-summary"><strong class="drop-cap">I</strong>ranian President Masoud Pezeshkian has reportedly submitted a letter of resignation to the Office of the Supreme Leader on ‘Fox News Live.’ U.S. Central Command (CENTCOM) announced that it carried out "self-defense strikes" against Iran over the weekend. "U.S. Central Command (CENTCOM) conducted self-defense strikes on Iranian radar and command and control sites for drones in Goruk, Iran and Qeshm Island this weekend," a press release noted. "The measured and deliberate strikes occurred on Saturday and Sunday in response to aggressive Iranian actions that included the shootdown of a U.S. MQ-1 drone that was operating over international waters. U.S. fighter aircraft swiftly responded by eliminating Iranian air defenses, a ground control station, and two one-way attack drones that posed clear threats to ships transiting regional waters," CENTCOM continued. TRUMP WARNS IRAN US WILL 'FINISH THE JOB' IF DEAL COLLAPSES AS ISRAEL EXPANDS LEBANON OFFENSIVE U.S. Secretary of War Pete Hegseth listens as Adm. Brad Cooper, Commander of U.S. Central Command, speaks during a press briefing at the Pentagon on April 16, 2026 in Arlington, Va.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Iran and U.S. trade strikes as deal to end war remains elusive</h4>
+                <p>U.S. Central Command said it targeted Iranian sites overlooking the strategic Strait of Hormuz, and Kuwait's military on Monday said it was responding to retaliatory airstrikes.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Fireworks reportedly trigger mass horse stampede through Rome streets, injuring several soldiers</h4>
+                <p>A late-night fireworks blast sent ceremonial horses stampeding through Rome on May 29, injuring several riders and animals before they were recovered. (Lucio Virzi Fotografo/Reuters) Fireworks set off without authorization in Rome reportedly triggered a mass stampede of frightened horses during a late-night rehearsal for Italy’s annual Republic Day parade, injuring multiple riders and animals.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Hardening views on migrants push Europe toward Trump-like tactics</h4>
+                <p>New rules were driven by high numbers of asylum seekers from “safe countries” and the fatigue of voters after waves of migration, European officials say.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/04/931/523/serena-williams-us-open-flushing-fox-news-001.jpeg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Serena Williams to make pro tennis return at the HSBC Championships in London</h3>
+                <p class="lead-summary"><strong class="drop-cap">S</strong>erena Williams will return to professional tennis this summer as a doubles competitor the HSBC Championships. The tournament begins in London at The Queen’s Club on Saturday and it runs through June 21. It is one of the events leading up to Wimbledon, which takes places in July. Serena Williams reacts after a point against Danka Kovinic on day one of the 2022 U.S. Open at the Billie Jean King National Tennis Center in Flushing, N.Y., on Aug. 29, 2022. (Robert Deutsch/USA TODAY Sports) "THE QUEEN RETURNS," the tournament announced on X. "Serena Williams is BACK & set for doubles at the #HSBCChampionships!" Williams has been out of tennis since she retired following the 2022 U.S. Open. Over the last year, she re-entered the doping testing pool but denied she was trying to make a return. All the pushback came to a close on Monday when it was announced she was going to compete in the HSBC Championships. Williams met her husband while eating breakfast in Rome. The pair fell in love after going on a six-hour date in Paris.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Draymond Green takes profane shot at Knicks, ‘doubles down’ on Jalen Brunson worry</h4>
+                <p>Draymond Green is standing with Becky Hammon and challenging Jalen Brunson to “prove me wrong” during the NBA Finals. The Warriors star and opinionated basketball observer was revisiting some old Knicks takes on the latest episode of his eponymous podcast now that they Knicks have reached the NBA Finals for the first time since 1999. Among those opinions was one about the Knicks’ lack of a “1A” player and how that makes it harder to win a championship. Green’s mind hasn’t changed one bit since he first voiced that opinion, he said during the segment. “And I double down on this. Just like Becky Hammon said, prove me wrong,”  he said. “Prove me wrong, double down, absolutely double down. Getting out of the East has never been a surefire way at a championship.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Heel Turn: Pro wrestling's hot month should remind fans just how good they have it</h4>
+                <p>WWE star Austin Theory reveals to Fox News Digital one rising wrestler who he'd see as a possible prospect for The Vision. The diehards want every match to be five stars, the storylines to make complete sense and the fans in the arena to yell and scream as if they’ve never been to a show before.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>What was behind ‘disruptive’ Caitlin Clark blowup with Fever coach Stephanie White</h4>
+                <p>The now-viral sideline blowup between Fever coach Stephanie White and superstar guard Caitlin Clark during Indiana’s 100-84 loss to the Portland Fire on Saturday has stirred conversation about locker room dynamics. WNBA legends Cheryl Miller and Sue Bird both agreed during an NBC Sports segment that frustration has taken over as the Fever dropped their second straight amid defensive struggles. “Right now, it’s frustration. And unfortunately, it’s boiling over and it’s being seen,” Miller said. “It’s one thing to have it behind closed doors. But when it spills over, and when the coach has to basically say, ‘Hey, you know what, Caitlin, enough is enough. This is too disruptive, in and out, take a seat.’ … When it becomes disruptive to the entire team, somebody has to step in.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/05/931/523/riley-green-cowboy-hat.jpeg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Country star Riley Green nearly dove into the crowd after a fan split his ear open during a performance</h3>
+                <p class="lead-summary"><strong class="drop-cap">R</strong>iley Green told Fox News Digital that he doesn't get nervous going on stage anymore, but his nerves were wrecked when he walked on the "Marshals" set. Riley Green described a tense moment on stage during one of his concerts in a recent interview with Billboard. When speaking with the outlet, the 37-year-old country music star recalled the moment a fan threw his cell phone at him while he was performing in Melbourne, Australia. "Initially, there was probably a moment where I thought about diving into the crowd and I reeled that back a little bit," he said. "There’s people in the venue that paid good money to come see me play and it seems pretty childish for me to let one person ruin it for everybody." The incident led him to get five stitches on his earlobe, but he continued on with the show, noting, "I got to be honest: I looked pretty cool with blood running down my neck singing ‘I Wish Grandpas Never Died.’" Green shared he thought about diving into the audience when someone threw their phone at him, but didn't want to ruin the show.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Kurt Russell says people warned him that leaving LA for Colorado meant ‘goodbye’ to his career</h4>
+                <p>Kurt Russell wasn’t looking for an escape, but found home in the mountains after leaving Los Angeles. Russell, 75, admitted that his ranch life in Colorado allows him to do “the things that I want to do on a day-to-day basis.” “What I want to look at, what I want to be a part of — all the things that Colorado has to offer,” he told People magazine. He added, “When Goldie and I got together, a couple of years later, we both built a ranch there together, where our family has grown up. That was 40 years ago.” The “Tombstone” star noted that his decision to leave Hollywood at the time wasn’t a popular option within the entertainment industry.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Queen Elizabeth’s mother wanted her to marry another man before Prince Philip: author</h4>
+                <p>Royal historian Hugo Vickers, who wrote a new book on the late monarch, explains how the Queen Mother favored another suitor, but Queen Elizabeth ultimately chose Prince Philip. Before Prince Philip captured Queen Elizabeth II's heart, another aristocratic suitor may have been in the running for the future monarch.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Long-lost footage from Dracula film found decades after it made audiences faint — now US viewers can see it for the first time</h4>
+                <p>Long-lost footage from a classic 1958 Dracula film with Christopher Lee was found in a warehouse decades after it was cut because early audiences found it so terrifying that they fainted. The three minutes of footage, which has never been seen in the US, was found in a Warner Brothers warehouse decades after it was removed from the film, which was called “Dracula” in the UK but released in the US as “Horror of Dracula,” according to Screen Daily. The footage was cut because it depicted scenes that were too gory and sexually suggestive for contemporary audiences, with viewers in Japan reportedly passing out upon viewing the full-color images.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2025/12/931/523/woman-texting-on-smartphone.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Your Microsoft text codes are going away</h3>
+                <p class="lead-summary"><strong class="drop-cap">I</strong>f you have ever waited for a login code that never showed up, you already know the pain. You type in your password. Microsoft asks for a code. Then you stare at your phone like it owes you money. Now Microsoft wants to move even further away from that routine. The company says it will phase out SMS codes as a sign-in and account recovery method for personal Microsoft accounts. Instead, Microsoft wants more people to use passkeys and verified email. This affects anyone who uses a personal Microsoft account. That can include Outlook, OneDrive, Windows, Xbox or Microsoft 365 users. That may sound like another tech company forcing you to change your habits. In this case, though, there is a real security reason behind it. Text-message codes helped make account logins safer for years. They were never built, however, to protect your digital life. Crooks have learned how to abuse them, steal them and trick people into handing them over. Microsoft is phasing out SMS codes for personal account sign-ins and recovery, pushing users toward passkeys and verified email for stronger security. (Photo Illustration by Serene Lee/SOPA Images/LightRocket via Getty Images) Your phone holds your email, passwords, photos, banking apps and personal data. In this free, live online class, Kurt the CyberGuy will walk you step by step through simple phone security fixes you can do in real time. You’ll learn how to improve your privacy settings, spot the latest phone scams, use trusted security tools and walk away with a simple checklist to stay protected. Register here: CyberGuyLive.com. Microsoft says SMS authentication has become a major source of fraud. Text messages can be intercepted, stolen through SIM-swap scams or captured through phishing attacks. That creates a real problem because your Microsoft account can unlock a lot. It may connect to Outlook, OneDrive, Xbox, Windows, Microsoft 365 and saved payment details. Once a criminal gets into that account, the damage can spread fast. They may read your email, reset other passwords or look for private files stored in the cloud. SMS codes once felt like a strong extra layer. Today, they can give people a false sense of security.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>QR code email scam targets employee reviews</h4>
+                <p>We received an email that looks like an official HR notice about a performance review. It mentions pay updates, benefits and a deadline. There is also a QR code to access your file. The message claims to come from an internal HR office. Instead, it pushes us to scan a QR code to access your appraisal. That setup is a classic phishing move. In many cases, these scams try to move you off your computer and onto your phone, where it is harder to verify links.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
