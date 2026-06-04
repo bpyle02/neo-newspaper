@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>WEDNESDAY, JUNE 03, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://thefederalist.com/wp-content/uploads/2026/06/120501-F-JZ013-0761-1200x675.jpeg" alt="Lead Story Image" class="news-photo">
+                <h3>A Minor IRS Inconvenience Shows Trump Is Serious About Fighting Fraud</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>he IRS notice in my mail represents another piece of evidence suggesting the Trump administration is taking the fight against fraud seriously. At first blush, it seems highly unlikely that any correspondence from the Internal Revenue Service would bring good news. However, I recently received an IRS letter that, if I did not exactly celebrate, I could in many respects welcome. It appears the IRS is stepping up its anti-fraud game, taking additional measures to ensure the security of households’ tax returns — not to mention taxpayer dollars. Despite the small inconvenience these measures caused me and perhaps some readers, they should make all of us safer over time. We recently received a tax return for tax year 2025 using your name and Social Security number (SSN) or individual taxpayer identification number (ITIN). If you DID file: Call our Taxpayer Protection Program hotline at [number redacted] between 7 a.m. and 7 p.m. local time. We need more information from you to verify your identity and tax return information so we can continue processing your tax return and issue a refund, or credit any overpayments to your next year’s estimated tax. We can’t process your return until we hear from you. I found those last two sentences slightly concerning. I didn’t receive a refund or overpayment credit on my 2025 return. In fact, I owed a sizable sum, which I paid on April 15. Couple the language in the letter with the identity theft I suffered due to lax security practices by the D.C. Exchange several years ago, and I feared my personal information had been used to file a fraudulent return, one in which crooks had attempted to claim refunds or credits in my name. I first called my accountant about the notice. She assured me it was legitimate and encouraged me to call the IRS hotline. She told me that, while she had not often seen the IRS use these types of letters over her several decades as an accountant, a few of her clients had recently received letters similar to mine. She said those clients had reported back to her that the IRS had issued the letters simply as a precautionary measure and not because of any fraudulent returns filed in their names. The next day, I called the IRS and completed the verification process over the phone. The customer service representative asked specific questions about my tax returns — not just the 2025 return I had filed this spring, but also prior years’ returns to ensure there were no anomalies with my account.</p>
+                <p class="source-credit">— The Federalist</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Longtime ‘60 Minutes’ Reporter Fired After Attacks On New Leadership</h4>
+                <p>CBS News fired “60 Minutes” correspondent Scott Pelley on Tuesday, just one day after he accused editor-in-chief Bari Weiss of attempting to “murder” the long-running show.  Nick Bilton, the tech journalist and filmmaker recently named the new boss of “60 Minutes,” told Pelley that he was being fired after he aggressively “hijacked” a staff meeting ...</p>
+                <p class="source-credit">— Daily Wire</p>
+            </div>
+            <div class="story-minor">
+                <h4>Marlins vs. Nationals prediction: MLB odds, picks, best bets for Wednesday</h4>
+                <p>Make sure your fire insurance is in place because long-suffering Knicks fans, who have paid their dues, time after time, have done their sentence, but committed no crime, may start a few celebratory bonfires while singing “We Are the Champions.” And even if every Knick breaks their pinky we will bet on the Knickerbockers (+170) to win the series. Miami’s Max Meyer is 5-0 but his ERA jumps from 1.79 at home to 4.78 on the road. The Nationals’ Andrew Alvarez has appeared in five games, all in relief, so this may be a bullpen game. Shane Baz pitched seven innings; Mayo and Alonso homered and the O’s beat the Dead Sox 4-2.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Jeffries declines to back Wasserman Schultz as Black leaders revolt over district switch</h4>
+                <p>During a Friday appearance on "CNN News Central," Rep. Debbie Wasserman Schultz, D-Fla., rebuked an op-ed from The New York Times that argued Democrats "will lose in 2028 unless they change course now." Rep. Debbie Wasserman Schultz, D-Fla., is facing mounting backlash from some Black leaders over her decision to seek re-election in a majority-minority district, a move that appears to be costing her support from the highest-ranking Black Democrat in Congress.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/06/931/523/kuwait-international-airport-june-1-2026.jpeg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>US ally Kuwait condemns 'brutal and ongoing Iranian attacks' after airport was hit</h3>
+                <p class="lead-summary"><strong class="drop-cap">F</strong>ormer deputy undersecretary of foreign affairs John Teichert discusses the latest news from the Middle East on 'Jesse Watters Primetime.' Kuwait decried Iranian attacks in a statement issued by its foreign affairs ministry, saying that the Kuwait International Airport had been targeted. "The Ministry of Foreign Affairs expresses the State of Kuwait's condemnation and denunciation, in the strongest terms, of the brutal and ongoing Iranian attacks using ballistic missiles and drones, the latest of which occurred at dawn today, targeting once again civilian and vital facilities, including Kuwait International Airport, resulting in the death of one individual, injuries to others, and damage to vital facilities, including diplomatic missions," part of the statement declared, according to a translation of the Arabic-language post on X. Kuwait's Ministry of Defense spokesperson had indicated that a building at Kuwait International Airport was damaged and people were injured, according to a post on X by the official account of Kuwait Army general staff headquarters.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Ukraine hits oil refinery as Russia opens St. Petersburg economic forum</h4>
+                <p>Plumes of thick black smoke rose over St. Petersburg, President Vladimir Putin's hometown, as the Kremlin welcomed international guests for an event often described as Russia's Davos.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Israeli official says EU sanctions reveal antisemitism hiding behind 'socially acceptable mask'</h4>
+                <p>Fox News host Mark Levin discusses the Iranian regime’s radical ideology and argues it seeks to destroy the West, including the U.S. and Israel, on ‘Life, Liberty & Levin.’ Israel's Deputy Foreign Minister accused the European Union of weaponizing a "socially acceptable mask" of anti-Zionism to target Israel— after it sanctioned Israeli civil society groups that oppose a Palestinian state. It also sanctioned several individuals.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Drone attack damages Kuwait airport as U.S.-Iran strikes widen</h4>
+                <p>One person was killed in an Iranian attack on Kuwait International Airport after U.S. forces targeted an Iranian military station on an island in the Strait of Hormuz.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F06%2Fnewspress-collage-1qo2fwfb1-1780486061768.jpg?quality%3D90%26strip%3Dall%261780471734" alt="Lead Story Image" class="news-photo">
+                <h3>Brittney Griner gets controversial flagrant foul after Angel Reese knocked to floor</h3>
+                <p class="lead-summary"><strong class="drop-cap">I</strong>t’s not often Angel Reese ends up on the wrong end of a rebound positioning battle. Reese hit the deck during a tussle with the Sun’s Brittney Grinder on Tuesday night in the Dream’s 91-75 victory, with Griner receiving a flagrant foul early in the fourth quarter. Griner held out her hands seemingly in surprise that Reese fell to the floor during the tussle. With Atlanta leading 68-65 with a little less than eight minutes remaining in the game, Griner and Reese battled near the basket to set themsleves up for a rebound. Griner stood to Reese’s left, and when both turned to the basket their arms became intertwined. The duo rotated with their arms locked to the point that Reese faced the basket while Griner had her back to the hoop, which led to an awkward scenario when one moment later Reese attempted to run toward the loose ball in the paint while Griner’s arm held her back. Reese then suddennly lost her balance, throwing her hands up in the air while sliding the floor in a mannerism that perhaps leads to questions of whether she flopped. Griner stood over Reese moments later while expressing surprise, although she extended a hand to her foe to help her up. The referees reviewed the play and ultimately awarded a flagrant foul, with Reese hitting one of two free throws to grow the lead to four points. Reese ultimately tallied another double-double with 12 rebounds and 13 points to help the Dream improve to 6-2, while Griner had seven points and four rebounds in a loss that dropped the Sun to 2-9.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>AJ Brown trade outcome: Dianna Russini paid a heavy price while Mike Vrabel emerged unscathed</h4>
+                <p>Dakich breaks down the viral Mike Vrabel and Dianna Russini photos and investigates whether the fallout led to the Patriots' recent statement on mandated counseling. Mike Vrabel and A.J. Brown were winning on Tuesday because the long-rumored trade that reunited them was finally complete. Brown was free of his recent unhappiness with the Philadelphia Eagles, while Vrabel spoke easily and smartly about how his Super Bowl team was getting better.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>2026 NBA Finals matchups: Who has edge between the Knicks and Spurs</h4>
+                <p>After eight days of waiting, the Finals are finally here. The Knicks finally return to the biggest stage for the first time since 1999, with a chance to, finally, win their first championship since 1973. Including their NBA Cup final win, the Knicks went 2-1 against the Spurs this year. And it very well could have been 3-0 if not for a fourth-quarter collapse on New Year’s Eve. But both teams are different — and more dangerous — versions of themselves now compared to those previous head-to-head clashes. The Spurs will be by far the best opponent the Knicks have faced this postseason.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Aaron Donald mulling NFL return after Rams trade for Myles Garrett, eyeing Super Bowl at SoFi</h4>
+                <p>Los Angeles Rams HC Sean McVay joins Colin Cowherd to discuss the Rams drafting Alabama QB Ty Simpson 13th overall, coaching reigning MVP Matthew Stafford, and being the Rams HC for his 10th season. Aaron Donald hasn't played since 2023, and, after recently turning 35, has taken up golf, so everything about his life suggests that life is good and he's not coming out of retirement to resume his 10-year NFL career. Or is he?</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/06/931/523/jana-kramer-thumbnail.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Jana Kramer says holding on to toxic relationships 'drains you' until you ‘start losing yourself' completely</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>he "Where the Heart Lands" star tells Fox News Digital how walking away from a "toxic" relationship reshaped her life and helped her become happier. The actress and singer told Fox News Digital that getting out of "toxic" relationships helped her become "a better person" and gave her a renewed appreciation for second chances — both on and off-screen. The country star, who has publicly navigated heartbreak, divorce and rebuilding her life, told Fox News Digital that walking away from unhealthy situations ultimately helped her become "a better person" — a lesson that mirrors the themes of her new Lifetime movie, "Where the Heart Lands." "Where the Heart Lands" star Jana Kramer shares a powerful message after escaping toxic relationships. (Lifetime) "Getting out of something really toxic… negative and bad helped me become a better person and a happier person… a lighter person," Kramer told Fox News Digital. The 42-year-old star said she often hears from people navigating divorce and major life changes, and her message is — don't be afraid of a fresh start.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Knicks superfan goes viral turning playoffs wins into Billy Joel parody songs</h4>
+                <p>A Long Island rooted diehard Knicks fan living in the heart of Celtics territory is going viral for turning New York playoff wins into clever Billy Joel lyrics — and it might just be a good luck charm for the NBA Finals vs. the Spurs. “When I decided to do it, they had won maybe five straight by that point,” 21-year-old Luke Wenner of Attleboro, Massachusetts, told The Post after the streak reached 11 straight. “I was like, yeah, might as well see how it goes. Obviously, it’s worked out pretty well,” added Wenner, who has gotten praise from Mick Jagger’s son, Lucas. The New Englander’s magnum opus came in homage to Madison Square Garden’s favorite with a “Piano Man” parody after Game 1 of the Eastern Conference Finals vs. Cleveland. Wenner energetically recapped when the Knicks erased a historic 22-point fourth-quarter deficit over the Cavaliers.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Prince Harry and Meghan Markle’s $3 million Frogmore makeover could soon be erased: experts</h4>
+                <p>Hugo Vickers, author of "Queen Elizabeth II: A Personal History," details how the Duke and Duchess of Sussex's exit and Oprah interview added strain during the late monarch's final years. Plans are in motion to reverse the roughly $3 million in renovations made to Frogmore Cottage, the former royal home of Prince Harry and Meghan Markle, in Windsor, The Sun recently reported.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>‘Masters of the Universe’ review: He-Man and Teela fight Jared Leto in kooky toy movie</h4>
+                <p>The toy company’s latest movie is no “Barbie,” and Tony Kushner won’t be hosting any classy for-your-consideration events for it come winter. Thank goodness. No, this decidedly summer flick, directed by Travis Knight, was made solely for your amusement. It’s fun, helium light and doesn’t have a single thought in its dumb head. The trip will be nostalgic for some children of the 1980s and ’90s, but I somehow managed to avoid 44 years of He-Man, She-Ra and Skeletor action figures, comic books and big-screen adventures starring Dolph Lundgren. To the uninitiated, just the title “Masters of the Universe” sounds pretty stupid.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2025/07/931/523/more-travel-7.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Could your Samsung phone replace your passport?</h3>
+                <p class="lead-summary"><strong class="drop-cap">K</strong>urt Knutsson reports World ID's iris scanning tech launches in six U.S. cities to verify identity, fight AI bots. Anyone who travels a lot knows the moment. You reach the TSA line, your bag slides off your shoulder, your boarding pass is somewhere on your phone and your passport somehow sinks to the bottom of your carry-on. Samsung wants to make that routine less annoying. The company has partnered with CLEAR to launch Samsung ID with CLEAR, a free digital ID inside Samsung Wallet. It uses information from a U.S. passport and lets eligible Galaxy users verify their identity at more than 250 TSA checkpoints that support digital IDs. That sounds incredibly convenient. Still, this new feature also raises a bigger question. How much of your identity should live inside one app on your phone? Samsung partnered with CLEAR to bring digital passport verification to Galaxy phones through Samsung Wallet. (Samsung) Samsung ID with CLEAR is a mobile digital ID stored in Samsung Wallet. It is backed by information from your U.S. passport and verified by CLEAR. Once approved, you can use it at supported TSA checkpoints by presenting your phone instead of digging out your physical ID. Samsung says travelers can present the ID with a tap or QR scan. That could make a real difference when you are juggling a carry-on, laptop bag, coffee and impatient travelers behind you. Woncheol Chai, EVP and Head of Digital Wallet Team, Mobile eXperience Business at Samsung Electronics, said the feature is designed to make airport travel and identity verification "easier and frictionless" for users. However, this feature does not mean you should leave your passport or REAL ID-compliant document at home. Keep a physical ID with you in case TSA needs it or a checkpoint does not support digital ID verification. Right now, Samsung ID with CLEAR has a few important limits. Samsung says the feature is available to U.S. passport holders and works only at select TSA checkpoints that support digital ID verification. Samsung Wallet itself requires a compatible Samsung smartphone, Android 9.0 or higher and a Samsung account. However, availability can still depend on your phone, airport and TSA reader support.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Identity theft rarely announces itself: 6 signs you missed</h4>
+                <p>By the time a debt collector calls or a lender rejects your loan, an identity thief may have been using your information for months. The warning signs often arrive much earlier. They may show up as a small card charge, a strange IRS letter, a missing bill or an Explanation of Benefits for care you never received. Each one can look like routine mail or another account notice.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
