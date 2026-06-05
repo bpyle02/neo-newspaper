@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>THURSDAY, JUNE 04, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://thefederalist.com/wp-content/uploads/2026/06/ethan-wilkinson-UJdx3XM3xao-unsplash-1200x675.jpg" alt="Lead Story Image" class="news-photo">
+                <h3>Britain’s Censorship Regime Was Always Going To Get People Like Henry Nowak Killed</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>he U.K.’s censorship regime indulges the idea that people who hold certain beliefs do not deserve to live freely — or at all. Henry Nowak, an 18-year-old Briton who died in police custody in December, got a death sentence for a thoughtcrime he never committed. Newly released bodycam footage of Nowak’s arrest shows police arriving at a residential driveway to find Nowak bleeding on the ground. A Sikh man named Vickrum Digwa, who would eventually be convicted of fatally stabbing Nowak with a blade that only Sikhs are allowed to carry in Britain, falsely claimed to police that Nowak had treated him with racial animus. Evidently believing Digwa’s accusations but not Nowak’s cries for help, the police rolled Nowak’s limp body over and placed handcuffs on his wrists. In response to his repeated pleas for treatment of his stab wounds, police can be heard telling him, “I don’t think you have [been stabbed], mate.” He died moments after police read him his rights as an accused criminal. Digwa was convicted of murder and was sentenced on Monday. He can be eligible for parole in as few as 21 years. During the trial, the judge concluded “that Nowak had not said anything racist to the Sikh man who killed him,” according to the BBC. The finding came too late to help Nowak, of course. In his final moments, he was tried, convicted, and sentenced in the minds of the state actors who refused him aid. For years, the British police state has been more concerned with restraining the speech of its citizens than with restraining the disproportionate number of new arrivals who murder and rape them. In December, the officers who responded to Nowak’s slaying made the same calculus. While British law enforcement turned a blind eye to imported scandals like the now-infamous rape gangs, in which predominantly Pakistani Muslim men abused young British girls for decades with protection from local officials, they cracked down on native Britons for beliefs expressed on the internet, and even those held silently. The U.K. censorship regime is deadly, and not just because it leaves police with fewer resources to prosecute actual crimes. It’s deadly because it indulges the idea that people who hold certain beliefs do not deserve to live freely — or at all. As an accused racist, Henry Nowak was deemed unworthy of timely and potentially life-saving care, and he was sentenced to bleed out in handcuffs on the street.</p>
+                <p class="source-credit">— The Federalist</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Hilton, Becerra lead in California’s governor primary. See live results here.</h4>
+                <p>Latest California governor primary results as Democrats Katie Porter, Tom Steyer and Xavier Becerra and Republicans Chad Bianco, Steve Hilton vie for nominations to replace Gov. Gavin Newsom.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>With Graham Platner, Democrats Are Playing with Fire</h4>
+                <p>Their strategy threatens to burn the party down.</p>
+                <p class="source-credit">— National Review</p>
+            </div>
+            <div class="story-minor">
+                <h4>The Votes Aren’t Even Counted Yet, But Spencer Pratt Just Dropped A Challenge On Karen Bass</h4>
+                <p>The votes have not yet been fully counted in Los Angeles, but that has not stopped mayoral candidate Spencer Pratt from dropping a serious challenge on incumbent Mayor Karen Bass. Pratt, who holds a seven-point lead over democratic socialist city councilwoman Nithya Raman, appears poised to hold onto second place and face Bass in a ...</p>
+                <p class="source-credit">— Daily Wire</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/06/931/523/donald-trump-buffalo-bangladesh.jpeg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Albino buffalo nicknamed 'Donald Trump' becomes sensation at Bangladesh's national zoo for its blond hair</h3>
+                <p class="lead-summary"><strong class="drop-cap">F</strong>ox News host Jesse Watters gives an update on the House passing a war powers resolution, noting a predicted presidential veto, while President Donald Trump signals openness to meeting Iran's ayatollah, on 'Jesse Watters Primetime.' A buffalo with a distinctive hairstyle is going viral for its resemblance to President Donald Trump. The rare albino buffalo, nicknamed "Donald Trump," has become a sensation at Bangladesh’s national zoo thanks to its blond tuft of hair, which many say resembles the president’s signature look. A video of the pale, horned buffalo quickly spread across social media, drawing crowds to a farm outside Dhaka where it was being kept. A rare albino buffalo fondly named after Donald Trump for its distinctive blond tuft is seen in an enclosure at the national zoological park, in Dhaka, Bangladesh, on Friday, May 29, 2026. (AP Photo/Rajib Dhar) The buffalo was originally sold and slated for slaughter during Eid al-Adha, the Muslim "Feast of Sacrifice," but government officials intervened and ordered the animal transferred to the national zoo in the capital.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Israel and Lebanon renew ceasefire deal without Hezbollah, a main combatant</h4>
+                <p>Israel and the powerful Iranian-backed militant group have continued to trade attacks since an initial ceasefire deal in April. Hezbollah has not commented on the latest agreement.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Trump expands Cuba sanctions beyond US companies in major crackdown on foreign enablers</h4>
+                <p>Former Treasury sanctions official Max Meizlish says the Trump administration is expanding "unprecedented" pressure beyond Cuba itself by threatening foreign banks and companies tied to the island’s military-linked economic empire. The Trump administration is rolling out what experts describe as the most significant expansion of U.S. sanctions on Cuba in decades.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Hungary lifts block on Ukraine’s E.U. bid, but long timeline could put Kyiv at risk</h4>
+                <p>Hungary agreed to drop its opposition to opening the formal access talks but is still opposed to the fast-track membership process that Ukraine says it needs as protection from Russia.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F06%2Fnewspress-collage-0d2kmke22-1780557496871.jpg?quality%3D90%26strip%3Dall%261780543106" alt="Lead Story Image" class="news-photo">
+                <h3>Mitchell Robinson solid off  bench in Knicks’ Game 1 win but hand injury mystery remains</h3>
+                <p class="lead-summary"><strong class="drop-cap">R</strong>obinson played 13 minutes in the Knicks’ 105-95 Game 1 win over the Spurs on Wednesday night at Frost Bank Center. He recorded two points and six rebounds. His two points came on an alley-oop over Luke Kornet. “I didn’t think he was,” coach Mike Brown said when asked if he thought Robinson was limited. “I’ve got to go back and watch the tape. He caught a lob. He was still a vertical threat. … And then defensively, I thought he was pretty good as well, trying to rebound, keeping those guys off the glass.” Robinson’s status had become a central Knicks storyline after he had surgery for a fracture of the fifth metacarpal in his right hand between the conference finals and the Finals. He had been listed as questionable in the lead-up to Wednesday. “Nah, I didn’t have no doubt in my head,” Robinson said when asked if he was ever nervous he wouldn’t be able to play. “I’ve been here eight years. There was no way I was gonna miss this.” The Knicks have been cryptic and have not revealed how the injury occurred, only saying that it did not happen in a game or practice. ESPN reported that it occurred at his home. Wednesday was the first time Robinson was made available to the media since the conference finals. But he still had no interest in revealing what happened with his hand. A fan ran on to the court and tried to take a selfie with Victor Wembanyama, momentarily pausing Game 1 before security got him off the court.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Jared Verse admits he was initially unhappy after being traded from the Rams to the Browns</h4>
+                <p>Armando Salguero gives an update on the possibility of Aaron Donald coming back to the NFL now that Myles Garrett is on the Rams. Jared Verse's family is from Dayton, Ohio, and his older sister still lives there and will be relatively close by, so the trade that sent Verse to the Cleveland Browns comes with benefits. But let's not kid ourselves, going from the Los Angeles Rams to the Browns wasn't welcomed news for Verse.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Victor Wembanyama sleep walks through long-awaited NBA Finals moment</h4>
+                <p>We knew it was brewing when 7-foot-4 Victor Wembanyama became the most highly touted prospect since LeBron James. We knew it was just a matter of time when we witnessed his alien-like abilities to patrol the paint as though he were playing on a toy model of a court. We knew how badly he wanted it when tears welled in his eyes after milestone wins. It took Michael Jordan seven seasons to lead his Bulls to their first NBA Finals appearance. It took James and Kobe Bryant four years. Wembanyama has already sprinted past them, leading his team to the Finals in his third season in the league. Wembanyama had 26 points, 12 rebounds, three blocked shots and six turnovers in the Spurs’ 105-95 loss to the Knicks.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Christian Pulisic explains why his screaming celebration was about more than ending scoring drought</h4>
+                <p>Christian Pulisic, who scored and notched an assist in the U.S. men's national soccer team's World Cup friendly against Senegal last week, discusses what it's like to represent country on home soil in the 2026 FIFA World Cup. As Christian Pulisic side-stepped Senegal’s goalkeeper and watched his shot hit the back of the net, the U.S. men’s national team (USMNT) star sprinted to the corner flag, got on his knees, balled his fists and let out a roaring scream as the stadium went into a frenzy above him.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F06%2F129641391-1.jpg?quality%3D90%26strip%3Dall" alt="Lead Story Image" class="news-photo">
+                <h3>Porn-obsessed Hasan Piker goes on shocking homophobic rant after Scott Wiener wins SF congressional primary</h3>
+                <p class="lead-summary"><strong class="drop-cap">S</strong>outhern California-based Hasan Piker, the communist darling of left-wing livestreaming, resorted to gay insults Tuesday night after being upset his “friend” lost to a gay state senator. That friend, San Francisco congressional candidate Saikat Chakrabarti, was completely bombed out of Tuesday’s primary race to succeed former Speaker Nancy Pelosi despite spending $10 million of his own wealth. As of Wednesday morning, the former aide to socialist Congresswoman Alexandra Ocasio-Cortez received just 15% of the vote count with half of the votes in. That’s far behind Democrats state Sen. Scott Wiener, who is the frontrunner at 41%, and Pelosi-endorsed city supervisor Connie Chan at around 29%. Scott and Chan will advance to the November general election. In the Tuesday stream, Piker was staring at the 11th Congressional District results that showed tech millionaire Chakrabarti trailing. A viewer made the remark that it seems Pittsburgh and Philadelphia are “far more progressive” than San Francisco, given Chakrabarti had established himself as the most leftist candidate but was still trailing in the liberal city. “You know what it is? I know what it is,” Piker responded. “F–ing car-reliant infrastructure. The more cars you have, the more chuddy the f-ing city is. That’s it. No public transit. No f–ing people living close to one another.” Piker continued on that argument as he grasped at straws to explain Chakrabarti’s loss. In progressive urban planning circles, car dependency is heavily critiqued for its environmental impact and social exclusion. However, San Francisco is more well-known for its public transportation system than the two Pennsylvania cities.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Black Crowes frontman Chris Robinson’s past controversial remarks resurface after halting patriotic chant</h4>
+                <p>Fox News contributor Joe Concha reacts to Bruce Springsteen's anti-Trump tirade at a Minneapolis concert, criticizing the high ticket prices. Social media users also expressed anger over the cost and the political nature of the performance. When Chris Robinson sparked backlash for shutting down a "U.S.A." chant at a Black Crowes concert over the weekend, the controversy resurfaced a familiar pattern of outspokenness from the musician.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Backstreet Boys return to Sphere in July 2026. Get discount tickets today</h4>
+                <p>Starting July 16, Backstreet Boys return to Las Vegas Sphere for another round of ‘Millennium’ residency concerts. This time around, Nick, Howie, AJ, Kevin and Brian have 21 gigs scheduled at the game-changing, visually-spectacular venue. At the time of publication, the lowest price we could find on seats for any one show was $194 including fees on SeatGeek. Make sure to use promo code NYPOST10 for $10 off purchases over $250 at checkout (Editor’s Note: this discount is only valid for users’ first purchase on SeatGeek). After doing a bit of digging, our team found that the chart-topping fivesome typically perform approximately 25 songs per Sphere show.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Cassie Ventura fled the United States after testifying against Diddy in sex crimes trial: docs</h4>
+                <p>Sean 'Diddy' Combs was sentenced to 50 months in prison on federal prostitution charges and ordered to pay a $500,000 fine by Judge Arun Subramanian. (Courtesy of Dario Alequin for Fox News Digital) Cassie Ventura fled the states after testifying in Sean "Diddy" Combs' trial last summer, according to documents obtained by Fox News Digital.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2024/12/931/523/2-data-broker-blunder-over-600000-sensitive-files-exposed-in-data-services-leak-outro.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Dark web monitoring: does it put your data at risk?</h3>
+                <p class="lead-summary"><strong class="drop-cap">C</strong>heck to see if your name, number, or other personal data is online without you even knowing - plus how to remove it. You hear the phrase "dark web monitoring," and it can feel unsettling. If a company is scanning shady corners of the internet for your information, are they exposing you even more? That question comes up often. In fact, Joyce from Florida wrote in with a concern many people share: "When companies scan the dark web for your data, doesn't that put you at risk? Your information is now out there. Please explain what that really means." Joyce, Fanning Springs, Fla. Joyce, great question. A lot of people assume these services are pushing your data somewhere new. That isn’t what is happening. The short answer is simple. No, dark web monitoring does not put your information at risk. Let's walk through what is really going on. Dark web monitoring checks breach dumps, hacker forums and leaked databases for personal information that may already be exposed. (Annette Riedl/picture alliance via Getty Images) Here is the key point to understand. Your information is already out there before they ever find it. The simple answer is no. Think of it like checking if your stolen credit card is being used. No one is putting your card out there. A monitoring service watches for signs that your data is already in use, so you can shut it down quickly. Reputable services use secure methods to check for your data. They are designed to protect your information during the process. Dark web monitoring can help users respond quickly by changing passwords, freezing credit or locking down affected accounts. (Kurt "CyberGuy" Knutsson) While the concept itself is safe, the provider you choose matters. There can be a risk if: That is why it is important to stick with well-known providers that have a strong track record. With monitoring, you get an early warning. That gives you time to change passwords, lock accounts and stop fraud before it spreads. In many cases, that early alert is the difference between a close call and a major financial hit.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Inside the Trump-backed push to bring AI doctors into American medicine</h4>
+                <p>The administration is laying the groundwork for chatbots that can diagnose illness and prescribe medicine, but physicians say AI can introduce more problems.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
