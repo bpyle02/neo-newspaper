@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>FRIDAY, JUNE 05, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://i0.wp.com/www.nationalreview.com/wp-content/uploads/2026/06/power-ballad-2.jpg?fit=617%2C360&ssl=1" alt="Lead Story Image" class="news-photo">
+                <h3>The Three Faces of Betrayal in <i>Power Ballad</i></h3>
+                <p class="lead-summary"><strong class="drop-cap">F</strong>orm and feeling set modern morality to music.</p>
+                <p class="source-credit">— National Review</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Republicans face ticking midterm clock as Iran fallout keeps pressure on gas prices</h4>
+                <p>Fox News senior strategic analyst Ret. Gen. Jack Keane discusses Iran’s strategy to delay nuclear deal negotiations until the 2026 midterm elections on ‘Hannity.’ As the Trump administration weighs diplomacy and military pressure against Iran, a political clock is ticking at home.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Arizona’s Lawfare-Pushing AG Can’t Quit Her Witch Hunt Against Trump Allies</h4>
+                <p>The state Supreme Court rejected Attorney General Kris Mayes’ appeal to revive her crooked case, so she’s shopping for a new grand jury. Her shoddy case shot through, leftist Arizona Attorney General Kris Mayes apparently isn’t done tormenting her party’s political enemies— allies of President Donald Trump — just yet. On Thursday, Mayes’ office said she would go back to the drawing board and seek a new indictment against Republican officials caught up in her insatiable weaponized prosecution for crimes she claims were committed following the rigged 2020 presidential election. The announcement came shortly after the Arizona Supreme Court denied the state’s appeal to resurrect the moribund political witch hunt.</p>
+                <p class="source-credit">— The Federalist</p>
+            </div>
+            <div class="story-minor">
+                <h4>‘Widow’s Bay’s Patricia Is 2026’s Best TV Character — Thanks To Kate O’Flynn’s Emmy-Worthy Performance</h4>
+                <p>Stream It Or Skip It: ‘You, Me and Tuscany’ on VOD, a Paint-by-Numbers Romantic Comedy Led by Halle Bailey Stream It Or Skip It: 'All's Fair In Love And Mahjong' On The Hallmark Channel, Where A Woman Finds Love And A Sense Of Purpose Via Mahjong 'You Me and Tuscany' Comes to Digital, But When Will the 'You Me and Tuscany' Movie Be Streaming on Peacock?</p>
+                <p class="source-credit">— Https://decider</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/05/931/523/pete-hegseth-1.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Pete Hegseth warns narco-terrorists as US backs Bolivia's government amid coup warnings</h3>
+                <p class="lead-summary"><strong class="drop-cap">F</strong>ormer Miami Mayor Francis Suarez discusses preventing teen takeovers and the future of Cuba’s regime on ‘Fox News Live.’ War Secretary Pete Hegseth on Thursday said the United States remains committed to helping defend Bolivia's fragile government amid ongoing warnings of a coup d’état. In a post on X, Hegseth said the War Department and the Americas Counter Cartel Coalition (A3C), a recently established multinational military and political alliance, reject all attempts to overthrow the government of Rodrigo Paz Pereira a mere six months into his term. "The United States is watching. Bolivia must not allow itself to fall prey to the old status quo of narco-terrorist dominance in the region," Hegseth wrote. "We will continue to support our A3C partners like Bolivia to ensure that narco-terrorists are deterred from profiting on death and destruction in our hemisphere." U.S. Secretary of Defense Pete Hegseth speaks at the IISS Shangri-La Dialogue security summit in Singapore on May 30, 2026. On Thursday, Hegseth reaffirmed the Trump administration's support for Bolivia's fragile government amid mass protests.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Xi to visit North Korea, showing China’s importance to a nuclear-armed neighbor</h4>
+                <p>The summit comes as China positions itself as a global power player projecting stability in contrast to the U.S.'s economically damaging war against Iran and erratic tariff policies.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Hezbollah denounces Israel-Lebanon ceasefire deal as a ‘farce’</h4>
+                <p>“We have given no commitment to anyone,” the Iranian-backed militant group's leader said after Israel and Lebanon announced a new U.S.-mediated agreement.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>As Hezbollah rejects truce, families on Israel's northern border describe life under fire</h4>
+                <p>Residents of agricultural communities near Israel’s border with Lebanon share their firsthand experiences of living under ongoing Hezbollah rocket fire. April, 2026. (Credit: Yoav Dudkevitch / TPS-IL) Two days after another ceasefire was announced between Israel and U.S. terrorist designated group Hezbollah, Yulia Bar-Dan was standing outside her temporary home in Kibbutz Manara in northern Israel when the familiar sound of an interceptor echoed overhead.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/03/931/523/wrestler-iran-leaders-split.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Olympians unite to speak out against Iran for the execution of the country's star athletes</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>race Gallagher discusses the execution of a 19-year-old wrestling star and two other young men by the Iranian regime, sparking international outrage. Christina Coleman reports on condemnations from Olympic gold medalists Brandon Slay and Tyler Clary. A panel, including Dr. Houman Hemmati, Shabnam Jaleh, and Eve Barlow, analyzes the regime's brutal tactics, the internet blackout, and citizens' desire for freedom. A coalition of athletes, including several Olympians, have signed a letter advocating against Iran for its history and plans to execute star athletes, as the planned execution of Iranian boxing champion Mohammad Javad Vafaei Sani looms. Sani is a boxing champion, coach and political prisoner who is currently facing an imminent risk of execution in Iran by the Ayatollah. He was arrested by the Islamic Revolutionary Guard Corps (IRGC) in March 2020 following his participation in the November 2019 nationwide protests, which were initially sparked by a sudden hike in gas prices. The Iranian judiciary charged him with "corruption on earth," which is a capital offense in the country.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Andrés Cantor says America is ready for soccer’s takeover at 2026 World Cup</h4>
+                <p>A World Cup in America once felt like a foreign broadcast bleeding faintly through static. Fans had to seek it out. They had to know about it. In 1994, when the U.S. hosted the tournament for the first time, soccer existed on the outskirts of the American sports conversation. It was tucked behind the NFL, NBA, MLB, college football and whatever Michael Jordan happened to be doing that week. There was no Major League Soccer. The World Cup came to America like a traveling circus making its next stop. But now, according to legendary broadcaster Andrés Cantor, the 2026 World Cup will be more than just a passing fad. It will be unavoidable.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Seth Jarvis scores overtime game-winner as Hurricanes storm back from 2-0 deficit to even Stanley Cup Final</h4>
+                <p>NHL superstar Matthew Tkachuk reflects on his father Keith Tkachuk’s 'compete' philosophy and why he still doesn't consider himself a 'great skater.' The Carolina Hurricanes have evened up the Stanley Cup Final in thrilling fashion, coming back from down 2-0 to win in overtime, 4-3.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Sachem North lacrosse, softball on edge of Long Island glory for first time since 1990s</h4>
+                <p>The Knicks aren’t New York’s only team one step from the title for the first time since the ’90s. They’re doing the Macarena at Sachem North High School as its boys lacrosse team is in the Long Island Championship for the first time since 1995, and girls softball since 1993. “Things happen in threes,” boys lax coach Anthony Muratore told The Post after Wednesday’s practice, adding that his players are taking notice of the good vibes. “It’s really cool to have this the same year these Knicks are going to the championship,” said senior midfielder Henry Sarro. Everybody on the campus has felt the energy since lacrosse knocked off No. 1 Northport 11-7 in the Suffolk County championship and softball bested Commack 4-3.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/06/931/523/james-handy-film-career.jpeg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Actor James Handy, known for 'Jumanji' and 'Top Gun: Maverick,' allegedly killed by girlfriend's son</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>he ‘Outnumbered’ panel discusses the investigation into the deaths of acclaimed film director Rob Reiner and his wife Michele. James Handy, an actor known for various roles in films like "Jumanji" and "Top Gun: Maverick," was allegedly killed by his girlfriend's son this week, police said. The Los Angeles Police Department said officers responded to a residence in the 19200 block of Erwin Street on Wednesday morning. According to police, a 911 caller stated: "I am the son of man, I just killed the man of sin." When officers arrived, they found Handy, 81, unconscious in the front yard suffering from a stab wound to the chest. 'HOW I MET YOUR MOTHER' ACTOR NICK PASQUAL SENTENCED TO DECADES IN PRISON FOR STABBING EX-GIRLFRIEND James Handy appears in an episode of "NYPD Blue" titled "Vishy-Vashy-Vinnie," which aired Jan. 17, 1995. (ABC Photo Archives/Disney General Entertainment Content via Getty Images) According to investigators, Gledhill flagged down officers as they arrived and told them he was the person they were looking for. James Handy, left, appears as Charles Ross alongside A.J. Buckley in an episode of "CSI: NY" titled "The Real McCoy.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>‘Office Romance’ review: Oh, great — another lousy Jennifer Lopez rom-com</h4>
+                <p>As Jennifer Lopez makes her entrance in Netflix’s “Office Romance,” the seventies song “I Believe In Miracles” by Hot Chocolate (“Where ya from? You sexy thing!”) plays. And, suddenly and wincingly, we’re back in 2000, when that retro tune and J.Lo were rom-com regulars. The “This Is Me… Now” singer is demonstrably obsessed with what she was then. Lopez has repeatedly and unsuccessfully tried over the past decade to return to the era of “Maid in Manhattan” and “Monster-In-Law” by starring in a string of mostly hopped-up duds: “Second Act,” “Marry Me,” “Shotgun Wedding” and now “Office Romance.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Hailey Bieber shows off toned abs in behind-the-scenes photos from new Rhode beach campaign</h4>
+                <p>Fox News correspondent Nate Foy has the latest on Justin Bieber claiming he was not an abuse victim of Sean ‘Diddy’ Combs on ‘America’s Newsroom.’ Hailey Bieber is soaking up the sun in behind the scenes photos from her new campaign for Rhode. In a recent Instagram post, the 29-year-old model posted a campaign for her skincare and beauty brand, Rhode, featuring photos of her on the beach in a bikini with some of her products.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Lena the Plug’s porn partner Jason Luv takes dig at Adam22 after couple’s divorce announcement</h4>
+                <p>Days after Lena “The Plug” Nersesian filed for divorce from Adam22, Luv took to social media and shared a cozy yacht snap with the OnlyFans creator — the same woman at the center of his yearslong feud with her estranged husband. In the photo, Nersesian, 35, wrapped her arms around Luv as the two posed together on the boat. The post was set to Pop Smoke’s “What You Know Bout Love,” including the lyric, “They say, what you know about us? I got what you need.” The upload comes just days after Nersesian filed to end her marriage to Adam22, whose real name is Adam Grandmaison, on Monday after three years of marriage.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/05/931/523/carnival_cruise_ship.jpeg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Carnival breach may put your travel data at risk</h3>
+                <p class="lead-summary"><strong class="drop-cap">K</strong>urt 'CyberGuy' Knutsson joins 'Fox & Friends' to discuss hackers using airport USB charging ports and phishing texts to target victims. Carnival Corporation has confirmed a data breach affecting nearly 6 million people, and the fallout could reach travelers who may not think of themselves as Carnival customers. The company says the incident involved a social engineering attack on a single user account. In other words, someone fooled an employee and gained access to part of Carnival's IT system. For cruise customers, the real concern starts after the breach. Stolen personal details can help scammers write messages that feel far more believable. Here is what may have been exposed, what Have I Been Pwned found in the leaked data and what you can do now to protect yourself. Carnival says exposed data may include names, addresses, emails, phone numbers, dates of birth and government-issued ID numbers. (iStock) Carnival Corporation says the breach began with a social engineering attack on a single user account. An unauthorized actor gained access to a limited part of the company's IT system. Carnival says it immediately blocked the activity, brought in third-party security experts and alerted law enforcement. "In April, we identified unauthorized access to a limited part of our IT system caused by a social engineering attack on a single user account. We immediately blocked the activity, engaged third-party security experts and alerted law enforcement. Our investigation found certain personal information was illegally accessed. We're notifying affected individuals and deeply regret any concern this causes. Protecting the privacy and security of personal data is a priority for us and we've added new layers of security and monitoring on top of the comprehensive protections already in place. We'll also continue advancing our defenses against evolving threats." State breach reporting shows 5,995,277 people were affected. Carnival says the impacted data varies by individual. However, the company says the information known to be involved includes names, addresses, email addresses, phone numbers, dates of birth and government-issued identification numbers, such as driver's license numbers and passport numbers.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Will a four-armed robot replace astronauts in space?</h4>
+                <p>Kurt Knutsson introduces you to a robotic dog with unnatural strength that is training for moon missions. Space changes the rules for almost everything, including how a robot should move. On Earth, legs help us stand, balance and walk across a room. In microgravity, those same legs lose much of their purpose.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Charter breach warning: What customers should know</h4>
+                <p>A phone call may have opened the door to a major telecom security scare involving Charter Communications, the company behind Spectrum. Charter is one of the largest broadband and cable providers in the United States, serving more than 32 million customers across more than 40 states with internet, cable TV, mobile and phone service.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
