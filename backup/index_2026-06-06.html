@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>SATURDAY, JUNE 06, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/06/931/523/Pratt-Hilton.jpeg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>GOP victor in CA House primary cites major momentum shift in deep blue state: ‘Californians are tired’</h3>
+                <p class="lead-summary"><strong class="drop-cap">J</strong>enny Rae Le Roux said Republican victories reflect mounting frustration with decades of Democratic control in California. Republican congressional candidate and CAL DOGE Director Jenny Rae Le Roux says pushback on decades of Democratic control is fueling a political shift in deep-blue California, which was on display Tuesday with strong performances by gubernatorial candidate Steve Hilton and LA mayoral candidate Spencer Pratt. "Californians are tired of one-party rule," Le Roux told Fox News Digital after her Tuesday night primary victory that sent her into a head-to-head match up with incumbent Democrat Dave Min in California's 47th Congressional District. "They know that the reason we’re suffering in this state and people are leaving California is because Democrats have been in charge for 60 years, and they’re up to no good." Le Roux argues that Min has not done enough to represent people across the district, saying her campaign has "already started doing the job that he’s not doing." Spencer Pratt and Steve Hilton scored major victories Tuesday night in California. (HIGHFIVE/Bauer-Griffin/GC Images ; Jeff Gritchen/MediaNews Group/Orange County) "It’s just to do the thing that Dave Min is not doing, which is to represent the district," she said. "We are out in every community. We have a precinct-by-precinct operation. Anyone who wants to meet with us, we will meet with them." Le Roux said residents unable to get answers from Min’s office on fraud, veterans’ concerns or housing issues are turning to Republicans like her for help. "People are frustrated by his office," she said. "They’re not responsive. They ask us for help with fraud issues, issues with HUD and veterans’ issues, and we’re making calls and getting things done for the people in the district." In a statement to Fox News Digital, Democratic Congressional Campaign Committee spokesperson Anna Elsasser defended Min, saying his office has helped constituents recover over $5 million from federal agencies. "Jenny Rae Le Roux’s lame attacks reflect both a lack of familiarity with Dave Min’s office, which has brought back over $5.7 million to constituents, and with the issues that Orange County families care about," Elsasser said.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Christopher Nolan’s shocking woke sellout: Weaponizing Homer’s Western classic AGAINST the West</h4>
+                <p>BlazeTV’s Auron MacIntyre and James Keena call out Nolan’s betrayal of the patriarchal roots of 'The Odyssey.' World-renowned director Christopher Nolan’s “The Odyssey” is a big-budget epic adaptation of Homer's ancient Greek poem that follows Odysseus' perilous journey home after the Trojan War. Set to release this July, the film sparked scandal the moment marketing began. Not only is Helen of Troy, who is described as a fair-skinned Greek woman in the original text, played by Kenyan-Mexican actress Lupita Nyong'o, but Elliot (formerly Ellen) Paige, a biological woman who started identifying as a man in 2020, plays a male character in the film. Although her specific role is unknown, one viral theory claims that she will play the mighty Achilles — the greatest warrior in all of Greek mythology.</p>
+                <p class="source-credit">— The Blaze</p>
+            </div>
+            <div class="story-minor">
+                <h4>Don’t get left in the dust: Early Prime Day vacuum deals are too good to miss</h4>
+                <p>Amazon recently announced 2026’s Prime Day dates, and this year is a four-day affair, running from June 23 to June 26. During this time, you’ll get heavy discounts on tons of home essentials, including TVs, mattresses and, of course, vacuums. If you are looking for an easy upgrade to your cleaning routine — without the hefty price point — shop the best early Prime Day vacuum deals now. These top picks from Shark to Dyson will have your floors looking clean in no time. Just remember, Prime deals are reserved for Prime members. If you’re not one already, you’ll want to sign up for Amazon Prime before June 23 so you can take advantage of all the discounts and additional perks. Amazon also offers a free 30-day trial to Prime, which makes it easy to sign up.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>The New SPLC Indictment Is Probably Also Just The Tip Of The Iceberg</h4>
+                <p>A superseding indictment filed this week against the Southern Poverty Law Center is probably the signal that a long legal battle is starting. In April, shortly after the indictment of the Southern Poverty Law Center, The Federalist explained here that the indictment was probably just a start and should be regarded as the tip of the iceberg. An active investigation continued, we wrote, and more legal developments should be expected. That was correct: A grand jury just returned a more detailed superseding indictment alleging that the SPLC has been pouring money into the groups it purports to oppose.</p>
+                <p class="source-credit">— The Federalist</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/06/931/523/raul-castro-havana-appearance.jpeg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Raúl Castro makes first public appearance since Trump administration charged him with murder</h3>
+                <p class="lead-summary"><strong class="drop-cap">S</strong>en. Ashley Moody, R-Fla., discusses the indictment of former Cuban President Raúl Castro on murder and conspiracy charges tied to the 1996 shoot-down of two civilian aircraft that killed four American pilots on ‘Sunday Night in America.’ Former Cuban leader Raúl Castro made his first public appearance Friday since the Trump administration charged him with murder over the 1996 shoot-down of planes operated by a Cuban exile group. The appearance came weeks after the Department of Justice unsealed an indictment accusing Castro of playing a role in the downing of two aircraft operated by the Miami-based exile organization Brothers to the Rescue nearly 30 years ago. Castro was charged with conspiracy to kill U.S. nationals, destruction of aircraft and four counts of murder. Raul Castro waves a Cuban national flag during a May Day parade at Revolution Square in Havana, May 1, 2025. (AP Photo/Ramon Espinosa) Castro, who turned 95 on Wednesday, was last seen publicly during May Day celebrations in Havana, days before the indictment was unsealed. Prior to his May Day appearance, Castro had remained out of public view for months, appearing only at a public ceremony in Cuba's capital in January honoring 32 Cuban soldiers killed during the U.S. military operation that led to the capture of Venezuelan President Nicolás Maduro.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Brazil, 24 years from a World Cup title, looks to a foreigner to rediscover its soul</h4>
+                <p>The Italian Carlo Ancelotti, the most decorated club coach in soccer history, is the first foreigner to lead the most successful nation.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>US, Shield of the Americas condemn 'ongoing efforts' to overthrow Bolivia's elected president amid unrest</h4>
+                <p>Former Colombian Ambassador to the U.S. Juan Carlos Pinzon discusses President Trump's statement about the US running Venezuela and highlights the potential for a peaceful transition on ‘Fox Report.’ The United States, along with the other countries that make up the Shield of the Americas, condemned the "ongoing efforts" in Bolivia to "overthrow the legitimately and overwhelmingly elected" government of President Rodrigo Paz on Friday.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Pope Leo visits a polarized Spain where conservatives are turning on the church</h4>
+                <p>On the first papal visit to Spain in 15 years, Leo plans to address political polarization and showcase the Catholic Church as an advocate for migrants and asylum seekers.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F06%2Fnewspress-collage-psvxjbz0u-1780724066908.jpg?quality%3D90%26strip%3Dall%261780709684" alt="Lead Story Image" class="news-photo">
+                <h3>Karl-Anthony Towns helps lead Knicks  to critical Game 2 win — even if one thing slowed him down</h3>
+                <p class="lead-summary"><strong class="drop-cap">S</strong>AN ANTONIO — The only thing that can slow down Karl-Anthony Towns at this point is the officiating. He still helped the Knicks take a commanding 2-0 series lead after this pulsating 105-104 victory at Frost Bank Center on Friday night. For most of the first three quarters, Towns got the better of Victor Wembanyama at both ends of the floor. However, he picked up his fourth foul with 6:01 left in the third quarter and had to watch the rest of the period. “For me, I’m just happy to be finding ways to win,” Towns said. “I’m just worried about the team result, which is winning. … This team leans on each other. I think that’s why we’ve gotten here. “That’s why we had the success we had during the regular season, even when things weren’t going great because at the end of the day when things do get tough, and the trials and tribulations do present themselves, this team doesn’t disband. They don’t go away from each other. We lean into each other even more.” It was a down regular season for Towns, but it has been a terrific postseason. So much changed in that opening-round playoff series against the Hawks, when coach Mike Brown shifted the offense to run more through Towns. He has become more efficient and far more engaged, a playmaker on one end and a strong defender on the other. Show the boys some love as they face off against the Spurs to take the championship. “It’s supposed to be like it is. I came in with a great plan. Maybe the plan doesn’t work. Who adjusts, him or me? Me. I adjust,” Brown said. “The adjustment’s not enough. Every once in a while, we’re not on the same page. We talk about it. I adjust again.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Knicks survive to take 2-0 NBA Finals lead after Jalen Brunson's clutch shot sinks Spurs</h4>
+                <p>The New York Knicks beat the San Antonio Spurs 105-95 to take a 1-0 lead in the NBA Finals. Colin Cowherd reacts to the win and asks if the Knicks stole the game, and he wonders if the Spurs can stop Jalen Brunson. The New York Knicks will return to Madison Square Garden just two wins away from ending their long championship drought.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>The Spurs’ magical run has been reduced to fantasy</h4>
+                <p>Heading into Game 2 of the NBA Finals, it was obvious what was on the line. If they fell to the Knicks 2-0, their season would be over. There was no coming back from that against a team that had won 13 playoff games in a row. Not with a city so excited to see their team in the NBA Finals for the first time in 27 years that the average asking price for Game 3 had soared past $10,000. Not with Karl-Anthony Towns playing some of the best basketball of his career. Not with Jalen Brunson en route to establishing himself as a household name. The Spurs’ magical run is over. Have teams come back from a 2-0 deficit in the Finals? Yes, but it’s rare. Teams trying to claw their way out of that hole are 5-31. No team has ever done it after losing two straight at home.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Broncos star Jonathan Cooper arrested on domestic violence charges</h4>
+                <p>Denver Broncos star Jonathon Cooper and his girlfriend were both arrested on domestic violence charges on Friday. Both Cooper and his girlfriend were held on suspicion of two counts of domestic violence and one count of criminal mischief, according to Douglas County jail records.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F06%2FAngus-Young.jpg?quality%3D90%26strip%3Dall" alt="Lead Story Image" class="news-photo">
+                <h3>What do the cheapest AC/DC tickets cost? Get them with a discount</h3>
+                <p class="lead-summary"><strong class="drop-cap">S</strong>tarting July 11, AC/DC will officially launch their ‘Power Up 2026 Tour’ with special guest The Pretty Reckless at stadiums all over North America. That includes stops at East Rutherford, NJ’s MetLife Stadium on Friday, Sept. 25 and Philadelphia’s Lincoln Financial Field on Tuesday, Sept. 29. If you’d like to be there to rock out with the Aussie icons live, last-minute tickets are available for all 18 late summer ‘Power Up’ concerts. At the time of publication, the lowest price we could find on seats for any one show was $66 including fees on SeatGeek. Make sure to use promo code NYPOST10 for $10 off purchases over $250 at checkout (Editor’s Note: this discount is only valid for users’ first purchase on SeatGeek). These ‘Power Up’ concerts come in support of AC/DC’s 2020 album that shares a name with the tour. Prior to this upcoming run, Brian Johnson, Angus Young and co. took the well-received record on the road in ’24 and ’25. While out and about, they often performed 20-22 songs per show.  Set List FM reported that they often delivered fan favorites T.N.T.,” “Back In Black,” “Highway to Hell,” “You Shook Me All Night Long” and “Dirty Deeds Done Dirt Cheap” in addition to a cut or two from “Power Up.” “AC/DC’s return to Chicago was a bold and triumphant, as they played a hard-hitting and unrelenting set to a sold-out crowd,” The Illinois Entertainer wrote in a review of a May 2025 concert at Chicago’s Soldier Field.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>'Jumanji' actor James Handy's girlfriend's son charged with murder after actor found stabbed to death</h4>
+                <p>James Handy's girlfriend's son has been charged with murder, after the actor was found stabbed to death outside his home in Tarzana. According to a press release from the Los Angeles District Attorney's office, Michael Gledhill, 44, is facing up to 26 years to life in prison if he is convicted as charged.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>I talked to Chris Lake. He told us why you need to see him in Brooklyn</h4>
+                <p>Chris Lake has played some of the biggest stages in the world, yet it’s New York he always keeps coming back to. Case in point, the DJ and producer will return to The City That Never Sleeps this weekend for a three-night run at Brooklyn’s Under the K Bridge from June 5-7. “I still have that moment of, ‘holy s—, I’m in New York,” Lake, 43, told The Post in an exclusive interview. “I still think of myself as the kid that was in his bedroom in Scotland, trying to make beats to get people’s attention..New York is an internationally-recognized word. It’s very difficult to ignore.” Of course, he’ll be bringing friends along to the Big Apple as well. To keep things fresh, Lake has enlisted different support acts for each night of his mini BK residency.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Maya Hawke says mom Uma Thurman practiced 'witch-adjacent' remedies</h4>
+                <p>Ethan Hawke has a sit-down discussion about his faith and how it plays into his work in the arts after the film "Wildcat" debuted Sept. 1. (Courtesy: Bishop Robert Barron via YouTube) Maya Hawke is shedding some light on how she was raised with Uma Thurman and Ethan Hawke as parents.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/05/931/523/carnival_cruise_ship.jpeg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Carnival breach may put your travel data at risk</h3>
+                <p class="lead-summary"><strong class="drop-cap">K</strong>urt 'CyberGuy' Knutsson joins 'Fox & Friends' to discuss hackers using airport USB charging ports and phishing texts to target victims. Carnival Corporation has confirmed a data breach affecting nearly 6 million people, and the fallout could reach travelers who may not think of themselves as Carnival customers. The company says the incident involved a social engineering attack on a single user account. In other words, someone fooled an employee and gained access to part of Carnival's IT system. For cruise customers, the real concern starts after the breach. Stolen personal details can help scammers write messages that feel far more believable. Here is what may have been exposed, what Have I Been Pwned found in the leaked data and what you can do now to protect yourself. Carnival says exposed data may include names, addresses, emails, phone numbers, dates of birth and government-issued ID numbers. (iStock) Carnival Corporation says the breach began with a social engineering attack on a single user account. An unauthorized actor gained access to a limited part of the company's IT system. Carnival says it immediately blocked the activity, brought in third-party security experts and alerted law enforcement. "In April, we identified unauthorized access to a limited part of our IT system caused by a social engineering attack on a single user account. We immediately blocked the activity, engaged third-party security experts and alerted law enforcement. Our investigation found certain personal information was illegally accessed. We're notifying affected individuals and deeply regret any concern this causes. Protecting the privacy and security of personal data is a priority for us and we've added new layers of security and monitoring on top of the comprehensive protections already in place. We'll also continue advancing our defenses against evolving threats." State breach reporting shows 5,995,277 people were affected. Carnival says the impacted data varies by individual. However, the company says the information known to be involved includes names, addresses, email addresses, phone numbers, dates of birth and government-issued identification numbers, such as driver's license numbers and passport numbers.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Americans hate rising prices. AI is making it worse.</h4>
+                <p>These goods and services are getting more expensive due to spillover from massive tech company investments in artificial intelligence.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
