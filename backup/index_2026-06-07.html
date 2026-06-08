@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>SUNDAY, JUNE 07, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://media.townhall.com/cdn/hodl/2026/110/1fdc0ce6-0bc3-4b54-98e2-7f2c363e5ccb.jpg" alt="Lead Story Image" class="news-photo">
+                <h3>19 Ohio Retailers Face Sanctions in Joint SNAP Fraud Enforcement Operation</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>he U.S. Department of Agriculture’s (USDA) Food and Nutrition Administration (FNA) and the Ohio Department of Public Safety’s Ohio Investigative Unit (OIU) have issued violation notices to 19 alleged fraudulent Supplemental Nutrition Assistance Program (SNAP) retailers across Ohio. On June 3 and 4, 2026, OIU and FNA – working alongside the USDA Office of Inspector General (OIG) – issued formal violation notices to 19 SNAP retailers across Cleveland, Cincinnati and Columbus, kicking off the enforcement process that holds bad actors accountable. These retailers are charged with committing blatant SNAP fraud, including exchanging benefits for cash, alcohol, tobacco and other illegal items. Charges include: Potential penalties for these charges range from prolonged suspension to permanent disqualification from SNAP as well as significant monetary fines. This week’s enforcement sweep is part of an ongoing USDA-Ohio partnership that has already resulted in criminal convictions for SNAP retailer fraud. For example, during an OIU and FNA investigation, a Cleveland retailer trafficked more than $17,000 in SNAP benefits for cash with undercover agents. Further investigation revealed significant additional fraud. The owner was convicted of trafficking, money laundering, and theft, sentenced to 18 months in prison and ordered to pay $63,000 in restitution. “This joint operation was vital in disrupting these illicit schemes. Not only will these retailers face repercussions from the Food and Nutrition Administration, but OIU has taken further action as well, both administratively and criminally,” said OIU Senior Enforcement Commander Greg Croft. “Because several of these businesses also held liquor permits, it allowed us to hold them accountable on multiple fronts by issuing administrative citations against their permits for the illegal use of benefits.” Fighting fraud means holding criminals accountable while also protecting our most vulnerable neighbors and the American taxpayers who support them. https://t.co/T8UzS0T8IW .@USDA has NEVER had access to State SNAP data. Not until this Administration demanded it.That’s why every figure from years past is meaningless. From the 29 states that DID share data, we’ve already identified at least $3 billion a year in fraud.Extrapolated nationwide: more… pic.twitter.com/st2Nf58fIR This federal-state collaboration demonstrates the Trump Administration’s whole-of-government approach to protecting vulnerable families who participate in SNAP and the American taxpayers who fund it.</p>
+                <p class="source-credit">— Townhall</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Florida and Texas are battling for new residents. DeSantis thinks he found an advantage</h4>
+                <p>Gabriela von zur Muehlen, chief policy officer at the Texas Association of Business, says Texas’ low costs and strong supply chains help attract billionaires, CEOs and manufacturers. Florida and Texas have for years attracted Americans feeling high-tax, high-cost states with an absence of personal income tax and business-friendly policies. Now, Florida Gov. Ron DeSantis is betting that reducing property taxes could become the Sunshine State's next competitive advantage.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>‘AI Obsession’ Is a Big Nothing Burger</h4>
+                <p>Before we know it, worries about AI-besotted partners are going to seem really dated.</p>
+                <p class="source-credit">— National Review</p>
+            </div>
+            <div class="story-minor">
+                <h4>Former Biden official Deb Haaland wins New Mexico primary for governor</h4>
+                <p>Haaland could make history as the first female Native American governor if she’s elected.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/06/931/523/sanchez-fujimori-peru-election.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Pro-US conservative faces leftist in Peru's high-stakes presidential runoff</h3>
+                <p class="lead-summary"><strong class="drop-cap">K</strong>eiko Fujimori and Roberto Sánchez advance past 33 candidates to face off June 7 as surging violence dominates voter concerns. (AP video.) Peruvians head to the polls in a pivotal presidential runoff June 7 in an election that could reshape not only the country’s future but also the balance of power across Latin America. Two candidates are vying to become the country's ninth president in just 10 years. Conservative candidate Keiko Fujimori is campaigning on law and order, free-market policies and closer ties with the United States, while left-wing challenger Roberto Sánchez represents a political movement that many see as a continuation of the leftist currents that have challenged U.S. interests in the region. José Ignacio Beteta, executive director of Asociación de Contribuyentes, a think tank in Peru, told Fox News Digital, "Peru’s June 7 runoff carries consequences well beyond its borders. When analyzed against the current U.S. National Security Strategy, this election will determine whether Peru consolidates its alignment as a U.S. partner or devolves into deeper geopolitical contention. Peru’s institutional weakness has already allowed China to expand into strategic sectors."</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Armenia, caught in Trump-Putin power contest, eyes E.U. and draws Russia’s fury</h4>
+                <p>Ahead of a national election on Sunday, Armenian Prime Minister Nikol Pashinyan has been talking about joining the E.U. and boasting of an endorsement from President Donald Trump.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Iran launched missiles and drones toward Strait of Hormuz, U.S. military says</h4>
+                <p>U.S. forces shot down Iranian missiles and drones launched toward the strait and neighboring countries.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Pope Leo XIV jokes young Spaniards would pick Bad Bunny over him during Madrid visit this weekend</h4>
+                <p>Fox News White House correspondent Aishah Hasnie reports on Secretary of State Marco Rubio’s meeting with Pope Leo XIV at the Vatican following President Donald Trump’s recent criticism on ‘Special Report.’ Pope Leo XIV joked Saturday that he knows who would win if young people had to choose between seeing him or Latin pop singer Bad Bunny this weekend.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/06/931/523/shea-theodore-gwg.jpeg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Golden Knights beat Hurricanes in double OT Game 3, one of the wildest Stanley Cup Final games of all-time</h3>
+                <p class="lead-summary"><strong class="drop-cap">I</strong>n this exclusive interview, veteran Indianapolis reporter Scott Agness joins Dan Dakich to break his silence on the Indiana Fever’s shocking decision to ban him over his explosive Caitlin Clark reporting. The Stanley Cup Final shifted to Las Vegas for Game 3 with the Vegas Golden Knights and Carolina Hurricanes knotted at 1-1 after splitting the opening two games in Raleigh. And, as you'd expect from the Golden Knights, this one got started with some theatrics, plus a little help from the city's latest hope at quarterback, who was getting in on the festivities. That's right. Who better to put on siren duty than Raiders draft pick and reigning Heisman Trophy winner Fernando Mendoza? There was a big surprise when the game got underway: Golden Knights defenseman Brayden McNabb — who took a slapshot straight to the face on Thursday in Game 2 — was in the Vegas lineup, albeit with a full cage. The first period was physical but ultimately scoreless, with Carolina getting more offensive opportunities, leading Vegas in shots 7-2. Vegas captain Mark Stone found the back of the net just 36 seconds into the second period; however, it was ruled offside after a Carolina challenge.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>5 injured after ferocious winds rip through WVU baseball game, sending tents airborne</h4>
+                <p>Five people were injured after powerful wind gusts sent tents flying during severe storms that swept through a West Virginia University baseball game Saturday. Thousands of fans packed Kendrick Family Ballpark in Granville on Saturday, but their hopes of watching the Mountaineers punch their ticket to Omaha were temporarily put on hold as dangerous severe storms swept through the sold-out venue. During the weather delay, a powerful wind gust sent a large tent flying and carried it across a nearby parking lot, creating a chaotic scene outside the stadium. According to the West Virginia University Police Department, five people were transported to a hospital for treatment following the incident.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Golden Tempo, 2026 Kentucky Derby winner, takes home 158th Belmont Stakes</h4>
+                <p>The winner of last month's Kentucky Derby, who sat out the Preakness Stakes, forfeiting a shot at the Triple Crown, took home the victory at the 158th Belmont Stakes in New York on Saturday. Renegade, similar to the Derby, closed as the 8-5 favorite, followed by Chief Wallabee and Emerging Market at 5-1 and Golden Tempo at 6-1.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>St. John’s season on the brink after getting shut out by Alabama, ace Tyler Fay</h4>
+                <p>The start to St. John’s first trip to the Super Regionals in 14 years didn’t go as planned. Looking to pull off another shocker after eliminating No. 10 Florida State last weekend, the Johnnies couldn’t touch Alabama ace Tyler Fay, while their own top pitcher, Liam O’Leary, struggled mightily. The result was an ugly 8-0 defeat to the seventh-seeded Crimson Tide at Sewell-Thomas Stadium on Saturday night. Now, for the Johnnies to advance to the College World Series for the first time since 1980, they will have to win the next two games. It is a difficult task against powerhouse Alabama, which improved to 4-0 in the NCAA Tournament and 24-6 at home.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/06/931/523/kyra-sedgwick-sxsw.jpeg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Kyra Sedgwick says knowing her ancestor signed the Declaration of Independence 'means a lot' to her</h3>
+                <p class="lead-summary"><strong class="drop-cap">K</strong>yra Sedgwick is sharing why the upcoming 250th anniversary of America's independence is special to her. During a recent appearance on "Today," the 60-year-old actress revealed that one of her ancestors signed the Declaration of Independence, telling the hosts that knowing that "means a lot." "I mean, as an American, democracy means a lot to me. The Constitution means a lot to me. And the Declaration of Independence is obviously what it's based on, and I just think that it's a great honor and responsibility," she said. "William Ellery, he was a long way back there. Yeah, he was a lawyer, he was amazing. The original writers of that Declaration were pretty extraordinary." She was on the show to promote her latest film, "Carolina Caroline," in which she plays the alcoholic mother of the main character. Sedgwick shared that one of her ancestors signed the Declaration of Independence. (Robby Klein/Getty Images for IMDb) The "Singles" star got her start in the entertainment industry as a teenager on the soap opera, "Another World," later appearing in films such as "Kansas," "Born on the Fourth of July" and "Lemon Sky," which is where she met her husband, Kevin Bacon.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Jamie Kennedy blasts LA mayoral election swing: ‘Literal crime scene’</h4>
+                <p>Actor and comedian Jamie Kennedy expressed astonishment at the dramatic shift in odds away from Spencer Pratt in the Los Angeles mayoral election. The “Scream” star, who supports Pratt, shared a post on Friday showing that socialist city Councilmember Nithya Raman had a 95% chance of advancing to November’s general election despite Pratt still maintaining a lead with votes still being counted. “This is a literal crime scene,” he wrote. “There is no way this is an honest election.” Oddsmakers had recently given Pratt more than a 75% chance to advance out of the primary. Raman and Pratt are competing for the final spot to make the runoff against incumbent Mayor Karen Bass, who is already projected to advance.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Rupert Everett exposes his 'lethal' past, admits he was 'slightly sociopathic' during Hollywood golden era</h4>
+                <p>In a recent interview with The Guardian, the 67-year-old actor discussed his rebellious past, calling himself "Brash. Pushy. Disingenuous. Lethal." "Well, I was lethal. I was just interested in myself and my own pleasure. That’s always lethal. I think I was slightly sociopathic. I was a terrible gossip, and I repeated everything everyone told me. I’d borrow people’s clothes and never give them back," he said. "I don’t know how I justified it to myself. I was lethal."</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Tom Hanks makes surprise visit to 90-year-old Bay Area typewriter store</h4>
+                <p>Oscar-winning actor and filmmaker Tom Hanks took a trip to one of the most novel spots in the Bay Area: a typewriter store. Photos posted on social media by Berkeley Typewriter — which has offered vintage typewriter service repairs for 90 years — showed the star chatting with workers and sitting in front of a black typewriter. The “Forrest Gump” and “Cast Away” star spent an hour in the store testing out its wares before making a purchase, staff said. According to the shop’s website, Hanks didn’t just buy a typewriter — he gifted the shop a treasured one from his collection. Photos shows a red typewriter accompanied by a letter from Hanks, both bearing his signature. The gift has been put on display, the shop said.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/06/931/523/3-Why-scammers-target-retirees-in-a-6-week-summer-window.jpeg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Why scammers target retirees in a 6-week summer window</h3>
+                <p class="lead-summary"><strong class="drop-cap">R</strong>ising elder scams: How to recognize them and protect yourself and your loved ones. Tech expert Kurt Knutsson helps you outsmart the scammers. Summer feels like freedom. Maybe you have grandchildren visiting, a road trip on the calendar or a beach rental already booked. Scammers see summer differently. For them, it can be one of the best times of year to target retirees. The six-week stretch from Memorial Day weekend to the Fourth of July creates a dangerous mix. Retirees are booking trips, using hotel Wi-Fi, posting vacation photos and spending more time away from home. At the same time, adult children may be busy with camp schedules, cookouts and travel plans, which can make it harder for families to spot trouble quickly. That timing does not happen by accident. It gives scammers a playbook. They can use fake rentals, grandparent scams, public Wi-Fi traps and holiday distractions to make their attacks feel more believable. Scammers often use the busy summer travel season to target retirees with fake rentals, urgent family scams and risky public Wi-Fi traps. (Kurt "CyberGuy" Knutsson) Here's how that six-week summer fraud window works, what scammers may be watching for and how you can protect yourself before they reach you. Your phone holds your email, passwords, photos, banking apps and personal data. In this free, live online class, Kurt the CyberGuy will walk you step by step through simple phone security fixes you can do in real time. You’ll learn how to improve your privacy settings, spot the latest phone scams, use trusted security tools and walk away with a simple checklist to stay protected. Register here:CyberGuyLive.com Scammers look for routines they can predict. Summer gives them plenty. Retirees may be booking trips, visiting family, checking accounts from the road and spending more time away from home. They may also post vacation photos before they return, which can reveal where they are and when their home may be empty. Family schedules can also get harder to track. Grandchildren may be out of school, adult children may be juggling camps and holiday plans and a fake emergency can sound more believable when everyone's routine has changed. That mix gives scammers several openings at once. A fake rental can catch someone before a trip starts. A grandparent scam can create panic. A public Wi-Fi network can steal logins. A holiday weekend can make families harder to reach. That is the window scammers try to use. Here's what their six-week calendar can look like.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>A wheeled robot may beat humanoids into your home</h4>
+                <p>Tech expert Kurt Knutsson gives insight into the Astribot S1, a humanoid robot for domestic tasks that showcases AI-powered capabilities. A new wheeled robot could help people at home before many humanoid robots are ready for everyday use. That is the big idea behind Hello Robot's Stretch 4. While many companies are developing human-shaped robots that walk, balance and try to act like us, Stretch 4 takes a different route. It rolls.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Fox News AI Newsletter: Sanders bill would seize 50% of stock in OpenAI, Anthropic for sovereign wealth fund</h4>
+                <p>Alaska Gov. Mike Dunleavy reacts to President Trump's call for a U.S. sovereign wealth fund and ways it could potentially benefit the American people. - Bernie Sanders unveils plan to take 50% stake in AI companies for government wealth fund Sen. Bernie Sanders reacts to questions from a Fox News Digital reporter about Maine Senate candidate Graham Platner’s resurfaced Reddit posts while walking through the Capitol in Washington, D.C., on Wednesday.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
