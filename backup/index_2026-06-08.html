@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>MONDAY, JUNE 08, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/06/931/523/zohran-mamdani-june-4-2026.jpeg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>NYC Mayor Zohran Mamdani says the Democratic Party 'lost its focus on working people'</h3>
+                <p class="lead-summary"><strong class="drop-cap">N</strong>ew York City Mayor Zohran Mamdani encouraged the Democratic Party to embrace his "uncompromising" frequent call for ICE to be abolished on MS NOW Saturday. New York City Mayor Zohran Mamdani said that he thinks the Democratic Party "has lost its focus on working people." Mamdani, during a June 1 interview with MS NOW's Eugene Daniels, said that people want to know what will be done about rent, housing, gas and groceries, noting, "We have to have answers to that. And that's what we're trying to show." Zohran Mamdani, mayor of New York, during a news conference on 2026 FIFA World Cup transportation at the MTA Rail Control Center in New York, on Thursday, June 4, 2026. (Adam Gray/Bloomberg via Getty Images) "I think that the party as a whole has lost its focus on working people. And I'm hopeful that we start to develop that," Mamdani said. "You know, you look at the four freedoms, you look at the real core of the New Deal, there was a moment when this party was unabashed about its focus on working people. And I'm excited to bring it back there," he said. Mamdani, who identifies as a democratic socialist, won the Big Apple's mayoral election last year while running as the Democratic candidate. MAMDANI MARKS PRIDE MONTH, SAYS HONORING 'QUEER AND TRANSGENDER' CONTRIBUTIONS WOULD TAKE MORE THAN 30 DAYS New York City mayoral candidate Zohran Mamdani attends the 2025 New York City Pride March on June 29, 2025 in New York City. (Noam Galai/Getty Images) "I was elected as a democratic socialist and I will govern as a democratic socialist," he declared during his January 1, 2026 inauguration speech. Get the latest updates on the Trump administration and Congress, exclusive interviews and more Fox News politics content. By entering your email and clicking the Subscribe button, you agree to the Fox News 
+        Privacy Policy
+       and 
+        Terms of Use
+      , and
+      agree to receive content and promotional communications from Fox News. You understand that you can
+      opt-out at any time. This material may not be published, broadcast, rewritten, or redistributed. ©2026 FOX News Network, LLC. All rights reserved. Quotes displayed in real-time or delayed by at least 15 minutes. Market data provided by
+        Factset. Powered and implemented by
+        FactSet Digital Solutions.
+        Legal Statement. Mutual Fund and ETF data provided by
+        LSEG.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Former Biden official Deb Haaland wins New Mexico primary for governor</h4>
+                <p>Haaland could make history as the first female Native American governor if she’s elected.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>‘Enola Holmes’ Writer Jack Thorne Praises Millie Bobby Brown’s “Strength” As A Child Actor: “I’ve Watched Her Grow Up”</h4>
+                <p>Stream It Or Skip It: 'The Greek Aisle' On Hallmark Channel, Where An American Businesswoman And A Greek Policeman Enter A Fake Marriage And Find Real Love Stream It Or Skip It: ‘You, Me and Tuscany’ on VOD, a Paint-by-Numbers Romantic Comedy Led by Halle Bailey Stream It Or Skip It: ‘David’ on Netflix, a Beautifully Animated Reiteration of the Classic Bible Story Stream It Or Skip It: ‘Pillion’ on HBO Max, a Remarkably Tender Dramedy about a Submissive Chap and His Biker-Dom Boyfriend Where Was 'Office Romance' Filmed?</p>
+                <p class="source-credit">— Https://decider</p>
+            </div>
+            <div class="story-minor">
+                <h4>Damning poll reveals what Democrats ACTUALLY think of America ahead of its 250th birthday</h4>
+                <p>Democrats are not only woefully lacking in pride for their country, but most would like to live somewhere else. Patriots are just weeks away from celebrating the 250th anniversary of the signing of the Declaration of Independence, marking America's semiquincentennial. Many citizens are clearly proud of the globally transformative superpower bequeathed to them and keen to honor the contributions and sacrifices made by generations past. There are, however, a great many who alternatively look back on American history with ingratitude and down at the country as currently constituted. According to a new national Elon University poll conducted by YouGov between April 30 and May 4, 55% of Democratic respondents said that there is another country on Earth that they would rather live in than the United States today. Only 10% of Republicans said the same.</p>
+                <p class="source-credit">— The Blaze</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2025/09/931/523/trump-putin-xi-kim-conspiracy-china-fox-news-001.jpg.png?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>US adversaries China, North Korea strengthening ties as Xi, Kim set to begin talks</h3>
+                <p class="lead-summary"><strong class="drop-cap">S</strong>en. Dave McCormick, R-Pa., discusses President Donald Trump's official state visit to China following news that he rejected Xi Jinping's offer to resolve the Iran conflict and reopen the Strait of Hormuz. A pair of U.S. adversaries — China and North Korea — appear to be strengthening relations, with Chinese President Xi Jinping's arrival in Pyongyang on Monday for a rare state visit. This is Xi's first trip to North Korea in seven years, and experts say the visit is likely aimed at reasserting China’s unique influence over North Korea in exchange for providing economic and political benefits. Xi is scheduled to meet North Korean leader Kim Jong Un in what will be their first summit since September, when they met in Beijing after viewing a military parade alongside Russian President Vladimir Putin and other foreign leaders. No specific agenda has been mentioned, but foreign experts predict the meeting to have a significant impact on bilateral ties and more, as both sides seek to fully restore their traditional alliance amid separate disputes with the U.S. government.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Iran says it will halt attacks on Israel after waves of strikes</h4>
+                <p>President Donald Trump had urged restraint after the two countries intensified attacks, and Iran said it would halt its strikes.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Israelis push Netanyahu to keep fighting in Lebanon, signalling long occupation</h4>
+                <p>As Trump fumes over fighting that has impeded his peace talks with Iran, some Israelis recall the 18-year occupation of Lebanon that began in 1982 and cite “complete déjà vu.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Hezbollah's secret 'kill, wound and maim' bomb network exposed as Israel strikes Beirut</h4>
+                <p>Israel launched retaliatory airstrikes on sites it described as Hezbollah command centers in Beirut's southern suburbs Sunday, hours after Israeli officials said Hezbollah fired rockets into northern Israel. Hezbollah did not immediately claim responsibility. The escalation came days after the U.S., Israel and Lebanon announced a renewed conditional ceasefire framework requiring Hezbollah to halt fire and withdraw from parts of southern Lebanon. It also followed the release of IDF footage that Israel said showed troops dismantling a Hezbollah explosives facility, where an outside expert said components appeared consistent with anti-personnel shrapnel devices designed to wound or kill people on foot.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/06/931/523/ernie-clement-blue-jays-home-run-fox-news-001.jpeg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Blue Jays rally while Orioles' double-play attempt negated as umps rule infielder failed to try to tag runner</h3>
+                <p class="lead-summary"><strong class="drop-cap">A</strong> month into the MLB season, batters are making frequent use of the new ABS challenge system. The replay system and the Automated Balls and Strikes system (ABS) may be a saving grace for some players and managers but the human element of baseball will always be a factor in the game as it was in a game between two American League East contenders. The Toronto Blue Jays and second baseman Ernie Clement may have benefited the most from the human aspect of the game in the sixth inning on Sunday. Toronto Blue Jays' Ernie Clement hits a three-run home run during the third inning against the Baltimore Orioles in Toronto on June 6, 2026. (Frank Gunn/The Canadian Press) Blue Jays catcher Brandon Valenzuela hit a chopper to Baltimore Orioles shortstop Gunnar Henderson. Clement swerved to his right to avoid Henderson’s tag with the infielder throwing to first, thinking that the runner would be called out for being out of the baseline. Instead, second base umpire Nic Lentz ruled Clement safe at second, saying that Clement was getting out of the way for Henderson to field the ball instead of trying to avoid the tag.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>The underlying fuel that’s propelling the Knicks through historic postseason run</h4>
+                <p>And now, these Knicks will go into Monday’s Game 3 at the Garden with a 2-0 NBA Finals cushion on the Spurs, just two wins away from securing that title. A sellout crowd — including President Donald Trump — will see their first NBA Finals in 27 years. Game 4 could represent an enven more meaningful first — the Knicks’ first championship in 53.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Broncos star speaks out following domestic violence arrest, fires off an apology</h4>
+                <p>Jay Glazer gave an update on DK Metcalf's suspension, Packers' QB situation, and Maxx Crosby's future with Raiders. It is rare when anyone, much less an NFL player who has the guidance of legal counsel, breaks his silence days after a domestic violence arrest, but Denver Broncos edge rusher Jonathon Cooper has done exactly that, and there are surprises.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>MSG’s electric Knicks atmosphere will be on full display as NBA Finals makes ‘really special’ return</h4>
+                <p>This playoff run — in which the Knicks have won 13 straight, including five at home — has shown the absolute mania that is possible inside Madison Square Garden. But even that is likely just a warmup for what the Mecca and Knicks fans are capable of at their full potential. Everything has lined up for Monday’s Game 3 of the Finals to be one of those moments that cements itself in New York City lore. The Knicks return home leading the series 2-0, having won both road games to begin the Finals. “I expect our fans to come out and do what they do every game, which is come and support us at the highest level,” Karl-Anthony Towns said after practice Sunday. “I’m really excited to play. It’s always great when you get to play the game of basketball at its highest level. To be able to lace the shoes up, be able to put the jersey on and be able to see our fans, to see Finals basketball after all this time is going to be really, really special.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F06%2Fnewspress-collage-7uzfzm3xn-1780889472822.jpg?quality%3D90%26strip%3Dall%261780875150" alt="Lead Story Image" class="news-photo">
+                <h3>Pink hosts a lackluster Tony Awards to end a truly rough Broadway season</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>he Lorne Michaels-produced show, based on the canceled AppleTV+ series, won the all-important Tony Award for Best Musical at Radio City Music Hall. It badly needed it. Like most new musicals during this rough season, the comedy about a married couple who gets trapped inside an old-fashioned musical has had soft ticket sales in recent weeks. The top prize at the Tonys — the only one that really drives box office — should give it a helpful boost as summer begins. I can’t say the same of the cast’s groaner of a performance of its sluggish and cutesy title song. The victor came off dusty and boring — and it is! — and not funny or particularly new. And it’s not! The big-budget rock spectacle “The Lost Boys” had more gusto, but the production was unable to showcase its greatest asset: The jaw-dropping aerial stunts. A producer told me they didn’t want to risk the audience at home seeing wires attached to actors. The pricey loser will now have its work cut out for it to wind up a financial success. It’ll need to run for years. The best song-and-dance of the night came from the fabulous Best Musical Revival nominee “Cats: The Jellicle Ball,” which takes Andrew Lloyd Webber’s 1980s felines and turns them into modern-day New Yorkers having a hugely fun ballroom competition in Harlem. Yet it’s hard to say how many lives the kitties have left in ’em after Sunday’s crushing loss. The winner of that category — a crime, by the way — “Ragtime,” did an uninspired and snoozy rendition of their loud-and-long opener. That revival also rightly took home Best Actor and Actress in a Musical for the wonderful Joshua Henry and Caissie Levy.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Sharon Stone says 'Euphoria' should be shown in 'every high school' and required viewing for parents</h4>
+                <p>While walking the carpet at the Golden Globe Awards, Sharon Stone told Fox News Digital "you get to choose how you view the world." Sharon Stone said that HBO's controversial show "Euphoria" should be shown in America’s high schools and that parents "should have to see it."</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>How to watch the 2026 Tonys live for free: Time, award nominees, streaming</h4>
+                <p>The 79th annual Tony Awards, celebrating the best and brightest of Broadway, are tonight, June 7. 19 plays and 11 musicals opened between April 28, 2025, through April 26, 2026, making them eligible for this year’s Tonys. “The Lost Boys,” based on the 1987 vampire flick, and “Schmigadoon!,” based on the Apple TV series, are tied for this year’s most-nominated musicals with 12 each. The Nathan Lane-led revival of “Death of a Salesman” leads nominated plays with nine. This year, three lifetime achievement awards will be given out; Lincoln Center artistic director André Bishop, lighting designer Jules Fisher and director/writer/frequent Sondheim collaborator James Lapine will be honored.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Mayim Bialik details 'nightmare' after one injection of GLP-1 drug led to weeks of debilitating side effects</h4>
+                <p>"Jeopardy!" host Ken Jennings told Pat Sajak about funny moments he's had with fans, during an appearance on "Wheel of Fortune," in which he was playing to raise money for the charity, the Equal Justice Initiative. Mayim Bialik is speaking out candidly about a severe reaction she says she experienced after taking a GLP-1 medication, revealing that a single low-dose injection led to weeks of debilitating gastrointestinal symptoms.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2025/05/931/523/trump-nuke.png?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Antares reaches reactor criticality under Trump pilot program, marking major nuclear milestone</h3>
+                <p class="lead-summary"><strong class="drop-cap">S</strong>enior White House correspondent Peter Doocy provides details on President Donald Trump's upcoming executive order aimed at boosting nuclear energy and his latest tariff threats. Antares Nuclear, Inc. announced Thursday that its Mark-0 microreactor achieved criticality at Idaho National Laboratory, becoming the first advanced reactor to reach the milestone under a U.S. Department of Energy pilot program established after President Donald Trump's 2025 executive order aimed at accelerating nuclear development. The Torrance, California-based company said the reactor reached initial criticality under DOE authorization, making Antares the first private company to bring an advanced reactor to criticality through the Department of Energy's Reactor Pilot Program. "Hitting our commitments is everything to us. Nuclear in America has been defined for too long by delays, by companies that said they would and then didn't," Antares CEO Jordan Bramble said. "We said criticality in 2026, electricity production in 2027, and power to the warfighter in 2028. Today is the first of those commitments delivered on the schedule we set." Criticality occurs when a reactor achieves a self-sustaining nuclear chain reaction, a major milestone in reactor development. Antares said the demonstration validated key reactor physics parameters and produced testing data and control system performance information that will support future reactor development. Energy Secretary Chris Wright said Antares Nuclear's Mark-0 microreactor became the first privately developed non-light-water reactor to achieve criticality in the U.S. in more than four decades under the Department of Energy's Reactor Pilot Program. (F. Carter Smith/Bloomberg) The Department of Energy confirmed the achievement Thursday, describing it as the first privately developed non-light-water reactor to reach criticality in the U.S. in more than four decades. "Today’s achievement is a historic moment for American nuclear energy," Energy Secretary Chris Wright said in a statement. "By bringing the first American non-light water privately developed reactor to criticality in more than four decades, Antares has shown what is possible when American innovation is unleashed."</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Is Apple Intelligence on your iPhone really secure?</h4>
+                <p>Tech expert Kurt Knutsson urges you to use Apple’s App Privacy Report to see what your apps are really up to. Apple has spent years telling us that privacy starts on the device. For many users, that message feels reassuring. Your messages, photos, emails and app data sit in your hand, protected by Face ID, passcodes and Apple's security layers. Now, new research gives Apple's on-device AI a reality check.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
