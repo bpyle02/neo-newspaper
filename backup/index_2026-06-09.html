@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>TUESDAY, JUNE 09, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://i0.wp.com/www.nationalreview.com/wp-content/uploads/2026/06/gavin-newsom.jpg?fit=617%2C360&ssl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Payback for Gavin Newsom’s Fiscal Folly</h3>
+                <p class="lead-summary"><strong class="drop-cap">R</strong>epresentative Vince Fong is moving to rein in California profligacy and relieve business owners in the process.</p>
+                <p class="source-credit">— National Review</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>U.S. Forces Jump Into Action After Army Helicopter Goes Down Near Strait Of Hormuz</h4>
+                <p>﻿</p>
+                <p class="source-credit">— Daily Wire</p>
+            </div>
+            <div class="story-minor">
+                <h4>Google's new daily helper knows all about you. Just how creepy is it?</h4>
+                <p>Google is trying to make Gemini as ubiquitous as possible. From AI Mode in Search to Gemini Intelligence in Android, and even the Gemini app on iPhone, the company is betting big that you’ll encounter its AI bot somewhere on your devices and fall so in love that you can’t live without it. One of these new features is Daily Brief, a digital corkboard that scans through all of your Google services to write a custom agenda for the day that is as cool as it is creepy. But is it useful? Let’s take a look. Every morning, I wake up to a new Gemini notification on my Pixel phone waiting to be unraveled. The Daily Brief is an automatically generated itinerary for the day ahead. It can include just about anything — a reminder about an important event you have coming up next week, a nudge to talk to your boss about that email you sent before you clocked out the day before, maybe even a prompt to follow up on that question you Googled earlier in the week.</p>
+                <p class="source-credit">— The Blaze</p>
+            </div>
+            <div class="story-minor">
+                <h4>Rob Reiner’s son demands his $1.5M inheritance as he stands trial for parents’ brutal murder</h4>
+                <p>Accused murderer Nick Reiner is fighting in court to get the inheritance left by the parents he is accused of stabbing to death in their $20 million Los Angeles mansion. A new court petition shows he is fighting to get $750,000 of his $1.5 million trust as his legal bills pile up. His legendary film director father, Rob Reiner, and his mother, Michele, set aside the trust for him, dictating he was to receive half of the funds when he turned 30 and the other half when he turned 35. Reiner, 32, now claims the trustee, lawyer Paul Kanin, has refused to hand over the funds, alleging “unsubstantiated ‘concerns’ about Nick’s so-called competence to ‘manage a trust,'” according to documents obtained by Daily Mail.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/06/931/523/Finnish-Soldiers.jpeg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Finland’s foreign minister says Ukraine ‘is now holding the cards’ as Russia signals talks</h3>
+                <p class="lead-summary"><strong class="drop-cap">I</strong>n an exclusive interview with Fox News Digital, Elina Valtonen said Finland and other European allies are supporting U.S. efforts to prevent Iran from becoming a nuclear state. EXCLUSIVE: Finnish Foreign Minister Elina Valtonen said Ukraine has gained new leverage against Russia, arguing that Moscow’s renewed talk of negotiations comes as Kyiv has strengthened itself militarily, politically and diplomatically. Valtonen’s comments carry particular weight because Finland is one of NATO’s newest members and now sits on the alliance’s longest border with Russia. Finland joined NATO in April 2023 after Russia’s full-scale invasion of Ukraine, ending decades of military nonalignment and transforming the country into a frontline state in Europe’s security posture. "Ukraine certainly is now holding the cards," Valtonen told Fox News Digital Monday in an interview at the United Nations headquarters in New York. "They have strengthened themselves immensely over the course of the past three, four months, both militarily and politically, diplomatically. And I think this opens a great window of opportunity for actually advancing the peace talks."</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Why rescue donkeys are wearing donated socks from a pro soccer team</h4>
+                <p>Socks from Arsenal Football Club have a new life helping rescued donkeys and horses heal from injuries.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>'You're destroying your countries': Is Europe finally heeding Trump's warning on illegal immigration?</h4>
+                <p>President Donald Trump takes the stage at the United Nations in New York City to deliver his General Assembly address, focusing on the Russia-Ukraine war, Middle East tensions and more. Earlier in June, the European Union appeared to finally react to concerns raised by President Donald Trump and many European voters over illegal immigration by introducing tougher border entry rules for the 27-nation bloc.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>NATO shoots down drone over Latvia as concern about Ukraine war’s spread grows</h4>
+                <p>The drone, which entered Latvia from Russia, was the latest to violate the airspace of a NATO member during the war.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F06%2Fnewspress-collage-z314jkb9p-1780966277357.jpg?quality%3D90%26strip%3Dall%261780952075" alt="Lead Story Image" class="news-photo">
+                <h3>What Dylan Larkin’s bombshell trade request means for the Rangers and Vincent Trocheck</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>he Rangers’ Vincent Trocheck is no longer the top center on the market in the wake of Dylan Larkin’s trade request from his hometown team, the Red Wings. News of Larkin wanting out of Detroit, first reported by Sportsnet’s Elliotte Friedman, cut to the hearts of Wings fans, but it couldn’t be classified as a shock by those inside or outside of general manager Steve Yzerman’s operation. Get Mollie Walker’s text messages with the latest Rangers buzz and get your questions answered — exclusive to Sports+ subscribers. Still, it’s difficult to imagine the Red Wings without the Michigan native they drafted 15th overall in 2014 and later named captain at the age of 24. With a no-move clause for the upcoming 2026-27 season and the next, Larkin is in full control of his fate. The Detroit Free Press reported Monday that Larkin provided Yzerman with a list of three teams he’d want to play for: the Wild, the Golden Knights and the Panthers.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Knicks guard nearly wipes out Michael Bloomberg diving for loose ball during NBA Finals Game 3</h4>
+                <p>Massive security preparations are underway for NBA Finals Game 3 in New York City due to Donald Trump's planned attendance. House Minority Leader Hakeem Jeffries criticized Trump's visit. The NYPD and Secret Service have implemented a "frozen zone" around Madison Square Garden, leading to fan advisories and a no-bag policy. Former FBI agent James Gagliano discusses these heightened security measures following a recent Penn Station stabbing.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Knicks fans clash with cops in chaotic scene outside Bryant Park Game 3 watch party</h4>
+                <p>Rowdy Knicks fanatics clashed with cops outside Bryant Park’s Game 3 watch party Monday night – including at least one who hurled a bottle at an officer. The sea of fans was already teetering over the edge just one hour after tip-off, as many didn’t make it inside the official watch park of the Knicks-Spurs game in the Midtown park. Huge brawls broke out and cops in riot gear rushed to control the unruly crowd, deploying pepper spray. Rabblerousing fans started vaulting onto parked cars while chanting “We want Wemby!” One daredevil set fire to a Spurs t-shirt, while a mob chased a San Antonio fan across the street.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Knicks coach Mike Brown rips officiating after free throw discrepancy in Game 3 loss to Spurs</h4>
+                <p>President Donald Trump was at Madison Square Garden for Game 3 of the NBA Finals between the New York Knicks and San Antonio Spurs. The New York Knicks had their 13-game win streak in these playoffs snapped at Madison Square Garden on Monday night, as the San Antonio Spurs took Game 3, 115-111, to avoid a potential sweep.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F06%2FBryson-Tiller.jpg?quality%3D90%26strip%3Dall" alt="Lead Story Image" class="news-photo">
+                <h3>How much do tickets cost to see Bryson Tiller? Get discounted seats</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>he hard-working singer has concerts booked at arenas all over the globe from August 2026 through January 2027 as part of his recently-announced ‘Neo Trapsoul Tour’ with special guests Majid Jordan, Ty Dolla $ign and Austin Millz joining him on select dates. That includes not one, not two, not three, not four but five (!) New York and New Jersey concerts. They’re scheduled to take place at: UBS ArenaBelmont Park, NYSaturday, Sept. 12Madison Square GardenNew York, NYSunday, Sept. 13Darien Lake AmphitheaterDarien Center, NYTuesday, Sept. 15Freedom Mortgage PavilionCamden, NJFriday, Sept. 18Prudential CenterNewark, NJSaturday, Sept. 19 If you’d like to be there, tickets are available for all 42 North American ‘Neo Trapsoul Tour’ concerts. At the time of publication, the lowest price we could find on tickets was $54 including fees on SeatGeek. “New decade, new album, new tour,” the  Cannot wait to see y’all again. Don’t miss it,” the 33-year-old Louisville native shared via Instagram. As of now, not much is known about the new record. However, there is a good chance his recently-released singles “So What Now,” “Still Mine,” “It’s OK” and “Drop The Lo” appear on the record. Prior to this outing, Tiller last headlined on his video game-themed, 2023-24 ‘Back and I’m Better Tour.’ On that run — which predated his self-titled 2024 album and 2025’s “Solace & The Vices” — he often performed approximately 20-25 songs per shows, according to Set List FM.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Princess Diana never forgave Sarah Ferguson for one betrayal that ended their friendship: book</h4>
+                <p>Andrew Lownie, author of "Entitled," weighs in on former Prince Andrew and Sarah Ferguson’s evolving relationship amid royal scrutiny. The exes were once known as the "happiest divorced couple." Princess Diana and Sarah Ferguson were once inseparable, famously dubbing themselves the "Terrible Twins" and the "Wicked Wives of Windsor." But a devastating rift between the royal rebels ended their friendship for good.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Charli XCX announces ‘Music Fashion Film Tour,’ two NYC shows. Get tickets</h4>
+                <p>Charli XCX just announced she’s striking out on her ‘Music, Fashion, Film Tour’ at arenas all over North America this fall with special guest Undertones. While out and about, the “Brat” hitmaker will make two stops at Brooklyn’s Barclays Center. They’re scheduled to take place on: “Can’t wait to party together again, it’s gonna be cute,” the 33-year-old Cambridge native shared on Instagram. The run of shows comes in support of XCX’s upcoming album “Music, Fashion, Film,” which hits shelves on July 24 and sports a cover adorned with John Cale, Marc Jacobs and Martin Scorsese. Ahead of the 11-track record’s release, she dropped a pair of singles: the jittery “Rock Music” and hypnotic “SS26.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Songwriter behind hits for Britney Spears and Dua Lipa fatally stabbed at 35, three arrested</h4>
+                <p>Police have arrested three people in connection to the fatal stabbing of songwriter Talay Riley, Fox News Digital can confirm. The artist, who had worked with Britney Spears, Dua Lipa and more A-list stars, was found stabbed in East London on Friday, according to the Metropolitan Police.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/04/931/523/maryland-surveillance-pricing-law.jpeg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>8 apps that can help you cut your food bill</h3>
+                <p class="lead-summary"><strong class="drop-cap">F</strong>ood prices have a way of sneaking up on you. One week, your usual grocery run feels normal. The next week, a few basics suddenly cost a lot more than you expected. That is why money-saving food apps are worth a closer look. All of these apps are free to download or sign up for, but you still pay for any food, groceries or purchases you make through them. Some help you find discounted groceries before stores toss them. Others connect you with surprise meals, receipt rewards, free local listings or recipes based on what you already have at home. The trick is knowing which app fits the way you actually shop. Here are eight apps that can help you stretch your food budget, reduce waste and maybe make your next receipt feel a little less painful. Food savings apps can help shoppers find discounted groceries, restaurant meals, receipt rewards and free local food listings. (iStock) Flashfood helps you find discounted groceries from participating stores near you. The app focuses on food that is still good but getting close to its best-by date. You browse local deals in the app, pay through the app and pick up your order in the store. Flashfood says shoppers can find grocery deals for up to 50% off. That can include produce, meat, dairy, pantry items and other staples, depending on what stores near you have available. Misfits Market delivers groceries to your door. The company says it offers high-quality rescued foods and lets you choose what goes in your order. After signing up, you receive a weekly shopping window. You can review your cart, remove items, add groceries and skip orders when needed. This can work well if you want grocery delivery and like the idea of reducing food waste at the same time. Misfits Market says there are no subscription fees or order obligations. You can skip, pause or cancel. Misfits Market lets you customize grocery deliveries with rescued or excess food that may cost less than traditional shopping. Too Good To Go helps you buy surplus food from nearby restaurants, bakeries, cafés and stores. The app uses "Surprise Bags," which means you usually know the type of food and pickup window, but not every exact item inside. That surprise part can be fun, especially if you like trying local spots. It can also be less ideal if you need a very specific dinner plan. Too Good To Go says users can save and enjoy food at half price or less.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Robot pets with AI could soon live with you</h4>
+                <p>A robot that follows you around the house may sound a little strange at first. Yet Colin Angle, the cofounder of iRobot and one of the people behind Roomba, is betting that the next big home robot may feel less like a machine and more like a companion. His new company, Familiar Machines & Magic, has revealed its first robot concept called a Familiar. It is a pet-inspired, emotionally aware home robot designed to live with you, learn your routines and support healthier habits. "The next era of robotics is not just about dexterity or humanoid form. It is about machines that can build and sustain human connection," Angle said.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Why your VPN keeps getting blocked and the simple fix</h4>
+                <p>You fire up your VPN, connect to a server and pull up the streaming service or website you were trying to reach. A few seconds later, you see the dreaded message: blocked. So you try again. Still blocked. Then you switch servers. Same result. If this sounds familiar, you are not alone. VPN blocking has become much more aggressive over the past few years. The old VPN tricks that once worked reliably no longer always get the job done.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
