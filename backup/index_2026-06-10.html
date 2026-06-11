@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>WEDNESDAY, JUNE 10, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2023/10/931/523/senator-tom-cotton.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Sen Tom Cotton urges DOJ to probe Chinese bid to 'kneecap' American AI</h3>
+                <p class="lead-summary"><strong class="drop-cap">F</strong>ormer Arizona Sen. Kyrsten Sinema, co-chair of the AI Infrastructure Coalition, discusses President Trump's strategic decision to bring top American tech CEOs to China for his meeting with Xi Jinping. Sen. Tom Cotton urged the Justice Department to investigate a covert campaign linked to China designed to "kneecap" America's rapidly expanding artificial intelligence infrastructure in a letter obtained exclusively by Fox News Digital. In the letter to Acting Attorney General Todd Blanche, the Arkansas Republican calls for federal investigators to examine whether foreign actors are attempting to shape U.S. public opinion and policy against data centers and AI development as Washington and Beijing compete for dominance in artificial intelligence. As a network of organizations supported by far-left activist Jodie Evans (second from left) and her husband Neville Roy Singham (right) protest America's AI development, data centers and other technology advancements, Sen. Tom Cotton (left) sends a letter to Acting Attorney General Todd Blanche, urging him to investigate the groups for possible violations of the Foreign Agent Registration Act (FARA). (Bill Clark/CQ-Roll Call, Inc via Getty Images, Chip Somodevilla/Getty Images, Dave Kotinsky/Getty Images) "Recent reports show that Communist China is attempting to influence our policy and public opinion on data centers. The reason is obvious: they want to kneecap our processing power to win the AI race," Cotton told Fox News Digital. "Americans should decide their own future free of communist propaganda. I'm encouraging the Department of Justice to investigate," Cotton said. The Bitcoin Policy Institute released a report alleging that nonprofits aligned with Chinese interests are driving a campaign against U.S. data centers. (Bitcoin Policy Institute) Cotton's request follows the release of a report last week from the Bitcoin Policy Institute, a think tank based in Washington, D.C., alleging that Chinese state media, foreign-funded advocacy groups and a network of organizations funded by American tech tycoon Neville Roy Singham have spent years building opposition to U.S. data center construction and AI infrastructure projects.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Once a rising star, Nancy Mace suffers resounding defeat in governor’s race</h4>
+                <p>The South Carolina congresswoman finished fifth in the state’s GOP gubernatorial primary, according to unofficial returns, solidly losing even her own home county and district.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Slain Teen’s Dad Unloads On Karmelo Anthony In Courtroom: ‘Can’t Even Look Me In The Eyes’</h4>
+                <p>"You can't even look me in the eyes right now but you can stab my f*cking son in the heart." The father of slain teen Austin Metcalf unloaded on convicted murderer Karmelo Anthony while reading his victim impact statement inside the courtroom on Tuesday. Anthony was convicted Tuesday of murdering Austin at a track meet in April 2025 and was sentenced to 35 years in prison. Austin’s father, Jeff Metcalf, admonished Anthony for making the case about race and told him he’s been feeling “pure unfiltered rage” while grieving the loss of his son. “I said from day one, this was never about race, please don’t politicize it,” Jeff said. “But what did you choose to do, both. It’s about right and wrong. We’re all humans. We all bleed the same color.</p>
+                <p class="source-credit">— Daily Wire</p>
+            </div>
+            <div class="story-minor">
+                <h4><i>The Little Sister</i>, Festival-Circuit Ninja</h4>
+                <p>Auto-fiction meets social and spiritual realism.</p>
+                <p class="source-credit">— National Review</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/06/931/523/north-belfast-stabbing-burned-out-car.jpeg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Belfast burns after Sudanese migrant arrested in brutal knife attack</h3>
+                <p class="lead-summary"><strong class="drop-cap">F</strong>irst responders rush to a Belfast neighborhood after violence erupted following a stabbing that seriously injured a local man. (Reuters) A Sudanese asylum seeker accused of blinding a Belfast man in one eye during a stabbing attack appeared in court Wednesday as anti-immigrant unrest spread across Northern Ireland. Hadi Alodid, 30, was ordered to be held in jail after appearing by video in Belfast Magistrates' Court, where prosecutors accused him of blinding Stephen Ogilvie in his left eye during Monday's attack. Alodid was charged with attempted murder, threatening to kill a radiographer and possessing a knife. He declined legal representation through an Arabic interpreter and did not enter a plea. The attack, which occurred shortly after 10:30 p.m. Monday in north Belfast and was captured in graphic video footage that quickly spread online, sparked outrage and fueled demonstrations that turned violent overnight. Police said Ogilvie, a man in his 40s, suffered serious injuries to his face, neck, back and eyes, and officers recovered what they believe was a kitchen knife from the scene.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Trump says Iran will ‘pay the price’ after it targets U.S. assets in three countries</h4>
+                <p>Hours after Iran announced a wave of strikes, President Donald Trump said Tehran had "taken too long to negotiate a deal that would have been great for them."</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>EXCLUSIVE: Serbian President Vučić says support for US 'surged' under Trump, invites him to visit Belgrade</h4>
+                <p>Aleksandar Vučić says Serbia is deepening ties with Washington while balancing relations with Russia and China, standing by Israel and resisting calls to recognize Kosovo. Serbian President Aleksandar Vučić says relations between Serbia and the United States have undergone a dramatic transformation under President Donald Trump, a shift he says has changed public perceptions in a country where memories of the 1999 NATO bombing campaign remain deeply rooted.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>In Belfast, riots and mayhem follow alleged stabbing by Sudanese asylum seeker</h4>
+                <p>The torching of neighborhoods across Belfast, the capital of Northern Ireland, marked the latest anti-immigration violence to convulse the United Kingdom.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/06/931/523/iran-national-football-team-fox-news-001.jpeg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Iran allegedly used soccer clubs to spy on citizens, opposition group urges FIFA to ban team before World Cup</h3>
+                <p class="lead-summary"><strong class="drop-cap">N</strong>ational Council of Resistance of Iran (NCRI)'s U.S. office's Deputy Director Alireza Jafarzadeh reveals shocking soccer plot report to Fox News Digital. EXCLUSIVE: Iran's Islamic Revolutionary Guard Corps (IRGC) has allegedly used the country's soccer system to spy on citizens, potentially violating FIFA bylaws, according to a new report from a major opposition party. The National Council of Resistance of Iran (NCRI)'s U.S. office provided the report to Fox News Digital. It outlines an alleged plot for Iran’s soccer federation and top clubs to be drawn into a broader state security apparatus, and that at least 15 IRGC commanders have been formally documented and identified in soccer club management. The NCRI, citing alleged official IRGC documents, accuses the IRGC of using clubs, stadium infrastructure and security-linked management posts to monitor fans, suppress dissenting athletes and violate FIFA rules on political interference. The report alleges facial-recognition technology and other devices and tracking systems were used to monitor spectators. The report cites alleged internal Iranian security documents, including Tehran Province Security Council material from 2025 and a Sarallah Headquarters security plan from 2024.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>World Cup 2026 Group B preview: Prediction, odds, full team overviews</h4>
+                <p>Everyone penciled in Italy to win Group B at the World Cup, except Italy had to actually qualify. The Azzurri instead fumbled their way out of a third straight World Cup, losing a playoff stunner to Bosnia and Herzegovina that blew Group B wide open. Teams listed in predicted order of finish. * indicates third-place team predicted to advance to the knockout stage. What you need to know: Switzerland is the favorite in this group, and the big question is whether they can go anywhere in the knockout stages. They breezed through qualifying and have real depth in the squad, with center back Manuel Akanji and keeper Gregor Kobel keying a defense that’s consistently hard to break down. Though Switzerland isn’t a high-scoring team, it can keep possession for long stretches and suffocate the opposition.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Women's basketball legend Nancy Lieberman credits Caitlin Clark for new WNBA CBA, higher salaries</h4>
+                <p>Women's basketball legend Nancy Lieberman credited Caitlin Clark for the WNBA's new CBA, and revealed her passion for prostate cancer awareness. WNBA legend Nancy Lieberman believes Caitlin Clark is to thank for the league's new collective bargaining agreement (CBA) that has allowed players to get much higher salaries.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>49ers’ believe Mike Evans is missing piece to Super Bowl contention: ‘Hard not to fan girl’</h4>
+                <p>SANTA CLARA — Even now, nearly four months after Mike Evans left the comfortable life and Hall of Fame-worthy career he built in Tampa Bay to help pull the 49ers back to Super Bowl contention, his new Bay Area teammates do a bit of a double-take, realizing he’s on their team. “Every single day I see Mike, I just go, ‘Wow, Mike Evans is here,’” 49ers tight end George Kittle said. “I think I’m annoying him at this point, but I pinch myself every day.” Or, as veteran tackle Trent Williams put it: “It’s hard not to fan girl over a guy like that.” That is high praise coming from a couple of players who will likely don gold Hall of Fame jackets themselves one day.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F06%2FJAY-Z.jpg?quality%3D90%26strip%3Dall" alt="Lead Story Image" class="news-photo">
+                <h3>JAY-Z announces 2026 concert at SoFi Stadium. Get discounted tickets</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>he 25-time Grammy winner just announced that he’ll perform a one-off concert celebrating the 30th anniversary of his seminal 1996 debut album “Reasonable Doubt” at Inglewood, CA’s SoFi Stadium on Friday, Oct. 23. Notable tracks from the record include “Can’t Knock The Hustle” featuring Mary J. Blige, “Brooklyn’s Finest” with Notorious B.I.G.” and “Dead Presidents II” among others. No word yet on whether or not he’ll play songs from other albums in his deep back catalog. Prior to this gig, the last time the “99 Problem” rapper performed in The Golden State was December 2017 when he headlined at The Forum as part of his ‘4:44 Tour.’ “He used his new material to re-contextualize his older hits in intriguing ways, giving hip-hop’s most consistent live performer the one thing his shows have sometimes lacked: a sense of surprise,” Variety wrote in a giddy review. Prior to the Inglewood show, the 56-year-old New York City native headlined at Philadelphia’s Roots Picnic Festival where he delivered a 32-song set, according to Set List FM. Highlights from the spot included a combative, a cappella freestyle that took aim at Ye, Drake, Nicki Minaj, Dame Dash, Tory Lanez and more along with fan favorite hits “Run This Town,”  “Empire State of Mind,” “Excuse Me Miss,” “The Story of O.J.” and “Public Service Announcement.” Then, come mid-summer, Mr. Beyoncé Knowles has three concerts lined up at Yankee Stadium from July 10-12.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Hugh Laurie admits he was 'slightly drunk' when he roasted a journalist who criticized his show 'House'</h4>
+                <p>Hugh Laurie is fessing up to being "slightly drunk" after roasting a "House" critic on social media. On Monday, British journalist Janet Murray uploaded a screenshot of an article she penned on UnHerd, titled, "What I learnt from my online fight with Hugh Laurie." The entire online debacle began when Murray penned a review of "House," which Laurie starred in from 2004 until 2012.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Sara Bareilles extends ‘Good Grief Tour,’ adds second NYC show. Get tickets</h4>
+                <p>The two-time Grammy winner just extended her forthcoming ‘The Good Grief Tour’ in support of her forthcoming record with the same name. She’ll now play 26 concerts at music halls, theatres, performing arts centers and auditoriums all over North America from early September through late October. That includes two concerts at NYC’s Radio City Music Hall. Those gigs are slated to take place: “Thank you all for the overwhelming response to the Good Grief tour, and I want as many of you as possible to join me for these special shows.” In addition to New York City, Bareilles added second nights in Boston, Toronto, Philadelphia, Chicago, Houston, San Francisco, Seattle and Washington, D.C.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Rob Reiner's son Nick fights for $1.5M trust fund access to bankroll high-powered murder trial defense</h4>
+                <p>Criminal defense attorney David Gelman discusses his take on the murder of Rob Reiner and his wife Michele, the likelihood that his son Nick could have an insanity defense and the latest on the Luigi Mangione murder trial. Rob Reiner's son demanded access to his trust fund after he was allegedly blocked from a massive payout that would have funded his decision to hire top-notch celebrity attorney Alan Jackson.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
