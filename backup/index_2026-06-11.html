@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>THURSDAY, JUNE 11, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://i0.wp.com/www.nationalreview.com/wp-content/uploads/2026/06/jon-ossoff.jpg?fit=617%2C360&ssl=1" alt="Lead Story Image" class="news-photo">
+                <h3>The Left’s <i>Citizens United</i> Dishonesty Continues</h3>
+                <p class="lead-summary"><strong class="drop-cap">L</strong>etting the government regulate their political speech won’t turn out the way Democrats think.</p>
+                <p class="source-credit">— National Review</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Missouri senator warns Dem immigration policies threaten Western civilization after scoring ICE funding win</h4>
+                <p>Sen. Eric Schmitt’s says his provision to fund deportations of criminal illegal aliens when they’re released from jail will combat Democrats whose policies will "destroy our country" if left unchecked. Democrats' "suicidal empathy" on immigration will "destroy our country," a Republican senator warned after his proposal targeting sanctuary city policies was included in the reconciliation package funding Immigration and Customs Enforcement (ICE) and Customs and Border Protection (CBP).</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Oil executives warn White House that gas prices will get worse</h4>
+                <p>Grim predictions add to the problems of a president already facing a sharp rise in inflation.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Sydney Sweeney and Scooter Braun pack on the PDA during ‘emotional rollercoaster’ Knicks date night</h4>
+                <p>Sydney Sweeney and boyfriend Scooter Braun packed on the PDA to watch the New York Knicks win Wednesday’s Game 4 of the NBA Finals. Early Thursday morning, the “Euphoria” actress shared a photo of the music entrepreneur kissing her on the cheek as they wrapped their arms around each other’s necks. Sweeney, 28, also shared a selfie of herself with Braun, 44, as they watched the Knicks come back from down 29 points to defeat the San Antonio Spurs at Madison Square Garden on Wednesday night. In Braun’s carousel roundup, he showed him celebrating with Sweeney and other fans in The Garden after the Knicks’ win.</p>
+                <p class="source-credit">— Https://pagesix</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/06/931/523/christian-israel-supporters.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Christian leaders hold emergency summit in Jerusalem to confront global rise in antisemitism</h3>
+                <p class="lead-summary"><strong class="drop-cap">I</strong>sraeli President Isaac Herzog addressed Christian leaders from around the world about the surge in antisemitism at the Jerusalem Summit in Israel. (Credit: The International Christian Embassy Jerusalem.) JERUSALEM: The International Christian Embassy Jerusalem (ICEJ) convened an emergency summit this week amid growing concern over the global rise in antisemitism following the Hamas-led Oct. 7, 2023. The three-day conference in the Israeli capital comes at a time when social media influencers are consistently pushing antisemitic hate to their millions of followers. "Attacking the Jews means attacking the very roots of one’s own faith. It means fighting against the people who gave us the Bible. Jesus was Jewish," ICEJ President Dr. Jürgen Bühler told Fox News Digital. Christian leaders attend the ICEJ's emergency summit on antisemitism on Wednesday, June 10th, 2026 at the Vert hotel in Jerusalem, Israel. (Amelie Botbol for Fox News Digital) "If you don’t fight antisemitism, you are sawing off the branch you sit on. For the church to survive, we need to connect to our roots, fighting antisemitism needs to be at the forefront of every pastor and every leader around the world," he added.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Iran targets U.S. bases for a second night, raising fears of renewed combat</h4>
+                <p>Iran said it launched the attacks in Kuwait, Bahrain and Jordan in response to U.S. strikes that it claimed effectively rendered the April ceasefire “meaningless.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>U.S. launches new strikes on Iran, hours after Trump issued warning</h4>
+                <p>U.S. Central Command said it went after “multiple targets” after the president said Tehran would “pay the price” for not making a deal.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>UK spy powers draw US scrutiny over alleged Apple encryption backdoor demand</h4>
+                <p>Rep. Jim Jordan, R-Ohio, discusses the report that Chinese hackers infiltrated Treasury Secretary Janet Yellen’s computer on ‘The Ingraham Angle.’ U.K. surveillance laws drew scrutiny from House Judiciary Committee Chairman Jim Jordan, R-Ohio June 5 amid warnings they could expose communications of officials and American citizens, according to reports.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F06%2FCOMP-RAIDERS-MINICAMP.jpg?quality%3D90%26strip%3Dall" alt="Lead Story Image" class="news-photo">
+                <h3>For Klint Kubiak, Raiders, it’s no longer business as usual: ‘Hard to read’</h3>
+                <p class="lead-summary"><strong class="drop-cap">H</strong>ENDERSON, Nev. — The Raiders put a bow on their offseason program Wednesday after concluding their first minicamp under new head coach Klint Kubiak. The tone set by Kubiak was far more detail-oriented and serious than recent Raiders offseasons, a clear sign that it’s no longer business as usual in Las Vegas. “He’s kind of hard to read a little bit, but that’s a good thing. I think I’m kind of hard to read, too,” new Raiders linebacker Quay Walker said. “He’s a coach who wants the team to be player-led.” Plenty of focus was on quarterback Fernando Mendoza, the first overall pick in the NFL draft, but there were plenty of other stories as well. The Raiders’ connection to Kirk Cousins, which includes him working with Kubiak and new Raiders offensive coordinator Andrew Janocko during their time together with the Vikings, made him a logical choice to serve as the veteran mentor to Mendoza and the potential bridge quarterback to cover Mendoza’s development process. The question was, which version of Cousins were the Raiders getting? The one closer to the player he was pre-2023 Achilles tendon injury, or the one who seemed to be handcuffed by the setback the last two years in Atlanta? That included an infamous night during the 2024 season when Cousins struggled to maneuver around the pocket in a game against the Raiders in Las Vegas. He was benched in favor of rookie Michael Penix Jr. soon after.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>NFL got routed on Capitol Hill after Roger Goodell declined to testify at House Judiciary hearing</h4>
+                <p>Fox News contributor Clay Travis says the NFL should offer Sunday Ticket option where fans only need to watch their favorites, rather than pay absurd amounts for everything. The House Judiciary Committee hearing on whether major sports leagues, the NFL in particular, benefit consumers or are violating the Sports Broadcasting Act of 1961 by funneling games behind increasingly expensive paywalls, was a one-sided debate.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>bet365 bonus code: Bet $10, get $365 in bonus bets for Golden Knights vs. Hurricanes</h4>
+                <p>Jordan Staal’s heroic pair of goals propelled the Hurricanes over the Golden knights to knot the Stanley Cup Final before heading back to Raleigh for Game 5. The bet365 bonus code will allow you to bet $10 and get $365 in bonus bets win or lose on any Golden Knights-Hurricanes bet. bet365 has the Canes installed as -155 favorites on the moneyline and a goal total of 5.5 as goaltender Brandon Bussi has stepped into the clutch. You can input the bet365 bonus code when you create an account for the Stanley Cup Final. Once you make a qualifying deposit and place a wager, you will get $365 in bonus value no matter the outcome of your bet.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>World Cup 2026 kicks off with Mexico vs South Africa and South Korea vs Czechia</h4>
+                <p>'Fox & Friends' co-host Brian Kilmeade speaks with former U.S. Men National Team player Alecko Eskandarian about the upcoming 2026 FIFA World Cup. Eskandarian shares his insights on the U.S. team's potential, emphasizing the importance of winning group matches against Paraguay and Australia. He also highlights MLS initiatives, including fully funded academies, to foster young talent and inspire new fans across the country.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2025/10/931/523/heather-tarek-el-moussa.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>HGTV stars Tarek and Heather El Moussa feel 'violated' after burglars ransack Newport Beach home</h3>
+                <p class="lead-summary"><strong class="drop-cap">H</strong>GTV star Heather Rae El Moussa tells Fox News Digital that she’s "not ashamed" to be in couple’s therapy with her husband Tarek, saying it can be a "beautiful thing." Tarek and Heather El Moussa felt "violated" after a suspect broke into their Southern California home while they were away on vacation. The reality stars' Newport Beach home was broken into earlier this week as the couple vacationed with their family in Mexico. Authorities responded to reports of a residential burglary near the Mariners Community after 6 p.m. on June 8, officials confirmed to Fox News Digital. Heather Rae El Moussa and Tarek El Moussa's Newport Beach home was broken into earlier this week, officials confirmed to Fox News Digital. (Phillip Faraone/Getty Images) "While the victim was away, unknown suspects accessed the backyard of the property and shattered a rear sliding glass door to get into the house," officials told Fox News Digital. "Inside the residence, the suspects ransacked the primary bedroom closet before fleeing through the backyard, along the side of the house and out the front yard."</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>I saw Chris Lake live in Brooklyn. He’s a bucket list performer</h4>
+                <p>It’s 4 p.m. on a breezy Sunday at Under the K Bridge Park in Greenpoint, Brooklyn. Bubbles float in the sky and soft house music booms in the background. Chris Lake is set to perform at 7:30 after his Saturday show was canceled due to a thunderstorm. Today, he’ll put on a spectacle complete with two stages, multiple amateur artists, and a 2.5-hour set from the Scottish legend himself. Even though it’s still early in the day, the park is already starting to feel like its own little world under the bridge. Groups of friends hop around in a circle at the second Renegade stage. Boomers, Millennials and Gen Zers bump their heads to the music at the main stage while sweat drips off their foreheads and whoops float through the crowd.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Elizabeth Hurley wows in daring yellow string bikini as she celebrates her 61st birthday</h4>
+                <p>The "Austin Powers" actress took to Instagram to celebrate her 61st birthday, posting a photo of herself soaking up the sun during a beach day. In the photo, the actress stuns in a yellow bikini as she held up a large tie-dye flag and smiled big for the camera, with a picturesque view of the ocean behind her.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>What do the cheapest tickets cost to see Tony winner ‘Death of a Salesman’?</h4>
+                <p>On Sunday, June 7, Arthur Miller’s seminal 1949 stage play starring Nathan Lane, Laurie Metcalf and Christopher Abbott took home six Tony Awards. The beloved drama, now the winningest play revival in Tony history, netted Best Revival of a Play, Best Direction of a Play (Joe Mantello), Best Featured Actress in a Play (Laurie Metcalf), Best Scenic Design (Chloe Lamford), Best Lighting Design (Jack Knowles) and Best Sound Design (Mikaal Sulaiman). In a rare four-star review, The Post’s Johnny Oleksinski wrote “that was the best ‘Death of a Salesman’ I have ever seen.” “…director Joe Mantello’s pummeling revival…accomplishes what this play at its most potent should. Yes, you leave raving about the sterling performances of Nathan Lane and Laurie Metcalf and the striking stagecraft. But, for more than a few people I overheard on the way out, it also powerfully summoned a tougher topic: their own lives.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/06/931/523/Texas-Woman-Arrested-Facebook-Post.jpeg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Texas mom jailed over dirty water Facebook post</h3>
+                <p class="lead-summary"><strong class="drop-cap">J</strong>ennifer Combs says she was arrested on a felony charge after using Facebook to collect reports about water concerns in Trinidad, Texas. A grand jury later declined to indict her. (Kurt "CyberGuy" Knutsson) Jennifer Combs says she never set out to become the face of a fight over free speech, dirty water and small-town power. She says she was simply trying to help people in Trinidad, Texas, report problems with their water. Some residents had complained about discoloration, sediment, odors and health concerns. So Combs used her Southern Belle Watch Facebook page to collect reports and send them to the state. Then, according to Combs, the situation took a turn that still sounds hard to believe. She says police came to her home and arrested her on a felony warrant over a Facebook post. "I've never even had a speeding ticket," Combs said. "I'm a mom of four kids. I have one grandbaby right now. I have two more grandbabies on the way." Jennifer Combs says she was arrested on a felony charge after using Facebook to collect reports about water concerns in Trinidad, Texas. A grand jury later declined to indict her. (Kurt "CyberGuy" Knutsson) Your phone holds your email, passwords, photos, banking apps and personal data. In this free, live online class, Kurt the CyberGuy will walk you step by step through simple phone security fixes you can do in real time. You’ll learn how to improve your privacy settings, spot the latest phone scams, use trusted security tools and walk away with a simple checklist to stay protected. Register here: CyberGuyLive.com. Jennifer sat down with me for my CyberGuy Report podcast at CyberguyPodcast.com to explain what happened, why she started asking questions and what she wants other communities to learn from her ordeal. Combs says she got involved after seeing a post from an older woman who needed help buying bottled water. According to Combs, the woman was on a fixed income and had already spent part of her monthly money on bottled water. Combs said the woman claimed her doctor had told her not to cook with or drink the tap water. That moment stuck with her.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Do not click fake 'account recovery' Amazon email</h4>
+                <p>Amazon is getting ready for Prime Day, and you can bet scammers are, too. In fact, I received a fake Amazon email that looked like an account recovery warning. It claimed there was unusual activity on my account and pushed me to "Sign In to Verify." That kind of message can make anyone uneasy. It certainly did for me. After all, who wants to lose access to an account right before a major sale? Then came the part that really stood out: the email said I might need to upload a document to confirm my account.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
