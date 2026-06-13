@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>FRIDAY, JUNE 12, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://thefederalist.com/wp-content/uploads/2026/06/Screenshot-2026-06-11-at-4.57.12-PM-scaled-e1781211547477-1200x675.png" alt="Lead Story Image" class="news-photo">
+                <h3>Graham Platner Is A Far-Left Person’s Idea Of A Far-Right Person</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>he left strained to find Nazi symbolism in Republicans. It accused everyone of being a Nazi. And yet when presented with Platner, they emphatically tell you he is no Nazi. As The New York Times’ Michelle Goldberg wrote in January, “For the last decade there’s been a debate, among people who don’t like Donald Trump, about whether he’s a fascist.” The “debate” isn’t a debate in the normal sense of the word. That is, it wasn’t a good faith disagreement between two sides weighing evidence. It was a decade-long screaming fest from half the country who insisted that anyone they disagreed with politically was Hitler. Of course now more than ever we know that it was simply their way of trying to retain power and keep it out of the hands of Republicans, because when presented with an actual Nazi, Democrats have suddenly lost an appetite for “debate.” In fact, Goldberg herself emphatically declared: “Graham Platner is no Nazi.” Platner is the Democrat candidate for Senate from Maine. Platner spent 18 years bearing a Nazi tattoo and only had it removed a few months ago. He also said women worried about rape should not “get blacked out, f*cked up around people” they aren’t “comfortable” with. He also allegedly said that if someone ever broke into his home, he would “rape them … [but] not in a sexual way, not in a gay way.” The New Republic ran a cover of Trump portrayed as Hitler and said this is what “American fascism” “would look like.” The examples are so numerous that compiling all of them would require an article the size of a phone book. Yet when Democrats finally encountered a politician with an actual Nazi emblem tattooed on his chest, the conversation was remarkably different. Platner is the caricature the left created of Republicans. For years we have been told that Republicans and Trump were extremists, Hitler, Nazi sympathizers, authoritarians, radicals, you name it. Then along comes Platner, a man who spent nearly two decades with a Nazi tattoo, made horrific remarks about the victims of rape, and is facing sexual misconduct allegations. In other words, Platner isn’t just a flawed candidate, he is the embodiment of the left’s stereotype of Republicans. It’s why so many have now rushed to explain away these problems or dismiss them or outright ignore them entirely. Because to acknowledge Platner for what he is would be to admit that their warnings about “fascism” and “Nazism” were never actually about those things, because if they were, Platner would be a five alarm fire.</p>
+                <p class="source-credit">— The Federalist</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>New Accuser: Platner Said Nazi Tattoo Reminded Him U.S. ‘Was The Evil Bad Guy Overseas’</h4>
+                <p>Another ex-girlfriend is accusing Maine Democratic Senate candidate Graham Platner of knowing the meaning behind his infamous Nazi tattoo, telling the New York Post the symbol reminded him that “the US was the evil bad guy overseas.” The unidentified woman, who claims to be a left-wing streamer, told The Post she was romantically involved with Platner in 2021 while he was engaged to his now-wife. “As a person who is a leftist, I immediately looked at him and asked him, ‘Is that a Totenkopf?’ and he told me a whole, ‘he will hold this weight forever’ bravado sob story about how it was, but he decided to keep it as a reminder that the United States was the evil, bad guy overseas,” she told The Post.</p>
+                <p class="source-credit">— Daily Wire</p>
+            </div>
+            <div class="story-minor">
+                <h4>Tracking who Trump is appointing to fill key administration roles</h4>
+                <p>Follow President Trump’s progress filling over 800 positions, among about 1,300 that require Senate confirmation, in this tracker from The Washington Post and the Partnership for Public Service.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Taylor Swift taps Steven Spielberg to film her and Travis Kelce dancing at Songwriters Hall of Fame induction: video</h4>
+                <p>Taylor Swift requested Steven Spielberg film herself and Travis Kelce dancing at her Songwriters Hall of Fame induction Thursday. In a playful video posted by Variety to X, the Grammy winner held her phone in selfie mode while rocking out with her partner to John Fogerty singing “Fortunate Son.” At the Songwriters Hall of Fame Gala, Taylor Swift goes Spielberg mode as she and Travis Kelce dance along to John Fogerty (and his sons) performing ‘Fortunate Son’ pic.twitter.com/hFtXH6bnSV The 36-year-old continued to get her groove on with Kelce, also 36, while the Oscar winner filmed the pair and then panned over to the performance.</p>
+                <p class="source-credit">— Https://pagesix</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/04/931/523/yoon-suk-yeol-impeachment-hearing-seoul-fox-news-001.jpeg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Former South Korean President Yoon Suk Yeol sentenced to 30 years over North Korea drone flights</h3>
+                <p class="lead-summary"><strong class="drop-cap">M</strong>ore than 50 House lawmakers, led by Rep. Darrell Issa, are raising alarms over what they call discriminatory South Korean policies that harm American tech companies and tilt economic advantages toward China-linked competitors. A South Korean court sentenced former President Yoon Suk Yeol to 30 years in prison Friday in a case that accused him of ordering drone flights over North Korea in an effort to justify his declaration of martial law. Yoon, 65, was sentenced alongside former Defense Minister Kim Yong Hyun by the Seoul Central District Court. The ousted president was previously sentenced to life in prison for leading an insurrection following his declaration of martial law in December 2024. North Korea accused South Korea of flying drones over Pyongyang to drop propaganda leaflets on three occasions in October 2024. South Korea's impeached President Yoon Suk Yeol attends a hearing of his impeachment trial at the Constitutional Court in Seoul on Feb. 11, 2025. (Lee Jin-man/AP) Then-Defense Minister Kim initially issued a vague denial before South Korea's Defense Ministry said it could neither confirm nor deny the allegations.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Behind veneer of normalcy in Dubai, war fatigue and a sense of uncertainty</h4>
+                <p>In the United Arab Emirates, there is a growing sense that the U.S.-Israeli war has taught Tehran how to menace its adversaries even without developing a nuclear bomb.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Why a notably warm start to the year foreshadows what’s ahead</h4>
+                <p>2027 has notably high odds of becoming the warmest year on record, with the latest projections showing nearly an 80 percent chance.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Starmer in 'seismic' crisis, UK defense chief quits before high-stakes Trump NATO summit</h4>
+                <p>Fox News Contributor Brett Velicovich, a former Army special ops intel analyst, provides an assessment of the ongoing military operation against Iran. U.K. Defense Secretary John Healey resigned Thursday after clashing with Prime Minister Keir Starmer's government over military spending, dealing the British leader a setback weeks before a critical NATO summit to include President Donald Trump.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F06%2Fnewspress-collage-ixnct1h0o-1781238177398.jpg?quality%3D90%26strip%3Dall%261781223805" alt="Lead Story Image" class="news-photo">
+                <h3>Underdog USMNT bringing ‘confidence’ to World Cup opener and moment three decades in making</h3>
+                <p class="lead-summary"><strong class="drop-cap">I</strong>RVINE, Calif. — The U.S. has waited 32 years to play a World Cup on home soil. All that waiting finally ends Friday at SoFi Stadium against Paraguay. Team USA will kick off the world’s biggest sporting event as a huge underdog. But with the nation marking its 250th birthday in the midst of the tournament, the team is aiming at making a deep run — maybe even celebrating by bringing home a long-shot title. “That’s the plan,” said defender Chris Richards, hoping to return from an ankle injury that cost him the final two tuneup friendlies. “If we can start off the World Cup with three points, not just for our confidence but also to show the group that we can be top dogs in this group and top dogs in this World Cup. So I think with a statement hopefully on Friday and three points, it’ll set the tone for this World Cup.” It could end up remembered for corruption, price gouging and war between the U.S. and Iran — who could face off in the knockout rounds. Or it could be recalled for a thrilling Team USA run to a quarterfinal — or beyond. Taking the full three points Friday would be not just a statement but a rarity. While the U.S. has improved to the point where advancement from the group stage is expected, the squad has won just three games in the past five World Cups. Manager Mauricio Pochettino has endeavored to instill the mindset that victories on the biggest stage against the best foes are not just possible but expected.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Carolina Hurricanes fend off late Golden Knights charge to come within one win of a Stanley Cup</h4>
+                <p>Dan Dakich says that Brendan Sorsby will be followed by gambling allegations for the rest of his career. This Stanley Cup Final between the Carolina Hurricanes and Vegas Golden Knights has been one of the wildest in recent memory, if not ever. After four thrillers, including two insane games in Vegas, the series shifted back to Raleigh for Game 5, with the two teams knotted at 2-2.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>How Jeremy Hefner looks back on his Mets downfall now that he’s succeeding with Braves</h4>
+                <p>Don’t miss Mike Puma’s text messages from Queens and beyond — he’s giving Sports+ subscribers the inside buzz on the Mets. Fired as Mets pitching coach after last season, Hefner will return to Citi Field on Friday with a Braves team that owns MLB’s best record. Much of the club’s success stems from a pitching staff overseen by Hefner that, as of Thursday, held an MLB-best 3.20 ERA. Hefner isn’t looking back (too much), but told Sports+ on Thursday that he was as culpable as anyone for the pitching staff’s free fall last season that played the largest factor in the Mets missing the playoffs. Kodai Senga, David Peterson and Sean Manaea all floundered after the All-Star break following a pitching surge that carried the Mets into late June.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>ESPN's Mike Greenberg calls misbehaving Knicks fans 'a disgrace' after eggs thrown at Wembanyama</h4>
+                <p>The New York Knicks complete a 29-point comeback, the largest in NBA Finals history, to take a 3-1 series lead over the San Antonio Spurs. The San Antonio Spurs' historic collapse in Game 4 of the NBA Finals was capped by one final indignity. NBA star Victor Wembanyama was struck by an egg that appeared to be thrown by taunting Knicks fans as the Spurs made their way back to the team hotel.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/06/931/523/Kate-Middleton-Royal-Family-Secret-Weapon.jpeg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Kate Middleton hailed as the monarchy's 'saving grace' after cancer battle transformed her royal role: experts</h3>
+                <p class="lead-summary"><strong class="drop-cap">C</strong>hristopher Andersen, author of "Kate!," tells Fox News Digital that the Princess of Wales’ modern approach, family values and "soft power" make her a vital asset to the royal family and the UK. After cancer, Kate Middleton has emerged stronger than ever and has become the one person saving the monarchy. The claim was made by multiple royal experts who spoke to Fox News Digital, praising the Princess of Wales for thriving in her "Kate Era." All eyes will be on the princess, 44, at Trooping the Colour on June 13, when the senior royals will gather for a ceremonial military parade held annually to mark the official birthday of the British monarch. "I think the 'Kate Era' began the moment she and Prince William exchanged vows in 2011," Christopher Andersen, author of "Kate!," told Fox News Digital. "No one in recent memory has had a greater impact on the monarchy than Kate." PRINCE WILLIAM WAS SHUT DOWN BY KING CHARLES AFTER FAMILY STRUGGLES LEFT HIM ‘SHAKEN TO THE CORE’: BOOK Kate Middleton is expected to embark on more trips overseas after captivating audiences in Italy, several royal experts told Fox News Digital.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Malcolm Todd announces ‘Do That Again Tour,’ 3 LA shows. Get tickets</h4>
+                <p>On Monday, June 8, rapidly rising singer-songwriter Malcolm Todd announced he’s hitting theaters, music halls, amphitheaters, ballrooms, squares, parks, auditoriums and forums all over North America this fall on his ‘Do That Again Tour.’ That includes seven (!) shows in California for the Los Angeles native. His final three concerts of the nationwide run are slated to go down at his hometown Greek Theatre. They’re slated to take place: Other Golden State gigs  include two spots at Oakland’s Fox Theatre (Oct. 21-22), a one-off at San Diego’s PETCO Park (Oct. 24) and an appearance at San Francisco’s Outside Lands Festival on Aug. 7.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>White House fires back at Ariana Grande after she told them to never use her music in ICE deportation video</h4>
+                <p>White House press secretary Karoline Leavitt slammed what she called elitist celebrities for attacking ICE, arguing they’re unfairly demonizing law enforcement while staying silent about violent crimes tied to illegal immigration. The White House hit back at Ariana Grande on Thursday after the "Wicked" actress slammed the Trump administration for using one of her songs in a social video depicting Immigration and Customs Enforcement arrests.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>‘The Odyssey’ popcorn buckets spark hilarious reactions online over bizarre shape: ‘Interesting, to say the least’</h4>
+                <p>Christopher Nolan’s “The Odyssey” is coming to theaters on July 17, and to excite moviegoers, they’ve released a Trojan Horse Popcorn Bucket that requires customers to open a secret hatch on the horse to access their popcorn. The location of the hatch is sparking funny commentary on social media. “Why is it in a dick pouch?” commented an X user on the announcement post for the bucket. Turning to souvenir popcorn buckets and movie merchandise is a smart way to incentivize people to actually go to the movies in the world of streaming. The popcorn bucket prop phenomenon is the latest — and wildly successful — trend in novelty concessions to bait fans. Past popcorn pushes have featured the designer-esque handbag for “The Devil Wears Prada 2,” the $65 corvette popcorn vessel for “Barbie” and the “Mission: Impossible” bucket that needed a key to unlock.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/06/931/523/man-smartphone-park-bench.jpeg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Stolen iPhones fuel scary passcode scam</h3>
+                <p class="lead-summary"><strong class="drop-cap">K</strong>urt the CyberGuy joins 'Fox & Friends' to share his tips to stay safe from online scammers and recent warnings on how AI toys can harm children. Your iPhone can feel nearly useless to a thief once you mark it as lost. Apple's Activation Lock can help turn a stolen device into a locked brick. That should make phone theft less profitable. Yet thieves have found a nasty workaround. According to new research from Infoblox Threat Intel, the cybersecurity research team at Infoblox, criminals are using fake Apple pages, smishing texts and Telegram-based unlocking tools to trick stolen iPhone owners into handing over their passcodes. Infoblox Threat Intel tracks cybercriminal activity partly by studying DNS, the system that helps devices find websites online. Think of DNS as the internet's phone book. By watching patterns in suspicious website names and traffic, researchers can spot fake domains, phishing pages and larger scam networks. The scary part is how personal the scam can feel. The thief may already have your phone. The message may arrive right after the theft. The fake page may even show what looks like your iPhone moving on a map. Cybercriminals are using fake Apple pages and text messages to trick stolen iPhone owners into giving up their passcodes. (Kurt CyberGuy Knutsson) Researchers found that many thieves care less about the data on the phone and more about turning the device into resale cash. Once they get your passcode, they can remove protections, wipe the device and sell it. Here is the part that feels especially cruel. When you lose an iPhone, you may put a message on the lock screen with a phone number to call. That feature can help a good person return your device. A scammer can use that same number to contact you. In one case described by the researchers, a stolen iPhone owner received a text shortly after the theft. The message linked to a fake Apple-style website. The page showed what looked like a moving phone location on a map. Then it asked for the phone's PIN code. Had the victim entered it, the thief would have gained control of the device. That is what makes this scam so believable. The thief may really have your phone. The message may arrive at the perfect moment. The fake page may look close enough to Apple's real Find My experience to catch someone who is stressed and trying to recover an expensive device.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Grandparents are identity theft's biggest payday</h4>
+                <p>Fox News' Douglas Kennedy reports the latest on the scams and what is behind the troubling trend. The FBI calls it a "distress scam." It is also known as a grandparent scam. The scam works by making an older adult believe a grandchild is in serious trouble and needs money right away, often before a court date or legal deadline. Victims reported more than $5 million in losses to this type of fraud in 2025. The FBI's Internet Crime Complaint Center also noted that reported losses likely show only part of what scammers actually stole.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>12 biggest Apple WWDC 2026 takeaways you need to know</h4>
+                <p>Tech expert Kurt Knutsson urges you to use Apple’s App Privacy Report to see what your apps are really up to. Apple used WWDC 2026, its annual developers conference, to lay out what is coming next for your iPhone, Mac, iPad, Apple Watch and Vision Pro. This year's keynote also carried extra weight because it marked Tim Cook's final WWDC as Apple CEO before John Ternus takes over in September.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
