@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>SATURDAY, JUNE 13, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/06/931/523/Platner-Musk.jpeg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Platner's 'deranged' response to Musk becoming a trillionaire sparks online outrage: 'Loserthink'</h3>
+                <p class="lead-summary"><strong class="drop-cap">J</strong>esse Watters and The Five panel discuss Democratic Senate candidate Graham Platner's string of scandals, including an ex-girlfriend's claims that his Nazi tattoo represents 'the US was the evil bad guy.' The hosts also weigh in on Platner's policies supporting universal healthcare and gender-affirming care, arguing his political positions are overlooked amidst personal controversies. The panel questions the media's focus and the public's tolerance for such candidates. Maine Democratic Senate candidate Graham Platner was widely mocked by conservatives on social media over a post lamenting Space X and Tesla CEO Elon Musk being labeled the world’s first trillionaire. Platner’s post, which was seen over 2 million times as of Friday evening, was referring to news that Musk’s SpaceX began trading at $150 a share on Friday, above its listing price of $135 a share, making him the world's first-ever trillionaire following the initial public offering. Online reactions poured in following Graham Platner's criticism of Elon Musk's trillionaire status. (Sophie Park/Bloomberg via Getty Images ; Johannes Neudecker/picture alliance via Getty Images) The post received heavy criticism from conservatives on social media, with many bringing up the various controversies surrounding Platner's campaign, including reports of infidelity, a Nazi tattoo, physical abuse of an ex-girlfriend and social media posts criticizing the military and rural America. "Communists can never quite grasp that if you make Musk poorer, you make millions of others poorer in the process because unlike them, he actually creates value for others in society," Red State writer Bonchie posted on X. "It's deranged." ""Pick your fighter," Utah Republican Sen. Mike Lee posted on X. "Guy who innovates constantly, has built phenomenally successful businesses, and now reaps the rewards. Graham Platner addresses the crowd at his watch party after winning the Democratic nomination for U.S. Senate at a YMCA in Blue Hill, Maine, on June 9, 2026. Platner will face Republican Sen. Susan Collins in the election for the seat.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>U.S. Wins Big in World Cup Opener</h4>
+                <p>The U.S. Men’s National Soccer Team secured the win and three points in their World Cup opener versus Paraguay after a 4-to-1 performance. The U.S. was led to the win by the quality finishing of forward Folarin Balogun, who nabbed two goals in the first half, one of which included a stoppage-time left-footed shot into the top-left corner. The U.S.'s fourth goal was a last-second thriller that came in the 97th minute to give them a 3-goal cushion should the group winner be decided by goal differential. Paraguay managed to claw back a goal in the 73rd minute, but were unable to overcome the first half scoring of the U.S.. A Paraguayan own goal created by Christian Pulisic in the seventh minute set the tone of the match for the South American squad early on in the night.</p>
+                <p class="source-credit">— Townhall</p>
+            </div>
+            <div class="story-minor">
+                <h4>The American Bar Association Is Unfit To Accredit Law Schools, And The Trump Admin Can Stop Them</h4>
+                <p>Some states have parted ways with the ABA, but federal recognition of the group’s accreditation power gives it a monopoly on the entire U.S. legal profession. Washington, D.C. — The American Bar Association (ABA) has injected far-left politics into America’s entire legal system through its power to accredit law schools, but this summer, the U.S. Department of Education will have the opportunity to strip that power. The National Advisory Committee on Institutional Quality and Integrity (NACIQI) is a federal advisory board within the Department of Education that “provides recommendations regarding accrediting agencies that monitor the academic quality of postsecondary institutions and educational programs for federal purposes.</p>
+                <p class="source-credit">— The Federalist</p>
+            </div>
+            <div class="story-minor">
+                <h4>Kate Middleton, Prince William join King Charles for Trooping the Colour</h4>
+                <p>Kate Middleton and Prince William cut a regal figure at Trooping the Colour 2026 on Saturday, alongside King Charles and Queen Camilla. Middleton looked elegant in a powder-blue Catherine Walker dress paired with a matching wide-brimmed Philip Treacy hat, bringing a sophisticated touch to the royal procession at Buckingham Palace marking the monarch’s birthday. She completed her look with Cassandra Goad pearl floral burst earrings, a pair she wore earlier this year at the installation of the new Archbishop of Canterbury and first debuted in 2018 during the christening of her youngest son, Prince Louis, Town and Country reported.</p>
+                <p class="source-credit">— Https://pagesix</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/06/931/523/shark-warning-sydney-beach.jpeg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Woman airlifted to hospital with serious injuries after shark attack at popular Sydney beach</h3>
+                <p class="lead-summary"><strong class="drop-cap">N</strong>ew South Wales Police Superintendent John Duncan speaks about fatal shark attack along beach in Sydney, Australia, on Saturday, Sept. 6, 2025. (Credit: AuBC/APTN) A 30-year-old woman was rushed to a hospital Saturday with serious injuries after being attacked by a shark at a Sydney beach, the latest in a string of recent shark attacks off Australia's coast. Officials said emergency crews responded to Coogee Beach on Saturday morning following reports that a swimmer had been bitten. "The woman was pulled from ⁠the water by members of the public who commenced ​first aid," police said. Police and emergency personnel at the scene after reports of a shark attack at Coogee Beach in Sydney, Australia, June 13, 2026. (REUTERS/Hollie Adams) A lifeguard and a NSW Police boat patrol Coogee Beach following a shark attack in Sydney, Australia, June 13, 2026. (REUTERS/Hollie Adams) Last week, officials said a 35-year-old fisherman was killed by a suspected shark measuring nearly 15 feet long off the coast of Western Australia. On May 24, 39-year-old Michael Jensz was killed after suffering fatal injuries during a suspected bull shark attack while spearfishing along the Great Barrier Reef.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>U.S. and Iran close to signing ceasefire deal, officials say</h4>
+                <p>After days of uncertainty and tit-for-tat military strikes, "text of the peace deal has been reached,” according to Pakistan's prime minister.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Mike Waltz says Gulf allies back Trump’s Iran pressure campaign after regional trip: ‘Zero daylight’</h4>
+                <p>Former CIA Chief of Station Dan Hoffman discusses the potential Iran deal, expressing doubt about its sincerity. He highlights U.S. military strikes, sanctions and blockades as key leverage points. Hoffman questions whether Iran's recent 'maximalist demands' indicate a genuine desire for a breakthrough after intense pressure.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Pope Leo had to catch a ride from the king of Spain after plane’s engine failed</h4>
+                <p>The pope wrapped up a trip to Spain by borrowing a private jet from King Filipe VI after the Vatican's chartered plane, with the press corps on board, broke down.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/06/931/523/pulisic.jpeg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Christian Pulisic subbed out at halftime of USMNT World Cup opener after feeling tightness in calf</h3>
+                <p class="lead-summary"><strong class="drop-cap">C</strong>hristian Pulisic, who scored and notched an assist in the U.S. men's national soccer team's World Cup friendly against Senegal last week, discusses what it's like to represent country on home soil in the 2026 FIFA World Cup. After a first half for the ages, USMNT fans got a scare when star Christian Pulisic did not return for the second half of the United States' World Cup opener against Paraguay. The Hershey, Pennsylvania, native, who plays club soccer for AC Milan, assisted on the United States’ second goal, scored by Folarin Balogun, and was one of the team’s most noticeable players throughout the first half. However, when the team emerged from the tunnel, it was revealed that Pulisic had been subbed out in favor of Sebastian Berhalter, son of former USMNT player and coach Gregg Berhalter. USMNT star Christian Pulisic was subbed out before the second half of the team's World Cup opener against Paraguay. (Gary Vasquez-Imagn Images) The thing was, the team did not give any reason for why the change was made. It was reported during the FOX Sports broadcast that Pulisic had indicated to family in the stands that he was OK.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Giants fall to Cubs as Javier Assad beats San Francisco for second time in a week</h4>
+                <p>SAN FRANCISCO — With a full week, instead of just a few minutes, to prepare this time around, the Giants didn’t find any more success against Javier Assad. Assad, who blanked San Francisco when called into emergency duty last week at Wrigley Field, was just as effective as the Cubs’ scheduled starter in a rematch Friday night. The Giants mustered just one hit in 6 ⅓ innings against Assad last week. They got to him for three singles this time but nothing else in a 5-1 loss. They needed more than that behind an erratic Landen Roupp, who struck out the first four batters of the game but exhausted 105 pitches and failed to complete five innings.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>US earns historic win in World Cup opener after beatdown of Paraguay as the legend of Folarin Balogun is born</h4>
+                <p>For the first time in history, the U.S. scored at least four goals in a World Cup game. On top of that, Folarin Balogun, 24, became the first American player since 1930 to score multiple goals in a World Cup match. The 4-1 victory over Paraguay also marked the first time the United States won a World Cup game by three goals since 1930, when it also beat Paraguay. Team USA secured the historic win in its 2026 FIFA World Cup opener in Southern California on Friday night.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Fate brought Falorin Balogun to USMNT and it’s already reaping benefits</h4>
+                <p>INGLEWOOD, Calif. — The noise inside Los Angeles Stadium on Friday night was deafening; 70,492 fans draped in red, white and blue roared with every American attack and chanted “USA!” throughout the 90-minute match. They were encouraged by a new face on the United States men’s national team. A striker that carried the hopes and hearts of a nation. That man was Falorin Balogun, and his magical first half against Paraguay propelled the United States to the World Cup start they needed to hopefully advance far in the tournament. “The first game is the most difficult,” said Balogun. “You want a result like this and it gives you a lot of confidence for the next game.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F06%2FSchmigadoon.jpg?quality%3D90%26strip%3Dall" alt="Lead Story Image" class="news-photo">
+                <h3>What do tickets cost to see 2026 Tony winner ‘Schmigadoon’ on Broadway?</h3>
+                <p class="lead-summary"><strong class="drop-cap">A</strong>fter being unceremoniously cancelled in January 2024 following its “Chicago”-themed second season, the musical hit the Great White Way in April ’26. Now, less than two months later, the show has netted countless rave reviews and scored Tony Awards for Best Musical, Best Original Score, Best Book of a Musical and Best Orchestrations. If you’d like to see the celebrated production starring Ana Gasteyer, Alex Brightman and Sara Chase, tickets are available for all upcoming shows at the Nederlander Theatre from now until January 2027. At the time of publication, the lowest prices we could find on seats for any one performance were $62, including fees, on SeatGeek. Make sure to use promo code NYPOST10 for $10 off purchases over $250 at checkout (Editor’s Note: this discount is only valid for users’ first purchase on SeatGeek). In the event you’re not familiar with the show, “Schmigadoon!” tells the tale of a bickering couple who get lost while on a couples’ retreat and find themselves in the magical musical “Schmigadoon,” a town where everyone sings as if they’re in “Brigadoon.” Keegan-Michael Key and Cecily Strong played the fighting pair in the TV series; Brightman and Chase assume their respective roles at the Nederlander. Variety raved, “the effervescent stage show, from creator Cinco Paul and director-choreographer Christoper Gattelli, is all but irresistible — a giddy love letter to the form that’s enough to turn even the most skeptical curmudgeon into a walking heart-eye emoji.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Justin Baldoni attorney rips Blake Lively after judge awards limited attorney fees</h4>
+                <p>Blake Lively arrived at the Met Gala after a lengthy lawsuit settlement with former co-star Justin Baldoni. Justin Baldoni's lawyer issued a scathing statement after a judge ruled that Blake Lively was entitled to recover attorney and litigation fees. Judge Lewis J. Liman said in a written decision that Lively can recover legal fees and costs related to her defense against a countersuit Baldoni brought against her after she sued him in December 2024. The judge rejected her claims to triple any damages and pursue punitive damages.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>How much are tickets to see Phoebe Bridgers? Get them with a discount</h4>
+                <p>On Friday, June 5, the four-time Grammy winner announced she’s striking out on her international ‘The Lost Tour’ at arenas all over the U.S. and Canada with special guest Alex G. And, after extending the run due to overwhelming demand, the Boygenius member now has three (!) concerts at Brooklyn’s Barclays Center. They’re scheduled to take place: If you’d like to see her live, tickets are now officially available for all 31 phone-less North American concerts — fans will be expected to put their devices in Yondr pouches — from September through November. At the time of publication, the lowest price we could find on seats for any one show was $81 including fees on SeatGeek.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Tim Allen reveals the one thing that has saved his nearly 20-year marriage to Jane Hajduk</h4>
+                <p>Actor Tim Allen and comedian Bill Maher dismissed the focus on DEI practices during a conversation on "Club Random," and argued that sitcoms have "just got to be funny." During an interview with Us Weekly, Allen opened up about the struggles he endured in his near two-decade-long marriage.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/06/931/523/Debug-Google-team-monitoring-larval-development-through-the-pupation-stage.jpeg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Google wants to release millions of mosquitoes</h3>
+                <p class="lead-summary"><strong class="drop-cap">I</strong> know what you are thinking. Why on earth would Google want to release millions of mosquitoes? That was my first reaction too. Usually, when we hear "Google" and "bugs" in the same sentence, we think about software. This time, the bugs are real. Google's Debug project is asking federal regulators for permission to release sterile male mosquitoes in New Jersey, California and Florida. The goal is to reduce mosquito populations that can spread disease. Now the big question is whether this is a smart new way to fight mosquito-borne disease, or a tech-backed experiment that needs much more public scrutiny. Google's Debug project says it is using science, automation and engineering to fight disease-carrying mosquitoes. The idea comes from a method called the sterile insect technique. Here is the basic version. Scientists raise male mosquitoes that cannot produce viable offspring. Then they release those males into the wild. When the sterile males mate with wild females, the eggs do not hatch. Over time, the local mosquito population can shrink. That part is important. Male mosquitoes do not bite. Female mosquitoes are the ones that bite and can spread disease. So Google isn’t trying to release more biting mosquitoes into neighborhoods. It is trying to release males that can help stop future generations from hatching. Google's Debug project sees mosquito control as a public-health and technology challenge. The team says it wants to use engineering, automation and AI tools to reduce disease-carrying mosquito populations. The idea is to stop "bad bugs" with "good bugs." That may sound strange, but the science behind it has been studied for decades. Sterile insect releases have been used against other pests, including fruit flies, screwworms and codling moths. Mosquitoes are harder. They are fragile, difficult to raise at a massive scale and challenging to sort by sex. That is where Debug says Google's technology can help. Debug says the process starts by raising sterile male mosquitoes. One approach uses Wolbachia, a naturally occurring bacterium found in many insects.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Fox News AI Newsletter: Top 12 takeaways from Apple's new AI features</h4>
+                <p>Apple CEO Tim Cook delivered his final WWDC keynote as Apple CEO, announcing smarter features included in the tech company's next big software update. (Josh Edelson / AFP via Getty Images) SIRI UPGRADE: Apple used WWDC 2026, its annual developers conference, to lay out what is coming next for your iPhone, Mac, iPad, Apple Watch and Vision Pro. This year's keynote also carried extra weight because it marked Tim Cook's final WWDC as Apple CEO before John Ternus takes over in September. Still, the biggest story for users was software. Apple put Siri AI and Apple Intelligence at the center of the keynote, while also announcing iOS 27 support for older iPhones, new child safety tools, faster performance and smarter features across everyday apps.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Stolen iPhones fuel scary passcode scam</h4>
+                <p>Kurt the CyberGuy joins 'Fox & Friends' to share his tips to stay safe from online scammers and recent warnings on how AI toys can harm children. Your iPhone can feel nearly useless to a thief once you mark it as lost. Apple's Activation Lock can help turn a stolen device into a locked brick. That should make phone theft less profitable. Yet thieves have found a nasty workaround.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
