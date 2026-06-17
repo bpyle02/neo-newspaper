@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>TUESDAY, JUNE 16, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://www.theblaze.com/media-library/america-has-culture-just-ask-the-world-cup-fans-discovering-waffle-house.jpg?id=66940749&width=980" alt="Lead Story Image" class="news-photo">
+                <h3>America has culture — just ask the World Cup fans discovering Waffle House</h3>
+                <p class="lead-summary"><strong class="drop-cap">F</strong>orget the final score. The real World Cup upset this summer is how many international fans are discovering that America is, against all odds, kind of great — especially in a "why does this gas station have 40 kinds of jerky and also a Wi-Fi password printed on the receipt" way — and they're documenting their delightful experiences on social media. The breakout star of the bunch is a German fan known on X as Freddy who has been chronicling a six-week road trip across the U.S. and Canada, following Germany's national team, and has picked up hundreds of thousands of followers in his trek. Freddy's Atlanta stop hit the respectable tourist beats — Stone Mountain, the MLK National Historical Park, some "Stranger Things" filming locations — and then immediately abandoned all dignity for Taco Bell, which he called "the holy land." A 1 a.m. Waffle House visit got a perfect 10/10 — food, prices, and staff included. His Wendy's stop in Tennessee produced the single best exchange of the whole tour. His order somehow came back under the name "John," and when he posted his haul of burgers and fries, the official Wendy's account replied with one demanding question: "WHERE IS THE FROSTY." He also fit in a Walmart run for water, socks, and USA soccer merch and somehow found time to watch the NBA Finals at Chili's amid all this. Before a single World Cup match had kicked off, Freddy watched the War Eagle fly over Auburn's Jordan-Hare Stadium and called it the most "the European mind can't comprehend this" moment of his life. One of Freddy's posts got enough traction that Transportation Secretary Sean Duffy shared it on X, writing: "There's no better way to see our country than on a road trip! Because to LOVE AMERICA you have to SEE AMERICA." Alabama Governor Kay Ivey (R) invited him back for football season. When he posted from the Gulf Coast, Republican Gov. Ron DeSantis welcomed him to Florida — but couldn't let it go that Freddy had called the Gulf "the sea." RELATED: 'I had the right papers': Somali World Cup referee booted from US gets an answer from the White House Freddy is not even the only German on this beat. Finn Agostinelli has been touring Chicago — the Riverwalk, "the Bean," and a visit to Portillo's so good that he posted a petition to get one opened back home in Hamburg. His best moment came at Macy's, where he had ducked in to find a restroom and instead found himself staring up at an enormous American flag. "I respect how proud Americans are of their country," he wrote. "Unimaginable back home in Germany."</p>
+                <p class="source-credit">— The Blaze</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>FBI thwarted attack targeting UFC event at White House, director says</h4>
+                <p>People have been taken into custody in connection with the alleged planned attack on the UFC event Sunday that President Donald Trump attended, FBI Director Kash Patel said.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>FBI Raids Leftist Group With History Of Suspect Voter Registration Practices</h4>
+                <p>The Ohio Organizing Collaborative has ties to  a voter canvassing group with a ‘bad reputation’ for suspected fraudulent voter registrations. Democrats are decrying last week’s FBI raid on the headquarters of an Ohio “voting rights” group as a political witch hunt, an “intimidation” investigation by a Trump administration fixated on probing election fraud. But buried in the breathless corporate media coverage is the fact that the Soros-funded Ohio Organizing Collaborative has a track record of voter registration fraud and ties to a for-profit political canvassing company with a history of suspect voter registration activities.</p>
+                <p class="source-credit">— The Federalist</p>
+            </div>
+            <div class="story-minor">
+                <h4>MLB Targets Christian Players Who Rejected LGBT ‘Pride Night’</h4>
+                <p>The Giants apologized for the Christian players' expression of their faith in a statement ironically championing "inclusion." Major League Baseball has officially warned San Francisco Giants players who counter-signaled or rejected the team’s LGBT “Pride Night.” Starting pitcher Landen Roupp on Friday etched a Bible passage found in Genesis onto his Giants cap, right next to the LGBT-themed rainbow logo he was directed to wear. Other players, JT Brubaker and Ryan Walker, followed suit in standing up for their Christian faith, also adding Bible verses. And relief pitcher Sam Hentges refused to wear the rainbow cap altogether, stating, “I don’t morally support it.</p>
+                <p class="source-credit">— Daily Wire</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/02/931/523/british-prime-minister-keir-starmer-february-24-2026.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Russia linked to arson attacks on properties connected to UK PM Keir Starmer, police say</h3>
+                <p class="lead-summary"><strong class="drop-cap">O</strong>fficials on Monday revealed new details about a series of arson attacks targeting properties connected to U.K. Prime Minister Keir Starmer, alleging the suspects were recruited and directed by a Russian-speaking handler. According to police and court reporting, the suspects were promised payment to carry out a coordinated campaign in London in May 2025, including attacks involving a vehicle and two properties linked to Starmer. A new investigation reported that the handler is believed to be a diplomat trained in information warfare and part of a broader Russian sabotage and disinformation operation directed by Moscow, according to the Kyiv Post. Ukrainian national Roman Lavrynovych, 22, and Romanian national Stanislav Carpiuc, 27, were convicted in connection with the arson plot after Lavrynovych was recruited by a Russian-speaking Telegram handler known as "El Money," according to police and court reporting. Kyiv Post reported that Carpiuc was also born in Ukraine. A third defendant, Petro Pochynok, 35, was acquitted. British Prime Minister Keir Starmer speaks during a meeting on Feb. 24, 2026.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Israelis denounce Trump’s deal with Iran</h4>
+                <p>Israeli officials disparaged the peace deal and said Israel’s fight against Hezbollah in Lebanon would go on.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>After news of Iran peace deal, Lebanese return home to assess wreckage</h4>
+                <p>Some war-weary residents displaced from the south found relative quiet, with guarded optimism that Trump will pressure Israel to adhere to a truce.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/06/931/523/tunisia-head-coach-sabri-lamouchi-fox-news-002.jpeg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Tunisia fires coach mid-World Cup after being decimated by Sweden</h3>
+                <p class="lead-summary"><strong class="drop-cap">C</strong>lint Dempsey, Walker Zimmerman, Bob Bradley and Alex Scott react to Sweden’s dominant 5-1 win over Tunisia, then preview USA's next group play match against Australia. The Tunisian men’s soccer team dropped their first match against Sweden in the 2026 FIFA World Cup on Sunday, and it appeared to have a reverberating effect across the squad. Tunisia fired coach Sabri Lamouchi on Monday after the 5-1 loss. Hervé Renard was appointed the coach for the remainder of the World Cup. The Tunisian soccer federation said Renard’s deal will only cover the next matches in the tournament and a longer-term deal will be discussed later. Tunisia head coach Sabri Lamouchi watches during the World Cup Group F soccer match between Sweden and Tunisia in Guadalupe, near Monterrey, Mexico, on June 14, 2026. (Moises Castillo/AP Photo) Tunisia has Japan and the Netherlands remaining on the schedule. However, the loss put Tunisia in a pretty tough spot as Japan and the Netherlands’ 2-2 draw gave each team a point. Japan would qualify for the knockout stage if the World Cup ended today.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Dodgers’ Kyle Tucker still looking to break out of season-long slump</h4>
+                <p>By this point in the season, Kyle Tucker knew to not read too much into anything he did on Monday in the Dodgers’ 4-3 win over the Tampa Bay Rays. He’d been fooled by moments like this before, tricked into thinking his season was about to turn around. So in the wake of a 2-for-4 performance in which he homered and threw out a baserunner at home from right field, Tucker kept the night in perspective. He continued, “It can work for one at-bat or two at-bats or something, but just gotta make it consistent. Play so many games and have so many at-bats, so having one at-bat go your way is fine, it’s great, but you just gotta try and come back and do that every single time.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Simone Biles remains mum on mysterious near-death experience in Belize</h4>
+                <p>American Olympic legend Simone Biles was asked on social media about her mysterious health crisis that landed her in the hospital during a trip to Belize. Biles wrote on Instagram earlier this month she almost died, but the details were very vague. She posted a photo of her hand with what appeared to be a hospital wristband around it. She shared a video of her trip to the Central American nation, but when asked about the near-death experience, she kept the situation close to the vest.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Serena Williams reunites with Venus at Wimbledon in comeback twist</h4>
+                <p>Serena and Venus Williams will compete together for the first time in four years in the Ladies’ Doubles tournament at Wimbledon in London via a wild card invitation, the tournament posted Tuesday morning. The pair own six Wimbledon doubles championships, having last won 10 years ago, and will aim to become the oldest pairing to win the event, per The Athletic. Back together, at Wimbledon 💚💜Serena and Venus Williams will compete in the Ladies’ Doubles at The Championships 2026 pic.twitter.com/xrOV0yeBCJ This family reunion comes shortly after the 44-year-old Serena surprisingly un-retired earlier this month and competed at the Queen’s Club Championship.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/06/931/523/gregg-allman-allman-brothers-fox-news-001.jpeg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Gregg Allman was haunted by father's murder and brother's death, fueling decades of addiction: doc</h3>
+                <p class="lead-summary"><strong class="drop-cap">"</strong>Gregg Allman: The Music of My Soul" director James Keach shared how his new documentary explores the childhood loss, family tragedy and addiction that shaped the rock icon's life, music and eventual redemption. Gregg Allman, the legendary frontman of the Allman Brothers Band, fought a decades-long battle with personal demons that nearly destroyed him. The new documentary "Gregg Allman: The Music of My Soul," which features rare interviews with Allman, explores the highs and lows of the late Southern rock icon's life. During an interview with Fox News Digital, director James Keach explained that the film chronicles how Allman's father's murder, the death of his brother Duane and years of addiction left lasting scars that ultimately led to a hard-won redemption. Gregg Allman was haunted by his father's murder and his brother's death before finding redemption, according to a new documentary. (Michael Ochs Archives/Getty Images) "He revealed why he struggled with addiction and his triumphs over that addiction," he continued. "It's Gregg telling the story of a kid's early childhood trauma, his dad being murdered, his losing his brother — and then you could just see the loss that this guy had in his life and the effect that the trauma had."</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Champion Knicks take over ‘The Tonight Show’—Here’s how to watch for free</h4>
+                <p>After players made appearances on “TODAY,” “Good Morning America” and “The View” earlier today, the Knicks are taking over “The Tonight Show.” Knicks fan and “Tonight Show” host Jimmy Fallon called the team’s visit “a booking 53 years in the making” in an official statement announcing the team’s appearance on tonight’s show. In addition to every member of the championship squad — including captain Jalen Brunson, Karl-Anthony Towns, Josh Hart, OG Anunoby, and Mikal Bridges — head coach Mike Brown and the Knicks City Dancers are also set to appear on the episode. Tonight’s episode of “The Tonight Show” will also feature a performance from the Wu-Tang Clan. The hip-hop group performed during halftime of Game 4, where the Knicks recorded the largest comeback victory in NBA Finals history.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Jelly Roll files for divorce from wife Bunnie Xo after almost a decade of marriage</h4>
+                <p>The country star and his wife posed for photos together while on the red carpet at the 2025 ACM Awards. The country star filed the paperwork on May 18 in Williamson County, Tennessee, according to court records viewed by Fox News Digital. Bunnie, whose real name is Alisa DeFord, and Jelly Roll tied the knot in August 2016 during a whirlwind Las Vegas ceremony, after meeting the year prior.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Canceled Hollywood star James Franco sparks concern with bizarre TikTok comeback</h4>
+                <p>James Franco has left the internet baffled after appearing in a series of TikTok videos mysteriously talking about “crazy stuff going on.” Franco disappeared from Hollywood back in 2018 after being at the centre of sexual misconduct allegations. Since those allegations, he has remained away from the spotlight, ending his long-running friendship with collaborator Seth Rogen as a result. The former A-list star has now appeared to have created a TikTok account, sharing a series of increasingly bizarre videos where he paces back and forth and acts oddly. In one video, which fans have questioned as to whether it could be AI, he is seen wearing a blue shirt with the name “Bruce Robinson” written on it as he paces around the room.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
