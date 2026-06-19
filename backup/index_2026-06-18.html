@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>THURSDAY, JUNE 18, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F06%2Fdecider-fyc-fiona-dourif.jpg?quality%3D90%26strip%3Dall" alt="Lead Story Image" class="news-photo">
+                <h3>Fiona Dourif’s Understated Excellence on ‘The Pitt’ Season 2 is Emmy-Worthy</h3>
+                <p class="lead-summary"><strong class="drop-cap">W</strong>hen Does ‘Your Fault: London’ Come Out on Amazon Prime Video? Release Date, Release Time, and Streaming Info The Late Daveigh Chase Made Her Eternal Mark on Hollywood With an Iconic One-Two Punch in 2002: ‘The Ring’ and ‘Lilo & Stitch’ Stream It Or Skip It: ‘David’ on Netflix, a Beautifully Animated Reiteration of the Classic Bible Story Stream It Or Skip It: ‘Never Change’ on Hulu, a Baffling Collection of Go-Nowhere Jokes Passing as a Comedy ‘Scary Movie 6’ Is A Box Office Hit in 2026, But How Does It Rank Against All The ‘Scary Movies’? Stream It Or Skip It: ‘The Wizard of the Kremlin’ on VOD, a Long, Dull Drama About the Rise of Vladimir Putin Stream It Or Skip It: ‘Pressure’ on VOD, a Rock-Solid Dad Movie About the Battle Between D-Day Weather Forecasters ‘Maternal Instinct’ On Netflix: Everything To Know About Taylor Parker and Netflix’s Shocking New True-Crime Doc Stream It Or Skip It: ‘Maternal Instinct’ on Netflix, an Upsetting True Crime Documentary About the Murder of a Pregnant Woman and Her Child Stream It Or Skip It: ‘Earth, Wind & Fire (To Be Celestial Vs. That’s The Weight of the World)’ on HBO, Questlove’s Joyous, Inspiring Profile Of The Legendary Band Stream It Or Skip It: ‘Mother Mary’ on VOD, a Nutty Anne Hathaway-Michaela Coel Two-Hander About Gods, Ghosts and Pop Stars Is ‘Billie Eilish – Hit Me Hard and Soft: The Tour Live in 3D’ Streaming on Netflix or Amazon Prime Video? The Massive Box Office Success Of ‘Michael’ Cements The Musician Biopic As Hollywood’s Most Reliable Genre Is ‘Dutton Ranch’ Airing a New Episode Tonight? How Many Episodes Of ‘Dutton Ranch’ Will There Be? ‘Widow’s Bay’ Ending Explained: Did Tom Kill Ruth? And Who’s Really Richard Warren’s Last Living Descendant? Will There Be A ‘Widow’s Bay’ Season 2 On Apple TV?</p>
+                <p class="source-credit">— Https://decider</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>In California, Organized Labor Might Just Defeat Itself</h4>
+                <p>Yet another tax-the-rich initiative is running into reality.</p>
+                <p class="source-credit">— National Review</p>
+            </div>
+            <div class="story-minor">
+                <h4>Knicks’ parade is bigger than a championship — it’s 80 years of New York basketball</h4>
+                <p>The Knicks have been in basketball business since 1946. They have never had a parade. They will get one Thursday, all right. They will take that regal ride up Broadway, from Battery Park to City Hall, and there’ll be a million or two of their closest friends lining either side of the street. There isn’t a lot of use for ticker tape these days, but someone at Western Union should spend the morning combing through basements, attics and archives. Somewhere there must be a few of their old tickers, a few spools of their old tape — between a half-inch and three-quarters of an inch wide. Feed a few miles of it into the machine for old times sake.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Claude shows the future: No AI for dissenters</h4>
+                <p>If AI companies can deny tools to lawful groups with disfavored views, they can tilt markets, speech, and politics without firing a shot. Many of my articles about artificial intelligence focus on individual liberty and personal autonomy in the age of AI. Conservatives worry about a future in which AI systems silently coerce individuals, institutions, or society itself in one direction or another. After Big Tech censorship, ESG mandates, and “Great Reset” schemes pushed by powerful institutions, those worries look warranted. To many people, however, they still feel theoretical. Denying access to artificial intelligence tools on ideological grounds means denying people access to technologies that AI leaders insist will define the future economy.</p>
+                <p class="source-credit">— The Blaze</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/06/931/523/Finnish-Soldiers.jpeg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Finland's parliament votes to lift decades-old ban on nuclear weapons in historic NATO defense shift</h3>
+                <p class="lead-summary"><strong class="drop-cap">F</strong>innish ambassador to the US Mikko Hautala speaks on the push to join NATO and the state of tensions on the border with Russia on ‘Your World.’ Finland’s parliament on Wednesday voted to lift a decades-old ban on nuclear weapons, approving a major defense policy shift aimed at aligning the country more closely with North Atlantic Treaty Organization (NATO) deterrence strategy. Defense Minister Antti Häkkänen said a strong majority backed the amendment to the Nuclear Energy Act, calling it a "historic reform" that strengthens Finland’s security and that of the alliance. "The Parliament approved the amendment to the Nuclear Energy Act with a strong 2/3 majority," Häkkänen said in a post on X. "This historic reform strengthens the security of Finland and of NATO as a whole. In April 2023, Finland joined NATO in response to Russia’s full-scale invasion of Ukraine, ending decades of military non-alignment. The move, aimed at securing Finland’s collective defense, roughly doubled NATO’s border with Russia. EU Commissioner for Defence and Space, Lithuanian Andrius Kubilius (R) and Finnish Defence Minister Antti Haekkaenen (L) attend a press conference at the Ministry of Defence in Helsinki, Finland, on Sept. 26, 2025.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>The local election that could topple Britain’s prime minister</h4>
+                <p>The outcome of a special election in the small working-class district of Makerfield could upend Labour Party leadership and U.K. politics.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Colombian military neutralizes five terrorists accused in bus bombing that killed 20, injured 45 civilians</h4>
+                <p>Colombian military forces announced they "neutralized" five members of the Estructura Jaime Martínez militant group in response to a bus bombing that killed 20 civilians and injured 45 others (Credit: X@FuerzasMilCol). Colombian military forces announced on Wednesday they successfully neutralized five members of the militant group responsible for a devastating bus bombing that killed 20 civilians and left 45 others injured.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Israel launches 'Biblical Highway' amid campaign to erase Jewish history</h4>
+                <p>Route 60, known as the "Biblical Highway," traces Israel's central mountain ridge and serves as the setting for many significant historical and religious events. (Courtesy: Yishai Fleisher. Artwork: Barel Toledano.) The Israeli government on Tuesday approved designating Route 60 — the highway stretching from Nazareth in the north to Beersheba in the south and passing through some of the most significant sites in history—as the "Biblical Highway."</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F06%2Fshopinch.jpg?quality%3D90%26strip%3Dall%261781739026" alt="Lead Story Image" class="news-photo">
+                <h3>Dodgers can boost offense by using Shohei Ohtani in any way possible</h3>
+                <p class="lead-summary"><strong class="drop-cap">I</strong>n retrospect, the secret weapon Dodgers manager Dave Roberts deployed on Wednesday was only surprising because he hadn’t used it before. The Dodgers were down by a run to the Rays, and Roberts had the best hitter in baseball available to pinch-hit. So what if he was the starting pitcher? Why wouldn’t Roberts insert him into the game? Never mind that by the time Shohei Ohtani stepped into the batter’s box in the sixth inning, Freddie Freeman had crushed a two-run homer that gave the Dodgers a 5-4 lead they held for the remainder of the game; or that the at-bat was uneventful, with Ohtani grounding out on the first pitch thrown to him by Rays reliever Kevin Kelly. The Dodgers have found another way to use Ohtani: On days in which he pitches but isn’t in the offensive lineup, he can pinch-hit. The more choices a manager has, the better, and Ohtani has presented Roberts with a new option as he tries to balance concerns over his two-way workload and the ramifications of removing his bat from the order. Baseball’s rules permit a pitcher to pinch-hit for a designated hitter. The main drawback is that by doing so, a team will forfeit the designated hitter for the remainder of the game. In the case on Wednesday, Ohtani was still in the game in the bottom of the sixth inning, as he’d just pitched the top half of the frame. He batted for Miguel Rojas, who was the designated hitter. That spot in the order never came up again, but if it did, the Dodgers would have to send their pitcher into the batter’s box or use another pinch hitter.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Deion Sanders wanted more from his son, Shedeur Sanders, but backs development plan after Myles Garrett trade</h4>
+                <p>Cleveland Browns legend Joe Thomas shared his confidence in rookie quarterback Shedeur Sanders, who has settled in after a tumultuous start to his career. Shedeur Sanders took over as starting quarterback in Week 12 last season, and after two more starts, he was named the starter for the remainder of the season. Sanders’ stunning slide to the fifth round of the 2025 draft set the stage for him becoming one of the most scrutinized rookies in recent memory.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Here’s how to watch the Knicks ticker-tape parade live for free at home</h4>
+                <p>The NBA championship celebrations are nowhere near over, as New York Knicks will take part in a time-honored NYC tradition for the first time in franchise history. A ticker-tape parade will be thrown in honor of the champs up downtown NYC’s iconic Canyon of Heroes, where many other championship teams have been celebrated throughout the year. It could end up being the largest in the city’s history. Mayor Zohran Mamdani announced the parade‘s date shortly after Game 5’s final buzzer on Saturday. In a later press release, the mayor said, “We have dreamed of this moment for generations. This Thursday, our city will rise to the occasion.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>UConn basketball coach floats potential game at White House after UFC event</h4>
+                <p>Jemele Hill is attacking the UFC's White House event for not fitting her "diversity checklist," but Dan Dakich isn't buying the hypocrisy. UConn men’s basketball head coach Dan Hurley floated the idea of the team playing a game at the White House given the success of the UFC Freedom 250 event on the South Lawn.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/06/931/523/prince-william-catherine-princess-wales-fox-news-001-scaled.jpeg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Prince William refuses to quit hobby that terrifies Kate Middleton: experts</h3>
+                <p class="lead-summary"><strong class="drop-cap">R</strong>obert Hardman, author of 'Elizabeth II,' explains how Prince William prioritizes family life and keeps a grounded approach despite the pressures of royal duty. Kate Middleton’s inability to get Prince William to give up riding motorcycles despite her efforts is "something most married couples can definitely relate to," Christopher Andersen, author of "Kate!," told Fox News Digital. "Kate's inability to get her husband to give up an activity he loves is something most married couples can definitely relate to—whether it's smoking, drinking, skydiving, whatever," Andersen said. " On the other hand, William's situation is unique. He is a future head of state.  So if he is injured or worse in a motorcycle accident, far more than just his family is impacted." He added that he finds it a "little ironic that someone whose mother was killed in perhaps the most famous car crash in history would take what seem like unnecessary risks on the road." What has always appealed to the Prince of Wales the most about motorcycles is it "enables him to maintain some degree of anonymity while at the same time bonding with other bikers," Andersen said.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>‘Lilo & Stitch’ star Daveigh Chase died with millions of dollars in residuals untouched, manager says</h4>
+                <p>“Lilo & Stitch” star Daveigh Chase was “too far gone” to collect millions of dollars in residuals she had sitting in an account as she spiraled into addiction, her manager told The California Post. Chase was just eight years old when she landed the voice of Lilo in Disney’s classic film and signed a deal that gave her a cut of merchandise sales, residuals, theme park attractions, and other products using her voice — rather than a one-time payment, John Ryan said. Ryan, who managed Chase for more than a decade, continued to receive SAG-AFTRA notices to his office reporting she had unclaimed residual checks. Ryan told The Post there was “millions” in unclaimed money.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>'Top Gear' star Jeremy Clarkson reveals 'aggressive' cancer diagnosis after health scares</h4>
+                <p>'Full House' star Dave Coulier gave advice on how to avoid missing warning signs after announcing complete remission following double cancer diagnoses. TV host Jeremy Clarkson revealed that he is battling cancer during the latest episodes of his hit show "Clarkson's Farm."</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Mystery as daughter of Oscar-winning director and wealthy husband found dead in running car</h4>
+                <p>A prominent San Francisco arts patron and her husband were mysteriously found dead in a running car on Monday evening, the California Highway Patrol said. Judith Sheldon, 84, daughter of filmmaker William Wyler, and her husband, Wylie Sheldon, 86, were found inside a red Jeep Compass stopped at the shoulder of Interstate 5 near Redding. Both of them were unresponsive and declared dead at the scene despite emergency care from medical personnel, said the Highway Patrol. Judith was in the driver’s seat and Wylie was beside her. Authorities are still investigating the cause of death, though the San Francisco Chronicle reported it was medically related.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
