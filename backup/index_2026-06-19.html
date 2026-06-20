@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>FRIDAY, JUNE 19, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F06%2Fnewspress-collage-vyya5uu6f-1781870160471.jpg?quality%3D90%26strip%3Dall%261781855797" alt="Lead Story Image" class="news-photo">
+                <h3>Tigers ace Tarik Skubal issues warning to team as trade rumors linger</h3>
+                <p class="lead-summary"><strong class="drop-cap">D</strong>etroit’s ace and pending free agent acknowledged that the last-place squad better turn its season around fast, “or else” there will surely be a roster shakeup. “The reality of the situation is, we need to play better baseball,” Skubal told the Detroit News earlier this week. “I’ve said that before, and I’ll continue to say that. My belief in this group has never changed. But the reality is, we need to play better baseball, or else come the deadline, you give the front office an option to reassess where this team is. “And if they don’t think what we have is a World Series- or playoff-caliber team, then the whole team is going to look different. That’s just the nature of the beast.” The Tigers passed on trading Skubal this offseason with one year left on his deal after reaching the ALDS last year, but this year’s struggles may leave the team with no option but to move him. Detroit has vastly underperformed with its 30-44 record, the fourth-worst mark in the sport, and Fangraphs gives the Tigers just a 15.4 percent chance to reach the playoffs. There have been no indications that the sides are close to a potential long-term deal, and teams like the Tigers have to capitalize on losing seasons when they have premium assets on expiring deals, such as Skubal, if they don’t believe he will re-sign in free agency. Skubal should command a nice package on the trade block that exceeds what Detroit would receive if he declined the qualifying offer and signed elsewhere. The 29-year-old just returned from elbow surgery, and The Post’s Jon Heyman recently ranked him as the top trade option with the Aug. 3 trade deadline some six weeks away. “The future for a lot of people in this room, not just myself, the outlook could look very much different in two months, and it all comes to an abrupt end,” Skubal told the Detroit News. The blessing for the Tigers is they play in the weakened AL Central, and they sit 9 1/2 games back entering this weekend’s home three-game set with the division-leading White Sox. Heyman listed the resurgent Blue Jays as a potential fit, while the NL East-leading Braves and Cubs could use frontline arms, and the Dodgers always lurk as the sport’s superpower. Skubal is 3-3 with a 2.81 ERA in eight starts this season, and just made his return June 13 in a losing effort against the Guardians, allowing three runs (two earned) in 4 2/3 innings. “We still control our destiny a little bit,” Skubal told the Detroit News. “We still do. We play the team this weekend that’s winning our division. It’s another big series. You don’t want to be playing playoff baseball in June, but it feels like we’re playing playoff baseball. We don’t have very much room for error and everyone understands that.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Hezbollah Kills Four Israeli Soldiers In Attack Just Two Days After U.S.-Iran Peace Deal</h4>
+                <p>The latest episode in a campaign of violence that Hezbollah has sustained across multiple ceasefires and diplomatic agreements. A Hezbollah strike on an Israeli tank in southern Lebanon killed four IDF soldiers Friday — including a battalion commander — raising fresh doubts about whether the Iranian-backed militia will honor terms that Iran agreed to earlier this week in the memorandum of understanding with the United States. The attack struck near the Lebanese village of Tebnit overnight, when “a suspicious target impacted an IDF tank,” an IDF official told The Washington Post. Israel responded by striking multiple Hezbollah infrastructure sites across Nabatieh and other areas of southern and eastern Lebanon.</p>
+                <p class="source-credit">— Daily Wire</p>
+            </div>
+            <div class="story-minor">
+                <h4>Republican congressman will end months-long absence from DC after missing 135 roll call votes</h4>
+                <p>Chief congressional correspondent Chad Pergram discusses Rep. Tom Kean Jr.'s, R-N.J., absence from Congress for weeks, missing over 50 votes since early March. After more than 100 days away from Capitol Hill, Rep. Tom Kean Jr., R-N.J., is set to return to Washington, D.C., in the coming weeks.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Trump 2.0 puts religious liberty back on offense</h4>
+                <p>The Justice Department’s new report documents how Biden administration officials treated Christian belief as an obstacle to ideology, not a constitutional right. One underreported achievement of President Trump’s first administration was the support the Justice Department provided to religious-liberty litigants. During those years, the federal government filed statements of interest and friend-of-the-court briefs defending conscience rights at a pace unmatched by either of Trump’s immediate predecessors. Cases involving memorial crosses, conscience protections, ministerial autonomy, and the rights of religious schools all reflected a broader shift in posture from the Obama administration.</p>
+                <p class="source-credit">— The Blaze</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/04/931/523/strait-hormuz-iran-tehran-fox-news-001.jpeg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Trump's $300B Iran investment fund may be 'close to impossible' due to IRGC sanctions law, expert warns</h3>
+                <p class="lead-summary"><strong class="drop-cap">M</strong>iad Maleki says the White House's Iran memorandum sanctions promises raise doubts that negotiators were counting on a final deal, warning 180-day waivers are unlikely to attract serious investors. A proposed $300 billion investment fund for Iran included in the U.S.–Iran memorandum of understanding may face major legal obstacles under existing U.S. sanctions law, raising questions about whether the plan is workable even if both sides move toward a final agreement. The memorandum, digitally signed Wednesday by President Donald Trump and Iranian President Masoud Pezeshkian, is aimed at ending the war and restoring traffic through the Strait of Hormuz. As part of the 14-point plan, the U.S. agreed to lift sanctions on Iran, allow Tehran to increase its oil revenue and regain access to parts of the international banking system, among other measures. But one of the most ambitious parts of the framework — a proposed $300 billion private investment fund for Iran’s reconstruction and development — may collide with a longstanding U.S. determination that Iran’s construction sector is controlled directly or indirectly by the Islamic Revolutionary Guard Corps.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Four Israeli soldiers killed as combat in Lebanon imperils U.S.-Iran deal</h4>
+                <p>U.S. and Iranian officials postponed negotiations planned in Switzerland on Friday about the details of their peace agreement as it faced a major test.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>From bear hugs to handshakes: How India lost its edge with Trump while Pakistan quietly gained ground</h4>
+                <p>Sen. Lindsey Graham, R-S.C., speaks to Secretary of War Pete Hegseth and Chairman of the Joint Chiefs of Staff, Air Force Gen. Dan Caine about China and Pakistan's ties to Iran during Senate hearing. This week, President Donald Trump and Indian Prime Minister Narendra Modi came face-to-face at the G7 summit in France, their first such encounter since February 2025. Rather than his trademark bear hug, Modi greeted Trump with a smile and handshake.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Andy Burnham wins U.K. Parliament seat, key step in bid to oust prime minister</h4>
+                <p>Burnham, the mayor of Greater Manchester, is now positioned to challenge Prime Minister Keir Starmer for leadership of the governing Labour Party and to seize the top job.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F06%2Fnewspress-collage-o952vfbte-1781869501420.jpg?quality%3D90%26strip%3Dall%261781855178" alt="Lead Story Image" class="news-photo">
+                <h3>The sights, sounds and feelings of being at a Knicks parade everyone wanted to savor</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>o understand the depths of the day, to understand just how much this championship — and the past two months — meant to Knicks fans who’ve waited as many as 53 years for this moment of bliss, perhaps it’s best to start away from the Canyon of Heroes. Away from the scenes and sounds broadcast on televisions and phones around the country as the franchise’s first-ever ticker-tape parade ended with Mayor Zohran Mamdani distributing keys to the city. Perhaps it’s best to start at the corner of Park Place and Church Avenue, where Jalen Brunson jersey after Jalen Brunson jersey and orange-and-blue-clad fan after orange-and-blue-clad fan tried to decipher ways to maybe, just maybe, catch a glimpse of the Knicks. Dozens climbed up sanitation trucks, figuring out if those extra feet of height could help catch a recognizable head or two when the floats drove by. Others in the area got a quick New York City geography crash course, figuring out the direction of City Hall and coming to terms that it was either going to be tough — or there was no way at all — to see it. These were the Knicks fans who still came, who didn’t get a spot by the barricades that some lined up for in the early hours of the morning and still joined in the joyous celebration that echoed throughout the streets of Lower Manhattan.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Iranian and Israeli athletes react to memorandum of understanding to end US-Iran war</h4>
+                <p>Jesse Watters discusses Trump's negotiated Iran deal, highlighting immediate successes like lower oil prices and open trade through the Strait of Hormuz. Iran is crippled financially and militarily, facing renewed sanctions if it doesn't comply. As Americans remain divided on the memorandum of understanding to end the war in Iran, star athletes who represent two of the countries most impacted by the deal have shared their thoughts.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>For Dodgers’ Roki Sasaki, start against Orioles will be ‘good test’</h4>
+                <p>Seven days ago, the 24-year-old Sasaki had his worst start of a season that has included several stinkers. In the first 4 ⅓ innings of an 8-2 loss to the White Sox, Sasaki was charged with seven runs. Which is why manager Dave Roberts is curious to see how Sasaki will respond in his scheduled start  Friday night against the Orioles. “It is a good test for a young player that after he has one like this, how he responds,” Roberts said. On the surface, it might seem as if Sasaki has relapsed into his early-season form that had me calling for him to be sent to the minor leagues to rebuild his delivery from scratch.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>How to watch USA vs Australia: Live stream the 2026 FIFA World Cup</h4>
+                <p>Former USMNT Head Coach Bob Bradley joins Colin Cowherd to discuss Christian Pulisic’s calf injury to determine if he’ll be ready vs. Australia, as well as USMNT’s 4-1 win over Paraguay. The United States men’s national team made a statement to open its 2026 FIFA World Cup campaign, routing Paraguay 4-1 last week behind two goals from Folarin Balogun.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F06%2FJohnson-Pitbull.jpg?quality%3D90%26strip%3Dall" alt="Lead Story Image" class="news-photo">
+                <h3>Get tickets for PNC Bank Arts Center 2026 lineup: Jack Johnson, Pitbull, more</h3>
+                <p class="lead-summary"><strong class="drop-cap">F</strong>rom June through October, Holmdel’s PNC Bank Arts Center is hosting a number of legendary icons and up-and-coming acts at their spacious outdoor venue that fits approximately 17,500 guests. Artists on this year’s calendar run the gamut of classic rock, Hip-Hop, heavy metal, EDM, country, folk, pop, R&B and more. Just a few of the most notable names headed to Holmdel these next few months include party-starters Pitbull with Lil Jon (Sept. 3), mellow rockers Jack Johnson with Hermanos Gutierrez (June 21), Americana hitmaker Riley Green (June 18), controversial singer-songwriter Jason Aldean (July 17) and ’00s heroes Ne-Yo and Akon (July 19). They’ll be joined by biggies like Weird Al (July 12), Sammy Hagar (June 22), Tim McGraw (July 10), John Mellencamp (July 25) and Wu-Tang Clan with Bon Thugs-N-Harmony (Sept. 11). That’s not to mention Santana with The Doobie Brothers (June 27), The Guess Who with Don Felder of Eagles (July 5), Train with Barenaked Ladies (July 24), Lynyrd Skynyrd with Foreigner (July 26) and Mötley Crüe with Tesla (July 31). Plus, we’d be absolutely remiss if we didn’t point out that TLC is swinging by with special guests Salt-N-Pepa and En Vogue on Saturday, Sept. 12. If you want to see any of these artists live, tickets are available for all upcoming concerts at the PNC Bank Arts Center. At the time of publication, the lowest price we could find on tickets for any one show was $30 including fees on SeatGeek.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Jelly Roll, Bunnie Xo 'still having a baby together' despite divorce: everything we know about the split</h4>
+                <p>The country star and his wife posed for photos together while on the red carpet at the 2025 ACM Awards. Jelly Roll and Bunnie Xo's split may have shocked fans, but signs of trouble had reportedly been surfacing for months. Bunnie went into detail about her side of the story during a June 18 episode of her podcast, "Dumb Blonde," in which she cleared up rumors, shed some light on their relationship and revealed some surprising future plans.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Phish is about to kick off their summer tour. Get tickets with a discount</h4>
+                <p>For the past 43 years — excluding a few short hiatuses and 2020 — Trey Anastasio, Jon Fishman, Mike Gordon and Page McConnell have embarked on a July through September jaunt at venues all over North America. This time around, the legendary jam band has shows lined up at stadiums, arenas, music centers, parks, amphitheaters all over the U.S. That includes a whopping five shows at New York City’s Madison Square Garden, their 92nd through 96th at the legendary House That Brunson Built venue. They’re scheduled to take place: If you’d like to see the one-of-a-kind, anything-goes ensemble live, tickets are available for all summer 2026 Phish concerts.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Jelly Roll's wife Bunnie Xo breaks silence on divorce, gets emotional about final fight</h4>
+                <p>Country star, Jelly Roll, walked the red carpet at the 2024 ACM Awards with his wife, Bunnie Xo. In a recent episode of her podcast, "Dumb Blonde," the 46-year-old podcaster spoke out about her divorce from the country music superstar, letting fans in on the intimate details which led to the shocking decision, dispelling rumors there was any infidelity.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2025/07/931/523/2-mcdonalds-ai-chatbot-exposed-64-million-job-application-records-body.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>McDonald’s AI drive-thru may take your next order</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>he next time you pull up to a McDonald's drive-thru, the voice taking your order may not be human. McDonald’s is testing a new AI-powered system called ArchIQ at five U.S. locations. The company has not said where those restaurants are located. The voice assistant, nicknamed Archy, can take drive-thru orders and has shown it can handle both English and Spanish. For anyone who has repeated "no pickles" into a speaker box more than once, this could sound helpful. However, if you remember McDonald’s last AI drive-thru experiment, you may also wonder whether your burger order could somehow turn into a bag full of surprise McNuggets. McDonald’s is testing an AI drive-thru system called ArchIQ at five U.S. restaurants. (Kurt "CyberGuy" Knutsson) ArchIQ is McDonald's new AI system for restaurants. It can take drive-thru orders and also help with operations behind the scenes. In a post on X, McFranchisee, an anonymous McDonald's franchisee account, said the system is in five test stores and has processed more than 1 million transactions. The account also said about 90% of orders were completed without a human stepping in. That number sounds promising. Still, McDonald's has not confirmed a nationwide launch date. For now, this remains a limited test. The system also appears to connect with a bigger McDonald's plan called "McDonald's > NEXT." CEO Chris Kempczinski described the strategy as a way to bring in more customers and improve restaurant productivity. The plan also includes menu changes, restaurant redesigns, technology upgrades and more focus on hospitality. Drive-thrus can get chaotic fast. Someone changes an order after the total appears. A child calls out from the back seat. Road noise makes the speaker hard to hear. Then the driver remembers the extra sauce after everything has already gone through. That is the type of pressure McDonald's wants AI to handle. If ArchIQ works well, it could help restaurants move cars through the line faster. It may also reduce mistakes during busy hours. Workers could then focus more on preparing food, handling payments and helping customers who need a real person.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>6 in 10 identity crimes now begin with a new account</h4>
+                <p>For years, two women in Bremerton, Washington, opened credit cards and lines of credit in other people's names, working from documents they pulled out of stolen mail. Emily Vranic and Heather Marquis redirected the new accounts' statements to an address they controlled, so no bill ever reached the victims. They pleaded guilty in federal court this month to bank fraud and aggravated identity theft in a scheme prosecutors say stole nearly $229,000 from banks and bank customers.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
