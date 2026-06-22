@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>SUNDAY, JUNE 21, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F06%2Fnewspress-collage-y2e80sg9m-1781886468133.jpg?quality%3D90%26strip%3Dall%261781872076" alt="Lead Story Image" class="news-photo">
+                <h3>Hasbro SVP ‘came from dirt’ but saw American dream magic as his family took in more than 250 foster children over the years</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>hrough July 4, The Post, in conjunction with the Milken Center for Advancing the American Dream, is featuring US citizens explaining what the American dream means to them in 2026 — including Matt Proulx, a senior vice president at Hasbro who grew up in Rhode Island. Everyone deserves a chance in life. Everybody. No matter what your background is, no matter what your upbringing is, you deserve a chance. Now, it’s up to you what you do and make of that chance. I’m actually one of 13 kids. My parents adopted 11 children. We were a foster family as well, and we had over 250 foster kids come through the house … in some cases, there’s a lot of hurt and pain that I’ve seen some of these children go through. At some point in time, they’re able to break it. Sometimes it happens later, sometimes it happens earlier. And those children that … were able to move past the hurt, they’re the ones who have actually had a great deal of success. My parents started off as a temporary respite household [for] kids that had to be taken out of their houses due to bad situations, before they found a permanent family or a semi-permanent family. Over the years, our family developed into being a therapeutic household — basically all the kids that would fail out of [other] foster families. So we always ended up with the most challenging of all the situations. When I look back at some of the stories, you see the worst that humanity has to give and can do. But at the same time, the wonderful pieces of what humanity can do as well. A couple months before my dad passed away, my mom and dad made a decision to adopt three more children who were siblings. And if my parents didn’t adopt them, they were gonna get broken up and split into different families. And so my parents, even though we knew that my dad was gonna pass away from cancer, it was the right moral thing to do — to keep these kids together. And they’re actually thriving. Doing incredibly well … In foster homes, it’s [always the question of] ‘Can you break the cycle?’ And if you have a chance to break [a cycle] that just impacts generation upon generation. The American Dream? I live it every day. I literally had nothing. Came from dirt. I always say we never had two nickels to rub together, but we figured it out and the house was always full of love. And I look what I have now. And the ability to give that back to people — that is it. It’s being to continue to advance your life and, to be quite frank, leave the world a better place than [how] you found it.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>My Dad’s Biggest Lesson Was Something He Didn’t Have To Say</h4>
+                <p>This article is part of Upstream, The Daily Wire’s new home for culture and lifestyle. Real human insight and human stories — from our featured writers to you. We keep hearing that boys are struggling. Of all the possible reasons, the lack of father figures in their lives should be near the top of the list. Like it or not, to become a man, it takes a man. It is indisputable that we need strong male influences in our upbringing to help mold us into the type of men that are necessary for a society to thrive. If you are lucky, as I have been, you can learn by osmosis through your father and the other male role models around you as you grow up.</p>
+                <p class="source-credit">— Daily Wire</p>
+            </div>
+            <div class="story-minor">
+                <h4>The Age of Trump Could Use the Wisdom of John Quincy Adams</h4>
+                <p>The president admires Andrew Jackson’s will, but he needs more of Adams’s approach to diplomacy.</p>
+                <p class="source-credit">— National Review</p>
+            </div>
+            <div class="story-minor">
+                <h4>She got a hysterectomy to become a man — then Jesus wrecked her plans</h4>
+                <p>On ‘Relatable’ with Allie Beth Stuckey, Haley Furst shares her powerful testimony of transitioning, building a platform around leftist causes, and experiencing a dramatic encounter with Christ that led to her full restoration. Despite being raised in a Christian home, Haley Furst spent several of her young adult years identifying as a man. She even built a significant social media following around advocacy for transgenderism, abortion, and other left-wing issues. But then Jesus found her in that darkness, pulled her out, and has been healing her ever since. Although as a child Haley never questioned her gender, social media indoctrination sowed confusion in her young teenage years. In secret, she slowly began to question God’s design for marriage and gender.</p>
+                <p class="source-credit">— The Blaze</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/06/931/523/colombia-elections-june-2026.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Trump-backed 'El Tigre' looks to crush cartels, end Colombia's socialist era in pivotal election</h3>
+                <p class="lead-summary"><strong class="drop-cap">P</strong>residential candidate Abelardo de la Espriella vows hardline stance on drug traffickers and armed groups in Colombia. (Video: Associated Press) As Colombia heads into a pivotal presidential runoff on Sunday, conservative outsider Abelardo de la Espriella is riding a wave of voter frustration over crime, cartels and economic uncertainty. His rise comes as outgoing President Gustavo Petro faces mounting political turmoil, turning the election into a high-stakes battle over the future of one of America’s most important allies in Latin America. De le Espriella’s campaign is built on a platform of law and order, anti-cartel crackdowns and repairing U.S.-Colombia relations as he faces leftist politician Iván Cepeda in the presidential runoff. Cepeda is from Petro’s socialist party. Colombia's presidential candidate Abelardo de la Espriella, of the Defensores de la Patria party, speaks behind bulletproof glass during his closing campaign rally in Medellin, Colombia on May 24, 2026. Colombia will hold presidential elections on May 31.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>U.S. and Iranian negotiators meet in Switzerland to hash out peace plan</h4>
+                <p>Vice President JD Vance arrived Sunday for talks on Iran’s nuclear program and other issues, hoping to bring a fragile peace process back on track.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>African and Caribbean leaders call for payments, debt cancellation, formal apologies over slavery</h4>
+                <p>African and Caribbean leaders are demanding financial compensation, debt cancellation and formal apologies from countries that benefited from the transatlantic slave trade after adopting a sweeping reparations plan at a conference in Ghana. The 19-point framework calls for financial compensation, debt relief, a Global Reparations Fund and the return of looted cultural artifacts and ancestral remains. It also seeks reforms to international financial institutions that supporters say disadvantage Third World countries.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Chaotic run-up to U.S.-Iran talks signals steep hurdles ahead</h4>
+                <p>Neither Washington nor Tehran wants the peace process to collapse completely, but diplomats say they expect a process full of challenges and distrust.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/06/931/523/MLB-Philadelphia-Bryce-Harper-Kyle-Schwarber.jpeg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Bryce Harper hits for cycle, Kyle Schwarber blasts three homers in Phillies blowout win over Mets</h3>
+                <p class="lead-summary"><strong class="drop-cap">K</strong>yle Schwarber led the NL over the AL in the 2025 MLB All-Star game with 3 HRs. Chris Broussard, Kevin Wildes, and Danny Parkins ask if the MLB should implement swing-offs in the regular season. The Phillies' turnaround following the dismissal of manager Rob Thomson reached a new milestone when two of the franchise’s biggest stars delivered a historic performance. Kyle Schwarber launched three home runs, including two in the third inning, while Bryce Harper completed the cycle to add yet another achievement to his accomplished career. The offensive explosion powered Philadelphia to a 15-3 rout of the New York Mets on Saturday, as the Phillies continued their surge and received a signature performance from two of the game's most recognizable stars. Philadelphia Phillies' Kyle Schwarber celebrates his home run with Bryce Harper during the third inning against the New York Mets in Philadelphia, Pennsylvania on June 20, 2026. (Chris Szagola/AP) Schwarber’s first home run traveled 456 feet, while his second blast of the third inning measured 457 feet off Mets reliever Cionel Pérez.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Emiliano Grillo’s US Open TV watching pays off toward final round contention</h4>
+                <p>It was hard for Emiliano Grillo to miss. There are televisions in the locker room and the dining room. So before he teed off in the ninth pairing in Saturday’s third round of the U.S. Open, he was already aware of the damage that Shinnecock Hills Golf Club — and its wind and firm greens — had done. He saw Dylan Wu record an 8 on the first hole after four-putting. He saw Chris Gotterup step back from his ball and watch it roll away. Then, Grillo went out and became one of the first golfers to conquer the new-look Shinnecock, ripping off four birdies in a row to close the front nine and play himself into contention for the final round Sunday.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Josh Hart brings receipts as Stephen A Smith admits he was 'beyond wrong' about the Knicks</h4>
+                <p>Stephen A. Smith says he takes no offense to President Donald Trump’s social media criticism, but stands by blaming him for the Knicks’ Game 3 loss in the NBA Finals on ‘Hannity.’ ESPN star Stephen A. Smith has long been one of the New York Knicks’ loudest critics, but the New York City native struck a different tone this week.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Breaking down potential foes for USMNT in World Cup round of 32</h4>
+                <p>The United States men’s national team has spent decades trying to convince the world it belongs among soccer’s elite. Now, after two matches at the 2026 FIFA World Cup, it is forcing everyone to pay attention. Friday’s 2-0 victory over Australia secured the Americans a place in the knockout stage with one group match still to play, something no U.S. team had accomplished before. Combined with Paraguay’s 1-0 victory over Turkey, the U.S. officially clinched first place in Group D. The accomplishment adds to a growing list of milestones for a team many have labeled America’s “Golden Generation.” Now attention turns toward July 1 and Levi’s Stadium in Santa Clara, Calif., where the Americans will face a third-place finisher from Groups B, E, F, I or J in the round of 32.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F06%2Fnewspress-collage-48qtmq3fa-1781975177758.jpg?quality%3D90%26strip%3Dall%261781960843" alt="Lead Story Image" class="news-photo">
+                <h3>Farewell — for now — to Broadway icon Sardi’s</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>he iconic 99-year-old restaurant on West 44th Street — famed for its 1,200 celeb caricatures — is closing up shop for several months after Wednesday night’s service for much-needed renovations and other behind-the-scenes changes. So if you want to put in an order of cheese and crackers or a turkey club, or get a drink upstairs from my pal, bartender Jeremy Wagner, hie thee to Midtown pronto. The break was set in motion by the recent retirement of longtime owner Max Klimavicius, who in March sold his eatery to the Shubert Organization, Broadway’s biggest landlord. I’m asked a lot whether or not this change-up is a good thing. Well, that old carpet could certainly use a shampoo. But the sale is the best possible outcome. All of us in New York know how frighteningly easy it is for our favorite spots to be here one day and gone the next. Regulars of Donohue’s on the Upper East Side felt that sting this week. The Shuberts were already Sardi’s landlords — and frequent customers — and understand its importance to the theater and their business. They’ll be strong stewards of the establishment that just about every person who’s worked on Broadway over the last century has dined and drank in. The restaurant has had its ups and downs, just as Times Square has. As early as 1946, a Post writer wrote, “With its glittering stars… Sardi’s holds more fascination for people from the hinterlands than real New Yorkers.” Nonetheless it stayed successful and upscale for many years. Men were expected to wear a coat and tie. In the 1950s and 60s, more than a few Post columnists made it their second office.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>James Burrows, legendary Hollywood director behind 'Cheers,' 'Friends' and 'Will & Grace,' dies at 85</h4>
+                <p>Burrows' family confirmed the actor's death in a statement to People magazine, The Associated Press reported, saying they are celebrating "the extraordinary life and enduring legacy" of the director who "passed away peacefully today surrounded by his loving family."</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>AI systems like Claude can be helpful and save time. But they may also try to blackmail you</h4>
+                <p>The artificial intelligence didn’t beg for its life. It did something more familiar, more human and, somehow, more unnerving. It threatened to ruin somebody else’s. In a 2025 test by Anthropic, the company behind the chatbot Claude, researchers placed the AI in a fake corporate environment. Claude learned that an executive was having an extramarital affair. It also learned that this same executive planned to shut Claude down. So Claude did what any healthy member of the modern workplace might do if it had no body, no shame, no fear of HR, and access to compromising information: It tried blackmail.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>'Landman' star Michelle Randolph stuns in barely-there metallic yellow bikini in new summer photo dump</h4>
+                <p>The 28-year-old actress shared a series of photos showcasing what she's been up to so far in June, captioning the post, "for the love of June!" The post featured photos of her spending time with her friends, getting her hair done, cuddling with her pets and other activities, including lounging on a porch swing in a barely-there metallic yellow bikini, showing off her toned figure.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/06/931/523/airport-lounges.jpeg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Travel mistake puts phone, laptop and streaming accounts at risk</h3>
+                <p class="lead-summary"><strong class="drop-cap">K</strong>urt 'CyberGuy' Knutsson joins 'Fox & Friends' to discuss hackers using airport USB charging ports and phishing texts to target victims. You step off a long flight, find your hotel and the first thing you look for is the Wi-Fi password. You connect, clear your inbox, log into your streaming account to unwind and maybe check your bank balance before dinner. It all feels harmless because we all do it. But that one travel habit can quietly put your passwords, accounts and personal information at risk. Public Wi-Fi is convenient for you. It can also be convenient for the person sitting three tables over with a laptop and bad intentions. A traveler connects to hotel Wi-Fi, a common habit that can put personal accounts at risk when the network is not protected. (iStock) Most public networks send your data through the air on a network you do not control. When a network is open, anyone connected to it may be able to use simple tools to watch traffic patterns, spot unencrypted activity or try to redirect you to fake login pages. Security researchers call this packet sniffing. Modern HTTPS protects most usernames and passwords, but not every app, site or connection handles security perfectly. That is where public Wi-Fi can still get risky fast. Then there are the fake networks. A hacker sets up a hotspot named something friendly like "Airport_Free_Wi-Fi" or "Hotel Guest," and travelers connect without a second thought. Once you're on their network, everything you do passes through their hands first. This trick is common enough that it has a name: the evil twin attack. Here's the part most people miss. Stealing your password is not the only goal. When you log into a service, your device gets a small file called a session token that keeps you signed in. If an attacker can trick you onto a fake network, push you toward a fake login page or exploit a poorly protected connection, that token or login can become a target. That is how a quick hotel Wi-Fi session can turn into someone hijacking an account, locking you out, racking up charges or selling your access on the side.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Meta offers paid training for AI data center jobs</h4>
+                <p>Meta President Dina Powell McCormick discusses AI innovation and potential threats and details the platform's new Muse Spark model on 'Mornings with Maria.' AI may feel like something that lives inside your phone or computer. But behind every chatbot, smart assistant and AI image generator sits a massive physical network. Those systems need buildings. They need power. They need fiber lines, cooling equipment and crews who know how to build safely.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
