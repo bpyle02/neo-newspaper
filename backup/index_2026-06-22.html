@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>MONDAY, JUNE 22, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://i0.wp.com/www.nationalreview.com/wp-content/uploads/2022/02/grocery-store-queens-aisle.jpg?fit=620%2C362&ssl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Inflation Is Stealing from Americans, but the Price Stability Act Can Help</h3>
+                <p class="lead-summary"><strong class="drop-cap">B</strong>y making stable prices the Fed’s sole focus, the act would help protect the economic interests of working families.</p>
+                <p class="source-credit">— National Review</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Rowing Norwegian World Cup fans take over NYC subways, Times Square</h4>
+                <p>Norwegian soccer fans descended upon Manhattan in anticipation of Norway vs. Senegal at New York New Jersey Stadium on Monday night. At one point, a sea of red and navy took over Times Square to perform the “Viking ship” celebration to send off the Norwegians for their second group stage match. It felt like everyone got in on the festivities, including the NJ Devil, the mascot of the NHL’s New Jersey Devils. The Norwegian fanbase has made a name for themselves with their celebrations. They’ve rowed up escalators and stormed stadium gates in a similar fashion to how their ancestors would conduct invasions. They even brought the rowing celebration to the New York subway system.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Chicago resident living in shadows of Obama Presidential Center reveal chaos caused by years-long construction</h4>
+                <p>A man who has lived across the street from what is now the Barack Obama Presidential Center on Chicago’s South Side for 18 years described to Fox News Digital the havoc wreaked on his living complex by the years-long construction project. CHICAGO – A man who has lived on Chicago’s South Side for 18 years and now lives in the shadow of the newly opened Barack Obama Presidential Center described to Fox News Digital the havoc he says the years-long construction project wreaked on his housing complex.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Amber Heard gives rare glimpse of 5-year-old daughter, Oonagh, after 10K race</h4>
+                <p>Amber Heard celebrated her first 10K race by sharing sweet snaps with daughter Oonagh over the weekend. The actress gave a rare glimpse of the 5-year-old via Instagram Stories on Sunday, writing, “Nothing beats this feeling.” Oonagh wore a plaid dress and pink hair bows in her hair in the social media upload. In a second photo of the mother-daughter pair, they held up their arms in celebration of Heard’s race completion. The 40-year-old, who competed in a pink sports bra and matching shorts, posted a solo picture of her “first race glow” to her feed. Oonagh’s younger siblings — 1-year-old twins Agnes and Ocean — did not appear in any of the post-race snaps.</p>
+                <p class="source-credit">— Https://pagesix</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/05/931/523/Sir-Keir-Starmer.jpeg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Keir Starmer resigns as British prime minister after devastating Labour revolt and local election losses</h3>
+                <p class="lead-summary"><strong class="drop-cap">B</strong>ritish Prime Minister Keir Starmer announces he will step down as Labour leader and remain caretaker prime minister until a successor is chosen, following mounting pressure from lawmakers, cabinet members and devastating local election losses. Britain’s Prime Minister Keir Starmer announced Monday that he will resign following a mounting revolt inside the Labour Party after devastating local election losses, the resignation of government ministers and growing pressure from senior members of his own cabinet. Starmer said he would step down as prime minister and Labour leader after concluding he could no longer unite the party, but is expected to remain in office until a successor is chosen. "Every decision I've taken has been about putting the country I love first. That is why I will resign as leader of the Labour Party. I have spoken to his majesty the king this morning to inform him of my decision," he said while delivering a statement outside of 10 Downing Street. Starmer also acknowledged growing opposition within his own party, saying, "The question my party is asking now is whether I am best placed to lead us into the next general election. I have heard the answer of my parliamentary party to that question, and I accept that answer with good grace."</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>U.K. will get its seventh prime minister in 10 years. Here’s how they fell.</h4>
+                <p>Looking back over the past decade, it’s hard not to wonder whether Larry the Cat has been the most stabilizing presence in British politics.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>US military conducts strike on another vessel carrying alleged narco-traffickers, killing 2</h4>
+                <p>The U.S. military says two men were killed after a strike on a vessel in the Caribbean that officials alleged was involved in narco-trafficking operations. Six survivors were rescued as the controversial campaign continues to face scrutiny. The U.S. military on Sunday announced a lethal strike on another vessel in the Caribbean carrying alleged narco-traffickers, killing two people.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>U.K. Prime Minister Starmer to resign as Labour Party seeks reboot</h4>
+                <p>The party’s crushing losses in local elections had triggered a mutiny against Starmer. Andy Burnham, the mayor of Greater Manchester, emerged as a heavy favorite to be the next PM.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F06%2Fcrop-39750830.jpg?quality%3D90%26strip%3Dall" alt="Lead Story Image" class="news-photo">
+                <h3>Giannis Antetokounmpo expected to be traded to Heat or Celtics before 2026 NBA Draft</h3>
+                <p class="lead-summary"><strong class="drop-cap">M</strong>ilwaukee Bucks star forward Giannis Antetokounmpo is expected to be traded to the Miami Heat or the Boston Celtics before the 2026 NBA Draft on Tuesday, ESPN’s Shams Charania reported Monday morning on “Get Up.” Jaylen Brown would be part of the Celtics deal, according to Charania. The Heat, meanwhile, are ready to part with Tyler Herro, Kel’el Ware, Jaime Jaquez Jr. and the No. 13 overall pick in the draft, NBA insider Marc Stein reports. Antetokounmpo, 31, has been rumored to be on the trade block since the end of the season, with the front office reportedly making the decision to trade the star. For a while, it seemed that the Heat had the inside track for Antetokounmpo, but the Celtics have ramped up the pursuit in the last week. Antetokounmpo has spent his entire career with the Bucks after being drafted in the 2013 NBA draft. He helped the Bucks win the NBA championship in 2021.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Meet the 10 youngest players in the 2026 World Cup</h4>
+                <p>Former pro soccer player and Seattle Sounders chaplain Jesse Bradley discusses the U.S. Men's National Team's historic start at the 2026 World Cup, winning its first two group stage matches since 1930. Bradley emphasizes the team's inspiring public faith, leading to Bible studies and prayer after games, and how it unites Americans through soccer, a sport now surging in popularity.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>The Brady Tkachuk message to Senators that spurred blockbuster Panthers trade</h4>
+                <p>A blockbuster trade hit the NHL world on Father’s Day with the Ottawa Senators sending Brady Tkachuk to the Florida Panthers for a bundle of draft picks, including both of Florida’s first-round picks in this week’s draft. The former Ottawa captain joins his brother Matthew in Florida. While the trade itself isn’t all that surprising, the timing of the move was never quite clear. Tkachuk has two years remaining on his seven-year, $57.5 million contract, so it wasn’t inevitable that Tkachuk would be moved this summer. But at some point, Ottawa got the message from Tkachuk and his agent. In recent weeks, Tkachuk’s agent, Craig Oster of Newport Sports, had conversations with Senators general manager Steven Staios about the captain’s future. At some point, it was conveyed that Tkachuk wouldn’t look to re-sign with the team when his contract expires in 2028, and that the Senators should get ahead on trading their captain, according to The Athletic.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Norway World Cup fans take over Times Square as team prepares for Senegal match</h4>
+                <p>Norwegian soccer fans perform the 'Viking Row' in Times Square as the team prepares for a match against Senegal. Norway is set to take on Senegal in their second 2026 FIFA World Cup match of the tournament on Monday night at New York New Jersey Stadium in East Rutherford, New Jersey.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F06%2Fnewspress-collage-n6s3cwmf8-1782072919073.jpg?quality%3D90%26strip%3Dall%261782058594" alt="Lead Story Image" class="news-photo">
+                <h3>‘House of the Dragon’ returns for Season 3—Here’s how to watch new episodes</h3>
+                <p class="lead-summary"><strong class="drop-cap">A</strong>fter spending two seasons building up to a war and one major cliffhanger, it’s finally time for the Dance of the Dragons to commence on “House of the Dragon.” The “Game of Thrones” prequel returns for its third season tonight, June 21, and it’ll be a bloody affair. The Targaryen civil war that the first two seasons led up to is finally here, and showrunner Ryan Condal confirmed that the season will open with the infamous naval Battle of the Gullet from George R. R. Martin’s “Fire and Blood” novel. In her review of the new season, The Post’s TV reporter Lauren Sarner wrote, “after two seasons of build-up to a war, the “Game of Thrones” prequel finally gets to the good part. Season 3 is all gas, no brakes.” Sarner concludes by saying, “if you liked the first two seasons of ‘House of the Dragon,’ you’ll like Season 3 more.” The Season 3 premiere of “House of the Dragon” will be released at 9 p.m. ET on HBO Max tonight, June 21 — the same date and time it premieres on the HBO cable channel. If you don’t get HBO through traditional cable, you’ll need an HBO Max subscription to tune in to “The Pitt.” If you’re new to HBO Max, you can sign up for as low as $10.99/month with ads, but an ad-free subscription will cost $18.49/month. If you want to stream even more and save a few bucks a month while you’re at it, we recommend subscribing to one of the discounted Disney+ Bundles with Hulu and HBO Max. With ads, the bundle costs $19.99/month and without ads, $32.99/month.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Jane Seymour reveals director's 'sizzling' reaction to her reunion with 'Dr. Quinn' co-star Joe Lando</h4>
+                <p>‘Harry Wild’ star Jane Seymour tells Fox News Digital her longtime partnership with co-star Joe Lando still delivers undeniable chemistry, calling their latest reunion a natural fit after 35 years. More than three decades after they became one of television's most beloved couples, Jane Seymour and Joe Lando are proving some chemistry never fades.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Justin Baldoni's attorney reveals shock Friday night phone call that ended Blake Lively legal war</h4>
+                <p>Bryan Freedman weighs in on the resolution of the legal battle between Justin Baldoni and Blake Lively, arguing that dismissed claims and publicly available records helped provide important context for the outcome. The settlement that ended Justin Baldoni and Blake Lively's blockbuster legal war began with an unexpected Friday night phone call.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>James Van Der Beek's wife honors 'magnificent' late husband on first Father's Day since his death</h4>
+                <p>Fox News senior medical analyst Dr. Marc Siegel joins 'America's Newsroom' to discuss the death of actor James Van Der Beek due to colorectal cancer, what could cause this kind of cancer and how to address it. James Van Der Beek's wife Kimberly Van Der Beek shared a heartfelt tribute to the late actor on the first Father's Day since his passing.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
