@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>TUESDAY, JUNE 23, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/06/931/523/john-james-january-2026.jpeg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Trump endorses John James in Michigan governor race as GOP rival exits primary</h3>
+                <p class="lead-summary"><strong class="drop-cap">R</strong>ep. John James, R-Mich., discusses President Donald Trump’s potential deal with Iran and warns against trusting the regime on ‘Fox Report.’ President Donald Trump on Monday endorsed U.S. Rep. John James, who is running for governor in Michigan. "It is my Great Honor to endorse America First Congressman, John James, who is running to become the next Governor of the Beautiful State of Michigan!" the president declared in part of a Truth Social post. "John James has my Complete and Total Endorsement to be the next Governor of Michigan — HE WILL NOT LET YOU DOWN!" Congressman John James attends the Detroit Auto Show Charity Preview at Huntington Place on January 16, 2026, in Detroit, Mich. (Monica Morgan/Getty Images) After Trump issued the endorsement message on Monday, Michigan state Senate Minority Leader Aric Nesbitt dropped out of the Michigan Republican gubernatorial primary and endorsed James. "This campaign has always been about the people of Michigan and standing with President Trump to defeat the Democrats in November. Today, I am suspending my campaign and proudly joining President Trump in endorsing John James as Michigan’s next Governor," Nesbitt declared in social media posts. "A divided primary only helps Democrats. It’s time to unite. I’m asking every one of you who supported this campaign to stand with me behind John James, roll up our sleeves, and deliver a Republican victory in November." James responded to Nesbitt's move, asserting in part of a post on X, "When President Trump endorsed this campaign, Aric Nesbitt did exactly what a true Michigan CONSERVATIVE should do: He united behind the President and our mission to Save Michigan from the Libs and the RINOs destroying our Republic!" U.S. President Donald Trump attends a press conference during the G7 Leaders' Summit on June 17, 2026, in Evian-les-Bains, France. (Anna Moneymaker/Getty Images) Businessman Perry Johnson, who is also running in the Michigan Republican gubernatorial primary, suggested that the president had made the wrong move by backing James. "President Trump received bad advice yet again. John James is a two-time statewide loser, and Michigan has already seen this movie before: Trump-backed statewide candidates like John James, Tudor Dixon, Matt DePerno, and Kristina Karamo all came up short when it mattered most," Johnson asserted in social media posts.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Trump supporter’s company pledges $1 million to fix White House lawn after UFC event</h4>
+                <p>Ohio-based ScottsMiracle-Gro said it is donating “a combination of monetary and product support.” A government watchdog said the arrangement raises ethics questions.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>A brute-force hack just hit a popular password management app. Here's how to stay safe going forward.</h4>
+                <p>Password management apps are trusted to keep and defend users' most precious login information that leads to their email addresses, bank accounts, social media profiles, and more. These apps protects their entire digital life, so when a password manager fails, the consequences could be dire. Unfortunately, popular password app Dashlane suffered a brute-force attack last month that left some users open to information theft. According to an announcement published by Dashlane, a targeted group of accounts were infiltrated by a hacker through a brute-force attack. A brute-force attack is a type of cybersecurity assault carried out through simple trial and error. It’s basically a digital version of guessing the code on a combination lock by turning it in random sequences until it clicks open. This type of attack can be extremely time-consuming but effective if luck is on the hacker’s side.</p>
+                <p class="source-credit">— The Blaze</p>
+            </div>
+            <div class="story-minor">
+                <h4>Collegiate ‘Likeness’ Deals Tempt Teens To Forfeit Future Millions For A Blinged-Out, $80,000 Prom</h4>
+                <p>College ‘name, image, and likeness’ deals are seducing young athletes into making rash financial choices with long-term ramifications. All that glitters is not gold. A recent Wall Street Journal article on athletes’ spending on extravagant proms brings to mind the Shakespearean phrase, for it hints at larger problems in the sports landscape. The Journal profiled how high-school athletes, many of whom graduate in December so they can spend the spring practicing with their new college teams, have spent up to $80,000 to return to high school and attend their prom. The article called it “prom in the NIL era,” as athletes receiving “name, image, and likeness” deals from university boosters “are remaking the high school rite of passage into a cultural phenomenon all their own, part victory lap and part personal branding opportunity.</p>
+                <p class="source-credit">— The Federalist</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2025/12/931/523/donald-trump-rwanda-democratic-republic-of-congo-peace-signing.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Trump gets major win against China in African rare earth minerals race</h3>
+                <p class="lead-summary"><strong class="drop-cap">F</strong>ox News anchor Bret Baier takes a look at U.S. efforts to increase rare Earth manufacturing domestically on 'Special Report.' JOHANNESBURG — In what’s being hailed as a major win for the Trump administration against Chinese domination of the rare earth minerals market, the U.S. has supported an American company, Virtus Minerals, in developing two major mines producing cobalt and copper in the Democratic Republic of the Congo (DRC). This is claimed to be the first U.S. rare earth minerals acquisition in the African nation since President Donald Trump announced the Washington Accord last December. Historically, China has been the heavy lifter of these metals. The Strategic Studies Institute reported that 80% of the world’s cobalt is produced in the DRC — and 80% of that is controlled by China. Cobalt, used in a wide range of applications, from electric cars and mobile phones to military jets, is on the U.S. government’s list of critical minerals. Copper, also on the list, has traditional uses such as piping for plumbing, but is also needed in electronics and the automotive industry.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Ukraine’s drones are eroding Putin’s vision for Crimea</h4>
+                <p>Russian-installed authorities in Crimea have halted fuel distribution in vacation season as Ukraine isolates the peninsula.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Trump allies push for ‘America First’ in Guatemala</h4>
+                <p>U.S. lobbyists and pundits with the president’s ear are aiding Latin America’s swing to the right.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Trump says Colombia's 'El Tigre' will be a 'great president' as socialist opponent launches legal challenge</h4>
+                <p>Trump congratulated Abelardo De La Espriella, known by many as 'El Tigre,' following an initial ballot count. While not officially called, the narrow lead signals a potential rightward shift for Colombia. (Reuters.) President Donald Trump congratulated conservative attorney and businessman Abelardo de la Espriella on becoming president of Colombia Monday at the White House. Yet while he holds a slim lead and is the favorite to win over left-wing Senator Ivan Cepeda, authorities have yet to officially certify the result.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/06/931/523/cristiano-ronaldo-world-cup-fox-news-001.jpeg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>From Cristiano Ronaldo to Luka Modric, here are the 10 oldest players competing at the 2026 World Cup</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>here is nothing like the World Cup, and nothing can prepare someone more for the sport’s biggest tournament better than experience. Some of these players are more than double the age of some of their youngest teammates. While they might not have the same burst they had in their prime, they bring an important blend of leadership and experience to their teams. Cristiano Ronaldo,, the Portugal legend, is the second-oldest player in this year’s tournament at 41. Lionel Messi, the Argentina great, is the 12th-oldest player in the tournament at 38 years old, and will soon turn 39. Portugal's Cristiano Ronaldo leaves the pitch after the first half during the World Cup Group K match between Portugal and Congo in Houston on June 17, 2026. (Karen Warren/AP) The USMNT captain, Tim Ream, is not only the oldest player on the team but also the 13th-oldest player in the tournament at 38 years old. Lionel Messi of Argentina celebrates after scoring the team's second goal during the international friendly match between Argentina and Iceland at Jordan-Hare Stadium on June 09, 2026 in Auburn, Alabama.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>The Yankees issues to watch before real October test arrives</h4>
+                <p>They are going to have hiccups through the schedule — as they did over the weekend against the Reds — that will put on repeat all the familiar questions. It will be akin to the endless loop with the Knicks: They gave up too much for Mikal Bridges. Can they win with a small guard as their lead player? Will Karl-Anthony Towns (pick one) be tough enough, able to stay out of foul trouble consistently or willing to accept his role? Ultimately, the Yankees will probably finish the regular season with a very good record, a lot of strengths and having built and played depth along the way, but also with a track record of playoff failures plus those lingering regular-season issues that will cast doubt on their postseason chances (sound familiar?).</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>WWE star Danhausen throws his hat in the ring for UK prime minister</h4>
+                <p>WWE star Danhausen asked the London crowd if they would be interested in him becoming the next UK prime minister. WWE star Danhausen has been fairly busy since he made his debut with the company earlier this year. He’s been cursing wrestlers, "uncursing" basketball teams and taking victory laps for his mysterious voodoo seemingly working out well. On Monday, he decided to take a break from his latest project to throw his hat in the ring for a new job – the prime minister of the United Kingdom.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>What Nets might do with Nos. 6 and 28 picks in 2026 NBA Draft</h4>
+                <p>The Post’s Brian Lewis predicts what the Nets might do with the Nos. 6 and 28 picks in the 2026 NBA Draft: The price to move into the top four ends up being too steep, so they’ll take the best available player at No. 6. But only three players since 2008 have had an assist percentage over 30, shot 84 percent from the foul line, had a free-throw rate over 35 and taken at least 14 3s per 100 possessions — Stephen Curry, Trae Young and Brown. The Nets end up drafting an Arkansas teen guard, but it’s not Darius Acuff Jr. It’s Thomas, who averaged 15 points and shot 41.6 percent from deep.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F06%2FDiana-Ross.jpg?quality%3D90%26strip%3Dall" alt="Lead Story Image" class="news-photo">
+                <h3>How much are tickets to see Diana Ross in concert? Get them with a discount</h3>
+                <p class="lead-summary"><strong class="drop-cap">8</strong>2-year-old Diana Ross recently announced she’s going to play theaters, resorts, bowls, concert halls and amphitheaters and events centers all over North America on her ‘Diana in Motion Tour’ this August and September. While out and about, the Rock Hall of Famer is slated to make three Tri-state stops in Connecticut, New Jersey and New York. They’ll take place at: Palace TheatreStamford, CTSunday, Aug. 16Ocean Resort CasinoAtlantic City, NJFriday, Aug. 21Tilles Center Concert HallGreenvale, NYSunday, Aug. 23 If you’d like to see the legendary Supremes singer live, tickets are available for all of her 11 upcoming ‘Diana in Motion’ concerts as of today. At the time of publication, the lowest price we could find on tickets for any one show was $ including fees on SeatGeek. Prices start at $107 including fees for her Tri-state gigs (that’s for the Friday night in Atlantic City). Make sure to use promo code NYPOST10 for $10 off purchases over $250 at checkout (Editor’s Note: this discount is only valid for users’ first purchase on SeatGeek). According to Set List FM, Ross typically performs 20-30 songs per show. Notable tracks that often make the cut include fan favorites “I’m Coming Out,” “Ain’t No Mountain High Enough,” “Upside Down,” “Count On Me” and, of course, “Endless Love.” She also often delivers Supremes classics like “Baby Love,” “You Can’t Hurry Love,” “Come See About Me” and “Stop! In The Name of Love.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Jackie Kennedy was unimpressed by Buckingham Palace until Queen Elizabeth's advice changed everything: author</h4>
+                <p>Author Caroline Hallemann explains how Queen Elizabeth's advice to Jackie Kennedy revealed the royal family's long-term approach to public life and fame. Hallermanns new book, "The Kennedys & the Windsors," is out now. Queen Elizabeth II gave Jackie Kennedy a piece of advice that helped ease any awkwardness between the two iconic women.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Brand New announces ‘The Devil and God Tour’ with Barclays show. Get tickets</h4>
+                <p>Starting in late September, Jesse Lacey’s beloved emo outfit will celebrate the 20th anniversary of their seminal 2006 album “The Devil and God Are Raging Inside Me” at arenas, ballrooms, pavilions, theaters and auditoriums all over North America. In the off-chance you haven’t listened to “The Devil and God Are Raging Inside Me” in the past decade, the impassioned, fist-pumping record is known for spawning fan favorite tracks “Jesus Christ,” “Sowing Season (Yeah),” “Degausser,” “Millstone” and “You Won’t Know” among others. “‘The Devil and God Are Raging Inside Me’ blew up teen angst to literally biblical proportions, resonating like no emo band before or since to outcasts in Sunday school and high school,” Pitchfork noted in an overwhelmingly positive 2016 review, a year before Lacey was accused of grooming and inappropriate behavior with a minor.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>'Sopranos' actress Sarah Shahi says James Gandolfini gave her one of the best on-screen kisses of career</h4>
+                <p>"Sopranos" actress Drea de Matteo told Fox News Digital that the late James Gandolfini gave cast members $30,000 checks when they were left out of a DVD deal. Sarah Shahi is spilling the details on her spicy sex scene with "Sopranos" star James Gandolfini. On the "Bossticks" podcast, Shahi said that her kiss with Gandolfini was "one of the best" kisses she's ever had.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
