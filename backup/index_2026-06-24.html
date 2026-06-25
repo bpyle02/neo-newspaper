@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>WEDNESDAY, JUNE 24, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://www.theblaze.com/media-library/you-need-just-two-things-to-have-fun-and-neither-of-them-is-money.jpg?id=66989710&width=980" alt="Lead Story Image" class="news-photo">
+                <h3>You need just two things to have fun — and neither of them is money</h3>
+                <p class="lead-summary"><strong class="drop-cap">W</strong>hen over 50% of Americans say they can’t afford to enjoy themselves any more, it's time to examine our assumptions. A recent national survey found something rather alarming. Nearly half of Americans say the fun has faded from their lives. The top excuse is predictable — money. Over half say they simply can’t afford to enjoy themselves any more. Interestingly, the people who do make time for fun report less stress, stronger relationships, and more motivation. In other words, the payoff is real. And the barrier is not as simple as the price tag. There’s also something to be said for reviving lost habits: pickup sports, church gatherings, volunteering, even old-fashioned storytelling. We have trained ourselves to think fun is expensive. That didn’t happen by accident. Social media sells a deadly diet of curated lifestyles — vacations, rooftop bars, luxury dinners, perfectly staged “memories.” Reality TV ups the ante with drama and excess. Fun, in this version of life, is something you buy, document, and broadcast. If it doesn’t look impressive, it doesn’t count. For most of human history, fun was simple, local, and shared. It was built around people, not purchases. Somewhere along the way, we replaced connection with consumption and then acted surprised when both our wallets and our spirits ran dry. The truth is, some of the best forms of fun cost next to nothing, and they tend to be the ones that actually work. Start with the obvious: time with other people. The survey itself admits what many already know but ignore — shared fun strengthens relationships. Not curated, expensive outings. Just shared time. A backyard cookout beats a $200 night out more often than people admit. A few burgers, a cheap speaker, maybe someone brings a folding chair that’s seen better days. It’s not glamorous. That’s the point. People relax. They talk. They laugh hard, let their hair down, and leave feeling re-energized. Game nights are another example. Not the staged, Instagram-ready kind, but the slightly chaotic version. A deck of cards, an ancient board game, or even something improvised. Half the fun is in the arguing over rules and the inevitable cheating accusations. Then there's the outdoors, still one of the best bargains left in America. A walk through the neighborhood, a hike up a nearby trail, a pickup game at the local court, an afternoon fishing at a quiet pond. None of it costs much more than the time you put in.</p>
+                <p class="source-credit">— The Blaze</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Tyler Metcalf's Dad Absolutely Torches The View's Sunny Hostin Over Her Remarks About His Son's Death</h4>
+                <p>Jeff Metcalf can’t hold his tongue anymore about how Karmelo Anthony’s family behaved during sentencing, and The View’s Sunny Hostin using his son’s death as a prop to make a shoddy point about race in America. He was on Will Cain’s show this week and did not hold back on Hostin, while also noting that Anthony’s family did not show any remorse. They weren’t even there when their son was sentenced to 35 years in prison for murder. Anthony fatally stabbed Jeff’s son, Austin, in Frisco, Texas, at a track meet in 2025. Sunny Hostin and ABC are facing mass calls for a lawsuit after claiming Karmelo Anthony did not receive a fair trial because there were no black jurors, while also misrepresenting the words of Austin Metcalf’s father, Jeff, to millions of viewers.Rein in your harpies, ABC. pic.twitter.</p>
+                <p class="source-credit">— Townhall</p>
+            </div>
+            <div class="story-minor">
+                <h4>When Was The Last Time America Felt Like This?</h4>
+                <p>Signs of the times include sporting patriotic gear, high-fiving strangers, and an uncontrollable urge to chant "USA" in public. This article is part of Upstream, The Daily Wire’s new home for culture and lifestyle. Real human insight and human stories — from our featured writers to you. America is currently gripped by a nationwide epidemic with no sign of slowing down: Millions of Americans have caught “FIFA fever.” Symptoms of this joyful “infection” include sporting patriotic gear, high-fiving strangers, and an uncontrollable urge to chant “USA” in public. Across the country, Americans are gathering in backyards, sports bars, and FIFA Fan Festivals to support the U.S. Men’s National Soccer Team in its quest to become the first U.S. men’s team to win the World Cup. The team’s opening match drew a record-breaking 27.5 million viewers, making it the most-watched soccer game in U.S. television history.</p>
+                <p class="source-credit">— Daily Wire</p>
+            </div>
+            <div class="story-minor">
+                <h4>The 4 GOP senators who broke ranks and voted to block Trump from resuming Iran war</h4>
+                <p>The president seethed at Susan Collins, Bill Cassidy, Lisa Murkowski and Rand Paul after the war powers resolution passed, saying: "I will get it done, one way or the other."</p>
+                <p class="source-credit">— Washington Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/06/931/523/kim-warship.jpeg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Kim Jong Un calls for North Korea to build 2 large warships per year in major naval expansion push: report</h3>
+                <p class="lead-summary"><strong class="drop-cap">N</strong>orth Korean state media releases images showing Kim Jong Un watching the 5,000-ton-class destroyer Choe Hyon test fire missiles on Sunday, April 12, 2026. (Credit: KCNA/AP) North Korean leader Kim Jong Un on Tuesday called for a major expansion of the country's naval forces, suggesting the regime should build two large warships each year for the next five years. Speaking at a commissioning ceremony for a new destroyer, Kim suggested North Korea should build two warships comparable in size to its 5,000-ton Choe Hyon-class vessel each year over the next five years, according to the Korean Central News Agency (KCNA). Kim was celebrating the deployment of the new multipurpose destroyer at the port of Nampho. In April, he observed launches of two cruise missiles and three anti-ship missiles from the vessel. North Korea launched two cruise missiles and three anti-ship missiles from the destroyer Choe Hyon, April 12, according to North Korean state media. (Korean Central News Agency/Korea News Service/AP) Kim previously hailed the development of the Choe Hyon as a major step toward expanding the operational reach and preemptive strike capabilities of North Korea's military.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Ukraine’s drones are spoiling Putin’s vision for Crimea</h4>
+                <p>Russian-installed authorities in Crimea have halted fuel distribution in vacation season as Ukraine isolates the peninsula.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Trump dismisses Iran’s rejection of nuclear inspections</h4>
+                <p>Iran’s Foreign Ministry said there was no plan for the IAEA to inspect its damaged nuclear facilities, a day after Vice President JD Vance said conversations with inspectors could happen imminently.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Turkey detains over 200 suspects, including alleged ISIS militants, in sweeping raid ahead of NATO summit</h4>
+                <p>Andrew Giuliani, executive director of the White House FIFA World Cup Task Force, discusses ISIS calls for lone-wolf attacks. Turkish authorities reportedly detained more than 200 people, including suspected ISIS-linked militants, in a sweeping Tuesday raid in capital Ankara ahead of a July 7-8 NATO summit.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F06%2Fnewspress-collage-q237d33np-1782294174937.jpg?quality%3D90%26strip%3Dall%261782279968" alt="Lead Story Image" class="news-photo">
+                <h3>This Giants receiving corps isn’t designed to withstand Malik Nabers’ absence</h3>
+                <p class="lead-summary"><strong class="drop-cap">W</strong>atching all the Giants’ work this spring, all the time on the field, all the 7-on-7 drills and full-team periods, seeing quarterbacks Jaxson Dart, Jameis Winston and Brandon Allen firing the ball hither and yon to a bevy of targets — wide receivers, tight ends and running backs — it was easy to forget who was not out there. Catches made, some routine, others more noteworthy. Yards after the catch. Tosses out of the backfield. Deep balls and over-the-shoulder receptions. There is no live rush to harass the throwers and no full pads worn to knock around the offensive playmakers. And, perhaps most importantly, no chance whatsoever for a punishing hit across the middle, a lack of fear that tends to empower guys who make a living hauling in the football. Sometimes the defense won these matchups. More often, the offense succeeded, in keeping with the way it is supposed to go in the spring, otherwise known as the T-shirts and shorts competition. It looked as if there were enough guys on the roster capable of making a living as pass-catchers.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Yankees' Jazz Chisholm Jr leans into lollipop fiasco after clutch home run in win over Tigers</h4>
+                <p>New York Yankees star Jazz Chisholm Jr. played it cool during a win over the Detroit Tigers after taking heat for his lollipop. As it turned out, New York Yankees second baseman Jazz Chisholm Jr. wasn’t the sucker everyone thought he was following his lollipop fiasco.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Siblings of Long Island native Joe Scally will finally see USA star in World Cup action after COVID kept them from his debut</h4>
+                <p>Long Island native Joe Scally is playing in his second World Cup for Team USA — in an American homecoming for the Bundesliga star that his family says they wouldn’t miss for the world. Siblings Drew and Anna Scally are ready to cheer on their brother and his teammates at home after heading across the pond to see the star defender during German league games. “Whenever we’re at one of his games, he knows where we’re sitting each time. He’ll look up and wave to us,” Drew Scally, 26, told The Post of watching the beloved Borussia Mönchengladbach player. “He always smiles. I would say he would maybe focus more; it’s definitely a lot of excitement for him.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>ESPN's Jay Williams faces awkward ribbing from colleagues during NBA Draft</h4>
+                <p>Nick Wright joins Colin Cowherd to discuss the Giannis Antetokounmpo trade, the failed trade of Jaylen Brown and the potential bidding war for him, as well as the NBA Draft. The 2026 NBA Draft finally saw the top college prospects get chosen along with some friendly fire among ESPN and basketball analysts on Tuesday night.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/06/931/523/Royal-Reunion.jpeg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Prince William's door is 'bolted shut' as Prince Harry plans UK return with Meghan Markle, children: expert</h3>
+                <p class="lead-summary"><strong class="drop-cap">D</strong>an Wakeford, founder of Celebrity Intelligence, discusses Prince Harry's expected UK return, his relationship with King Charles, and why a meeting with Prince William remains unlikely. Prince Harry is heading to the U.K. in July, and this time, he's expected to bring his wife, Meghan Markle, and their two young children, Prince Archie and Princess Lilibet. It will mark the first time in four years that the Duke of Sussex, who resides in California, has returned to his home country with his wife and children. The Sussexes are expected to travel across the Atlantic to join celebrations marking the one-year countdown to the Invictus Games Birmingham 2027 event, according to the BBC. Fox News Digital reached out to Archewell, which handles the offices of the Duke and Duchess of Sussex, for comment. Prince Harry is expected to return to the U.K. in July with his family. However, royal watchers say a reconciliation with his estranged brother, Prince William, remains unlikely amid their ongoing rift. (Emilio Morenatti - WPA Pool/Getty Images) Dan Wakeford, founder of the weekly pop-culture newsletter Celebrity Intelligence, has been speaking with well-placed sources about the surprise visit. A veteran celebrity-media editor, Wakeford previously led People magazine, Entertainment Weekly and Us Weekly.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>How to watch ‘The Sheep Detectives’ for free: Release date, cast</h4>
+                <p>The classic murder-mystery-whodunnit structure meets… basically any movie that comes to mind about a talking animal in “The Sheep Detectives,” a delightful new movie that hits streaming today. A hybrid live action-animation feature, “The Sheep Detectives” is based on the novel “Three Bags Full” by Leonie Swann and hit theaters in early May. It comes to Prime Video today, June 24. Hugh Jackman stars as George Hardy, a shepherd who we learn cares deeply for his flock. He gives them all names, knows all of their individual needs, and every night, reads them murder mystery detective novels. Until one day, when George’s mysterious death leads to the titular sheep becoming detectives.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Oprah Winfrey admits she begged talk show audience to bury footage of Whitney Houston onstage fall</h4>
+                <p>Oprah Winfrey is shedding new light on Whitney Houston's troubled final years, revealing that the late singer fell off the stage while performing during a 2009 taping of "The Oprah Winfrey Show." During a recent appearance at Cannes Lions, where she was honored with the LionHeart Award, the 72-year-old former talk show host spoke out about the previously undisclosed incident, which she said occurred after Houston relapsed amid her longtime battle with drug addiction.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Drake’s baby mama Sophie Brussaux marries Muay Thai fighter on Father’s Day</h4>
+                <p>The mother of Drake’s only son is now a married woman after tying the knot with a professional Muay Thai fighter over Father’s Day weekend. Sophie Brussaux, who gave birth to Drake’s son Adonis in October 2017, married Efe Caliskan in a Sunday ceremony with the couple’s closest family and friends in North York, Toronto, Canada. Caliskan is a professional fighter who recently made his MMA debut in Canada, which resulted in a unanimous decision win. Brussaux had previously posted videos sparring and training with Caliskan. Drake and Brussaux were never in a long-term relationship before or after her pregnancy; a 2018 paternity test revealed he was the father of Adonis.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/06/931/523/flight-simulation.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Helmet-style cockpit vision system aims to change how pilots see in low visibility</h3>
+                <p class="lead-summary"><strong class="drop-cap">L</strong>ow visibility still disrupts airline operations, driving delays and cancellations across the system. AerSale Inc. says its AerAware system, manufactured in Tucson, Arizona, helps pilots see more clearly in fog, haze, smoke and darkness. PHOENIX, Ariz. – Dror Yahav, a former commercial pilot and now CEO of Universal Avionics, said he often flew approaches in low-visibility conditions where runways did not appear until late in the landing sequence. Now, he's helping bring a cockpit vision system to market for commercial aircraft. AerSale developed the system, AerAware, in partnership with Universal Avionics and has received Federal Aviation Administration certification for the Boeing 737 Next Generation. The system uses a nose-mounted enhanced vision camera and a wearable head display that overlays flight data and imagery into the pilot’s field of view. "You turn your head up and look outside, and there’s just nothing — pitch black or foggy," he said. He said the system combines sensor data and imagery to support situational awareness during takeoff and landing. AerAware departs from traditional head-up displays and instead equips both pilots with a dual wearable system that delivers the same information to each cockpit seat. Yahav said the concept draws from military helmet-mounted displays used in aircraft such as the F-35 Lightning II. Regulators continue to focus on runway safety, and FAA data shows there were 1,636 runway incursions in fiscal year 2025, down from 1,758 in 2024 and 1,760 in 2023. Pilot deviations accounted for 62% of incursions from 2021 through 2025. The installation process takes about two to three days per aircraft, followed by pilot training under an approved program, Yahav said. Jacqueline Carlon, senior vice president of marketing and communications for AerSale, said airlines evaluating the system focus on certification, installation downtime and integration into existing operations. "It takes about a two- to three-day installation per aircraft, followed by an approved training program," she said. Carlon said safety and operational efficiency drive interest as airlines evaluate upgrades for Boeing 737 fleets.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Are ChatGPT and other AI chatbots politically biased? We tested them.</h4>
+                <p>The Post tested ChatGPT, Gemini and other chatbots with political questions, and the results show that the AI tools have different political leanings.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
