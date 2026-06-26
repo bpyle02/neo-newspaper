@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>THURSDAY, JUNE 25, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://media.townhall.com/cdn/hodl/2020/189/9568d7c2-0226-4824-8b36-70052e5550b1.jpg" alt="Lead Story Image" class="news-photo">
+                <h3>A CNBC Host Asked a Dem Senator a Simple Question About Socialism. It Did Not Go Well.</h3>
+                <p class="lead-summary"><strong class="drop-cap">Y</strong>ou knew how this was going to turn out—we didn’t even need to set it up. New York experienced a Marxist surge in last night’s primaries, where all of Zohran Mamdani’s communist supporters won their races. Some establishment figures were defeated, like Rep. Dan Goldman, who was easily beaten by Brad Lander by more than 30 points. Goldman, who was part of the legal team during the Trump impeachment circus and one of the president’s most outspoken critics, was also pro-Israel, which is what did him in. New Jersey Democrat Cory Booker says he is ok with socialism in the Democrat party:"One of things that makes the Democratic party great is it's a big tent party, we need to stay that way." pic.twitter.com/WdX47jkyhU Anyways, given the socialist wave crashing into the Democratic Party, and some establishment types welcoming these lunatics, CNBC host Joe Kernen asked Delaware Sen. Lisa Blunt Rochester a simple question: Where has socialism ever worked? Democrat Sen. Lisa Blunt Rochester dodges when asked when socialism has ever worked.ROCHESTER: Is that another question or is that for the next interview?CNBC: I just want to know one place...ROCHESTER: When you have me come back on we can talk about all the races... pic.twitter.com/vEwq0ObxBi Editor's Note: Do you enjoy Townhall's conservative reporting that takes on the radical left and woke media? Support our work so that we can continue to bring you the truth. Copyright © Townhall.com/Salem Media.
+                            All Rights Reserved.</p>
+                <p class="source-credit">— Townhall</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Parenting influencer’s daughter, 2, drowns in their home pool</h4>
+                <p>“I lost my daughter,” Jamal Morton, 33, told his 2.6 million followers on Instagram in a heartbreaking tribute to Rose, whom he called “the best daughter a father could ever ask for.” “She thought she was a big girl and could swim all by herself. She walked out of the house and got into the pool where she drowned,” he said in an online fundraiser over the death of the youngest of his nine children. “Losing a child is a pain I wouldn’t wish on my worst enemy,” he said in the heartbreaking post where he shared a montage of snaps from her birthday celebrations in April. “ I hate to make this post but yall won’t be seeing me for a while. I have to take a break. I lost my daughter.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>America Turns 250. So Where Are The Patriotic Movies?</h4>
+                <p>This article is part of Upstream, The Daily Wire’s new home for culture and lifestyle. Real human insight and human stories — from our featured writers to you. As America celebrates its big birthday this summer — writing from across the pond to wish you “happy Semiquincentennial,” I must say you look remarkably good for your age — it is worth taking a moment to consider that such a milestone anniversary is being ignored by this summer’s crop of blockbuster movies. Aside from the “blink-and-you’ll-miss-it” three-day limited release of Hillsdale’s documentary “Revolutionary America,” and the Revolutionary War-adjacent “Young Washington,” which depicts the nation’s first president learning his soldiering as a British subject in the French and Indian War, our movie theaters this summer will be free of tricorn hats and flintlock pistols. Which is rather a shame when you think about it, given the significance of this year.</p>
+                <p class="source-credit">— Daily Wire</p>
+            </div>
+            <div class="story-minor">
+                <h4>The liberty we cherish must extend to ALL Americans — especially the most defenseless</h4>
+                <p>It’s our national creed. It’s our DNA. Yet here we are, heading into America’s 250th year, and “We the People” still does not include all the people. I was conceived in rape but adopted into a diverse family of 15 with nine other adopted siblings. I just want to clarify the language to avoid ambiguity. Every human is a person; every person is a human. All of us begin life at fertilization. Every compromise on personhood has always resulted in discrimination, destruction, and death. “Is life so dear, or peace so sweet, as to be purchased at the price of chains and slavery? Forbid it, Almighty God! I know not what course others may take; but as for me, give me liberty or give me death!</p>
+                <p class="source-credit">— The Blaze</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2023/11/931/523/UN-Israel-flag.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Israel slams UN report as 'political blood libel' for alleging deliberate targeting of Palestinian children</h3>
+                <p class="lead-summary"><strong class="drop-cap">I</strong>sraeli President Isaac Herzog addressed Christian leaders from around the world about the surge in antisemitism at the Jerusalem Summit in Israel. (Credit: The International Christian Embassy Jerusalem.) Israel reacted angrily over a new United Nations’ Commission of Inquiry report alleging the Jewish state had engaged in the "deliberate targeting of Palestinian children." Prior reports from the Independent International Commission of Inquiry on the Occupied Palestinian Territory, Including East Jerusalem, and Israel garnered accusations of antisemitism and incitement to violence. The latest report, released Wednesday, said that, "based on the evidence reviewed, and consistent with its previous reports, the Commission finds on reasonable grounds that the Israeli authorities and the Israeli security forces have continued to commit the crime of genocide, crimes against humanity and war crimes in the Gaza Strip and war crimes in the West Bank, including East Jerusalem." A woman kneels by a memorial site in Kibbutz Kfar Aza, southern Israel, as the community commemorates members killed, taken hostage, or who died in captivity following the Oct. 7, 2023, Hamas attack.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Israel deliberately targeted Palestinian children in Gaza, U.N. commission says</h4>
+                <p>The Israeli Foreign Ministry called the findings a “libelous sham.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Trump says Venezuela earthquakes left 'devastating number of deaths' as US readies aid</h4>
+                <p>President Donald Trump said late Wednesday that two powerful earthquakes that struck Venezuela had caused what he described as "a devastating number of deaths" as officials continued assessing the extent of the disaster. Venezuela's acting President Delcy Rodríguez later said at least 164 people were killed and more than 971 were injured in the earthquakes.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>France reports first Ebola patient as cases in Africa surge above 1,000</h4>
+                <p>France said a doctor back from a humanitarian mission was infected and in stable condition, while experts said the outbreak in Africa could be the worst ever recorded.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F06%2Fnewspress-collage-wxfda00xm-1782368183078.jpg?quality%3D90%26strip%3Dall%261782353809" alt="Lead Story Image" class="news-photo">
+                <h3>Breaking down winners and losers of first round of 2026 NBA Draft</h3>
+                <p class="lead-summary"><strong class="drop-cap">A</strong> home run of a pick, landing Alabama guard Labaron Philon Jr. at No. 22. He should’ve gone in the late teens at worst. He was one of college basketball’s top guards last season, averaging 22 points, five assists and shooting 39.9 percent from distance on 6.1 attempts. He’s terrific going to the basket, has a sweet jumper and made a major leap from his freshman to sophomore season. But with Philadelphia, he’s a third guard, behind Tyrese Maxey and VJ Edgecombe. That’s a heckuva young trio, all 25 or younger. San Antonio addressed a major weakness that hampered it in the playoffs: big man depth behind Victor Wembanyama. They used the 20th pick on Kentucky center Jayden Quaintance, then traded for a second first-round pick, and used No. 26 on Connecticut’s Tarris Reed Jr. Quaintance is a lottery-level talent with injury questions after playing in just four games this past season after ACL surgery. It was a worthwhile gamble. Odds are, he won’t play much next year, but could be a major factor in time. Reed is not a prototypical NBA big man, because he doesn’t shoot 3s or guard well in space. But he’s physical, tough and can be an enforcer type. Did Oklahoma City find an answer for its Wembanyama problem? Aday Mara, the Thunder’s pick at No. 12, is at least an option. The 7-foot-3 center is a defensive dynamo who helped lead Michigan to its first national championship in 37 years in April. The more size you can throw at Wemby, the better.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>US Olympic hero Nancy Hogshead wins legal battle after volleyball coach's $250M defamation suit is dismissed</h4>
+                <p>Former Olympian Nancy Hogshead-Makar warned on in the opening segment of an episode of Dr. Phil, Three-time Team USA Olympic gold medalist women's swimmer Nancy Hogshead has won a massive legal victory for athlete safety. A federal judge in Chicago has dismissed a $250 million lawsuit filed against Hogshead by Rick Butler, a prominent junior volleyball coach accused of sexually abusing underage players. The lawsuit was filed in December 2021 by Butler and his wife Cheryl, targeting statements Hogshead made in 2017 and 2018 regarding allegations that Butler sexually abused teenage girls that he coached in the 1980s.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>St. John’s star frontcourt gets ‘picture-perfect ending’ with historic NBA draft</h4>
+                <p>This was on March 27, after a hard-fought, Sweet 16 loss to Duke inside Capital One Arena. The three friends weren’t ready to say goodbye to what had been a memorable season. They were hurting and it showed. They didn’t get their fairy-tale moment then. Get Zach Braziller’s text messages with all the latest St. John’s info and get your questions answered — exclusive to Sports+ subscribers. It wasn’t a Final Four or a national championship, but the St. John’s frontcourt got to live out their dreams separately over two nights of the NBA draft, and in the process make more Red Storm history.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Qatar's Assim Madibo handed five-match FIFA World Cup ban after tackle broke Canada star's leg</h4>
+                <p>Clint Dempsey, Sacha Kljestan, Kasper Schmeichel and Melissa Ortiz react to Spain's 4-0 win over Saudi Arabia and Lamine Yamal scoring his first career FIFA World Cup goal. Qatar player Assim Madibo was given a five-match ban from the 2026 FIFA World Cup after his tackle on Ismaël Koné broke the Canadian’s leg during their match.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F06%2F132102315.jpg?quality%3D90%26strip%3Dall" alt="Lead Story Image" class="news-photo">
+                <h3>‘Baywatch’ scene shows the scary realities of visiting Venice Beach</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>hings aren’t all sunshine and slow-motion rescues on the set of the new “Baywatch” reboot, shining a bright light on some the dangers brought on by SoCal’s homeless population. Hassie Harrison and the “Baywatch” cast were on set filming a scene in Venice Tuesday that included a homeless man approaching Harrison’s character, Nat, with a knife. The homeless actor,  dressed in torn up clothes, held a massive knife while standing only inches from Harrison’s face. Harrison, dressed in the show’s iconic bright red one-piece lifeguard swimsuit, is eventually saved by Stephen Amell’s character, Hobie, who rushed in to intervene. California Post News: Facebook, Instagram, TikTok, X, YouTube, WhatsApp, LinkedInCalifornia Post Sports Facebook, Instagram, TikTok, YouTube, XCalifornia Post  Opinion California Post Newsletters: Sign up here!California Post App: Download here!Home delivery: Sign up here!Page Six Hollywood: Sign up here! The chiseled lifeguard engages in a fight with the homeless man, taking him down before paramedics jump in to help the fallen attacker. The scene made it hard to tell where television drama ended and real-life issues at one of California’s most famous beaches began. The dramatic sequence is a far cry from the sun-soaked image that made “Baywatch” a global hit, instead reflecting a complicated reality of modern-day Venice Beach. Production on the reboot has been underway in Venice, bringing a new generation of lifeguards to the same stretch of sand that helped make the original series famous.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Taylor Swift, Travis Kelce nuptials called a 'royal wedding' by NFL pals dropping major timing hints</h4>
+                <p>The Taylor Swift-Travis Kelce wedding buzz reached a new level this week after the NFL star's pals likened the highly anticipated event to a "royal wedding" and hinted that the superstar couple may not be far from walking down the aisle. Swift made an appearance at Kelce's Tight End University, an NFL camp created by the football player, along with George Kittle and Greg Olsen, on Tuesday night. The "Life of a Showgirl" singer showed up at the concert to watch Lainey Wilson perform and made a surprise performance of her iconic song, "Love Story."</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Want to see Jacob Collier live? Get tickets with a discount today</h4>
+                <p>Starting in late September, the mid-2010s internet star-turned-seven-time Grammy winner is slated to set off on his intimate solo ‘The Light For Days Tour’ in support of his 2025 album with the same name. The 14-concert outing will send the 31-year-old Londoner to theaters, music centers, bowls and, of course, NYC’s Carnegie Hall where he’ll perform on Wednesday, Sept. 30. If you’d like to see the “In My Room” singer live, tickets are available for all his North American gigs. At the time of publication, the lowest price we could find on seats for any one show was $118 including fees on SeatGeek.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Joe Manganiello turned to shamans and pagan rituals during seven-year health battle that nearly killed him</h4>
+                <p>In his upcoming memoir, "Bloodlines," Manganiello detailed his experiences with a life-threatening medical scare, which led him "beyond medicine and into a remarkable, globe-spanning quest that revealed answers about his ancestry, inherited trauma and the deeper histories we carry," according to Simon & Schuster.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
