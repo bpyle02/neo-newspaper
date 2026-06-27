@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>FRIDAY, JUNE 26, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F06%2Fgolf8_b66a35.jpg?quality%3D90%26strip%3Dall" alt="Lead Story Image" class="news-photo">
+                <h3>Putt your money to good use with last-minute Prime Day golf deals you don’t want to miss</h3>
+                <p class="lead-summary"><strong class="drop-cap">Y</strong>ou play this beautiful game for the love of the sport, but let’s be honest: nothing beats the thrill of crushing your friends during a friendly Sunday match. You play for fun, but your competitive fire runs deep. Premium gear matches your burning drive to win, injecting undeniable swagger into every single pre-shot routine. It is time to leave the amateur labels behind, claim your throne as the local ace and watch your handicap plummet. With Amazon Prime Day 2026 (June 23 through June 2026), there’s no better time to save on improving your game.  We’ve rounded up your Prime Day golf deals to surface the best quality at the lowest price. Upgrading your golf equipment is the ultimate shortcut to trading weekend hacker frustration for pure, unadulterated course dominance. Here at The Post, we don’t just diligently fact-check to call out fake news — we also relentlessly price-check to get you inflation-beating bargains you can trust. Before we recommend a single Prime Day purchase, our experienced bargain hunters put every “deal” through our price-checking gauntlet: Use the links below to navigate to your preferred section, or simply scroll to take in all of the golf deals that Prime Day has to offer. Engineered for precision and feel, the TP5 golf ball features a soft 5-layer construction with a new Speed Wrapped Core and Tour Flight urethane cover — delivering lower driver spin, enhanced greenside control, and 360-degree ClearPath Alignment for serious players who demand performance. Achieve ultimate control with Srixon Z-STAR Golf Balls. Featuring a FastLayer DG Core for premium feel and distance, their Spin Skin+ coating maximizes greenside spin on wedges. The 338 Speed Dimple Pattern cuts through wind, while the tour-level 3-piece construction offers complete tee-to-green performance for skilled players. Bring a stroke of luck to your next round with the limited-edition Callaway Supersoft Lucky Golf Balls. This special release features a distinctive four-leaf clover design that stands out beautifully in the fairway and adds undeniable flair to your game. Engineered with Callaway’s advanced HyperElastic SoftFast Core, these balls deliver blazing speeds off your driver and irons for effortless, towering distance. Despite its explosive power, the core maintains an ultra-soft feel on every strike. Engineered for advanced players with medium swing speeds, the 3-piece Vice Pro maximizes driver distance without sacrificing control. Its extra-thin cast urethane cover delivers outstanding greenside spin and an ultra-soft feel. Featuring a newly designed, closed alignment line for sharper aiming, this ball provides premium, tour-level performance on every single shot.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Border Authorities Make Massive Discovery During FIFA World Cup</h4>
+                <p>As the FIFA World Cup brings in millions of international fans to the United States, criminals are lurking behind-the-scenes to exploit the buzz surrounding the games. In the last few weeks, Customs and Border Protection (CBP) has intercepted massive amounts of counterfeit FIFA World Cup merch. In a recent five-day operation dubbed “Protect the Pitch,” border officers in Cincinnati seized 68 shipments of counterfeit FIFA World Cup 2026 jerseys, shirts, shorts, shoes, hats, jewelry, and other merch, CBP told The Daily Wire. If they had been authentic, the 2,589 items had an estimated retail value of $266,566, according to CBP. The shipments included 1,563 FIFA World Cup 2026 jerseys, 306 pairs of shorts, 200 pairs of footwear, 150 hats, 80 shirts, and 290 other World Cup-related items that originated in Mexico and Colombia.</p>
+                <p class="source-credit">— Daily Wire</p>
+            </div>
+            <div class="story-minor">
+                <h4>Inside Trump’s plans for retribution and other lesser-known allegations in ‘Regime Change’</h4>
+                <p>A new book from two Washington reporters reveals what took place inside the White House after President Donald Trump’s return to power.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>The Week: The Art of the MOU</h4>
+                <p>Plus: New York’s socialist revolution.</p>
+                <p class="source-credit">— National Review</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                
+                <h3>In AI race vs. U.S., China eyes a come-from-behind victory</h3>
+                <p class="lead-summary"><strong class="drop-cap">U</strong>.S. AI companies seem to be in the lead, but that could be short-lived as Chinese competitors offer cheaper products with more commercial appeal worldwide.</p>
+                <p class="source-credit">— Washington Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Quakes give U.S. opportunity to transform Venezuela from foe to friend</h4>
+                <p>The country once rejected U.S. aid after a natural disaster. This time, it’s different.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>King Charles reveals his personal tax bill. Spoiler alert: He’s very rich.</h4>
+                <p>The first-ever tax disclosure by a British monarch was partly intended to contain the damage from revelations about the finances of the king’s disgraced brother, Andrew.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F06%2Fcrop-39799215_e5c7f7.jpg?quality%3D90%26strip%3Dall" alt="Lead Story Image" class="news-photo">
+                <h3>It was hard to imagine Brent Headrick being this much of a Yankees savior</h3>
+                <p class="lead-summary"><strong class="drop-cap">B</strong>OSTON — If you predicted Brent Headrick to have the seventh-highest bWAR of any Yankee at the halfway point of the season, I’m guessing you are either blood-related or lying. Because as much as the Yankees had high hopes for the lefty reliever entering this year, it was difficult to imagine him being quite this good, this dependable and this frequently used in a bullpen that was in need of some trustworthy arms. Headrick has posted 1.5 bWAR, which trails only Cam Schlittler, Cody Bellinger, Aaron Judge, Ben Rice, Paul Goldschmidt and Max Fried on the Yankees. He is in that company because of his 1.66 ERA and 39 strikeouts in 38 innings while establishing himself as a legitimate high-leverage arm in Aaron Boone’s circle of trust.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Marina Mabrey ties WNBA single-game scoring record with 53 points in Tempo's historic win</h4>
+                <p>Vince August joins Will Cain & The Crew to confront the WNBA's hostile attitudes toward star Caitlin Clark and a deep dive into New York's socialist primary sweep. Plus, Jaccob Slavin shares his journey to the Stanley Cup & an Olympic gold medal! Toronto Tempo star Marina Mabrey tied the single-game scoring record with 53 points in a dominant 125-94 victory over the Los Angeles Sparks on Thursday night. Only A’ja Wilson and Liz Cambage have reached that 53-point mark before Mabrey.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Late injury can’t dampen USMNT’s Auston Trusty’s first international goal</h4>
+                <p>INGLEWOOD, Calif. —- When Sebastian Berhalter’s corner kick floated toward the back post, most of the sellout crowd of 70,492 supporters were still settling into their seats. Some were waiting in line for beer, others were still still enveloped in conversation of how excited they were to witness a World Cup game. The ball floated perfectly over a cluster of bodies before dropping onto the left leg of Trusty, who took a touch before unleashing a left-footed finish into the back of the net for the game’s first goal. The stadium erupted as the United States grabbed a stunning early lead over Turkey just 2 minutes and 30 seconds into the match, making it the second-fastest goal ever scored by the U.S. at a FIFA World Cup.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Team USA falls to Türkiye in final seconds, still set for round of 32 match vs Bosnia and Herzegovina</h4>
+                <p>California gubernatorial candidate Steve Hilton discusses the love World Cup fans are showing for the United States on 'Jesse Watters Primetime.' The United States men's national soccer team lost its final Group D match to Türkiye, 3-2, as Kaan Ayhan scored on the final shot of the game in a crushing blow to the home country.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/06/931/523/Prince-Harry-UK-Visit-1.jpeg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Prince Harry's UK plans could send powerful message to King Charles and Prince William: experts</h3>
+                <p class="lead-summary"><strong class="drop-cap">D</strong>an Wakeford, founder of Celebrity Intelligence, discusses Prince Harry's expected UK return, his relationship with King Charles, and why a meeting with Prince William remains unlikely. When Prince Harry and Meghan Markle land in the U.K. next month, they may stay at Princess Diana's ancestral home. The trip would mark the first time in four years that the Duke of Sussex, who lives in California, has returned to his home country with his wife and their two children. The Sussexes are expected to travel to Britain for celebrations marking the one-year countdown to the Invictus Games Birmingham 2027, according to the BBC. Fox News Digital reached out to Archewell, which represents the offices of the Duke and Duchess of Sussex, for comment. PRINCE WILLIAM'S DOOR IS 'BOLTED SHUT' AS PRINCE HARRY PLANS UK RETURN WITH MEGHAN MARKLE, CHILDREN: EXPERT Prince Harry (pictured here), Meghan Markle and their two young children may consider staying at Princess Diana's ancestral home when they travel to the U.K. in July 2026, several royal experts told Fox News Digital.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Apple TV and Paramount+ start at $1 with this Prime Day streaming deal</h4>
+                <p>Prime Day deals are in full swing, and for just a few more days, you can take advantage of over 20 Amazon Prime Day streaming deals on Prime Video. Specifically, you can add subscriptions to your Prime Video account for as low as $1/month. Subscriptions on Prime Video allow Amazon Prime subscribers to subscribe to additional streaming services within Prime Video. Instead of having tons of apps for every service you subscribe to, the content for all of your add-ons will be available right inside Prime Video and the Prime Video app. That being said, you will need to be a Prime member to take advantage of these prices. Amazon Prime costs $14.99/month or $139/year and includes access to Prime Video, plus exclusive deals leading up to Prime Day and some major perks.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Taylor Swift, Travis Kelce wedding betting frenzy reveals one overwhelming prediction</h4>
+                <p>Fox News' Harris Faulkner reports on Swift-Kelce wedding rumors after the celebrity couple reportedly rented out Madison Square Garden for Independence Day weekend. Taylor Swift and Travis Kelce haven't confirmed a single wedding detail, but that hasn't stopped bettors from putting millions on what could be the biggest celebrity ceremony in years.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Hollywood’s collapse continues as another production house is forced to close</h4>
+                <p>Another longtime Hollywood production company has shut its doors, becoming the latest casualty of California’s prolonged slowdown in film and television production. Shadowcast Pictures, a Los Angeles-based production equipment rental company that supplied cameras, lighting and other filmmaking gear to movies, television shows and commercials for nearly two decades, has ceased operations after struggling through years of industry turmoil. “I couldn’t imagine the film industry that was profitable and had a foolproof system for over 100 years fall off a cliff,” owner Jay Ellison told CBS Los Angeles.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/02/931/523/woman-files-taxes-with-irs.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Debt collection letter for debt you don't owe? What to do now</h3>
+                <p class="lead-summary"><strong class="drop-cap">A</strong> letter arrives about a debt you don't remember, from a company you've never dealt with, for an account you never opened. For a growing number of people, that notice is how they first learn someone used their identity. Complaints to the Consumer Financial Protection Bureau (CFPB) about attempts to collect a debt not owed rose about 115% above their prior two-year average in 2025, and many of those consumers reported balances they didn't recognize and suspected identity theft. Before you panic or pay, it helps to understand why these letters show up and what rights you have. A collection letter for a debt you do not recognize can be the first sign that someone used your identity. (John Carl D'Annibale /Albany Times Union via Getty Images) When a charged-off account is sold to a collection agency, the agency receives the original creditor's application file, including whatever identifiers were used to open it. That contact information is often 90 to 180 days out of date by the time the account changes hands. Before the first call, the agency runs skip tracing: matching a name, Social Security number (SSN) and past addresses against public records, postal change-of-address data, property and utility records and data-broker files to find the current person behind the account. At bulk volume, each lookup costs the agency pennies. The agency then contacts you directly, by phone or mail, whether or not you have looked at your credit file. The account behind the notice may have been opened with your information pulled from breaches and resold, then approved by an automated check that matched the data to an existing file without confirming that the applicant was you. Opening a new account is the leading form of attempted identity misuse reported to the Identity Theft Resource Center (ITRC), which counted it more often than takeovers of accounts people already held. What happens after is less understood. Charged-off debts, including fraudulent ones, are sold in bulk portfolios for pennies on the dollar, often with thin supporting paperwork. One fraudulent balance can be sold and resold across several agencies. A debt you dispute and clear with one collector can be repackaged and reappear with another months later.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Bionic hands are now teaching robots to feel</h4>
+                <p>Robots have gotten very good at moving fast, repeating steps and doing jobs that would wear you and me out. But ask a robot to pick up something delicate, oddly shaped or slightly different from the last item it handled, and things can get a little complicated quickly.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
