@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>SATURDAY, JUNE 27, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2023/04/931/523/handgun-display-firearms-store.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Lawyer who beat Hawaii gun law calls state’s reliance on Black Code ‘disgraceful’</h3>
+                <p class="lead-summary"><strong class="drop-cap">O</strong>ne of the lawyers behind the case says the decision reinforces that states cannot treat the Second Amendment differently from other constitutional protections. The attorney who helped persuade the Supreme Court to strike down Hawaii’s private-property concealed-carry restriction on Thursday criticized the state’s reliance on a Reconstruction-era Black Code to defend the law. In a 6-3 decision in Wolford v. Lopez, the Court held that Hawaii cannot require licensed gun owners to obtain express permission before carrying firearms onto private property open to the public. Gun-rights challengers dubbed the policy the "vampire rule" because lawful gun owners had to be "invited in" before entering businesses while armed. "It is disgraceful that any state would rely on a law specifically aimed at taking away the Second Amendment rights or any constitutional right of Black Americans as it was at that time," attorney Kevin O'Grady, who represented the plaintiffs, told Fox News Digital. "And it's not surprising, however, that Hawaii would rely on it as they are diametrically opposed to the Second Amendment. We fully expected that the Supreme Court would identify that as the kind of law that one absolutely should not look to determine whether or not something is constitutional because this is the perfect example of something which is not constitutional." SUPREME COURT HANDS SECOND AMENDMENT WIN TO CONCEALED CARRY HOLDERS IN BLUE STATE GUN CONTROL CASE Justice Ketanji Brown Jackson speaks on stage during the "Ketanji Brown Jackson on Lovely One: A Memoir" panel at The Atlantic Festival in Washington, D.C., on Sept. 20, 2024. (Tasos Katopodis/Getty Images for The Atlantic) A major flashpoint was Hawaii's effort to justify the law under the Supreme Court's 2022 decision in New York State Rifle & Pistol Association v. Bruen. Since Bruen, courts evaluating firearm regulations have generally asked whether modern gun restrictions are consistent with the nation's historical tradition of firearm regulation. Hawaii cited several historical laws, including an 1865 Louisiana statute enacted as part of the post-Civil War Black Codes. The law made it unlawful to carry firearms onto another person's property without the owner's consent.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>The Group Gender Ideology Seems To Attract Again And Again</h4>
+                <p>Mainstream media outlets are flummoxed by the connection between autism and transgenderism. The explanation is obvious. This article is part of Upstream, The Daily Wire’s new home for culture and lifestyle. Real human insight and human stories — from our featured writers to you. The field of psychology has its own special version of obtuse, especially when it comes to the trans debate. I am a therapist, but I’m an outlier nowadays, and that is simply because I have common sense. I continue to be dumbfounded by what passes as professional expertise, such as the mythological, non-scientific idea that people are “born in the wrong body.</p>
+                <p class="source-credit">— Daily Wire</p>
+            </div>
+            <div class="story-minor">
+                <h4>Etsy cracks down on spell-casting after a decade of turning a blind eye</h4>
+                <p>Allie Beth Stuckey warns that the commercialization of witchcraft poses a real spiritual danger to a desperate culture, even as fraud and bad PR likely drove the platform’s decision. Despite banning metaphysical services (like spell-casting, hexes, clairvoyant readings, prayers or rituals promising outcomes, etc.) in 2015, Etsy has largely looked the other way as "Etsy witches" built lucrative businesses around custom spell work. In September 2025, a Jezebel article satirically detailing how its writers hired Etsy witches to curse conservative activist Charlie Kirk drew intense backlash after he was assassinated just two days later.</p>
+                <p class="source-credit">— The Blaze</p>
+            </div>
+            <div class="story-minor">
+                <h4>The Obama Presidential Center Is Decidedly Meh</h4>
+                <p>‘You can go through and weep, as many liberals have — the center has even placed tissue boxes in the museum spaces.’ If you remember Barack Obama’s official presidential portrait, you know what his new presidential library-that-isn’t-a-library is like: highly unconventional, tediously provocative, instantly forgettable. On the political right, pictures of the big Battlestar Galactica museum tower are being taken as evidence that the place is a hideously ugly architectural abomination. It’s not that interesting. It’s ugly, but it’s a brutalist stub of a building in Chicago. Complaining about a squat gray tower in Chicago is like b-tching about scones in a bakery. The thing fits into its place, dull and ordinary while it tries to be wild. It’s Barack Obama, an appearance that never grows into substance.</p>
+                <p class="source-credit">— The Federalist</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://static.foxnews.com/foxnews.com/content/uploads/2026/06/plane.gif" alt="Lead Story Image" class="news-photo">
+                <h3>Video shows gaping hole after small plane crashes into towering skyscraper</h3>
+                <p class="lead-summary"><strong class="drop-cap">A</strong> small aircraft crashed into Beijing’s tallest building on Friday, the global flight tracking service provider Flightradar24, following witness accounts and evacuations in the city’s business district. (Credit/Associated Press). Video captured a large emergency response after a small plane crashed into Beijing’s tallest skyscraper on Friday, prompting an immediate information blackout from Chinese authorities, The Associated Press reported. Video and photos shared on social media appear to show the aircraft plummeting to the ground after smashing a large hole in the 108-story CITIC Tower, located in the Chinese capital's business district. Police, fire and EMS workers were spotted at the scene preventing witnesses from taking photos and attempting to clear the area. People gather near the CITIC Tower in Beijing on June 26, 2026, after an eyewitness reported plane debris at the base of Beijing's tallest building. Video footage taken from a nearby building by the witness showed fire trucks blasting water at smoke billowing from the 528-metre (1,732-foot) CITIC Tower, while the wreck of a plane lay on the ground beside the building.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Unease deepens in Russia as Ukraine steps up long-range strikes</h4>
+                <p>Experts said Vladimir Putin was unlikely to change course despite worsening fuel shortages and a sharp decline in the stock market.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Ukrainian drones drive Russia to declare emergency in occupied Crimea</h4>
+                <p>Weeks of punishing strikes have disrupted water, fuel and electricity supplies across the peninsula, which Ukraine’s president has vowed to reclaim.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Rubio announces framework deal between Israel and Lebanon as experts warn Iran will fight to sabotage it</h4>
+                <p>Secretary of State Marco Rubio and Israeli Prime Minister Benjamin Netanyahu welcomed the U.S.-brokered framework agreement between Jerusalem and Lebanon on Friday as a robust first step toward peace and a rejection of Iranian interference in the region. The breakthrough could lead to a path of diplomatic normalization between the two countries, Lebanon and Israel, that are in a formal state of war. The framework agreement may impede the Iran-backed terrorist movement Hezbollah that has gained control over parts of the Lebanese state, according to experts.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F06%2Fnewspress-collage-89zflfjz0-1782539492170.jpg?quality%3D90%26strip%3Dall%261782525122" alt="Lead Story Image" class="news-photo">
+                <h3>Walker Buehler outshines regressing Roki Sasaki in Padres’ win over Dodgers</h3>
+                <p class="lead-summary"><strong class="drop-cap">S</strong>AN DIEGO –– It was a battle of Dodgers pitching phenoms at Petco Park on Friday night. While Sasaki took a major step backwards in his up-and-down sophomore season, walking five batters and giving up a three-run homer in a shaky four-plus-inning outing, Buehler tapped back into his dominant form of old for San Diego, cruising through 5 ⅓ innings of one-run ball to hand the Padres the opening game of this pivotal mid-season rivalry series. Before the game, manager Dave Roberts was only half-joking when he said the former Dodgers ace would “love nothing more than to shove it up our you-know-what.” Sasaki’s struggles, however, represented a more foreboding development in a campaign suddenly headed back in the wrong direction. He lacked command from the start, walking three of his first five hitters while grinding through long, foul-ball-extended at-bats. Then, after getting Ty France to an 0-2 count with two aboard in the second inning, he threw a low slider that France launched to left for a no-doubt three-run blast. The Dodgers would trail the rest of the way, failing to solve Buehler before squandering a bases-loaded, one-out opportunity after he exited in the top of the sixth. The Padres didn’t even have to go to lockdown closer Mason Miller, either, not after their offense tagged Dodgers reliever Jonathan Hernández with four runs in the eighth to pull away. For Buehler –– now on his third organization since getting the last out of the Dodgers’ 2024 World Series title –– the outing continued his recent turnaround, giving him a 3.81 ERA this season and a 1.71 mark since the start of June.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>WWE Night of Champions 2026 preview, predictions and more</h4>
+                <p>WWE star Sami Zayn talks to Fox News Digital about his triple-threat match against Cody Rhodes and Gunther for the Undisputed WWE Championship. WWE Night of Champions on Saturday is going to be the scene-setter for what’s to come for SummerSlam in August – and this year’s card is as stacked as ever.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Isaiah Hartenstein signing new three-year, $75 million Thunder contract</h4>
+                <p>Hartenstein is returning to the Thunder on a three-year, $75 million deal, with a rare mutual option after the 2027-28 season, ESPN reported Friday night. The Thunder had a big decision to make in settling their frontcourt, and they’ve locked down their man in the middle, which wasn’t always a guarantee heading into the season. Hartenstein, who turned 28 in May, was initially signed following the 2023-24 season, in which he played for the Knicks, and immediately contributed to what became an NBA championship Oklahoma City team in 2025. It’s worth noting that, in the frontcourt, the Thunder are welcoming 7-foot-3 rookie Aday Mara, selected No. 12 overall in this week’s NBA draft out of Michigan, as well as 2025 No. 15 overall pick Thomas Sorber, who sat out all of last season with a torn ACL.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Why Sami Zayn believes winning Undisputed WWE Championship at Night of Champions would be a 'cultural moment'</h4>
+                <p>WWE star Sami Zayn talks to Fox News Digital about his triple-threat match against Cody Rhodes and Gunther for the Undisputed WWE Championship. Sami Zayn is getting another chance to win a WWE championship when he steps into the ring on Saturday against Cody Rhodes and Gunther at Night of Champions in Saudi Arabia.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F06%2Fabby-elliott-the-bear.jpg?quality%3D90%26strip%3Dall" alt="Lead Story Image" class="news-photo">
+                <h3>‘The Bear’ star Abby Elliott calls cast ‘a forever family’ as she bids farewell to series</h3>
+                <p class="lead-summary"><strong class="drop-cap">W</strong>arning: Spoilers ahead! Do not proceed unless you’ve watched “The Bear” Season 5, including the series finale. “The Bear” star Abby Elliott exclusively told The Post her onscreen sibling, Jeremy Allen White, is like “a brother to me” off screen, too. In the fifth and final season of the restaurant dramedy, now streaming on Hulu, Carmen “Carmy” Berzatto (White) steps back from the titular Chicago restaurant, The Bear. The Emmy-wining show originally premiered in 2022, following Carmy as he took over his brother Mikey’s (Jon Bernthal) restaurant The Beef after Mikey’ suicide. Throughout the series, he eventually turns the eatery it into a fine-dining spot with the help of his sister, Natalie “Sugar” Barzatto (Elliott); his protégé, Sydney Adamu (Ayo Edebiri); his best friend, Richard “Richie” Jerimovich (Ebon Moss-Bachrach) and the rest of their staff. For most of the final season — which mostly takes place over the course of one day — Carmy is still working with everyone as they try to do dinner service in the middle of a storm. However, the plan is for Sugar, Sydney and Richie to take over in a partnership after he departs. “He’s saying goodbye and handing it off to Sydney, Richie and Sugar — and it feels like Jeremy Allen White [doing it] instead of Carmy,” Elliott told The Post. The former “SNL” actress noted that while Sugar has helped out in the kitchen, she hasn’t really cooked before Season 5.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Ana de Armas stuns in bikini during sizzling summer getaway</h4>
+                <p>The trailer for Netflix's "Wake Up Dead Man: A Knives Out Mystery" starring Daniel Craig, Glenn Close, Josh Brolin, Kerry Washington and Jeremy Renner. Directed by Rian Johnson. Netflix © 2025 The 38-year-old actress shared a series of new photos on Instagram, many of which showed her in a bikini as she partied poolside with friends.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>How much are tickets for Ella Langley’s ‘Dandelion Tour’? Get discounted seats</h4>
+                <p>After serving as the special guest for Morgan Wallen, Eric Church, Riley Green, Dierks Bentley, Jon Pardi and Randy Houser over the past few years, the 27-year-old Alabama native has officially graduated to headliner status. Due to overwhelming demand, Langley has added a second leg to her ‘Dandelion Tour’ — which comes in support of her recently-released second album “Dandelion” — with support from ERNEST, Gabriella Rose, Kameron Marlowe, Kaitlin Butts, Laci Kaye Booth and more on select dates. That includes concerts at July 31 at Canandaigua, NY’s Constellation Brands Performing Arts Center on Friday, July 31 and Newark, NJ’s Prudential Center on Thursday, Sept. 10.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Clay Aiken says Kelly Ripa feud sparked the 'most catastrophic' week of his life</h4>
+                <p>Kelly Ripa told husband Mark Consuelos he's been "getting attention on the street" as he congratulated her on her best-selling book. ("Live! with Kelly and Ryan" 10/13) Clay Aiken is reflecting on the 20-year-old feud with Kelly Ripa that he says sparked the "most catastrophic" week of his life.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/06/931/524/Waymo-Photo-1.jpeg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Fox News AI Newsletter: Waymo's robotaxi recall</h3>
+                <p class="lead-summary"><strong class="drop-cap">W</strong>aymo is recalling 3,871 robotaxis after software issues allowed some vehicles to enter closed freeway construction zones. The company has restricted freeway operations while deploying a fix. (Kevin Carter/Getty Images) - OPINION: China is building an AI war machine. Washington must wake up before it’s too late CONES IGNORED: Waymo has filed a voluntary recall affecting 3,871 vehicles equipped with its 5th Generation Automated Driving System. According to the National Highway Traffic Safety Administration, the software may allow a Waymo vehicle to enter a closed freeway construction zone and continue driving. OPINION: On June 24, OpenAI unveiled its first custom-built inference chip, developed with Broadcom and known internally as "Jalapeño." Most Americans will never see it. Yet Beijing certainly noticed. The announcement signals that the contest between America and China has moved beyond software and chatbots into a struggle for control of the infrastructure that will shape economic, military and technological power in the 21st century. REPORTER'S NOTEBOOK: Reading. Writing. And AI algorithms. The Senate is now wrestling with how students — and teachers — might use artificial intelligence in the classroom. It’s inevitable. "The question is not whether AI is going to impact education. The real question is whether we will shape its use thoughtfully. Responsibly," said Delaware Secretary of Education Cindy Marten during a recent Senate hearing. FCC Chairman Brendan Carr announced a review of the agency's E-Rate program, citing concerns about excessive screen time in schools. (Michael Macor/The San Francisco Chronicle via Getty Images) SEE THAT?: Meta Wearables VP Alex Himel discusses the newly launched Meta Smart Glasses, highlighting their AI capabilities, accessible price point of $299, and the design collaboration with Kylie Jenner on "The Claman Countdown." TECH TITAN: Microsoft CEO Satya Nadella issued a warning that the tech giants competing in the AI race need to ensure they advance the emerging tech in a way that's palatable to the public.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Ohio robot cop retires after zero arrests</h4>
+                <p>Kurt 'CyberGuy' Knutsson joins 'Fox & Friends Weekend' to react to growing talks of using AI-powered robots to help police the streets. Dublin, Ohio, gave a robot cop a trial run inside a public parking garage. Less than a year later, the machine was off the job and headed back to its maker.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>World Cup ticket scams target desperate fans</h4>
+                <p>Kurt 'CyberGuy' Knutsson warns fans about World Cup ticket scams involving fake FIFA websites, social media ads for fake tickets and AI-generated job offers and interviews. You finally find World Cup seats that fit your budget. The site looks polished. The ticket has a QR code. The seller says someone else wants them, so you need to move fast. That is exactly the moment scammers are counting on.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
