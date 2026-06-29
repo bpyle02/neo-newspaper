@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>SUNDAY, JUNE 28, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F06%2Fnewspress-collage-upxckznjw-1782638651619.jpg?quality%3D90%26strip%3Dall%261782624273" alt="Lead Story Image" class="news-photo">
+                <h3>AOC says Congress should break up Apple amid looming price hikes for MacBooks and iPhones</h3>
+                <p class="lead-summary"><strong class="drop-cap">R</strong>ep. Alexandria Ocasio-Cortez, D-NY, revealed that she believes Congress should look to break up companies like Apple amid news that the tech giant might soon raise its prices on phones and laptops due to a strained processing chip supply chain. “We need to break up a lot of these companies that are far, far too big and we need to be instituting consumer protections for people,” Ocasio-Cortez said. Her statements reveal one of the many ways lawmakers are grappling with the realities of the AI race as companies feel the squeeze of global demand for processing power and as local communities wrestle with the costs of their use. Like many other progressives, Ocasio-Cortez has advocated for a more government-led response, citing a distrust of corporate influence. “The problem that we have is that these big companies think they are governments. They want to be governments. They want to have totally unchecked power,” Ocasio-Cortez said. In recent weeks, Apple’s outgoing CEO Tim Cook signaled that the company might soon have no choice but to pass some of its climbing costs off to consumers. “Unfortunately, price increases are unavoidable,” Cook said in a recent interview with the Wall Street Journal. “We’re doing our best to mitigate the huge increases that are being passed to us, and we’ve been trying to shield our customers from the increases, but the situation has become unsustainable.” For years, companies like Apple have dominated demand for the processing chip market, the part of a computer that acts as the brain of a device. These chips, which require highly sophisticated production, allow computers to perform calculations, process data and execute commands. Now that AI companies are also adding to demand, Apple finds itself competing for a dwindling supply of processors, driving the company’s costs up. Beyond her views on the relationship between the government and business, Ocasio-Cortez said that she believes it’s time Congress re-visit ways it can mitigate costs of the AI-race that have climbed on a local level. In particular, she believes it’s time for lawmakers to address the energy strain of data centers. When asked if she believed Congress should consider something beyond the Creating Helpful Incentives to Produce Semiconductors (CHIPS) Act, President Joe Biden’s signature technology investment bill that became law in 2022, Ocasio-Cortez said she thought so.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>AOC puts major tech company on notice amid looming price increases: 'Far too big'</h4>
+                <p>Lawmakers respond to news that the tech giant may soon increase its pricing on phones, laptops due to chip squeeze. (Credit: Nicholas Ballasy for Fox News Digital) Rep. Alexandria Ocasio-Cortez, D-N.Y., revealed that she believes Congress should look to break up companies like Apple amid news that the tech giant might soon raise its prices on phones and laptops due to a strained processing chip supply chain.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Four Black women. Nine degrees. Not one steady paycheck.</h4>
+                <p>The president promised to save “Black jobs,” but his policies have resulted in fresh pain for the Black middle class as the employment gap widens.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Debunking Spielberg: Why real alien disclosure will not affect the faithful</h4>
+                <p>BlazeTV host Rick Burgess responds to Steven Spielberg’s comments on 'Disclosure Day' and reassures believers that extraterrestrial revelation cannot undermine God as creator. Steven Spielberg's 2026 sci-fi thriller “Disclosure Day” about a whistleblower exposing a government cover-up of extraterrestrial life is performing strongly at the box office with over $160 million worldwide to date. BlazeTV host Rick Burgess has been suspicious about this summer blockbuster since he first saw the previews. Not only is the timing a bit odd in light of the government’s ongoing declassification of UFO-related files, but Spielberg's own comments about how real disclosure could rattle the faith of many people has Rick’s guard up.</p>
+                <p class="source-credit">— The Blaze</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://static.foxnews.com/foxnews.com/content/uploads/2026/06/baby-earthquake.gif" alt="Lead Story Image" class="news-photo">
+                <h3>American rescue teams pull infant alive from rubble in Venezuela days after devastating twin earthquakes</h3>
+                <p class="lead-summary"><strong class="drop-cap">A</strong>merican search-and-rescue teams rescued an infant trapped beneath the rubble following this week's deadly earthquakes in Venezuela, according to the State Department. (Credit: X@StateDept) American search-and-rescue teams pulled an infant alive from beneath the rubble in Venezuela days after the country's devastating earthquakes, the U.S. Department of State said Saturday. The State Department shared video on social media showing U.S. personnel pulling the infant from the rubble as rescue crews continued searching for survivors more than 72 hours after two powerful earthquakes struck the South American country. The infant was 9 months old and was rescued along with her mother, the State Department told Fox News Digital. Both suffered only minor injuries, according to the rescue team. "This heroic rescue was carried out in Catia La Mar by the Fairfax County Urban Search and Rescue team (USA-01), which deployed to Venezuela on June 26 following activation by the State Department," a State Department spokesperson said. American search-and-rescue teams rescued an infant trapped beneath the rubble following this week's deadly earthquakes in Venezuela, according to the State Department.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>U.S. says it hit targets in Iran as hostilities erupt over Hormuz for third day</h4>
+                <p>Tehran said it launched strikes on U.S. interests in the Middle East, and Bahrain and Kuwait said they were targeted, as clashes continue to threaten the ceasefire.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Gulf countries strongly condemn Iran's drone attack on Bahrain as rising tensions threaten MOU</h4>
+                <p>Madeleine Rivera reports on the fragile U.S.-Iran ceasefire after an Iranian drone strikes a Singapore-flagged cargo ship in the Strait of Hormuz. Several Gulf countries have strongly denounced Iran's drone strikes Saturday on the island nation of Bahrain, while vowing to stand united against any possible aggression from Tehran in the future.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>These homes rose out of Venezuela’s socialist revolution. Now they’re rubble.</h4>
+                <p>In the absence of government help, ordinary Venezuelans dug barehanded through the rubble of the week’s earthquakes for loved ones.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/statics.foxsports.com/www.foxsports.com/content/uploads/2026/06/931/523/how-to-watch-south-africa-vs-canada-16x9-1.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>How to Watch South Africa vs. Canada: TV Channel, Live Stream, Time</h3>
+                <p class="lead-summary"><strong class="drop-cap">S</strong>outh Africa and Canada meet in their 2026 FIFA World Cup Round of 32 match on Sunday, June 28, 2026 at 3:00 p.m. ET from Los Angeles Stadium. South Africa advanced out of Group A as the second place team after earning 4 points. Thapelo Maseko and Teboho Mokoena each scored once in the group stage. The result marked the first time in South Africa's history that the side has advanced to the knockout stage of the World Cup. Canada made it to the knockouts after finishing behind Switzerland in Group B. Jonathan David scored three times for the Canadians in the group stage. Learn more about South Africa vs. Canada and check the full FIFA World Cup schedule on FOX Sports! Want great stories delivered right to your inbox? Create or log in to your FOX Sports account, follow leagues, teams and players to receive a personalized newsletter daily. Get all the stories you need-to-know from the most powerful name in news delivered first thing every morning to your inbox. By entering your email and clicking the Subscribe button, you agree to the Fox News 
+        Privacy Policy
+       and 
+        Terms of Use
+      , and
+      agree to receive content and promotional communications from Fox News. You understand that you can
+      opt-out at any time.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>No witch doctor can stop Harry Kane from becoming England’s all-time leading World Cup scorer</h4>
+                <p>The witch doctor’s spell certainly seemed to have been lifted from England star Harry Kane on Saturday evening at MetLife Stadium as he scored the Three Lions’ second goal against Panama in a 2-0 win and took his place as the national team’s all-time leading scorer at the World Cup. Kane scored his 11th goal in the World Cup in the 67th minute Saturday after he impressively headed a ball sent into the box by Jude Bellingham. The Bayern Munich striker surpassed Gary Lineker, who previously held the record with 10 goals that he scored between the 1986 and 1990 World Cups. “It is a proud one for sure,” Kane said to the BBC after the match. “I spoke before the tournament about the World Cup being the biggest competition we play as professional footballers, so to get to 11 goals is a proud feeling.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>4 Takeaways From A Dramatic Ending Between Austria And Algeria In The Group J Finale</h4>
+                <p>In what was the most dramatic ending to a group-stage match at the 2026 FIFA World Cup, Austria and Algeria played to a wild 3-3 draw at Kansas City Stadium on Saturday night. For most of the second half, Austria and Algeria appeared content with a 2-2 draw and seemingly did not want to take any more risks, knowing the result would send both teams through.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Algeria, Austria both advance to World Cup knockout round after thrilling draw</h4>
+                <p>KANSAS CITY, Mo. — Algeria and Austria knew that a pedestrian draw Saturday night would have sent both to the knockout round of the World Cup. In the wildest finish of the group stage, Algeria took the lead in stoppage time only for Austria to answer on the final play of the game, making it a win-win result for those teams and a heartbreaking loss for Iran, which was eliminated from the tournament. “I’ve been a coach for about 40 years. I don’t remember a game that had such a dramatic course, and such an unexpected trajectory,” Austria coach Ralf Rangnick said, shaking his head. “Even at the beginning of the match, if someone would have said it would be 3-3, nobody would have believed it. Somebody would have won an incredible bet, I guess.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F06%2Fcrop-39818899.jpg?quality%3D90%26strip%3Dall" alt="Lead Story Image" class="news-photo">
+                <h3>Larry David should give it a rest — his new HBO show is a lousy ‘Curb’ imposter</h3>
+                <p class="lead-summary"><strong class="drop-cap">W</strong>atching Larry David’s unfortunate new HBO tribute to America’s 250th anniversary, “Life, Larry, and the Pursuit of Unhappiness,” made me want to secede. Because, like Pavlov’s dogs, viewers have been conditioned for decades to roar whenever they so much as see David, the ingenious co-creator of “Seinfeld” and curmudgeonly star of “Curb Your Enthusiasm.” This time, though, the model for George Costanza is met with total silence. Abruptly, the laugh affair ends with David’s shaky seven-episode series, produced by comedy icons Barack and Michelle Obama. During the first chapter of “Unhappiness,” which pursues unhappiness all right, I didn’t so much as half smile. Frowned, glowered, scowled, sure. My patriotic anthem: And the critic’s red glare! The jokes bursting on air! The show’s shtick is that it plops David and his usually hilarious modern gripes and grievances into major moments in American history: the writing of the Declaration of Independence, the trenches of World War I. In one scene, he plays telephone inventor Alexander Graham Bell as he first demonstrates his device. But the chatty guy on the other end, played by Richard Kind, is so annoying that Bell hangs up. Another imagines Rosa Parks (Jurnee Smollett) on an earlier bus ride than the pivotal one that sparked a movement. She sits next to David’s character Murray, who jabbers on so much that she voluntarily moves to the back to shake him.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Michelle Pfeiffer says she felt 'humiliated' following her audition for her breakthrough role in 'Grease 2'</h4>
+                <p>Michelle Pfeiffer tells Fox News Digital that ‘The Madison’ finally gave her the chance to share the screen again with Kurt Russell after their brief scenes in ‘Tequila Sunrise.’ Michelle Pfeiffer has revealed how she landed her first big role in "Grease 2," and it was an awkward start to a legendary Hollywood career.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Scott Eastwood credits his famous father's work ethic for making him aware of 'bulls---' in the film industry</h4>
+                <p>Scott Eastwood is reflecting on what it was like to grow up with a super famous parent. During a recent interview on "The Joe Rogan Experience," the 40-year-old actor shared how his father, Clint Eastwood, protected him and his siblings from fame, and how his experiences visiting his dad on set shaped how he views the industry today.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Taylor Swift, Travis Kelce wedding buzz grows as Stevie Nicks and Tim McGraw are tapped to perform: report</h4>
+                <p>Taylor Swift-Kelce wedding rumors are escalating as reports indicate Swift has rented Madison Square Garden for a July 4th weekend event. Harris Faulkner discusses the New York Times report, with co-host Griff Jenkins noting the extreme secrecy surrounding the alleged nuptials. Fans are calling it 'America's Royal Wedding'.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/06/931/523/mailbox-fraud.jpeg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Empty envelopes in your mailbox? Do not scan that code</h3>
+                <p class="lead-summary"><strong class="drop-cap">A</strong> plain white envelope shows up in your mailbox. It is addressed to you. It may even have a tracking number. The sender's name looks unfamiliar, but the delivery seems real. Then you open it. Nothing is inside. No note. No product. No explanation. That would make anyone curious. And that is exactly what scammers may be counting on. Investigators and consumer protection groups have warned that empty envelopes and mystery packages can be tied to a scam known as brushing. In a more dangerous version, the package may include a QR code that tries to send you to a fake website or steal your personal information. The bigger risk is what scammers hope you do next. If they can get you to scan a QR code, click a link, call a fake number or enter personal information, that strange envelope can turn into a much bigger problem. A mystery envelope may look harmless, but it can be a sign that your name and address are already being used in a brushing scam. (Kurt "CyberGuy" Knutsson) The empty envelope scam is often connected to brushing. That is when a third-party seller sends a cheap item, or sometimes an empty envelope, to a real person's address to make it look like a real order was delivered. Once the package gets marked as delivered, a shady seller may use that delivery record to post a fake "verified buyer" review on an online marketplace. Those reviews can make junk products look more popular than they really are. Recent reports describe people receiving small white padded envelopes from unfamiliar or possibly fake sender names. Some people get them more than once. Others receive cheap trinkets, packing material or nothing at all. That may seem like a strange nuisance. But to me, the bigger concern is this: Someone may already have your name and home address. Scammers do not need to send you anything valuable. They only need a tracking number that shows something arrived at a real home. Here is how the scam often works: A scammer gets your name and address from a data broker, public record, old breach or online leak. Then they create a fake order using your information. Next, they mail a cheap item or an empty envelope to your home.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Apple raises prices as AI chip costs surge</h4>
+                <p>Apple has started charging more for some of its products, and AI is one of the big reasons why. The increases apply to select iPads and MacBooks, along with HomePod speakers and Apple TV devices. Apple's own store pages now show higher prices on several models than earlier launch materials listed. The iPhone was not included in this round, but analysts warn that may not last.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
