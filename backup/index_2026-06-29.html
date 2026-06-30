@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>MONDAY, JUNE 29, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://thefederalist.com/wp-content/uploads/2026/06/Untitled-design-2.png" alt="Lead Story Image" class="news-photo">
+                <h3>Relay For America Unites Americans ‘One Mile At A Time’</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>he Relay for America is a 20-day relay where over 250 runners will carry the American flag from San Francisco to Washington, D.C. As marathon runners Joe Nail and Wyatt Moss were completing a challenge to run a marathon in all 50 states, they began formulating a plan to hold a nationwide flag relay. This plan became the Relay for America, a 20-day relay where over 250 runners will carry the American flag from San Francisco, California, to Washington, D.C. It is expected to end on July 4 at the Capitol Building as the fireworks are going off. The men created the Relay for America to celebrate America’s 250th anniversary and encourage national pride, Nail told The Federalist. “We set out with one overarching mission, which was uniting Americans one mile at a time,” Nail said. “We’re trying to get people to celebrate their country and feel inspired while bringing together people from all walks of life.” The relay is open to the general public to participate in, whether it be by running, driving, or helping with operations. Nail told The Federalist that Moss wanted to open the event to the general public as part of their shared mission of bringing people together, rather than only allowing a small set of elite runners to participate. Those watching from home can tune in by watching a live feed of the flag’s process as it makes its way across the country. With around 75 percent of the relay complete, the live tracker shows pacing statistics indicating that the runners are ahead of schedule to arrive on time on the 4th of July. Each mile of the 3,000-mile track is dedicated to a different veteran. Names of veterans are being collected through the website, where people can submit the name of a loved one to be honored during the race. Nail, Moss, and the Relay for America team have received an outpouring of support on social media since the race began, Nail told The Federalist. In one instance that Nail said was particularly impactful, a U.S. Army soldier preparing for his second deployment emailed the organization, thanking them for their support and love for America. “Those are the sorts of messages that make it all worth it,” Nail told The Federalist. “That was definitely what we had in mind when we first started out.” The Relay for America has grown significantly on social media since the challenge started. The group’s Instagram and Facebook pages have each grown from under 2,000 followers to over 50,000 as Americans learn and share their story.</p>
+                <p class="source-credit">— The Federalist</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Why resisting Trump has galvanized Black Democrats as the midterms approach</h4>
+                <p>High primary turnout among Black voters in the South has given some in the party hope for upset wins in the region.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>How About a Declaration of Charity?</h4>
+                <p>Celebrate Independence Day as true Americans.</p>
+                <p class="source-credit">— National Review</p>
+            </div>
+            <div class="story-minor">
+                <h4>Japan vs. Brazil World Cup prediction: Odds, picks, best bet for Monday’s Round of 32 clash</h4>
+                <p>Canarinho were just OK in a 1-1 draw against Morocco, but they beat up on Haiti and Scotland, showing flashes of the offensive magic we’ve grown accustomed to seeing out of the players wearing the iconic canary yellow shirts at the World Cup. The problem is that those performances came against teams that didn’t pose too much of a threat to Brazil going forward. Samurai Blue is not your typical underdog. Most teams that are up against steep odds prefer to sit back and turn matches into a rock fight, but Japan takes the opposite approach. Manager Hajime Moriyasu has turned the Japanese National Team into one of the most exciting squads in international soccer, as they emphasize pace and pressure.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/06/931/523/france-forensic-technicians.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Families watch in horror as skydiving plane crashes in France, killing all 11 aboard</h3>
+                <p class="lead-summary"><strong class="drop-cap">F</strong>irst responders and investigators work at the scene after a skydiving plane crashed moments after takeoff in northeastern France, killing all 11 people aboard. (Reuters) Families watched in horror as a skydiving plane crashed in France moments after takeoff Sunday, killing all 11 people aboard, according to French officials. The single-engine Pilatus PC-6 crashed shortly after taking off from the Nancy-Essey Airfield near the city of Nancy in northeastern France. Officials said the victims included five skydiving instructors, five first-time jumpers and the pilot. French Interior Minister Laurent Nuñez said some victims' relatives watched the aircraft fall from the sky. "Some of the victims' families witnessed the aircraft falling with their own eyes," Nuñez said. "So there is tremendous emotion and an even greater psychological trauma." Police officer stands near the site where a skydiving plane crashed in Tomblaine northeastern France, killing all 11 people on board, Sunday, June 28, 2026. (AP Photo/Antonin Utz) Meurthe-et-Moselle Prefect Yves Séguy said the aircraft suffered an apparent malfunction and "fell almost vertically," narrowly missing a populated area after crashing roughly 300 yards from the runway.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>US military touts work to assist in Venezuela following deadly earthquakes</h4>
+                <p>U.S. search and rescue teams, supported by military assets, are deployed to Venezuela following two devastating earthquakes. The disaster has resulted in at least 920 fatalities and 51,000 missing persons, with over 3,300 injured. The U.N. also dispatches 1,000 emergency workers to assist in the overwhelmed nation's recovery efforts.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Shipping giant warns Strait of Hormuz chaos is 'new normal' as Tehran shifts 4M barrels</h4>
+                <p>Fox News anchor Shannon Bream covers the escalating conflict in the Middle East as Trey Yingst reports from Tel Aviv. The U.S. carried out strikes against Iranian missile and drone storage locations after Iran targeted shipping in the Strait of Hormuz. Additionally, Iran launched drones toward Kuwait and Bahrain, while Israel conducted strikes against Hezbollah in Lebanon. These events coincide with a diplomatic framework agreement between Israel and Lebanon.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>French investigators probe fatal skydiving plane crash that killed pilot and 10 parachutists</h4>
+                <p>Fox News' Todd Piro covers a devastating plane crash in Missouri, resulting in the deaths of 11 skydivers and their pilot. The incident occurred near Kansas City after takeoff, with families tragically witnessing the fiery scene. The FAA and NTSB are investigating, suspecting power issues were a factor, though no intentional act is indicated.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F06%2Fnewspress-collage-emi5hqrde-1782733257485.jpg?quality%3D90%26strip%3Dall%261782718873" alt="Lead Story Image" class="news-photo">
+                <h3>Former teammates Josh Naylor and Austin Hedges get in shouting match: ‘Literally nobody likes you’</h3>
+                <p class="lead-summary"><strong class="drop-cap">S</strong>eattle’s first baseman Josh Naylor and Guardians catcher Austin Hedges exchanged words after Naylor seemingly leaned into a pitch and took it off the elbow. The encounter began when Hedges told the umpire that Naylor leaned into the pitch, and Naylor then called the catcher a “f–king loser” and argued it was a breaking ball and that it was not his fault he was hit. The two played together for four years with the Guardians and Padres, most recently in 2024, but were separated when Naylor was traded to the Diamondbacks that year. When they were teammates, Naylor had a lot of praise for Hedges, though he did say you “kind of got to be able to talk crap back to him” to get him to calm down. “He’s an awesome person to have around. His energy is infectious,” Naylor said in 2024. “He wants to be here. He wants to win. He wants to have fun. He also wants to learn and grow every day.” The altercation was just part of an entertaining game in which Seattle scored more than three runs for the first time since June 12. The Mariners led 4-1 heading into the eighth inning, but a four-hit, five-run inning for the Guardians was too much for Seattle to overcome in the ninth. Naylor finished the game 2-for-4 with an RBI double, and Hedges went 1-for-2 before being taken out for Patrick Bailey in the sixth. Thanks to the win, the Guardians maintain their tie for the top spot in the AL Central with a 44-40 record.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Thekla embarrasses Stardom's Starlight Kid after retaining AEW World Women's Championship at Forbidden Door</h4>
+                <p>She made her debut in All Elite Wrestling (AEW) last year and quickly moved up the ladder to win the AEW Women’s World Championship in a strap match against Kris Statlander in February. She’s continued to hold the title even when three opponents were thrown her way at Double or Nothing.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Dodgers already have NL West title wrapped up, and it’s not even July</h4>
+                <p>With a 4-2 victory over the Padres on Sunday at Petco Park, the Dodgers extended their division lead over their little brothers to a season-high 10 games. The Dodgers won’t say it, so I will: They won the National League West title over the weekend, their 14th division crown in 15 years. In reality, that was already decided before the Dodgers traveled down to Port Loser to take two of three games from the Padres. San Diego is intimately familiar with failure, and the people here knew better than to invest their hopes in a team with no chance. The Dodgers did everything but stick a Uniqlo flag in the mound at Dodger Stadium South, overcoming a Roki Sasaki stinker in the series opener Friday to take the remaining two games.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Kendal Grey captures WWE NXT Women's Championship at The Great American Bash</h4>
+                <p>WWE Hall of Famer Booker T talks to Fox News Digital about the ceiling for rising prospects Kendal Grey and Kali Armstrong. Kendal Grey came into her match against Lola Vice as the up-and-coming rookie ready to make a major splash and put the rest of the WWE NXT roster on notice at The Great American Bash.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/06/931/523/king-charles-belt-london-fox-news-001.jpeg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>King Charles becomes first British monarch to publicly disclose tax payments, revealing $39.6M bill</h3>
+                <p class="lead-summary"><strong class="drop-cap">F</strong>ox News senior foreign affairs correspondent Greg Palkot reports on King Charles III making his personal tax returns public in a historic first for a British monarch on ‘Fox Report.’ King Charles III made history this week by becoming the first reigning British monarch to publicly disclose how much he pays in taxes. Buckingham Palace revealed the king's voluntary tax payments as part of its annual financial reports released Thursday. The monarch is not legally required to pay income or capital gains tax but does so voluntarily under a longstanding arrangement. The unprecedented disclosure also included the first public release of Prince William's voluntary tax payments and was presented as part of the palace's effort to increase transparency around royal finances. King Charles III became the first reigning British monarch to publicly reveal how much he pays in taxes. (Chris Jackson/Getty Images) The financial reports included the Sovereign Grant Annual Report and a new "Royal Finances" explainer. While the documents revealed summary tax payments, they stopped short of publishing complete tax returns or detailing the king's full income and wealth.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>‘Holy Grail’ of lost Beatles footage from ‘Top of the Pops’ debut recovered after six decades</h4>
+                <p>Footage from the Beatles’ first-ever appearance on British TV show “Top of the Pops” in 1964 has resurfaced — clips fans have long called the holy grail of Beatlemania. Film preservation group Film is Fabulous! announced it has unearthed a complete 35mm film of the Fab Four’s March 19, 1964 performance at BBC’s Television Theatre in London, where they performed “Can’t Buy Me Love” and “You Can’t Do That” one day before they were released on a single. The footage — which captures four grainy takes of “Can’t Buy Me Love” and two of “You Can’t Do That,” banter and bloopers included — was given to the group by the family of a deceased former industry professional.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Kelsey Grammer urges Americans to look to Founding Fathers for guidance as nation faces deep divisions</h4>
+                <p>Kelsey Grammer reflects on starring in "Young Washington" and explains why he believes the Founding Fathers vision still offers guidance for America's future. Ahead of America's 250th anniversary of independence, the "Cheers" and "Frasier" alum stars in "Young Washington," in which he plays aristocrat Thomas Fairfax. The historical drama follows George Washington during the French and Indian War, before he became the first U.S. president.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Rock star forced to issue plea after shocking incident at Philadelphia tour stop</h4>
+                <p>A viral video picked up steam Saturday following Kahan's "The Great Divide" tour stop in Philadelphia, which appeared to show pieces of fecal matter on the floor at Citizens Bank Park. The "Stick Season" singer pleaded with future attendees to prioritize restroom breaks before admitting he once had his own on-stage excrement experience.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/06/931/523/health-photo-1.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>AI may spot deadly heart risk in a routine ECG</h3>
+                <p class="lead-summary"><strong class="drop-cap">K</strong>urt "CyberGuy" Knutsson discusses the social media addiction trial against Meta and YouTube, the jury’s questions on liability and damages, and what a possible verdict could mean on "Fox & Friends." A routine heart test may be hiding a warning sign that doctors have missed for years. That is the big takeaway from new UC Berkeley research published in Nature. Researchers trained an artificial intelligence model to study ECGs, also called EKGs, and look for patterns tied to sudden cardiac death. This is the scary part. Sudden cardiac arrest can strike people with known heart problems. However, it can also hit younger athletes and people who never knew they were at risk. Each year, hundreds of thousands of Americans die after cardiac arrest. Once it happens outside a hospital, survival can drop fast. CPR and a defibrillator can save lives, but timing is everything. Now, AI may help doctors spot some patients earlier, while their hearts still look normal by today's common tests. UC Berkeley researchers say artificial intelligence can detect hidden ECG patterns linked to sudden cardiac death that routine heart screenings may miss. (Photo by Quentin Top / Hans Lucas / AFP via Getty Images) An ECG records the electrical activity of your heart. It creates the familiar spikes and waves doctors review to check rhythm and other heart clues. For this study, researchers used more than 440,000 ECGs from Sweden. They paired those scans with death certificates and health records. Then they trained the AI model to look for waveform patterns linked to sudden cardiac death. After that, they tested the model on separate patient data from the U.S. and Taiwan. That step is important because medical AI often looks good in one dataset, then fails in the real world. Here, the model held up across very different health systems. Doctors often use a measurement called left ventricular ejection fraction, or LVEF, to judge risk. In plain terms, it shows how much blood the heart pushes out with each beat. If that number falls below a certain threshold, a patient may qualify for an implantable defibrillator. That device can shock the heart back into rhythm during a dangerous event.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>FBI warns Microsoft users about passwordless scam</h4>
+                <p>Halimah Delaine Prado, Google General Counsel, reveals the rise of AI-powered phishing scams originating from China's 'outsider enterprise.' She explains how these criminals use artificial intelligence to create highly convincing fake websites, impersonating trusted brands like T-Mobile to defraud hundreds of thousands of Americans, causing millions in losses. Prado highlights Google's strategy to combat these evolving threats.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
