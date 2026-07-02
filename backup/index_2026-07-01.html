@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>WEDNESDAY, JULY 01, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/05/931/523/white-house-sheridan-gorman-fox-news.jpeg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>WATCH: Angel mom turns tables on sanctuary politicians with basic question about their priorities</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>he mother of Sheridan Gorman, an 18-year-old college student murdered in Chicago by an illegal immigrant who had previously been arrested and let go, torched politicians during a congressional hearing about sanctuary policies. The mother of an 18-year-old college freshman killed in March by a criminal illegal immigrant asked lawmakers Tuesday to look her in the eye and explain why "people here illegally matter more" than American citizens, delivering emotional testimony during a congressional hearing on sanctuary policies. Jessica Gorman, whose daughter Sheridan Gorman was fatally shot after going to the Chicago lakefront with friends to see the Northern Lights, accused sanctuary city leaders and politicians of failing to protect her child during a House Judiciary subcommittee hearing on sanctuary policies. "I want you to imagine that little girl on the 'buddy bench,' that innocent college freshman with a heart full of compassion and a head full of dreams that was gunned down by an illegal immigrant," Gorman said. "I want you to imagine that was your daughter, not mine. What if she was yours?" Gorman's remarks came as she invoked a childhood story about Sheridan "stalking" the "buddy bench" at recess, waiting to help classmates who felt lonely or left out. Sheridan Gorman and her father, Tom Gorman, are seen in a family photo. (Gorman Family/Fox News) She lamented that her daughter, who spent her life making others feel seen, had been failed by the people responsible for protecting her. "I bring this back to the buddy bench. I think Congress needs one. Yes, I think every governor, every mayor, every sanctuary city official and politician shifting blame and interest, hiding behind their slogans and talking points should have to all sit on one," Gorman said. "I challenge you all to sit down with me. Take my hand, look me in the eye, and then explain to me, because I just don't understand. Explain why people here illegally matter more than your American citizens. Explain why sanctuary policies matter more than my Sheridan's life. Explain why cooperation with ICE was too much to ask for, but asking our American parents to bury our children is somehow acceptable. Ask me — I need you to tell me."</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Danny Glover, 79, reveals heartbreaking Alzheimer’s diagnosis: ‘Things are going to be different’</h4>
+                <p>The actor gave his health update during a “Today” show segment with Lester Holt, which aired Wednesday morning. “I could live with it in a sense,” the “Lethal Weapon” star, who received his diagnosis “not long after” his honorary Oscar win in 2022, said in the pre-taped sitdown. However, the 79-year-old acknowledged, “I’m sure as it advances, things are going to be different and changing.” Glover’s daughter, Mandisa, also spoke with Holt, 67, and said it’s “really important for him to have control of his own narrative, of his own life story.” She added, “That’s really important. And the time is now. What better time but now for him to speak for himself? It’s important because people ask questions sometimes, and I don’t want to be a dishonest person and say, ‘Oh, yeah, everything is all right. It’s all great.</p>
+                <p class="source-credit">— Https://pagesix</p>
+            </div>
+            <div class="story-minor">
+                <h4>Voters are angry with Washington, and other takeaways from the Colorado primaries</h4>
+                <p>A sitting Democratic House member and a sitting senator both lost key races in the state.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Oh, So Dr. Fauci's Pardon From Joe Biden Is Not 'Bulletproof'?</h4>
+                <p>Dr. Anthony Fauci was granted a presidential pardon by Joe Biden before he was carted out of the White House. Why? Well, we know why. Former Director of National Intelligence Tulsi Gabbard exposed that before she left her post this month. Fauci said the National Institutes of Health didn’t fund gain-of-function research on the COVID virus, even though it appears it did. Because of this development, Fauci could get yanked onto the Hill again sometime in July John Solomon breaks down how Senator Rand Paul has a golden opportunity to finally expose Dr. Fauci once and for all — even with his pardon from Joe Biden.Solomon says this could be a lose-lose scenario for Fauci.SOLOMON: “We know that in the end days of Joe Biden, Anthony… pic.twitter.</p>
+                <p class="source-credit">— Townhall</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/06/931/523/venezuela-search-crews.jpeg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Boy, 2, pulled alive from rubble six days after Venezuela's devastating twin earthquakes</h3>
+                <p class="lead-summary"><strong class="drop-cap">A</strong>merican search-and-rescue teams rescued an infant trapped beneath the rubble following this week's deadly earthquakes in Venezuela, according to the State Department. (Credit: X@StateDept) Emergency workers in Venezuela on Tuesday rescued a 2-year-old boy who had been trapped beneath the rubble for six days, marking the only reported rescue of a survivor on the sixth day of operations following last week's devastating earthquakes. Venezuela's acting President Delcy Rodríguez said in a Telegram post that Jordanian emergency workers pulled the child from a collapsed building in La Guaira, an area hit the hardest by last week's earthquakes. The child, identified by authorities as Klieber Moran, was rescued after spending six days trapped beneath the rubble, Rodríguez said. A Jordanian team works to rescue a child trapped under rubble following earthquakes in Venezuela, in a location given as Caracas, Venezuela. (Jordan Public Security/Handout via REUTERS) National Assembly President Jorge Rodríguez said in a televised address Tuesday that officials remain hopeful more survivors will be found.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>After quakes trap Venezuelans, the government impedes rescuers and aid</h4>
+                <p>In the nation’s gravest hour, the country’s authoritarian regime has crippled an effective response, say survivors, rescue workers and former officials.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>In contrast with Trump, the first American pope plans a somber July Fourth</h4>
+                <p>The pope's visit to the Italian island of Lampedusa, desperate migrants' gateway to the West, will set up a split-screen moment as President Donald Trump holds an Independence Day rally.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>State Department congratulates Keiko Fujimori as Peru's president-elect following razor-thin vote count</h4>
+                <p>The State Department on Tuesday congratulated conservative candidate Keiko Fujimori after she was declared the winner of Peru’s presidential runoff election by a razor-thin margin. The statement marked a significant milestone in Latin American relations, with Washington signaling it expects to work closely with Fujimori’s administration on shared priorities.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F06%2Fnewspress-collage-v5g634qc6-1782855182265.jpg?quality%3D90%26strip%3Dall%261782840923" alt="Lead Story Image" class="news-photo">
+                <h3>The reasons to be optimistic about these Giants</h3>
+                <p class="lead-summary"><strong class="drop-cap">I</strong>t is the start of July. That means your favorite Giants players and coaches are somewhere other than the team facility, probably on vacation. Get texts from Paul Schwartz with all the latest Giants news and insights, exclusive to Sports+ subscribers. The early weeks of summer are upon us, and if you cannot muster up some level of optimism about your favorite team, you are either a doomsayer or do not want to get your hopes up, at all. We will not be like that here. There is no reason to dwell on the negative and every reason to believe better days are ahead for the Giants. Sure, the past decade — longer than that, really — has been rough and so many times the good vibes generated this time of year have devolved into “here we go again’’ depression. But not now. So, go ahead and think big because it beats the alternative.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Pro wrestler Vinnie Massaro found his 'WrestleMania moment' in Japan, shares love for building sport's future</h4>
+                <p>Pro wrestler Vinnie Massaro opens up to Fox News Digital about his love for training others and his upcoming six-man tag team match against Blue Panther and others. Pro wrestler Vinnie Massaro is a relative unknown to those who primarily dedicate their viewing experiences to what comes on their televisions and streaming services a few times a week.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Aaron Judge ‘starting to feel better’ but is weeks away from scan on rib</h4>
+                <p>Aaron Judge is “starting to feel better,” Aaron Boone said, though that feeling has not yet translated into concrete progress toward a return. Thursday will mark four weeks since the Yankees announced their captain had suffered a stress fracture of a rib and would undergo additional medical imaging in “approximately four to six weeks.” Join Post Sports+ for exciting subscriber-only features, including real-time texting with Greg Joyce about the inside buzz on the Yankees. He will not be reexamined on the shortest end of the given spectrum, Boone saying Tuesday that Judge is weeks away from a scan that would check for healing.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>How to Watch England vs. DR Congo: TV Channel, Live Stream, Time</h4>
+                <p>England and DR Congo meet in their 2026 FIFA World Cup Round of 32 match on Wednesday, July 1, 2026 at 12:00 p.m. ET from Atlanta Stadium. England won Group L with a 2-1-0 record across three matches, beating Croatia 4-2 in their opener, drawing 0-0 with Ghana in their second match, and defeating Panama 2-0 to clinch the group. Harry Kane has scored three times in the tournament so far and Jude Bellingham has added two goals. Kane's third goal against Panama was his 11th career World Cup goal, making him England's all-time leading World Cup scorer, breaking a tie with Gary Lineker.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/07/1200/675/victor-willis-village-people.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Village People lead singer Victor Willis dead at 74</h3>
+                <p class="lead-summary"><strong class="drop-cap">"</strong>It is with profound sadness that I must announce the death of my husband, VICTOR WILLIS. Victor passed away on Tuesday June 30, 2026 as a result of a short, but aggressive illness," a post on Willis' Facebook page states. Get a daily look at the top news in music, movies, television and more in the entertainment industry. By entering your email and clicking the Subscribe button, you agree to the Fox News 
+        Privacy Policy
+       and 
+        Terms of Use
+      , and
+      agree to receive content and promotional communications from Fox News. You understand that you can
+      opt-out at any time. This material may not be published, broadcast, rewritten, or redistributed. ©2026 FOX News Network, LLC. All rights reserved. Quotes displayed in real-time or delayed by at least 15 minutes. Market data provided by
+        Factset. Powered and implemented by
+        FactSet Digital Solutions.
+        Legal Statement. Mutual Fund and ETF data provided by
+        LSEG.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Disneyland celebrates USA’s 250th with patriotic Soarin’ Across America re-theme</h4>
+                <p>As part of Disney Celebrates America, a company‑wide commemoration of the country’s big birthday, Walt Disney Imagineers have reimagined the beloved Soarin’ attraction in Disney California Adventure with some extra stars and stripes. The innovative ride, which simulates a hang gliding flight in front of a dome screen, was originally conceived as Soarin’ Over California upon its debut in 2001, and was re-themed as Soarin’ Around the World in 2016. Now, it’s getting a patriotic twist: Soarin’ Across America glides into the Disneyland Resort on July 2. But with 50 states and just 12 featured shots in the final product, how could the team settle on which locations to highlight?</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Taylor Swift's rumored Madison Square Garden wedding faces one massive hurdle, celebrity planner warns</h4>
+                <p>If Taylor Swift and Travis Kelce tie the knot at Madison Square Garden, celebrity planner Larry Walshe tells Fox News Digital that the famous arena would need a stunning transformation to swap stadium vibes for romance. If Taylor Swift and Travis Kelce really plan to walk down the aisle at Madison Square Garden on July 3, they'll first have to pull off the ultimate makeover.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>‘Minions & Monsters’ review: Ode to Old Hollywood is the franchise’s best movie</h4>
+                <p>One of the best odes to Old Hollywood in a long time comes courtesy of … the Minions? Yes, somehow, the funny yellow Tic Tacs, who heretofore clumsily served supervillains, are leading a smart and detailed tribute to Georges Méliès, Orson Welles, Boris Karloff, “Casablanca” and countless other pieces of movie-making history called “Minions & Monsters.” Improbably, this fantastic animated kids movie, sure to be a highlight of the summer, is an adult cinephile’s dream. Because years ago, French director Pierre Coffin, who co-created the talking Tylenols in 2010’s “Despicable Me,” realized the real scene stealer wasn’t Steve Carell’s baddie Gru at all but rather his pellet-shaped henchmen who speak in European gibberish.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
