@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>THURSDAY, JULY 02, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://pagesix.com/wp-content%2Fuploads%2Fsites%2F3%2F2026%2F07%2F133005281.jpg?quality%3D90%26strip%3Dall" alt="Lead Story Image" class="news-photo">
+                <h3>Frankie Muniz hastily deletes Paige Price divorce announcement amid backlash</h3>
+                <p class="lead-summary"><strong class="drop-cap">F</strong>ormer “Malcolm in the Middle” star Frankie Muniz has announced that he and his wife of six years, Paige Price, have decided to divorce. Muniz, 40, made the announcement on Instagram Wednesday — and the split seems so amicable that Paige even spoke up in the comment section to offer her support. But in a bizarre twist, the announcement was Muniz’s second go at revealing the split, following a “cruel” online reaction to his initial attempt to break the news. He quickly deleted the original post, which had been illustrated with a video of the couple dancing with their young son that some deemed inappropriate given the news. “Following a period of separation that we kept private, Paige and I have decided to move forward with ending our marriage,” Muniz wrote. “After 10 beautiful years together, we’ve grown in ways that made us realize our relationship feels most natural and strong as a deep friendship and as co-parents. “We share an incredible son who remains the centre of our world, and we’re both happier, stronger parents because of the love and growth we’ve shared.” Muniz paid tribute to his wife for putting “her own dreams on hold so I could chase mine,” and said the couple had a “foundation of respect and friendship” that would continue. He said the pair would continue to co-parent their son and would even continue working together, on the actor turned stock car racer’s business Muniz Racing. Muniz’s now-ex Paige left a comment underneath the post, but she and others made reference to the actor’s since-deleted original post. Muniz had shared a video of the family dancing happily together in their living room, which apparently attracted some negative reaction from those who felt such upbeat footage was in poor taste for a post announcing a marriage break-up. “Frankie, I am so sorry that you felt the need to delete an old fun video of our family because people are so cruel to you. This world is so f***ed … divorce is bad, sure – it’s not like we’re excited about it … but we’re two adults who know how to be on the same team. I can’t believe people could scrutinize that,” Paige wrote under the post. “Aw. I’m glad I got to see the first one right before it disappeared. It was so cute,” said one fan. “The video was lovely. As a child who survived a bad divorce, it was healing to see 2 people who love each other and themselves & walking through it together,” wrote another.</p>
+                <p class="source-credit">— Https://pagesix</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Eight monks killed on pilgrimage in Thailand after truck driven by boy, 11, crashes into them</h4>
+                <p>An 11-year-old boy crashed a pickup truck into a group of monks on a pilgrimage walk in northeastern Thailand on Thursday, killing eight, officials said. A total of 35 monks from Mukdahan province, about 600 kilometers northeast of the capital Bangkok, were on the pilgrimage. Five monks were killed at the site, while three others died at a hospital, according to Mukdahan Governor Worrayan Boonnarat. The group started the 260-kilometer walk to Ubon Ratchathani province about 30 minutes before the crash. Security camera footage shared by a local rescue group, Ruam Jai Mukdahan Rescue Association, shows the monks walking in a single line on the side of a road before the truck crashes into them.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>One Year Later: NRCC Touts Working Families Tax Cuts, Targets Democrats in New Ad</h4>
+                <p>One year ago, the Republican controlled Congress passed the Working Families Tax Cuts, and President Trump signed the bill into law on July 4, 2025. Since then, the Working Families Tax Cuts have helped millions of American families keep more of their hard-earned money. Back in April, millions of Americans filed their taxes and found that refunds were up 11 percent, with the average refund exceeding $3,400. This includes 25 million taxpayers who claimed the No Tax on Overtime provision, six million who benefited from the No Tax on Tips, and 27 million who claimed the No Tax on Social Security. In addition, 12 million small business owners saw an average tax reduction of $7,000 and families who have children born between 2028 and 2028 are eligible for $1,000 government contributions to Trump Accounts that will help their children start off on the right financial footing.</p>
+                <p class="source-credit">— Townhall</p>
+            </div>
+            <div class="story-minor">
+                <h4>Celebrate America’s 250th with this limited edition merch</h4>
+                <p>To celebrate a monumental milestone, the New York Post is offering an exclusive, limited-edition 250th Birthday Collection. For two and a half centuries, the Post has been New York’s heartbeat and America’s voice—bringing you the grit, the glamour, the headlines, and the history that shaped our world. This curated collection of 250 premium commemorative items lets you own a piece of that legacy. From stunning centerpiece decor to everyday street-style merch, every item captures the bold, irreverent, and unforgettable spirit of America’s oldest continuously published daily newspaper. Check for Home Delivery in your area, get the e-edition, or download our mobile apps now!</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/03/931/523/supreme-leader-khamenei-death.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Khamenei body in cold storage as feared Basij mobilizes ahead of historic Iran funeral</h3>
+                <p class="lead-summary"><strong class="drop-cap">I</strong>sraeli Defense Forces released video Friday showing strikes on what it said was former Ayatollah Khamenei's underground bunker, "one of the Iranian leadership's most important military command centers." (Credit: @IDF/X) Tehran is preparing for the July 9 burial of Supreme Leader Ali Khamenei, more than four months after his death, as authorities mobilize the Basij militia and mount a massive security operation ahead of what is expected to be a "historic" turnout. The lengthy delay to the funeral has raised questions about how Khamenei's remains have been preserved, as Islamic tradition, analysts say, generally calls for prompt burial and discourages chemical embalming. "The mechanism is almost certainly refrigerated cold storage, not embalming, as Islam bars chemical embalming," counterterrorism expert Dr. Mohammed Omar told Fox News Digital. Iran’s Supreme Leader Ali Khamenei speaks in Tehran, Iran, on Jan 3. (Iranian Leader Press Office/Anadolu via Getty Images) "Shia law allows delayed burial and preservation by cold in exceptional cases, and a clerical exemption for a Supreme Leader is easy to get," he added.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Trump-backed truce in Lebanon, key to Iran peace deal, risks new civil war</h4>
+                <p>To reach a more durable peace agreement with Iran and open the Strait of Hormuz, Trump needs Israel to uphold the terms of a deal with Lebanon that Hezbollah says it will block by "any means necessary."</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Families sue Maduro in US, accuse ex-president of directing police unit tied to extrajudicial killings</h4>
+                <p>Fox News contributor Paul Mauro reports from a Manhattan court after Nicolás Maduro and his wife plead not guilty to narco-terrorism charges. Former Venezuelan President Nicolás Maduro is facing a new legal challenge in the United States after the families of five Venezuelan men filed a civil lawsuit accusing him of overseeing a Venezuelan police unit responsible for extrajudicial killings and torture during his presidency.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Vatican excommunicates bishops of breakaway traditionalist sect</h4>
+                <p>The sect, the Society of St. Pius X, defied a direct plea from Pope Leo XIV and sought to consecrate four bishops without the Vatican's approval.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F07%2Fnewspress-collage-6m5nqxl87-1782976185117.jpg?quality%3D90%26strip%3Dall%261782961826" alt="Lead Story Image" class="news-photo">
+                <h3>Why USMNT can’t appeal Folarin Balogun’s controversial red card</h3>
+                <p class="lead-summary"><strong class="drop-cap">S</strong>ANTA CLARA, Calif. — Folarin Balogun has no option to appeal the red card that left him suspended for the U.S. men’s national team’s Round of 16 match against Belgium, meaning the USMNT needs to plan for life without its star striker. Article 66.4 of FIFA’s regulations states that, “A sending-off automatically incurs suspension from the subsequent match. The FIFA judicial bodies may impose additional match suspensions and other disciplinary measures.” In more plain terms, that means a player can be suspended for more games, but not have an automatic red-card suspension reduced. “Typical FIFA,” midfielder Tyler Adams said when told of that rule after the USMNT’s 2-0 win over Bosnia-Herzegovina on Wednesday night. The collision between Balogun and Tarik Muhamerovic was not given any discipline on the field, and the red card was handed out after a VAR review. A VAR review can only give out a red card or nothing, leaving out the middle ground — which the contact between the two seemed to fall into — as an option. “You’re asking the wrong person, with how I tackle,” Adams said of his opinion on the ruling. “Do you know what I mean? I think it’s a yellow card. I think when you slow everything down, it’s always gonna look worse. I don’t want to say too much.” Before players went through the mixed zone, a USMNT spokesman showed reporters a collage of fouls committed on the national team during the World Cup that were not carded.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>USA World Cup star calls lack of appeal process for teammate's red card 'bogus'</h4>
+                <p>Former U.S. Men's National Team midfielder Dax McCarty joins ‘Fox & Friends’ to preview the crucial U.S.-Bosnia and Herzegovina match. Folarin Balogun’s teammates came to his defense after the USA World Cup star was given a red card during the team’s 2-0 win over Bosnia and Herzegovina on Wednesday night.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Malik Tillman’s impressive free kick helps propel USMNT to Round of 16</h4>
+                <p>SANTA CLARA, Calif. — Sometimes the loudest player on the pitch is the quietest player on the team. For 81 minutes, U.S. midfielder Malik Tillman had covered nearly every blade of grass. He did what he has done throughout this World Cup: chase, press, recover possession and stitch together the American attack without asking for recognition. Then, with the U.S. clinging to a one-goal lead and hanging on with 10 men after Folarin Balogun’s red card, Tillman authored the defining moment of his international career. His curling free kick in the 82nd minute soared over the Bosnia-Herzegovina wall. By the time it nestled into the top corner of the net, Tillman had covered something even bigger: every doubt that had followed him into this World Cup.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Alexi Lalas rips referees after Folarin Balogun red card in Team USA win: 'An absolute joke'</h4>
+                <p>Folarin Balogun opened up to explain his decision to play for the United States at the 2026 FIFA World Cup™. Celebrations have begun for Team USA after defeating Bosnia and Herzegovina 2-0 to advance to the Round of 16 at the 2026 FIFA World Cup. But it’s also bittersweet considering Folarin Balogun, who scored his third World Cup goal in the victory, won’t be available on Monday night in Seattle against Belgium after being shown a red card in the 64th minute in a massively controversial decision.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/07/931/523/taylor-swift-travis-kelce-game-kiss-split.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Taylor Swift and Travis Kelce's wedding could unleash unprecedented global spending frenzy: expert</h3>
+                <p class="lead-summary"><strong class="drop-cap">F</strong>ox News’ Alexis McAdams joins ‘America’s Newsroom’ to report on rumors that Taylor Swift and Travis Kelce plan to marry at Madison Square Garden. As Taylor Swift and Travis Kelce's reported wedding approaches, experts say the ceremony is poised to become much more than a celebrity milestone. According to branding and business experts, the economic impact won't begin when the couple says "I do." It began the moment the wedding entered the cultural conversation. Even if the rumored July 3 ceremony remains entirely private, experts told Fox News Digital that Swift's influence is powerful enough to drive consumer spending without fans ever setting foot near the venue. Business and branding experts told Fox News Digital that Taylor Swift and Travis Kelce's reported wedding is already generating significant economic activity before the couple exchanges vows. (David L. Nemec/NBAE via Getty Images; Christopher Polk/Billboard via Getty Images) "The economic value isn't generated by access to the wedding," brand innovator Sunny Bonnell said. "It's generated by participation in the cultural moment."</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Kathy Griffin claims she’s banned from Jimmy Fallon’s ‘Tonight Show’  for being ‘too controversial’</h4>
+                <p>Kathy Griffin claimed in an Instagram post on Tuesday that she had been banned from “The Tonight Show Starring Jimmy Fallon” for being inappropriate and controversial. “I have not done the Jimmy Fallon show since it was on at 12:30 Eastern and Pacific, so I guess I’m banned from the Fallon show, or inappropriate, or too controversial,” Griffin said in the video posted to Instagram. “I don’t even know. When you’re banned from a show — and if you guys know me, I’m banned from most of them. You’re welcome, America and Indonesia — they don’t usually tell you you’re banned. They just can’t seem to find room for you.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>‘Lethal Weapon’ star Danny Glover reveals Alzheimer’s battle at 79</h4>
+                <p>Fox News senior medical analyst Dr. Marc Siegel comments on a breakthrough study on Alzheimer’s disease performed on mice and what it means for humans on 'America Reports.' The 79-year-old Hollywood icon has revealed that he is living with Alzheimer's disease, opening up about his diagnosis in a deeply personal interview while reflecting on his legendary career, his family and the road ahead.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>‘Dirty Jobs’ host Mike Rowe sues for millions in alleged unpaid ‘Deadliest Catch’ voiceover money</h4>
+                <p>“Dirty Jobs” host Mike Rowe claims Discovery cheated him out of millions by launching “Deadliest Catch” spinoffs without using him as the narrator, according to a new lawsuit. Rowe, who started to narrate “Deadliest Catch” episodes back in 2005, filed a lawsuit against Discovery Talent Services (DTS) Tuesday claiming the network failed to pay him according to a deal they allegedly hammered out in 2020 stating Rowe would rake in $40,000 an episode. Rowe and his production company Lab Rat were to be paid on a “pay-or-play” basis, according to the lawsuit, meaning DTS was to either use Rowe’s voice in episodes (play) or to pay him his hourly rate for any new episode they did have him narrate or used another narrator (pay).</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
