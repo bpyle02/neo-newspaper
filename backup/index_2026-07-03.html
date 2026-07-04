@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>FRIDAY, JULY 03, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/07/931/523/bonnie-california-trump-fair-1.png?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>We asked Americans to grade the economy. Then we asked if it would change their vote.</h3>
+                <p class="lead-summary"><strong class="drop-cap">A</strong>t the Great American State Fair, Americans expressed cautious optimism about jobs and growth, but many told Fox News Digital values and leadership matter more than economic conditions at the ballot box. As Americans gather in the nation's capital to celebrate the Fourth of July and kick off the nation's 250th anniversary festivities, Fox News Digital asked attendees at the Great American Fair on the National Mall whether the economy will influence how they vote in November. While most respondents gave the U.S. economy a passing grade — most commonly a "B" — many said their ballots won't hinge on inflation, jobs or economic growth alone. Instead, they pointed to values, leadership and party affiliation as the factors that will ultimately decide their vote. The responses offer a snapshot of how some voters are weighing one of the nation's top political issues ahead of the 2026 midterms. Jay Miller from Louisiana told Fox News Digital that the U.S. economy does not impact his vote in November. (Fox News Digital) Although respondents expressed cautious optimism about the economy's direction, several said improving conditions would not be enough to change their political preferences, underscoring the role that broader ideological and cultural issues continue to play in shaping voter decisions. "I would probably give the economy, compared to what it was, I would give it a B for sure," Jay Miller of Lafayette, Louisiana, told Fox News Digital. "I think we are on the verge of an economic boom like we've never seen in our nation. And I'm glad that I'm living at this point and this time to witness it firsthand." Miller said he believes lawmakers should work more closely with President Donald Trump to advance the administration's agenda, arguing that doing so would help unlock further economic growth. Donna Festinger from Greenfield, Massachusetts, also gave the economy above average marks, grading it a "B-plus." "I think it's on the rise and we're getting more and more jobs, which I think really helps everyone in America," the retired schoolteacher told Fox News Digital. "I think this administration is working hard to help everybody earn more money and to be able to save more money, which will circle back into a better economy."</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>As Trump commands 250th stage, Democrats offer their vision of patriotism</h4>
+                <p>Partisanship around the country’s big anniversary has put Democrats in a bind: They want to criticize the president without appearing unpatriotic.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>The US military under President Trump is winning the war — in the bedroom,  Pentagon data reveals</h4>
+                <p>America’s heroes are having more sex under President Trump, Pentagon data ahead of the country’s 250th birthday shows. Bedroom-booster drugs surged to an all-time high in 2025, with a record-breaking 108,332 prescriptions doled out to active duty troops for erectile dysfunction drugs, official statistics obtained by The Post through a Freedom of Information Act request reveal. But it also marks a whopping 16.5% jump from the 92,996 prescriptions recorded in 2021 under the Biden administration. Defense officials did not immediately return The Post’s request for comment — but the Defense Health Agency data confirms America’s warriors remain locked and loaded.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Stan Lee claims he got a paltry $6 million from Disney instead of becoming ‘indescribably rich’</h4>
+                <p>Stan Lee says he made just $6 million in a deal with Disney because he got bad legal advice — when he should have become “indescribably rich” in the deal. In an unreleased documentary “Stan Lee: The Final Chapter,” the late Marvel writer opens up about the  paltry sum while admitting, “Nobody has made more bad business decisions than I have.” “Disney wanted to buy Marvel and they offered me a contract giving me ten percent of Marvel’s profits, so, I said, ‘Man that’s wonderful,’” he says in an exclusive clip of the doc obtained by Page Six. Lee was responsible for creating comic characters such as Spiderman, Black Panther and the Incredible Hulk, the core of the four stunningly successful “Avengers” movies, which have spawned more than a dozen spin-off.</p>
+                <p class="source-credit">— Https://pagesix</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/07/931/523/sharia-indonesia-caning.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Couple publicly caned after alleged TikTok kiss sparks outrage in Indonesia</h3>
+                <p class="lead-summary"><strong class="drop-cap">A</strong> young couple in Indonesia was publicly caned Thursday after allegedly kissing during a TikTok livestream. The couple — a 22-year-old man and a 25-year-old woman — each received 21 lashes, according to The Associated Press. They were reportedly convicted of violating local morality laws under an Islamic Sharia court in Indonesia’s conservative Aceh province. The pair, who were detained in March, had already spent four months in prison prior to the punishment, which ultimately reduced their sentence from 25 lashes to 21, the AP said. SOUTH CAROLINA FITNESS TRAINER TOLD FRIENDS SHE WANTED TO LEAVE HER NOW-HUSBAND YEARS BEFORE BODY WAS FOUND Shariah law officials assist an unmarried woman, convicted of violating Islamic law by kissing during a TikTok livestream, to get up after being publicly caned, in Banda Aceh, Indonesia, Thursday, July 2, 2026. (AP Photo/Reza Saifullah) According to local authorities, the couple filmed a TikTok video inside a car one night in March. As the video went viral, they were subsequently apprehended for what officials described as an "immoral act."</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Kyiv’s most-bombed neighborhood just won’t quit</h4>
+                <p>After four years of war, life in Lukianivka, the most frequently hit part of the Ukrainian capital, is a mix of adaptability and endurance, defiance and denial, resignation and resilience.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Six Kurdish fighters killed in IRGC ambush as clashes spread across western Iran</h4>
+                <p>Fox News correspondent Greg Palkot reports that Iran's repression of its people has worsened, with nearly 50 executions in the past three months and 6,000 arbitrary detentions. Iran’s Islamic Revolutionary Guard Corps said Thursday it killed five members of the Democratic Party of Iranian Kurdistan, while the Kurdish opposition group told Fox News Digital that six of its Peshmerga — a term commonly used for Kurdish fighters — were killed in what it described as an Islamic Revolutionary Guard Corps ambush in northwest Iran.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Vatican excommunicates bishops of breakaway traditionalist sect</h4>
+                <p>The sect, the Society of St. Pius X, defied a direct plea from Pope Leo XIV and sought to consecrate four bishops without the Vatican's approval.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/07/931/523/Croatia-Portugal-1-1.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>VAR denies Croatia's game-tying goal as Cristiano Ronaldo leads Portugal to Round of 16</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>hiago Alcântara, Peter Crouch, Kasper Schmeichel and Alex Scott react to Brazil's 2-1 late win over Japan, thanks to Gabriel Martinelli's CLUTCH goal in stoppage time. Croatia thought their FIFA World Cup hopes were still alive when they scored the game-tying goal just before the end of stoppage time in the second half. But a VAR review said Mario Pasalic was offside, and it was Portugal moving on instead. Gonçalo Ramos’ goal just minutes earlier — a beautiful header into the back of the net in the 94th minute — was the decider in this 2-1 victory for Portugal. And it was only the second time in Portuguese World Cup history the nation needed to come from behind to win, underscoring its resilience on the sport's biggest stage. Luka Modric of Croatia and teammates react after the 1-2 loss during the FIFA World Cup 2026 Round of 32 match between Portugal and Croatia at Toronto Stadium on July 2, 2026, in Toronto, Ontario. (Patrick Smith - FIFA) It was a controversial ending, though, and one where Croatia tried to argue the ball never hit the head of Igor Matanovic, which made Pasalic offside during VAR review.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>What we’re learning about these Yankees during their summer slide</h4>
+                <p>In their first 20 games without Aaron Judge, the Yankees went 12-8, and looked like a team capable of withstanding the absence of the two-time defending AL MVP. Don’t miss Greg Joyce’s text messages from The Bronx and beyond — he’s giving Sports+ subscribers the inside buzz on the Yankees. In the seven games since, they have gone 0-7 and resembled a dumpster fire in just about every area of their game. The good news for the Yankees is the Twins are coming to town this weekend, the equivalent of a homecoming opponent for a team that needs a get-right series. The bad news is that Aaron Judge’s return is nowhere in sight, so aside from beating up on the Twins, they are going to have to find a way to dig themselves out of this without him.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Athletics prospect Ryan Lasko awaits feeling in lower half after C6-C7 spinal surgery following collision</h4>
+                <p>Dan Dakich, Jason Hammer & Dan Zaksheske discuss the upcoming issues that the MLB is facing in their next offseason A top Athletics outfield prospect still can’t feel his lower half after spinal surgery was needed to repair fractured vertebrae following a scary collision with a teammate in Double-A ball.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Wimbledon picks: Tommy Paul vs. Hubert Hurkacz odds, best bets, prediction</h4>
+                <p>There was a time, not too long ago, when Hubert Hurkacz looked like a future Wimbledon winner. Armed with size and a massive serve, the Pole’s game was built for the grass, so it wasn’t a shock that it only took three tries for Hurkacz to make his first semifinal at the All England Club in 2021. He’ll look to get one step closer in a tough matchup with World No. 25 Tommy Paul on Friday morning. Injuries have plagued Paul this season, but when he’s been on the court, he’s generally been effective. After pulling out of Stuttgart at the beginning of June, the New Jersey native went to the final at ATP London in his most recent tournament.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/07/931/523/taylor-travis-thumb.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Taylor Swift and Travis Kelce's love story in photos as wedding day arrives</h3>
+                <p class="lead-summary"><strong class="drop-cap">O</strong>ne Swiftie told Fox News Digital she doesn't believe Taylor Swift is actually getting married at Madison Square Garden. The couple first sparked romance rumors in 2023, after Kelce spoke about attending an Eras Tour show in Kansas City in the hopes of getting Swift's number during an episode of his podcast "New Heights." Soon after, Swift was spotted at a Chiefs game, further fueling speculation. Eventually, the two were spotted out together on numerous occasions, confirming they were dating. The two announced their engagement in August 2025, with an Instagram post featuring Kelce on one knee, with the caption, "Your English teacher and your gym teacher are getting married 🧨." As their wedding approaches, here is a look back at their relationship over the years, in pictures. Swift made her first appearance at a Kansas City Chiefs game in September 2023. (David Eulitt/Getty Images) Swift made headlines when she was photographed sitting next to Kelce's mom, Donna, at a Kansas City Chiefs game in September 2023. Rumors of their relationship continued to swirl after they were photographed leaving Arrowhead Stadium together after the game. The rumors first began after Kelce gave her a shout-out on his podcast in July 2023.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Beabadoobee is playing arenas in 2026. How much do the cheapest tickets cost?</h4>
+                <p>In an Instagram post announcing her 2026 ‘Powerline Tour’ with special guest Wisp, the 26-year-old shared “I didn’t think I’d ever play venues like this in my life…it’s going to be epic I can’t wait to see you all.” Just a few of the most notable include Morrison, CO’s Red Rocks (Aug. 7), Columbia, MD’s Merriweather Post Pavilion (Oct. 10) and Inglewood, CA’s Kia Forum (Oct. 21). And, of course, lest we forget, she’s also slated to headline at New York City’s Madison Square Garden on Monday, Oct. 5. If you’d like to see the “death bed” singer warble live, tickets are available for all of her 20 concerts as of today.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Taylor Swift and Travis Kelce's MSG wedding guest list: Everyone reportedly confirmed for star-studded event</h4>
+                <p>One Swiftie told Fox News Digital she doesn't believe Taylor Swift is actually getting married at Madison Square Garden. Taylor Swift and Travis Kelce's reported wedding at Madison Square Garden is just a day away and there is still very little about the highly anticipated event that has been confirmed.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>‘Baddies Gone Wild’ star claims Zeus Network CEO promised he’d make her a TV star in return for sex: suit</h4>
+                <p>A cast member of the hit show “Baddies Gone Wild” on The Zeus Network was coerced into having sex with the network’s CEO with promises of making her a star, according to a bombshell new lawsuit. Jadynn Brown, who made a splash on the first season of the popular series accused Lemuel Plummer of sexual assault, sexual harassment, and wrongful termination in documents obtained by The California Post. The suit also named The Zeus Networks as a defendant. Brown alleged that in March 2023, when she was 19, Plummer propositioned her — telling her he would hire her for “Baddies” if she had sex with him, according to the lawsuit.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/07/931/523/corning-new-york-fiber-optics.png?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Fox News AI Newsletter: American manufacturer says AI is creating jobs, not replacing them</h3>
+                <p class="lead-summary"><strong class="drop-cap">I</strong>nside Corning's North Carolina factory, workers are producing the optical fiber that has become a critical piece of the infrastructure powering the AI boom. (Footage courtesy of Corning) DOMESTIC OUTPUT: Before Henry Ford rolled out the Model T, before the Wright brothers took to the skies and before the Statue of Liberty welcomed millions to America's shores, Corning was already charting a course of innovation that continues today. A Corning employee handles optical fiber as part of the manufacturing process that supports broadband and telecommunications infrastructure. (Courtesy of Corning) DIGITAL RESCUE: Ame thought Lucy might be hiding upstairs. The family's kitten had missed dinner, which felt odd. Still, cats hide. They nap in strange places. Sometimes, they ignore everyone. MANUFACTURING PUSH: President Donald Trump on Wednesday said that Taiwan is doubling the size of the chipmaking plants under construction in Arizona, adding that it could help the U.S. share of the chip market rise to 50% by the end of his term. LICENSED TO AI: The Trump administration has lifted export restrictions on two of Anthropic's latest artificial intelligence models after the company worked with the Commerce Department on a national security review, according to statements released Tuesday. SHIFTING GEARS: Ford has rehired experienced human engineers to help address the shortcomings of artificial intelligence (AI) tools meant to tackle quality issues in the automaker's production processes. PULSE CHECK: A routine heart test may be hiding a warning sign that doctors have missed for years. That is the big takeaway from new UC Berkeley research published in Nature. Researchers trained an artificial intelligence model to study ECGs, also called EKGs, and look for patterns tied to sudden cardiac death. For participants under 65, an increase in the pulse pressure-heart rate index was associated with a 76% higher risk of developing dementia. (iStock) NEW ERA: A new report is pushing back on artificial intelligence "doomsday" fears, arguing the technology could unleash one of the biggest productivity booms in American history — unless Washington slows it down with premature regulation.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Heat wave do’s and don’ts for your phone</h4>
+                <p>Don’t stick your phone in the fridge. Do sign up for emergency text alerts.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>New sodium-ion battery could reshape grid storage</h4>
+                <p>At Coherent's Sherman, Texas facility, CEO Jim Anderson and NVIDIA CEO Jensen Huang detail how their plant is at the forefront of AI innovation. They describe using light to efficiently transmit data for AI data centers, explaining the technology to Will Cain. Coherent is set to quadruple its output by next year, demonstrating rapid growth.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Booking a summer trip? Here's what you're giving scammers</h4>
+                <p>Kurt "CyberGuy" Knutsson explains how a reader named Rosette made a Google search and wound up handing her credit card number and birth date to a scammer. You found the flight, booked a hotel, and gave them your name, passport details and everything else they asked for. At this point, most of us close the laptop and start counting down the days.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
