@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>SATURDAY, JULY 04, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://www.theblaze.com/media-library/image.jpg?id=66870158&width=980" alt="Lead Story Image" class="news-photo">
+                <h3>The broken chain at Lady Liberty’s feet: What it really means to be a patriot</h3>
+                <p class="lead-summary"><strong class="drop-cap">G</strong>lenn Beck reveals the powerful symbolism most Americans miss — and why true patriotism runs far deeper than flags and slogans. When most think of the Statue of Liberty, they picture her halo-like crown — the seven rays symbolizing a beacon of hope to the rest of the world. Or they think of the torch held aloft in her right hand, a representation of enlightenment and liberty lighting the way to freedom and progress. But as our nation nears its 250th birthday this Independence Day, many Americans still overlook one of her most powerful symbols: the broken chain and shackle partially hidden under the hem of her flowing robes. In this powerful monologue, Glenn takes us beyond the usual symbols to reveal the profound story hidden at the Statue of Liberty’s feet — and what it truly means to be an American patriot. “France didn't give [the Statue of Liberty] to us because they liked us. They were fighting Marxism in their own country, and they were trying to show America has the best idea,” Glenn recounts. The reason for the broken chain and shackle around her foot, he explains, is to show that America “broke the chain of slavery.” “And how did we do it?” Glenn asks. “Here's a tip: With what's in her [left] hand.” In Lady Liberty’s left hand sits a rectangular tablet inscribed with "JULY IV MDCCLXXVI" — July 4, 1776, in Roman numerals. It represents the Constitution and the Declaration of Independence and emphasizes that liberty rests on principles of law and order. The idea of “independence” and that “all men are created equal” is what “breaks the chain of slavery,” Glenn exclaims. “And what makes man man? The ability to invent, the ability to dream, the ability to do. That's the torch!” he continues. Put them all together, and you get a striking picture of what America is and who she is for: the “free man … under the law” who can turn “dreams” into reality and thus “light the entire world.” “Patriotism is not about red hats. It's not about waving flags or chanting slogans at rallies. It's not about God bless the USA. It's not about any of that stuff,” says Glenn, calling these surface-level expressions “sugar highs.” “Real patriotism is deeper. … It's the steady, bone-deep love of the country that raised you even when it didn't get things right.” To enjoy more of Glenn’s masterful storytelling, thought-provoking analysis, and uncanny ability to make sense of the chaos, subscribe to BlazeTV — the largest multi-platform network of voices who love America, defend the Constitution, and live the American dream.</p>
+                <p class="source-credit">— The Blaze</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>The Best And Worst Pavilions At The Great American State Fair</h4>
+                <p>An exhibit designer ranks all of the booths at the Great American State Fair and argues they should become permanent exhibitions. Forget the World’s Expo, where every nation has a pavilion. The true genius of the Great American State Fair in Washington D.C., which runs through July 10, is that all 56 of our states and territories get about 600 square feet to show off what makes them special. There is a kernel of a much bigger idea here, as The Mall would be a much better place if each state and territory had its own permanent pavilion. This would balance the major attractions in our nation’s capital politically and philosophically rather than Smithsonian offerings that all lean left.</p>
+                <p class="source-credit">— The Federalist</p>
+            </div>
+            <div class="story-minor">
+                <h4>America Is Already Celebrating 250 Years of Freedom—and the Displays Are Spectacular</h4>
+                <p>We’re just hours away from America’s 250th Independence Day anniversary, but the celebrations are already underway. Here are some of the most patriotic displays from around the country: 🚨 BOOM! Texas just went maximum America, forming a bald eagle with pyrotechnics in the SKY for America 250, Uncle Sam and moreTHIS over the SOMALI FLAG! 🇺🇸 pic.twitter.com/V1gD41PsKv The Sphere in Las Vegas is now showing off how awesome our country is for July 4th: pic.twitter.com/WyFQYt0MLA NEW: US Army Golden Knights & US Navy Leap Frogs are parachuting into the National Mall w/ a large 🇺🇸 flag to kick things off at the Great American State Fair for America 250 today.Today is Aviation Day, lots of flyovers planned today.10:00 AM — U.S. Army Golden Knights and… pic.twitter.</p>
+                <p class="source-credit">— Townhall</p>
+            </div>
+            <div class="story-minor">
+                <h4>As Trump commands 250th stage, Democrats offer their vision of patriotism</h4>
+                <p>Partisanship around the country’s big anniversary has put Democrats in a bind: They want to criticize the president without appearing unpatriotic.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/07/931/523/Keiko-Fujimori-peru-001.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Conservative Keiko Fujimori officially declared winner of Peru's presidential runoff election</h3>
+                <p class="lead-summary"><strong class="drop-cap">K</strong>eiko Fujimori and Roberto Sánchez advance past 33 candidates to face off June 7 as surging violence dominates voter concerns. (Video: AP.) Keiko Fujimori, the conservative politician and daughter of the former president, was declared the winner Friday of Peru's presidential runoff election. Fujimori, 51, will take office later this month as Peru's ninth president in 10 years. This was her fourth bid for the position following years of political instability in the country. Peru's conservative Keiko Fujimori addresses the media at her party's Popular Force headquarters. On Friday, she was declared the winner in the country's presidential runoff. (Reuters) "I receive with profound gratitude the trust that millions of Peruvians have placed in me. A new stage begins. We assume it with responsibility, humility, and a deep sense of duty," she wrote. "Each day of this transition process is an opportunity to listen, engage in dialogue, and arrive prepared at the start of the new government. Through these accounts, we will share the progress of this stage and the work we have been carrying out. I invite you to join us."</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Iran’s leader was killed in February. The country will finally bury him.</h4>
+                <p>For the surviving Iranian regime, the funeral offers an opportunity to project power after withstanding months of war with Israel and the United States.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>In a hit low-budget film, Beijing sees a way to court Chinese communities abroad</h4>
+                <p>“Dear You,” a Teochew-language family drama and migration story, has raised fraught questions of identity among some Chinese communities abroad.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Waltz calls out Iranian diplomat at UN following drone strikes on Bahrain and Kuwait</h4>
+                <p>U.S. Ambassador to the United Nations Mike Waltz scolded Iran during this week's U.N. Security Council meeting, saying Tehran "will not silence" the body following claims by the Islamic Republic's representative that council members were spreading falsehoods about its recent attack targeting neighboring Gulf states.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F07%2Fnewspress-collage-rjkz1kn9x-1783138698488.jpg?quality%3D90%26strip%3Dall%261783124348" alt="Lead Story Image" class="news-photo">
+                <h3>Star Lynx rookie Olivia Miles returns home with 14-point effort against Liberty</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>he Summit, N.J., native will have had plenty of family and friends show up in droves to support her against the Liberty at Barclays Center. But she struggled with her shooting, going 5-of-16 from the field and missing all four of her 3-point tries. Lynx coach Cheryl Reeve’s only consolation for her fellow New Jerseyan is that Miles’ return home went better than when Maya Moore went back to Connecticut early in her career. Moore scored just two and three points, respectively, in each of her first games at the Connecticut Sun in 2011 and 2012. “I’m really hopeful we can start a trend that this young rookie can be great when she comes back home.” But Reeve really doesn’t seem to have to worry about her rookie point guard all too much these days. Miles is doing stuff rookie guards don’t typically do. There’s usually an adjustment period to the speed and physicality of the WNBA game for newcomers, especially those coming from college. It’s impressive her consistency and ability to read the game as well as she does not even two months into her first season. She thought it would take longer for her to adjust to the speed of the pro game, but if anything, she’s the one dictating it when she’s on the floor. Going into Friday’s game, she led She leads all rookies in scoring (18.7 points per game), assists (5.7) and efficiency (22.8). She also ranks sixth in efficiency and eighth in assists across the league. This year’s No. 2 overall pick is a clear frontrunner for Rookie of the Year.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Messi, Argentina avoid a shocking upset in wild knockout stage match against Cape Verde</h4>
+                <p>Fox News national correspondent Bryan Llenas reports on the Philadelphia FIFA Fan Festival and the U.S.-Bosnia and Herzegovina match setting an English-language soccer viewership record on ‘The Will Cain Show.’ On Friday, Argentina looked to continue its quest for back-to-back World Cup titles, and to do it, they had to get through one of the darlings of this year's tournament, Cape Verde.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Shohei Ohtani removed from Dodgers comeback win over Padres with bicep tightness</h4>
+                <p>Amid absolute pandemonium at Dodger Stadium on Friday night, an unexpected cause for concern arose in the home dugout. Shortly after completing a six-inning, three-run start as a pitcher against the San Diego Padres, Shohei Ohtani was removed from the game as a hitter in the bottom of the seventh, when Miguel Rojas pinch-hit for him shortly after a go-ahead grand slam from Teoscar Hernández in the Dodgers’ come-from-behind 4-3 win. The reason for Ohtani’s removal: Tightness in his right bicep he had felt during his final at-bat as a hitter in the game. On the bright side, both Ohtani and Roberts described the superstar’s exit as a “precautionary” decision, and downplayed the potential severity of the injury.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>FIFA makes final ruling on US soccer star Folarin Balogun's controversial red card suspension</h4>
+                <p>1994 USA World Cup player John Harkes, who was suspended himself for yellow card violations, wants to see FIFA change its red card rules after Folarin Balogun's suspension. The United States Men's National Team is coming off of a massive victory on Wednesday night over Bosnia and Herzegovina, but there is a big cloud hanging over them for the next match against Belgium.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F07%2F133173563.jpg?quality%3D90%26strip%3Dall" alt="Lead Story Image" class="news-photo">
+                <h3>Venice cafe owned by ‘Love Island’ Bombshell contestant sees huge customer spike with watch parties and night markets</h3>
+                <p class="lead-summary"><strong class="drop-cap">G</strong>al’s girls turned out in force for a watch party celebrating the hottest reality show of the summer: “Love Island USA.” While the Season 8 Islanders and late-arriving “bombshells” remain cut off from the outside world in a Fiji villa with no phones or social media, one Venice, California, café is cashing in on the frenzy. Saba Surf Cafe, owned by Season 8 contestant Gal Tshnieder, drew more than 100 “Love Island USA” fans who lined up for coffee, merch and a communal viewing of the hit dating series, with lines stretching out the door. “I’m super excited to be here. I’d heard about the coffee shop before because I have a few friends that live in the area and I’ve been meaning to come down here and check it out,” Claire Belhamer, who made the hour-long trek all the way from Pasadena, told The California Post. “And as soon as I watched the show and heard Gal describe it, I knew exactly what coffee shop it was, and I saw that they had watch parties.” For those not in the know, the reality dating competition follows single “Islanders” living in an isolated, luxurious villa to find romance. To stay on the show, contestants must “couple up,” surviving regular recouplings and bombshell arrivals before winning a cash prize of up to $100,000 based on public votes. The hit reality phenomenon pits young singles against a gauntlet of temptations, games, and elimination ceremonies. Tshnieder, or as America knows him, Gal, entered the villa as one of the temptations for the girls.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Taylor Swift marries Travis Kelce</h4>
+                <p>Comedian Tom Shillue and National Review columnist Caroline Downey discuss actor George Clooney's appearance on NFL star Travis Kelce's podcast, where the two claimed they had never gotten into an argument with their significant others. Swift married NFL star Travis Kelce July 3 at a ceremony held at Madison Square Garden. The couple reportedly hosted around 1,000 guests after renting the arena for multiple days.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>‘Young Washington’ review: Meh George Washington origin story fails to inspire</h4>
+                <p>During a 1755 battle in “Young Washington,” future U.S. president George Washington dangerously runs toward the enemy French and their Native American allies alone and clutching a gun. Parts of that depiction of early heroism are shown in slow motion, almost like “Captain America,” in director Jon Erwin’s movie, and the music swells. It’s the textbook formula for goosebumps. And yet I defy you to feel anything while watching it. Although so-so “Young Washington” fulfils its baseline promise — Look! Washington! While young! — it doesn’t accomplish much more than that. The film succeeds in neither humanizing him nor deifying him, and so the Revolutionary War hero comes across as strangely milquetoast. He’s a striver, sure, but here he’s not an especially exciting or extraordinary one.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Cole Hauser says his family helped shape Montana as fans follow Taylor Sheridan from Treasure State to Texas</h4>
+                <p>The ‘Dutton Ranch’ star reflects on his family’s deep ties to Montana as the Paramount+ series premieres May 15 with two episodes, followed by weekly releases. Hauser told Fox News Digital that while Taylor Sheridan's hit franchise introduced millions of viewers to Montana, his family's ties to the Treasure State stretch back nearly 140 years.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/02/931/523/youtube-tv-viewer.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Cheap streaming box could hijack your home internet</h3>
+                <p class="lead-summary"><strong class="drop-cap">H</strong>alimah Delaine Prado, Google General Counsel, reveals the rise of AI-powered phishing scams originating from China's 'outsider enterprise.' She explains how these criminals use artificial intelligence to create highly convincing fake websites, impersonating trusted brands like T-Mobile to defraud hundreds of thousands of Americans, causing millions in losses. Prado highlights Google's strategy to combat these evolving threats. That cheap streaming box promising free movies, live sports and premium channels may come with a hidden cost you never agreed to pay. Security researchers are warning about a sprawling Android-based botnet called Popa. It has reportedly forced millions of consumer TV boxes to relay internet traffic tied to ad fraud, account takeovers and mass data scraping. The concern goes beyond one shady app or one off-brand gadget. It points to a bigger problem sitting in living rooms across the country. Your home internet connection can be quietly used by strangers. In other words, that box connected to your TV may be doing more than streaming shows and movies. A cheap streaming box promising free TV can secretly route stranger traffic through your home internet. (Phynart Studio/Getty Images) Popa is tied to the wider Vo1d and BADBOX-style ecosystem of compromised Android-based streaming devices. These are often unofficial TV boxes sold online under countless names. Many promise access to paid movies, sports or channels for a one-time price. That should be your first warning sign. KrebsOnSecurity reports that Popa works less like a traditional botnet built for quick attacks and more like a persistent tunneling system. It can register a device, keep encrypted connections open and route traffic through that device when needed. So what does that mean at home? Someone else's internet traffic can appear to come from your house. A residential proxy uses a regular home internet address to send traffic. To a website, that traffic can look like it came from an ordinary household instead of a suspicious server farm. That makes these networks valuable for people trying to hide mass scraping, fake ad clicks, account attacks or other shady activity. It also creates a scary problem for the person who owns the Wi-Fi.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Zoox robotaxi redesign brings big rider upgrades</h4>
+                <p>Atlanta residents captured alarming video of dozens of Waymo driverless cars continually circling their quiet neighborhood for hours. Tech expert Kurt Knutsson warns this 'AI takeover' raises significant safety concerns, especially for children, highlighting a critical lack of human intervention and company accountability from Waymo regarding these autonomous vehicles and potential glitches.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
