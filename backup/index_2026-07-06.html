@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>MONDAY, JULY 06, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://media.townhall.com/cdn/hodl/2026/181/307b63e9-e47f-4523-be1a-ee0f70674bda.jpg" alt="Lead Story Image" class="news-photo">
+                <h3>Ketanji Brown Jackson Hits the Front Page of Essence Magazine, and Check Out How They Describe Her</h3>
+                <p class="lead-summary"><strong class="drop-cap">S</strong>upreme Court Justice Ketanji Brown Jackson is the Left's darling. It doesn't matter that her jurisprudence is rooted in Internet memes or that she doesn't understand the oral arguments being made before the Court. She's a dyed-in-the-wool Leftist, and that's enough for them. Now, KBJ is on the cover of ESSENCE Magazine, and check out how they describe her. They don't believe in the interpretation of the law. They believe in legislating from the bench, and KBJ herself said her job is to 'use her voice' while sitting on the Supreme Court. Sorry, I hate stuff like this. Ketanji Brown Jackson isn't supposed to be "the people's champion." She's not a politician. She's supposed to *interpret* the law, not make it. This kind of thing is why so many people misunderstand how our government works at a basic level. https://t.co/HEuLZ0ZcKE Supreme Court justices shouldn’t be celebrities.They don’t have to run for office and don’t need political slogans like “The People’s Champion.”They should simply do their job of interpreting the law according to constitutional principles. https://t.co/1LM8B6WwwA Imagine a Supreme Court packed with Justices like KBJ. We would be in serious trouble. But that's what the Democrats are promising to do if they regain power: pack the Supreme Court with people just like KBJ. Editor’s Note: Every single day, here at Townhall, we will stand up and FIGHT, FIGHT, FIGHT against the radical Left and deliver the conservative reporting our readers deserve. Help us continue to tell the truth about the Trump administration and its successes. Join Townhall VIP and use promo code FIGHT to receive 60% off your membership. Copyright © Townhall.com/Salem Media.
+                            All Rights Reserved.</p>
+                <p class="source-credit">— Townhall</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Social Media ‘Influencers’ Are Turning the World’s Most Beautiful Places Into Shallow Photo Ops</h4>
+                <p>This article is part of Upstream, The Daily Wire’s new home for culture and lifestyle. Real human insight and human stories — from our featured writers to you. While visiting the United Kingdom this summer, my family and I stopped for lunch at Bourton-on-the-Water, a village in England’s famous Cotswolds district. Climbing rosebushes cover quaint cottages built from the area’s signature honey-colored stone and flourish in lush gardens. The River Windrush flows through Bourton’s cobbled streets, giving the village its name. Green-headed mallard ducks and snowy swans float peacefully on the river, which is spanned by many small stone bridges. The picturesque scene has given Bourton its reputation as the “Venice of the Cotswolds.</p>
+                <p class="source-credit">— Daily Wire</p>
+            </div>
+            <div class="story-minor">
+                <h4>Mamdani embarrassingly misspells name of NYPD detective shot in back — after axing plans to hire nearly 600 more cops</h4>
+                <p>New York City Mayor Zohran Mamdani embarrassingly botched the spelling of the veteran NYPD officer who was shot in the back this weekend — despite announcing he had just visited the father-of-three in the hospital. Hizzoner misspelled Detective Robert Karroll’s last name three times in a social media post, wrongly spelling the veteran officer’s name as “Carroll.” “Early this morning in Crown Heights, Detective Robert Carroll was shot in the line of duty. I visited Detective Carroll at the hospital today, and I’m grateful his bulletproof vest protected him from more serious injury. I’m keeping him and his loved ones in my thoughts as he recovers,” Mamdani posted on X Sunday afternoon.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>John Roberts Again Undermines SCOTUS Legitimacy With Irreconcilable Slaughter And Cook Opinions</h4>
+                <p>In one ruling, SCOTUS affirmed the president’s power to fire independent agency officials. On the same day, it invented a fourth branch of government to protect the Fed. On Monday, the Roberts Court struck a massive blow against the administrative state when, in a majority opinion drafted by the chief justice, the court affirmed in Trump v. Slaughter that “the President may remove his subordinates” within so-called independent agencies “at will.” It should have been a given that in agencies subject to executive control and exercising executive authority by way of executive-appointed principals, the executive would be free not only to hire but to fire such principals — that “independent agencies are not ‘independent’ in the sense that they are free of the President,” as the court declared. But for more than 90 years, precedent in Humphrey’s Executor shielded the likes of the plaintiff, Rebecca Kelly Slaughter, a Democrat-appointed Federal Trade Commissioner, and other leaders in the alphabet soup of multimember agencies from accountability.</p>
+                <p class="source-credit">— The Federalist</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/07/931/523/ukrainian-president-zelenskyy-july-2026-1.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Zelenskyy pressures US and Europe for more 'air defense' assistance amid ongoing war with Russia</h3>
+                <p class="lead-summary"><strong class="drop-cap">F</strong>ormer U.S. Ambassador to NATO Kurt Volker discusses the upcoming NATO Summit in Turkey, which President Donald Trump will attend. Volker highlights Trump's focus on increased defense spending from allies and the challenges of promoting unity within the alliance, especially following the Iran operation. He emphasizes NATO's historical role in deterring aggression and its support for the U.S. after 9/11. Ukrainian President Volodymyr Zelenskyy is pressuring the U.S. and Europe to provide more missiles to help Ukraine defend against Russian attacks. "Last night, Kyiv came under a massive Russian attack. Russia launched 68 missiles and 351 attack drones," Zelenskyy noted in part of a Monday post on X. President Donald Trump is slated to attend the North Atlantic Treaty Organization (NATO) summit in Ankara, Turkey, this week. Zelenskyy is calling for the U.S. and European allies to emerge from the meeting "with strong decisions in support of" Ukraine's "air defense.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Deadly Russian strikes hit Ukraine’s capital ahead of key NATO meeting</h4>
+                <p>The overnight attacks on Kyiv killed at least 11 people as Russia stepped up a new offensive.  Ukraine's president said NATO must do more to help his country intercept incoming missiles.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Families of children killed in strike on Iranian school join leader’s funeral</h4>
+                <p>In Iran, the school deaths have become a symbol for U.S.-Israeli brutality and an unjust war. The Washington Post is reporting from the country under restricted conditions.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Australian mother healing with 'beautiful messages' after losing arm to shark attack</h4>
+                <p>Leah Stewart, an Australian mother and teacher who lost an arm after a shark attack at Sydney’s Coogee Beach, has been reading messages from supporters around the world during sleepless nights as she continues her long recovery, her family said. "We’ve been sharing some of the beautiful messages we’ve received with Leah and she’s loved them, finding inspiration from the care and love you’ve all shared," her brother, Joshua Stewart, wrote in a GoFundMe update on Sunday.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F07%2Fnewspress-collage-k990h7i2o-1783288411713.jpg?quality%3D90%26strip%3Dall%261783274047" alt="Lead Story Image" class="news-photo">
+                <h3>How the USMNT matches up against Belgium for World Cup Round of 16 clash</h3>
+                <p class="lead-summary"><strong class="drop-cap">S</strong>EATTLE — The incredible decision by FIFA to reinstate Folarin Balogun on Sunday almost overshadowed that there is a match to be played Monday, in which 21 players aside from the U.S. striker will be on the field at all times — well, barring another red card. That match qualifies as the most important the U.S. national team has played since at least the 2002 quarterfinal loss to Germany. Not only is it a chance to get back to that stage for the first time since, but it’s happening on home soil, on prime-time television, against an opponent that — while certainly elite — seems to qualify as beatable. The ratings will almost assuredly set records. And if the U.S. can win, it will go a long way toward changing what the very sport of soccer means here in America. With the exception of Turkey — a game in which Mauricio Pochettino’s lineup was rotated beyond recognition — this is the first opponent the U.S. has faced that won’t sit back and absorb pressure. That changes the contours of the match significantly. Pochettino will presumably want his team to play the same way, but whether it can execute that style against Belgium differs entirely from doing so against Bosnia-Herzegovina. Will he dare commit as many men forward knowing Belgium’s speed in attack? And can the Americans maintain possession as they have against a team that’s held on to the ball slightly more than them throughout the tournament, at 57.6 percent of total possession compared to the 57.1 percent for the U.S., per FotMob?</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Heel Turn: Pro wrestling fans hit with cold dose of reality about top stars and more</h4>
+                <p>WWE star Matt Cardona names a few people who pro wrestling fans should look out for on the indies in an interview with Fox News Digital. Pro wrestling fans were reminded last week about how close their favorite superstars are to the end than the beginning. It first happened on "Monday Night Raw." Seth Rollins came out in the last segment to challenge Roman Reigns for the World Heavyweight Championship at SummerSlam. The prospect of Reigns and Rollins going head-to-head again may have seemed a bit tiresome on the surface, but Rollins explained to Reigns that it could be one of the last times, if not the last time, they ever do battle in the ring again.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Folarin Balogun suspension drama not over yet as Belgium gets last-minute appeal with ‘red line’ crossed</h4>
+                <p>Belgian soccer officials on Monday were granted the right to appeal the ruling that resulted in USMNT’s ace Folarin Balogun’s ban being overturned — before UEFA blasted FIFA, saying the organization had “crossed a red line.” Bosses of the Belgian federation wrote to FIFA chiefs, saying they were “astonished” by the dramatic decision, and the right to appeal has now been given the green light, anonymous sources told the Athletic. It now means a member of the FIFA appeals committee – who is not part of UEFA or CONCACAF – will now hear Belgium’s case. Belgium and US Soccer bosses were ordered to make submissions by 8 a.m. EST Monday ahead of the appeal being heard.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>England player injures wrist hopping over ad board during team's World Cup victory celebration vs Mexico</h4>
+                <p>Will Cain hosts a special America 250 broadcast from Philadelphia, featuring Fourth of July celebrations, World Cup mania and discussions on defining American values. Fox News' Bryan Llenas reports the latest. England was jubilant after taking down Mexico in their Round of 16 World Cup match on Sunday night but a small slip-up amid a celebration after the 3-2 win may have cost them a player.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/06/931/523/Prince-Harry-King-Charles-Queen-Camilla.jpeg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>King Charles hopes to reunite with Prince Harry, but Queen Camilla is drawing one firm line: experts</h3>
+                <p class="lead-summary"><strong class="drop-cap">D</strong>an Wakeford, founder of Celebrity Intelligence, discusses Prince Harry's expected UK return, his relationship with King Charles, and why a meeting with Prince William remains unlikely. Queen Camilla is said to support King Charles III's hopes of repairing his fractured relationship with Prince Harry, but she has no intention of getting personally involved. The claim was made by several royal experts who spoke to Fox News Digital. Harry is expected to travel to the U.K. on July 7 for events marking the one-year countdown to the Invictus Games Birmingham 2027, a milestone closely tied to his signature charitable initiative. The BBC reported that Meghan Markle and the couple's two children, Prince Archie and Princess Lilibet, will not accompany him to London after it was confirmed the family would not receive taxpayer-funded police protection. Prince Harry and his family are expected to visit the U.K. from July 7–11 for events marking the one-year countdown to the Invictus Games Birmingham 2027, fueling speculation about a possible father-son reunion.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Country singer Nate Smith drops 70 pounds, sets new weight loss goal after years of breathlessness on stage</h4>
+                <p>The country music star admitted he used to feel out of breath performing simple tasks, but losing more than 70 pounds has given him his life back. While attending the Sports Illustrated and Tight End University’s Tight Ends & Friends Concert at The Pinnacle in Nashville last month, the “Bulletproof” singer told People magazine he has a new goal in mind. “I think I want to get under 200 lbs.,” Smith said. “So I was like 275 lbs., somewhere in that world. But I want to get down to like 185 lbs. again.” When asked what motivates the “Whiskey on You” singer to pursue a healthier lifestyle, Smith said he wanted to be able to perform at his best for his fans.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Country singer drops 70 pounds, sets new weight loss goal after years of breathlessness on stage</h4>
+                <p>Country singer Nate Smith can't wait to visit his grandpa for Christmas, and give him his present. The country music star admitted he used to feel out of breath performing simple tasks, but losing more than 70 pounds has given him his life back. While attending the Sports Illustrated and Tight End University's Tight Ends & Friends Concert at The Pinnacle in Nashville last month, the "Bulletproof" singer told People magazine he has a new goal in mind.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Prince William’s lineage suprisingly linked to American patriots who battled British, book claims</h4>
+                <p>The future king of Britain descends from American patriots who fought against the crown he is destined to inherit, according to a new book tracing Prince William’s family tree. In “American Crown,” Stephanie Green traces the Prince of Wales’ extraordinary American lineage to Revolutionary War patriot Nathan Hale and other colonial ancestors. “The more I read about the family, the more interesting it was,” Green told Fox News Digital. “All the characters in the family tree are so fascinating, and it’s an American success story. The fact that he has this American bloodline — I don’t even know if he’s aware of it.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/07/931/523/starship-delivery-robot-1.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Starship delivery robots leave campuses for cities</h3>
+                <p class="lead-summary"><strong class="drop-cap">V</strong>ideo shows an autonomous food delivery robot navigating downtown Dallas as freezing rain and sleet coat sidewalks, continuing scheduled meal drop-offs despite hazardous winter weather conditions across the area. Those little white robots that once rolled across college sidewalks with lattes, fries and late-night snacks are getting a new assignment. Starship Technologies recently announced that it will wind down its U.S. university campus operations and redeploy more than 1,200 robots toward grocery chains and hot food delivery in cities across the United States and Europe. If you have ever watched one of these robots patiently wait at a crosswalk like a polite cooler on wheels, you know why students got attached. They became part campus convenience, part mascot. Now, the company is moving from a controlled campus setting into a much tougher public test. That raises the bigger question: will these cute campus robots be just as welcome when they start sharing crowded city sidewalks with you? Starship is winding down U.S. campus robot operations as it expands grocery delivery in the U.S. and Europe. (Starship) Starship says the decision comes down to focus. The company says its grocery delivery operations are on a 10x growth trajectory over the next two years, driven by demand from major retailers in the United States and Europe. In Finland, Starship says its robots already complete roughly one in five grocery deliveries. That gives the company a real-world model it wants to repeat elsewhere. To support that expansion, more than 1,200 robots from U.S. campus fleets will be moved into grocery delivery. For Starship, that is a major pivot. Campuses helped the company build its brand in the U.S. They also gave the robots a place to learn. Starship made a big U.S. splash at George Mason University in 2019, when the school became the first U.S. university to offer autonomous robot deliveries from Starship. From there, the robots spread to dozens of campuses. That made sense. College students are often hungry at odd hours. Many live without a full kitchen. They also tend to be open to new tech, especially when it brings food to the dorm without small talk.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Hi Mom text scam: How to spot fake emergency texts</h4>
+                <p>A scam text showed up today that would make many parents stop cold. The message said: "Hi mom, text me here on my work phone. Dropped my actual phone in the sink earlier and it's completely unresponsive now." The text came from an unknown number. Then it asked me to text a different unknown number. That detail is important. The scammer wants to move you into a new conversation before you stop and verify who is really on the other end.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
