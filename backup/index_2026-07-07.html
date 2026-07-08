@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>TUESDAY, JULY 07, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://media.townhall.com/cdn/hodl/2022/33/ef60eebb-69eb-42f6-9747-2a63f7b4aa55.jpg" alt="Lead Story Image" class="news-photo">
+                <h3>Watch Scott Jennings Nuke the Dems' Narrative on Graham Platner in Less Than Two Minutes on CNN</h3>
+                <p class="lead-summary"><strong class="drop-cap">I</strong>s that really what some Democrats are saying now that Graham Platner’s Maine Senate bid has already fallen apart? They didn’t vet him—are we hitting Hunter Biden’s crack pipe? Scott Jennings made mincemeat of that narrative in less than two minutes: Scott Jennings just blew up the Democrats’ favorite excuse.They’re now claiming Graham Platner wasn’t properly vetted, but Jennings wasn’t buying it for a second.He reminded the CNN panel that prominent Democrats like Ro Khanna, Bernie Sanders, Elizabeth Warren, and Tim Walz… pic.twitter.com/oMQ6AxjDwj JENNINGS: “The only thing I disagree with is when she said that he hadn’t been vetted.” “All of the things that have been stated, it was all out in the public and people like Ro Khanna, Bernie Sanders, Elizabeth Warren, Tim Walz, the Bulwark, Pod Save America, all these people came together to overlook it all, to explain it all, to rationalize it all.” “He was vetted. People knew all these things and a whole bunch of Democrats in Maine showed up and voted for him anyway. And a bunch of donors from around the country sent him money anyway.” “You already signed off on Nazi tattoo, a self-described communist, somebody who’s had rape fantasies, somebody who has been on a social media platform known as a playground for predators.” “And the difference between this accuser and the previous one is simply this, she’s a liberal. It’s okay, I guess, for Democrats that their candidate’s assault conservatives.” “But he broke into someone’s house. And apparently, according to her, raped her. And because her politics are correct, they can now believe it.” “All of this whole thing is disgusting. But to say that they hadn’t vetted him, or that they didn’t know about all this is totally false.” “They knew it and they signed up for it, and I don’t know why they’re backing away from this scumbag today when they had already signed off on all that other crazy behavior.” Democrats have until July 13 to settle this issue in Maine and remove Platner from the ballot. The clock is ticking. Copyright © Townhall.com/Salem Media.
+                            All Rights Reserved.</p>
+                <p class="source-credit">— Townhall</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Graham Platner has six days to decide whether to drop out. Here’s how that would work.</h4>
+                <p>The Maine Democrat has faced an escalating string of scandals as he competes for a critical Senate seat that could determine control of the chamber.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>The Wine Moms Are Smoking Pot Now</h4>
+                <p>There’s a new TikTok trend making headlines, and it’s all about moms smoking weed to survive taking care of their children. They call themselves “garden moms.” Parents are calling pot a coping mechanism, describing their drug habits with zero shame. As the barriers to accessing marijuana crumble nationwide, with multiple states legalizing the drug both for medical and recreational use, users are bringing their daily use into the mainstream. The Atlantic’s Sarah Levy recently reported that she found about 76,000 videos under the #gardenmom hashtag. She interviewed an influencer named Taylor Mitchem, who has 120,000 followers and started smoking pot daily when her son was two and a half. Her reasoning was simple: “If you can have something that can take the edge off a little bit, why not?</p>
+                <p class="source-credit">— Daily Wire</p>
+            </div>
+            <div class="story-minor">
+                <h4>Divorced, destitute and left for dead — the dark side of tradwife life after 35</h4>
+                <p>With her husband hailed king of the castle — almost rivaling the Holy Trinity between God the Father, the Son and Holy Spirit — Templeton, who married at age 26, eagerly abandoned her dreams of pursuing a career in art to, instead, satisfy her man’s every command. From growing the family’s produce in her private garden to gussying up in sexy outfits and cosmetics before he came home from work, the brunette’s routine became that of an extreme 1950s homemaker: obeying, baking and baby-making. Unlike housewives, women who manage their households and raise kids as equals to their working spouses, tradwives often become subservient subordinates whose sole purpose is to please their partner.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/07/931/523/cuba-city.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Cuba plunges into third major blackout this year as power crisis worsens</h3>
+                <p class="lead-summary"><strong class="drop-cap">F</strong>ormer Treasury sanctions official Max Meizlish says the Trump administration is expanding "unprecedented" pressure beyond Cuba itself by threatening foreign banks and companies tied to the island’s military-linked economic empire. An island-wide blackout plunged Cuba into darkness Monday as the country’s deepening energy crisis continues to strain its fragile power system. The outage affected roughly 10 million people before limited electricity service was restored in some areas. "A total disconnection of the National Electric Power System is occurring," Cuba’s state-run Electric Union said Monday morning. "The causes are being investigated." Cuba has faced increasingly frequent power outages in recent years as the country struggles with chronic fuel shortages and deteriorating electrical grids. The crisis worsened when President Donald Trump imposed additional sanctions in January and threatened tariffs on countries that provide oil to the island. People walk on the street during a blackout in Havana, Cuba, Monday, July 6, 2026.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>For Khamenei’s funeral, a highly scripted show of public mourning and fury</h4>
+                <p>A regime that has survived months of attack by the United States and Israel is projecting a show of strength with enormous crowds and the reappearance of military leaders.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Tanker set on fire after being struck in Strait of Hormuz, British military says</h4>
+                <p>The ship was struck with a projectile near Oman, a British maritime monitor said. No casualties were reported and Iran and the U.S. did not immediately comment.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Israel fortifies border with Jordan as Iran seeks new terror path</h4>
+                <p>Israeli Prime Minister Benjamin Netanyahu warned that the current diplomatic standstill has left the region under a highly fragile ceasefire, asserting that a paused peace deal must not give a hostile regime room to advance its nuclear ambitions. JORDAN VALLEY: After Hamas’ terrorist invasion of Israel’s southern border on Oct. 7, 2023, the Jewish state created the 96th army division to thwart new security threats along its border with Jordan.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F07%2Fnewspress-collage-g4bhavoyt-1783404415504.jpg?quality%3D90%26strip%3Dall%261783390287" alt="Lead Story Image" class="news-photo">
+                <h3>From Jeff Bezos to Eddie Vedder: USA vs. Belgium draws stars to Seattle for World Cup</h3>
+                <p class="lead-summary"><strong class="drop-cap">S</strong>EATTLE — The final whistle brought heartbreak for the United States men’s national team on the pitch, but the sellout crowd of supporters in the stands and the celebrities among them still offered a reminder of just how massive the 2026 FIFA World Cup has become in North America. Long before Belgium ended the Americans’ dream with a 4-1 victory in Monday night’s Round of 16 showdown, Seattle’s celebrity row was a mix of soccer royalty, sports stars, Hollywood names and hometown icons. Former USWNT World Cup champions Alex Morgan and Kelley O’Hara were among the first familiar faces spotted. Next was former U.S. captain Clint Dempsey, whose memories of the Americans’ dramatic World Cup battles with Belgium made this rematch all the more emotional. FOX’s star-studded studio crew was impossible to miss as Thierry Henry and Zlatan Ibrahimovic soaked in the atmosphere before returning to television duties. Nearby sat another World Cup-winning goalkeeper, Hugo Lloris, watching the tournament he once conquered from the stands instead of between the posts. No one, however, drew louder cheers than Seattle’s own Eddie Vedder. The Pearl Jam frontman embraced the moment by chugging a beer during a break in play before balancing the empty can on his head, sending the home crowd into laughter despite the mounting tension on the field. Seahawks head coach Mike Macdonald watched alongside star defensive lineman Leonard Williams and Bears wide receiver Rome Odunze, the former Washington Huskies standout receiving one of the night’s biggest ovations.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>CM Punk wins Undisputed WWE Championship in WWE return</h4>
+                <p>WWE star Sami Zayn talks to Fox News Digital about Kevin Owens getting back into the ring. It was supposed to be Sami Zayn defending the Undisputed WWE Championship against Cody Rhodes on "Monday Night Raw." But an attack from Gunther to start the show forced Rhodes off the card as he was left bloodied. WWE officials ruled Rhodes out. Zayn thought he was in a clear but Raw general manager Adam Pearce made clear to him that he will still be defending the title.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Belgium exposed the defensive cracks USMNT showed all World Cup long</h4>
+                <p>SEATTLE — The United States men’s national team finally showed the cracks along the fault lines that had been there from the beginning. Their vulnerable defense that bent through friendlies, shined and survived in the group stage, and escaped against Bosnia and Herzegovina, finally fractured Monday night. “Today wasn’t a good day,” midfielder Tyler Adams said. “There was a lot of things we could have done better. I think when you concede goals that easily against a team of that quality, you’re going to lose. This was an opportunity to advance and try and do something special and we fell short.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>WWE's Maxxine Dupri helps Austin Theory and Bron Breakker win World Tag Team Championship, seals win with kiss</h4>
+                <p>Austin Theory touts his Vision stablemate Logan Paul in an interview with Fox News Digital ahead of Saturday Night's Main Event. Paul Heyman put The Vision on notice ahead of their World Tag Team Championship match against Montez Ford and Angelo Dawkins on "Monday Night Raw".</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/04/931/523/Prince-Harry-King-Charles-Together.jpeg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Palace aides 'don't trust' Prince Harry alone with King Charles, experts say</h3>
+                <p class="lead-summary"><strong class="drop-cap">K</strong>atie Nicholl, royal correspondent for Vanity Fair and co-host of "The Royals Uncensored," discusses Harry's UK security battle, the king's offer of a royal residence and growing palace frustration. If Prince Harry gets face time with King Charles during his latest drama-filled U.K. trip, don't expect a warm family reunion — palace aides are reportedly expected to tightly script every second to shield the monarch and the crown. "Every interaction will need to be managed, even to the minute, by courtiers and those whose job it is to protect the monarchy," British royal expert Hilary Fordwich told Fox News Digital. "Merely polite meetings are more plausible." "They are far more concerned with the overall institution and continuity than the feelings of any one family member," Fordwich said. "This has been the case for generations. Harry should know better." KING CHARLES HOPES TO REUNITE WITH PRINCE HARRY, BUT QUEEN CAMILLA IS DRAWING ONE FIRM LINE: EXPERTS From left: Sir Timothy Laurence, Prince Harry, Duke of Sussex and King Charles III walk behind the coffin during the procession for the lying-in State of Queen Elizabeth II on Sept. 14, 2022, in London. The Duke of Sussex and the monarch last reunited in September 2025.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Trump wouldn’t let rain keep Long Island opera singer from celebrating America at 250 concert</h4>
+                <p>President Trump moved hell and high water to ensure Long Islander opera star Christopher Macchio got his moment to shine in storm-battered DC for the nation’s 250th birthday, the touted tenor told The Post. Macchio, known as “America’s Tenor,” was set to perform on the National Mall on July 4 after nearly two hours of torrential rain and wind had already nixed planned performances from Lynyrd Skynyrd, Gene Simmons and CeeLo Green. “The White House basically reached out to me directly, and they said, ‘Christopher, we’re on our way,’ ” Macchio said, explaining the administration made it clear they were getting him on that stage.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Kate Hudson stuns in black bikini during Greek getaway with fiancé and kids</h4>
+                <p>Kate Hudson told Fox News Digital that she is actively trying not to raise fame-obsessed children. The "Running Point" star shared a carousel of photos from a Greek vacation with fiancé Danny Fujikawa and her three children, captioning the post, "My happy place."</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>See inside Taylor Swift’s $157M portfolio of houses, mansions and lofts across the US</h4>
+                <p>Taylor Swift is a modern marvel, having over the years risen to a Beatles level of fame across many generations and an eager international audience of fans. Of course, that’s her latest bit of success. She has collected quite a portfolio of real estate over the years thanks to her illustrious career — a portfolio that’s worth at least $157 million. But now that she’s married, where will she and Travis Kelce call home? They sure have a fair spread to choose from. Scroll through to see all of her other residences spread across the US. Her first NYC real estate purchase was made in 2014, buying two adjacent penthouses in a Tribeca building for $19.95 million.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/01/931/523/man-working-on-laptop-on-airplane.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Fake Booking.com travel credit scam targets travelers</h3>
+                <p class="lead-summary"><strong class="drop-cap">H</strong>alimah Delaine Prado, Google General Counsel, reveals the rise of AI-powered phishing scams originating from China's 'outsider enterprise.' She explains how these criminals use artificial intelligence to create highly convincing fake websites, impersonating trusted brands like T-Mobile to defraud hundreds of thousands of Americans, causing millions in losses. Prado highlights Google's strategy to combat these evolving threats. Summer travel already costs enough. So, an email promising a $500 Booking.com travel credit can feel like a lucky break. That is exactly why this message we received deserves a closer look. It uses a familiar travel brand, a big reward and a deadline to push you toward a blue "Redeem Now" button. The email also uses my real name in three places, which makes the message feel more personal and convincing. However, the details in this email raise several red flags. The sender address does not even appear to relate to Booking.com. The subject line feels vague. The reward sounds broad. The deadline adds pressure. Scammers know people are booking flights, hotels and last-minute trips right now. A fake travel credit can catch someone at the perfect moment. A fake Booking.com email promises a $500 travel credit while using pressure tactics and suspicious sender details to target travelers. (iStock) The subject line says "(1) Pending." That wording is a red flag. It sounds urgent, but it does not clearly explain what is pending. Scammers often use vague subject lines because they spark curiosity. You may open the message just to find out what needs your attention. Also, the number "(1)" makes the email feel like an account alert. It hints that one item needs action. That can push you to click faster. A real travel reward email should explain the offer clearly. It should not rely on mystery to get your attention. The biggest giveaway is the sender address. The display name uses a Booking. com-style label. However, the actual email address does not appear to relate to Booking.com at all. That is a major warning sign.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Starship delivery robots leave campuses for cities</h4>
+                <p>Video shows an autonomous food delivery robot navigating downtown Dallas as freezing rain and sleet coat sidewalks, continuing scheduled meal drop-offs despite hazardous winter weather conditions across the area. Those little white robots that once rolled across college sidewalks with lattes, fries and late-night snacks are getting a new assignment. Starship Technologies recently announced that it will wind down its U.S. university campus operations and redeploy more than 1,200 robots toward grocery chains and hot food delivery in cities across the United States and Europe.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
