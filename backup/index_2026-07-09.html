@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>THURSDAY, JULY 09, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://thefederalist.com/wp-content/uploads/2026/07/Screenshot-2026-07-09-at-1.23.59-AM-1200x675.png" alt="Lead Story Image" class="news-photo">
+                <h3>Grassley: Trump’s DOJ Is The Most Transparent, Shining A Light On Dark Biden-Era Secrets</h3>
+                <p class="lead-summary"><strong class="drop-cap">‘</strong>The fact that he’s been able to bring some transparency to government is a tribute to his independence,’ the senator said. Wednesday’s release of the latest bombshell documents exposing the corruption and hypocrisy that defined Joe Biden’s weaponized Department of Justice is another good sign that the Trump DOJ remains committed to transparency and accountability. The senator who made the communications public said he couldn’t have done so without the continued cooperation of Acting Attorney General Todd Blanche and his staff. As The Federalist’s Brianna Lyman reported on Wednesday, Senate Judiciary Committee Chairman Chuck Grassley released another round of records suggesting the Biden DOJ mishandled classified documents as Special Counsel Jack Smith — the left’s unlawfully appointed errand boy — pushed his case alleging that then-citizen Donald Trump mishandled classified information. Messages from DOJ staff and Smith’s team point to careless handling of top secret documents, disregard for critical procedures, and a flippancy from law enforcement officials itching to knock Trump out of the political arena. In a letter to Blanche, Grassley notes concerns that an individual was given access to classified materials without confirming the required “need to know” condition. The Iowa Republican wrote that there was “at least one instance” in which the potential movement of classified materials retrieved by the special counsel’s office was unaccounted for, and a “violation and incident” occurred when a sensitive compartmented information facility (SCIF) “was left open at least overnight and potentially longer.” 2day I released msgs showing Biden DOJ personnel incl ppl assigned to Jack Smith's Special Counsel Office potentially mishandled CLASSIFIED MATERIAL while Smith ws prosecuting Pres Trump 4that very offenseMsgs indicate HYPOCRITICAL+CARELESS BEHAVIOR &merit further investigation In a series of messages between Carli Rodriguez-Feo, who worked in the Justice Department’s Litigation Security Group, and Smith team member Julie Edelstein, the two chat about a man identified as “Dan” and how he “just moved forward with clearing someone without the need to know confirmation..” “‘[W]ere there any concerns’ … don’t care if there were!” Rodriguez-Feo wrote in a message dated Oct. 16, 2023. Edelstein “became involved in the Trump-related documents case even before Smith was appointed special counsel,” according to ABC News’ 2023 profile piece on Smith’s special counsel team. In 2005-06, while in law school, Edelstein “interned for the House Homeland Security Committee, working with the top Democrat on the panel, Rep. Bennie Thompson of Mississippi,” according to the news outlet.</p>
+                <p class="source-credit">— The Federalist</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Trump to ask Supreme Court to rehear birthright citizenship case after 'insane decision'</h4>
+                <p>Homeland Security Secretary Markwayne Mullin voices his strong disagreement with the Supreme Court's ruling to uphold birthright citizenship. Mullin contends that the decision, which President Trump opposed, is 'dead wrong,' highlighting the national security risks posed by 'birth tourism,' primarily from China. He explains how foreign nationals exploit the system for citizenship, undermining U.S. security.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Bonnie Tyler rocked out to ‘Total Eclipse of the Heart’ in final performance before tragic death</h4>
+                <p>Bonnie Tyler delivered an epic final performance of “Total Eclipse of the Heart” during her last show before her tragic death. The Grammy nominee belted out her hit song at London’s Shepherd’s Bush Empire on March 19. She was all smiles, singing the ’80s power ballad, holding the microphone out to the audience for their participation. Tyler, who appeared happy and healthy at the time, performed in a sparkly top, matching pants and a black blazer. While the songwriter was expected to take the stage two days later in Cardiff, the show was postponed — and Tyler was hospitalized in Faro, Portugal, at the end of April over a serious tear in her bowel.</p>
+                <p class="source-credit">— Https://pagesix</p>
+            </div>
+            <div class="story-minor">
+                <h4>How to decide on World Cup rooting options for the disgruntled U.S. soccer fan</h4>
+                <p>I made my lone trip to the Freedom Tower a little more than nine years ago, speeding up to the 102nd floor to attend a press conference where the U.S. announced its bid to co-host the 2026 World Cup. If the 1994 World Cup essentially introduced soccer to mainstream America, the 2026 event has served as a celebration of a sport that may now be more popular than America’s pastime. If you weren’t already hooked, the sport has made the best possible pitch in the past month.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://static.foxnews.com/foxnews.com/content/uploads/2026/07/ukraine-targets-vessels.gif" alt="Lead Story Image" class="news-photo">
+                <h3>Drone offensive hits Russian oil tankers and refineries at 'industrial scale' as Moscow bans diesel exports</h3>
+                <p class="lead-summary"><strong class="drop-cap">U</strong>kraine launched one of its broadest recent drone offensives against Russia’s maritime and energy networks this week, claiming strikes on 21 vessels in three days as attacks on major refineries deep inside Russia intensified pressure on Moscow’s fuel supplies. On Wednesday, President Volodymyr Zelenskyy met President Donald Trump at the NATO summit in Ankara, where Trump said the United States would allow Ukraine to manufacture Patriot air-defense interceptors and the two leaders discussed a potential drone agreement. Drone footage shows fire and smoke rising from what the Rostov region governor said was an empty oil tanker, following Ukraine's overnight drone attacks on Russia, confirmed by the Ukrainian military, at a place given as the Sea of Azov, in this screengrab from a handout video released on July 8, 2026. (Commander of Unmanned Aerial Systems Force/Handout via REUTERS ) Zelenskyy made air defense his top priority during the bilateral meeting and said the two governments had also begun working on a separate drone agreement. "Air defense is the priority," Zelenskyy said. He described the emerging drone deal as "a very good beginning" and said he hoped to discuss additional details with Trump.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>U.S. intensifies strikes on Iran’s coast along Strait of Hormuz</h4>
+                <p>After President Donald Trump declared the collapse of a preliminary peace agreement on Wednesday, the U.S. and Iran traded renewed airstrikes.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>U.S., Iran trade dozens more strikes in dangerous cycle</h4>
+                <p>For a second straight day, the U.S. military attacked Iranian targets overnight and Iran struck back, targeting U.S. bases in Bahrain and Kuwait.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Critics say Turkey's verbal attacks on Israel have crossed into antisemitism</h4>
+                <p>Israeli Prime Minister Benjamin Netanyahu details Iran's tyrannical regime, citing 'Death to America' chants at a funeral and the murder of 40,000 citizens. As Iran, Russia’s war with Ukraine and NATO’s defense spending dominate the organization's summit in Ankara, one issue that has escaped the media glare is the increasingly antisemitic rhetoric coming from Turkish leaders.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F07%2Fnewspress-collage-tdfj6qn4k-1783576518716.jpg?quality%3D90%26strip%3Dall%261783562129" alt="Lead Story Image" class="news-photo">
+                <h3>Don Mattingly reveals thoughts on his Phillies future after engineering turnaround</h3>
+                <p class="lead-summary"><strong class="drop-cap">C</strong>INCINNATI — Don Mattingly expressed interest in returning as the Philadelphia Phillies’ manager next season if he was approached by the front office. “Oh, I would do it,” Mattingly said during an interview with ESPN before an 11-5 loss to the Cincinnati Reds on Wednesday night. “I committed myself to two years with the Phillies when I came over. So whatever (president of baseball operations) Dave (Dombrowski) wants to do in that regard. Mattingly joined the Phillies in January as their bench coach after three seasons in the same role with Toronto. He was elevated to interim manager on April 28 after Rob Thomson was fired. Philadelphia was 9-19 this season under Thomson, but has gone 43-22 under Mattingly — the second-best mark in the majors since he took over. The Phillies were 10 ¹/₂  games behind Atlanta in the NL East on May 22, but are just three back of the Braves as well as tied with Miami for the NL’s second wild-card spot. Preston Mattingly — one of Don Mattingly’s four sons — is the Phillies’ general manager. It is believed to be the first father-son manager-GM duo in baseball history.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Girl who was allegedly sexually harassed by trans athlete in SCOTUS case speaks out after historic ruling</h4>
+                <p>Former West Virginia high school girls' athlete Adaleia Cross broke her silence on allegedly being sexually harassed by the trans athlete who recently lost the SCOTUS case on women's sports. For Adaleia Cross, the Supreme Court’s ruling in the West Virginia women’s sports case was not just a legal victory.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Roki Sasaki rebounds, Mookie Betts breaks late tie as Dodgers win another series</h4>
+                <p>The first-place Dodgers might not have much meaningful baseball ahead of them the rest of this regular season. Still, losing a series to the last-place Rockies is an embarrassment that –– regardless of their place in the standings or odds to win the division –– is best to be avoided. On Wednesday, that’s exactly what the club did, winning a 4-3 rubber match at Dodger Stadium thanks to a go-ahead eighth-inning RBI single from Mookie Betts that came at the end of an impressive nine-pitch at-bat. The Dodgers hadn’t had many quality at-bats for much of Wednesday, not since scoring three runs in the first inning.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Anthony Volpe calls retracted position change report 'BS,' vows to do anything to help Yankees win</h4>
+                <p>Philadelphia Phillies pitcher Zack Wheeler says a "BS rule" regarding pitching schedules is keeping him from being named an All-Star this year. (This video contains AI-assisted content.) New York Yankees embattled shortstop Anthony Volpe usually rolls with the punches thrown by the rabid fan base over his inconsistency at the plate, but he offered a rare public response on Wednesday.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F07%2Fnewspress-collage-fn0fruu2h-1783548829885.jpg?quality%3D90%26strip%3Dall%261783534448" alt="Lead Story Image" class="news-photo">
+                <h3>Actor behind one of Hollywood’s weirdest origin stories turns sneaky side hustle into novel</h3>
+                <p class="lead-summary"><strong class="drop-cap">K</strong>irk Fox, a comedian and actor on “Parks and Recreation,” “Jury Duty” and “Reservation Dogs,” as well as a novelist with “Palmdale,” released in June, credits his Hollywood success to an unlikely source. “Tennis was the agent for my first 10 movies,” Fox proudly told the California Post in an interview for the “California Roots” series. When pried for his best Hollywood tennis story, he replied: “I was teaching tennis to Lawrence Kasdan. And when he was doing ‘Wyatt Earp,’ he asked me if I could ride a horse, and I told him, ‘Like the wind.’ And on that first day, he realized immediately that I couldn’t ride a horse, so he put me on a very small horse so that his tennis pro wouldn’t get hurt.” Fox, who hails from San Diego, where he played tennis at UCSD, also found a very different sort of side hustle from tennis. “Everyone I was teaching tennis to wanted me to look into something, so you can call it whatever you want,” Fox explained. “I think at the end of the day, we’re all private investigators. I don’t know anyone that’s not investigating something.” “It’s about a private investigator who’s teamed up with his daughter that he hasn’t seen in a long time,” Fox said. “And they’re investigating a body that was found in Palmdale, and we traced it back to Bel Air. It’s very noir. It’s a lot of Humphrey Bogart, Mickey Spillane. It’s gritty, it’s dusty.” Fox wrote some of what ended up in “Palmdale” decades ago, and is now writing a sequel set in San Diego.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Prince William 'no longer recognizes' Prince Harry as security battle leaves duke 'close to tears': expert</h4>
+                <p>Katie Nicholl, royal correspondent for Vanity Fair and co-host of "The Royals Uncensored," discusses Harry's UK security battle, the king's offer of a royal residence and growing palace frustration. Prince Harry’s security battle may have left him "close to tears," but the royal family is said to have little sympathy for his emotional ordeal.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>How much are last-minute Tori Amos tickets? Get them with a discount</h4>
+                <p>On July 7, Tori Amos kicked off the North American leg of her ‘In Times Of Dragons Tour’ with special guest Bartees Strange at Palm Beach, FL’s Kravis Center for the Performing Arts. According to Set List FM, the ’90s icon performed 14 songs that evening. Popular tracks that made the cut  include “Winter” and “Crucify” from 1992’s seminal “Little Earthquakes” along with “Pretty Good Year,” “Little Amsterdam” and “Bliss.” She also performed a tune from the recently-released “In Times of Dragons,” her 18th studio album, which shares a name with the outing. “I can not recommend seeing Tori Amos live enough,” Joyzine wrote in a review of one of the nine-time Grammy nominee’s spring concerts in the UK.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Bonnie Tyler, singer of chart-topping hit 'Total Eclipse of the Heart,' dead at 75</h4>
+                <p>Bonnie Tyler, the Grammy-nominated Welsh singer whose soaring 1983 hit "Total Eclipse of the Heart" became one of pop music's most enduring anthems, has died. She was 75. Tyler died unexpectedly at a hospital in Portugal, where she had been receiving treatment for an illness, her family announced Thursday.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/07/931/523/google-pixel-4-announcement-2019.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Google turns old phones into cloud servers</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>hat old phone sitting in your drawer may have more life left in it than you think. You may look at it and see a dead battery, an outdated camera or a screen that no longer feels worth using. Google and researchers at the University of California San Diego see something else: a tiny computer that may still have useful processing power. Their idea is called phone cluster computing. Instead of treating retired smartphones as electronic waste, researchers remove the motherboard and redeploy it as part of a low-carbon computing system. Google says UC San Diego plans to launch a data center built from 2,000 Pixel smartphones in fall 2026. The goal is to provide low-cost cloud computing for students and researchers while reducing the need for newly manufactured server hardware. That means the next chapter for an old phone may not be a junk drawer. It may be a server rack. Researchers plan to launch a 2,000-phone data center at UC San Diego in fall 2026 to support students and research workloads. (Kurt "CyberGuy" Knutsson) Phone cluster computing takes retired smartphones and turns their core hardware into a computing platform. The process starts by stripping each phone down to the motherboard. That board holds the processor, memory and storage. The display, battery, cameras, chassis and other phone-specific parts are removed. That step is important because a full phone does not belong in a data center. Batteries can create safety issues. Screens and cameras waste space. The motherboard is the part that still offers computing value. Once the board is removed, researchers load a general-purpose Linux system onto it. Android already runs on Linux at its core, but Android is built for mobile apps and personal devices. A data center needs something more flexible for cloud workloads. After that, the phone boards can be grouped into clusters. Many small boards then work together like a collection of tiny servers. The AI boom has created a huge appetite for computing power. Data centers need more chips, more electricity and more cooling. At the same time, billions of phones fall out of use around the world.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Apple AI security update proves hackers move fast</h4>
+                <p>Matt Shumer, co-founder and CEO of OthersideAI, details Anthropic's new AI model, Mythos, on 'The Sunday Briefing'. The model's "emergent capabilities" to find software vulnerabilities autonomously raised alarms, prompting Anthropic to restrict public access. Shumer explains the proactive move of granting major companies and the US government early access to Mythos for cyber defense, anticipating future threats to critical infrastructure and national security.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
