@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>FRIDAY, JULY 10, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/07/931/523/aoc-abdul-el-sayed-split.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>AOC-backed candidate ripped for 'bizarre response' to transparency question: 'Pretty basic'</h3>
+                <p class="lead-summary"><strong class="drop-cap">H</strong>aley Stevens unloads on Abdul El-Sayed for not releasing his tax returns: ‘What are you hiding?’ Abdul El-Sayed, a Democratic candidate for U.S. Senate in Michigan, is facing backlash after claiming he’s waiting on outstanding paperwork needed to accurately fill out his tax disclosure forms. El-Sayed's statement appears to be trying to defuse allegations from his opponent, Rep. Haley Stevens, D-Michigan, that he is trying to mask his net worth, hiding the true nature of his wealth until after the Michigan Aug. 4 Democratic primary. "You’ve sought an extension through August 13, I believe, which is after the primary," El-Sayed, who is endorsed by Rep. Alexandria Ocasio-Cortez, D-N.Y, Sen. Bernie Sanders, I-Vt., and other far-left lawmakers, was asked on Wednesday. "Was this to avoid transparency with your voters? Why not release them before the election?" Abdul El-Sayed, candidate for U.S. Senate in Michigan, speaks before U.S. Sen. Bernie Sanders, I-Vt., takes the stage at Mumford High School on May 3, 2026 in Detroit, Michigan. (Sarah Rice/Getty Images) "My wife and her family own property abroad and getting all those tax forms is a thing," he added. As a part of his candidate disclosure report filed in June 2025, El-Sayed has reported a number of holdings. Among them: a salary from Wayne County worth $278,900 and an assortment of other assets bringing his net worth to somewhere between $580,000 and $1.7 million. As a part of that disclosure, his wife reported a rental property in Bangalore, India worth between $100,001 and $250,000. The disclosure went on to say that his wife brought in between $5,001 and $15,000 in "income." Another rental property in Ann Arbor, Michigan that was worth between $250,001 $500,000 brought in between $5,001 and $15,000. To some viewers, El-Sayed’s responses this past week are confusing, given the existence of his 2025 filings. "A bizarre response," Chuck Ross, a Washington Free Beacon investigative reporter, wrote in a post to X. "He filed a Senate financial disclosure in June 2025 that listed his wife’s rental property in India."</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>‘Little House on the Prairie’ returns – a look back at all the scandals</h4>
+                <p>“Little House on the Prairie” is back with a new Netflix show, now streaming. The original ’70s series had the ultimate family-friendly image — but behind the scenes, the cast of the classic show was embroiled in several scandals. Based on the popular book series by Laura Ingalls Wilder (published in the 1930s), the original TV show was a classic of the era, airing on NBC from 1974 to 1983 (and also inspired several TV movies). Set in the 1800s, the story followed the pioneer Ingalls family living their rural frontier life in Walnut Grove, Minnesota. It starred Michael Landon as Charles “Pa” Ingalls, Karen Grassle as Caroline “Ma” Ingalls, Melissa Gilbert as Laura Ingalls, Melissa Sue Anderson as Laura’s sister, Mary, and twins Lindsay and Sydney Greenbush as the third child, Carrie. Shannen Doherty was also in Season 9.</p>
+                <p class="source-credit">— Https://pagesix</p>
+            </div>
+            <div class="story-minor">
+                <h4>The Week: Graham Platner’s Downfall</h4>
+                <p>Plus: The broken Iran deal.</p>
+                <p class="source-credit">— National Review</p>
+            </div>
+            <div class="story-minor">
+                <h4>MIA Mitch McConnell Must Explain His Absence Or Retire</h4>
+                <p>The rules are clear: senators must disclose to the Senate reasons for an extended absence. Has Mitch McConnell done that? Is he even alive? He’s dead. No, he’s alive. He’s brain dead. He’s living in a Barstow Motel 6 under an assumed name with Elvis. The political and social media spheres have been buzzing for nearly a month about Sen. Addison Mitchell McConnell’s state of …  existence. The 84-year-old Kentucky Republican reportedly was admitted to a D.C.-area hospital on June 14 after he suffered “cardiac arrest” at his Capitol Hill townhouse. President Trump said on Wednesday evening that he hasn't spoken to Senator Mitch McConnell (R-KY) after his hospitalization in June. "I have no idea how he's doing," Trump said, as he was returning from the NATO summit in Ankara, Turkey. pic.twitter.</p>
+                <p class="source-credit">— The Federalist</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/07/931/523/leobertazzo_preview.png?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Argentinian flight instructor jumps to death from plane, 22-year-old student forced to land alone</h3>
+                <p class="lead-summary"><strong class="drop-cap">A</strong> flight instructor jumped to his death out of a small aircraft over Argentina, forcing the student pilot he was teaching to land the plane herself. Leandro Andrés Bertazzo, 42, was on board a two-seat Cessna 150G on Saturday when he made the decision to jump out over the province of Córdoba, according to CNN, which cited its Argentinian affiliate TN. "He made this tragic decision on board an aircraft with another person by his side," Eduardo Álvarez, director of the Flying Parrot Córdoba flying school where Bertazzo worked, told TN. "It’s impossible to think about it or understand it, but the human mind is so complex." An undated photo of Leandro Andrés Bertazzo, a 42-year-old pilot who jumped to his death from a plane on Saturday, July 4 in Argentina. (Instagram/Leandro Bertazzo) Rosario, the 22-year-old student, later told authorities that Bertazzo told her, "You know what you have to do, carry on," before taking off his gear, opening the door and leaping out, according to Álvarez. Opening the door of a plane midair is incredibly difficult. Álvarez said it would be akin to trying to open the door of a car traveling 124 miles per hour.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>U.S. intensifies strikes on Iran’s coast along Strait of Hormuz</h4>
+                <p>After President Donald Trump declared the collapse of a preliminary peace agreement on Wednesday, the U.S. and Iran traded renewed airstrikes.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Jailed Catholic woman's hunger strike highlights Iran religious persecution — US demands action</h4>
+                <p>Iranian Christians Hormoz Shariat and Lana Silk discuss the persecution faced by believers in Iran, sharing personal stories of loss, faith and the growth of Christianity in the country. The State Department condemned Iran’s intensified repression of Christians, including a Catholic woman on hunger strike in a prison known as one of the most brutal in the theocratic state.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Health workers fighting Ebola go on strike after months without pay</h4>
+                <p>Doctors and Nurses on the front lines of the Democratic Republic of Congo’s Ebola response have reached a breaking point.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/07/931/523/MLW-Shotzi-071026-1.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Pro wrestling star Shotzi Blackheart calls being MLW women's champion 'the greatest thing ever'</h3>
+                <p class="lead-summary"><strong class="drop-cap">M</strong>ajor League Wrestling star Shotzi Blackheart talks to Fox News Digital about being the women's champ and having influx of challengers. Shotzi Blackheart began her first Major League Wrestling (MLW) Women’s World Championship reign earlier this year when she defeated Shoko Nakajima on "Fusion." It’s her first title of any kind of MLW and she relished the fact that she sits on top of the MLW women’s division after only joining the company officially in March. "Oh my god, it feels so good. Like, look at this beauty. I love it," she said, showing off her championship belt in an interview with Fox News Digital. "I love MLW. I am such a proud champion. Like, I love this company so much. I've never had a company understand Shotzi Blackheart more than MLW. So, to be the champion there is just like the greatest thing ever. Yes, so proud." Now, Shotzi has a target on her back. The challengers are lining up. She will make her latest title defense against Kira, who is a rising star with Consejo Mundial de Lucha Libre (CMLL). Kira joined CMLL in 2023 and became an immediate player, participating in the tournament to crown the CMLL Universal Amazonas champion. She didn’t win that match but has a good opportunity to win the MLW women’s world title against Shotzi on Saturday.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>The Yankees variables in targeting starters at the trade deadline — and who could fit</h4>
+                <p>The Yankees threw a bullpen game on Thursday, which begs the question: Do they need to acquire a starting pitcher by the Aug. 3 trade deadline — and preferably much sooner than that? Don’t miss Greg Joyce’s text messages from The Bronx and beyond — he’s giving Sports+ subscribers the inside buzz on the Yankees. Because by some point around the deadline, Max Fried and Carlos Rodón might be closing in on returns to the big league rotation. And late in August, Clarke Schmidt could begin to join the conversation as well, whether the bigger need is in the rotation or bullpen. But that is still weeks away. And while the Yankees have the benefit of the All-Star break coming up, once they return, they will still need a fifth starter to cover them for a few weeks before they get healthy – and that is assuming the rest of the current rotation remains healthy, which is no guarantee.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>London descends into disorder as Morocco fans flood streets after World Cup elimination by France</h4>
+                <p>More than 890 people were arrested nationwide and 178 police officers were injured after Paris Saint-Germain's Champions League victory sparked two days of unrest, officials said. (Video: Reuters Marketplace - Anadolu Video.) Public unrest began in parts of London late Thursday night, and it appears Morocco’s exit from the 2026 FIFA World Cup at the hands of France is the reason.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Wimbledon picks: Novak Djokovic vs. Jannik Sinner prediction, odds, best bet</h4>
+                <p>For the sixth time in their careers and the second time this year, Jannik Sinner and Novak Djokovic will meet in the semifinal of a Grand Slam. Sinner has won three of the five previous meetings at this juncture of a major, and the Italian is 6-5 overall against Djokovic, but the Serb won the most recent meeting at the Australian Open. That result isn’t having much of an impact on the betting market, as Sinner is a chunky -465 favorite over Djokovic at FanDuel Sportsbook. Neither player has been at their dominant best during the fortnight at Wimbledon. Sinner was taken to five sets right out of the gates by Miomir Kecmanovic, and he ended up on the right side of a couple of tiebreakers against Nuno Borges in Round 2.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/07/931/523/Relationship-Prince-Harry-King-Charles.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>King Charles 'fed up' with Prince Harry drama as reunion with grandchildren hangs in balance: expert</h3>
+                <p class="lead-summary"><strong class="drop-cap">K</strong>atie Nicholl, royal correspondent for Vanity Fair and co-host of "The Royals Uncensored," discusses Harrys UK security battle, the kings offer of a royal residence and growing palace frustration. King Charles III is said to be "fed up" with the drama that continues to follow his estranged son. The claim comes from British broadcaster and photographer Helena Chard following The Mirror's report that the Duke of Sussex is "frantically" trying to secure private security for his wife, Meghan Markle, and their two young children so they can travel to the U.K. Fox News Digital reached out to Archewell, which handles the offices of the Duke and Duchess of Sussex, for comment. King Charles III (left) walks with his son Prince Harry as they arrive at St. George's Chapel inside Windsor Castle on Sept. 19, 2022, ahead of the committal service for Queen Elizabeth II. (David Rose/Pool/AFP via Getty Images) "Of course, grandfather Charles wants to see his Montecito grandchildren," said Chard. "He just does not want the Sussex drama. King Charles is fed up — fed up with the rolling media briefings, the last-minute changes of plan, the security fight being litigated in public and in court.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Noah Kahan has two Citi Field concerts coming up. What do tickets cost?</h4>
+                <p>Folk icon Noah Kahan has two ‘Great Divide Tour’ concerts with special guest Gigi Perez booked at Citi Field. They’re slated to take place on: At the time of publication, the lowest price we could find on seats for either gig was $420 including fees. Make sure to use promo code NYPOST10 for $10 off purchases over $250 at checkout (Editor’s Note: this discount is only valid for users’ first purchase). While expensive, prices have dropped approximately $80 since we last reported on how much seats cost to see Kahan in Queens back on June 30. Based on our findings at Set List FM, the 29-year-old Vermont native goes all out at live shows performing approximately 24 songs per show, mostly from “Stick Season” and “The Great Divide.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Jessica Alba posts multiple bikini photos from Italian vacation with boyfriend Danny Ramirez</h4>
+                <p>In a recent Instagram post, the 45-year-old actress shared snippets from her recent vacation to Tuscany with her boyfriend, Danny Ramirez, featuring many shots of her lounging in her bikini. "Ciao, Italy," the actress, who flashed her toned abs in a striking bikini, wrote as the caption for the Instagram carousel she shared.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Netflix’s ‘Owning Manhattan’ star blasted for ‘horrifying’ remarks about NYC homeless: ‘So dystopian’</h4>
+                <p>Jade Shenker, 30, a real estate agent with buzzy Big Apple brokerage Serhant — and a featured wheeler-and-dealer on streaming series “Owning Manhattan” — is being digitally dragged down the concrete for perceived slights against NYC’s unhoused. “I feel like the homeless people on the street are pretty comfortable,” the gal about town casually quipped during a recent impromptu, curbside interview with “Girls Who Sublet” — a virtual hub for gals seeking temporary lodging in Gotham. The controversy-making comments were prompted by a question regarding the high cost of living in Manhattan — and the “minimum” amount of money residents should earn in order to keep a decent roof over their heads. Median monthly rents in the borough have recently soared to a heartburn-giving $5,125.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/07/931/523/orthopedist-patient-knee-pain.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Medical identity theft follows you into the doctor's office</h3>
+                <p class="lead-summary"><strong class="drop-cap">D</strong>r. Oz reveals the number one rule seniors must follow to protect their benefits and stop healthcare scammers from stealing billions from Medicare. The Justice Department recently charged 455 people in its annual National Health Care Fraud Takedown. The cases involve more than $6.5 billion in alleged false claims. More state Medicaid units took part than in any prior year. Ninety of the accused are doctors or other licensed medical professionals. The DOJ says prosecutors still must prove the charges in court. Many schemes used other people's medical identities. Prosecutors also added aggravated identity theft charges in cases across dozens of states. In one case, the co-owner of a Virginia mental health company allegedly paid homeless people with hotel stays. Prosecutors say the company used their Medicaid numbers, then billed Medicaid for crisis services the patients never got. For the people whose numbers got used, the case file may eventually close. Their medical records may not be so easy to fix. Once someone else's treatment shows up under your name, it can add wrong information to your chart. It can also use up insurance benefits you may need later. That is harder to undo than canceling a credit card. DR OZ WARNS MEDICARE SCAMMERS ARE STEALING BILLIONS — AND YOUR PERSONAL INFORMATION COULD BE NEXT Medical identity theft can put someone else’s claims, prescriptions or diagnoses into your health records, creating problems that can follow you into a doctor’s office. (iStock) Medical identity theft happens when someone uses your name, Social Security number (SSN), health insurance account number, or Medicare number to see a doctor, fill a prescription, buy medical equipment, or submit a claim, according to the Federal Trade Commission (FTC). When care is billed under your name, the thief's health information can blend into yours. The FTC warns that mixed records can affect the care you're able to get and the benefits you are able to use. A blood type, a drug allergy, a diagnosis, or a prescription that belongs to a stranger can sit in the file a physician reads before treating you.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Wally Funk, trailblazing aviator who waited 60 years to go to space, dies at 87</h4>
+                <p>A veteran pilot and air safety investigator, she dreamed of space for six decades before Jeff Bezos invited her to join him on a Blue Origin rocket.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>OpenAI launches new system the Trump administration initially put on a leash</h4>
+                <p>The company says the government raised no objections to Thursday’s launch, which opens the model to any company or individual.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
