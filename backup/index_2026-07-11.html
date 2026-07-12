@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>SATURDAY, JULY 11, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://i0.wp.com/www.nationalreview.com/wp-content/uploads/2025/10/Graham-Platner-2.jpg?fit=527%2C307&ssl=1" alt="Lead Story Image" class="news-photo">
+                <h3>The Week: Graham Platner’s Downfall</h3>
+                <p class="lead-summary"><strong class="drop-cap">P</strong>lus: The broken Iran deal.</p>
+                <p class="source-credit">— National Review</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Here’s What You Need To Know About The Charlie Kirk Assassination Trial, Day 5</h4>
+                <p>Whether Tyler Robinson will stand trial for the assassination of Charlie Kirk won’t be decided until September. The preliminary hearings used to determine whether Tyler Robinson will be tried for capital murder ended Friday, with no answer as to whether Robinson will stand trial for the assassination of Charlie Kirk. Judge Tony Graf will need to review all the evidence put before the court over the last five days to determine whether the bar of probable cause is met in order to send the case to trial. State prosecutors, Robinson and his counsel, and Graf will meet again on Sept. 1 at 10:00 a.m., after which Graf will, at some point, make the decision.</p>
+                <p class="source-credit">— The Federalist</p>
+            </div>
+            <div class="story-minor">
+                <h4>Elderly couple hired 17-year-old to do odd jobs at their home — before he robbed and brutally murdered them, cops say</h4>
+                <p>A 17-year-old boy is on trial for allegedly shooting to death an elderly couple that had hired him to do odd jobs around their home in Mississippi. Cordarius Hobbs was arrested by Simpson County Sheriff's deputies after an hours-long standoff on June 3 when they were called to the residence near Mendenhall. Less than a week after Hobbs was taken into custody to face charges for double murder, his two brothers were involved in a massive manhunt. The incident unfolded after three contractors went to the home of 75-year-old Bill Blair and his 71-year-old wife, Carol Blair, to install a generator at about 10 a.m.</p>
+                <p class="source-credit">— The Blaze</p>
+            </div>
+            <div class="story-minor">
+                <h4>Does Mamdani dare disavow his openly anti-American DSA comrades?</h4>
+                <p>Kudos to the State Department for putting the kibosh on city International Affairs Commissioner Ana María Archila’s bid to meet with Amir-Saeid Iravani, Iran’s ambassador to the United Nations, even as America and Iran are at war — but the affair poses a challenge to Mayor Zohran Mamdani: Does he have the grit to break with the openly anti-American factions of the Democratic Socialists of America? Mamdani’s tried to downplay the disgraceful episode, insisting Archila had no clearance to do such outreach, yet he’s not firing her or imposing any discipline. Which raises the question of whether he prefers the theocratic regime in Tehran to the United States government.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2025/06/931/523/netanyahu-3.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Israel signals readiness for another Iran strike as Trump declares ceasefire over</h3>
+                <p class="lead-summary"><strong class="drop-cap">I</strong>srael warned the U.S. about a fresh Iranian assassination plot targeting President Donald Trump, according to the Wall Street Journal. Former NSC Chief of Staff Alex Gray discusses the latest. Israel’s leaders are publicly signaling that their country is prepared to strike Iran for a third time, while a U.S. official tells Fox News Digital that Washington remains closely coordinated with Jerusalem. "The IDF is on high alert and prepared to resume the campaign, regain air superiority, and carry out an independent Israeli strike against Iran to eliminate threats — even for a third time," Israel Defense Forces (IDF) Minister Israel Katz said Thursday at a graduation ceremony for the Israeli Air Force’s newest pilots. U.S. Central Command shared this footage in a July 8, 2026, press release about strikes against Iran.  (CENTCOM) Prime Minister Benjamin Netanyahu also warned Thursday that Israel’s campaign against Iran was not finished and said Tehran would not be permitted to obtain a nuclear weapon, regardless of any agreement reached with Washington.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Patriot missile deal and Trump’s praise for Zelensky put pressure on Russia</h4>
+                <p>The Kremlin downplayed President Donald Trump’s reversal but said it could cause the war to go on longer.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Trump says U.S. and Iran will keep talking but declares ceasefire ‘OVER!’</h4>
+                <p>The president suggested talks could continue amid military strikes, but analysts say a deeply flawed preliminary truce deal poses obstacles for negotiators.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Former British MP and reality TV star Ann Widdecombe found dead; man arrested for murder</h4>
+                <p>British Prime Minister Keir Starmer has resigned, announcing his decision outside Number 10 Downing Street amid significant political turmoil. Fox News senior foreign affairs correspondent Greg Palkot reports that Starmer's leadership has been plagued by economic struggles, immigration issues, and declining support from his Labour Party. Andy Burnham, a popular former mayor, is now considered a frontrunner to become the UK's seventh Prime Minister in a decade.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/07/931/523/WWE-CM-Punk-071126-1.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>CM Punk to defend Undisputed WWE Championship against Cody Rhodes at SummerSlam</h3>
+                <p class="lead-summary"><strong class="drop-cap">W</strong>WE's Sami Zayn describes his new character work as a 'choose your own adventure' kind of thing in an interview with Fox News Digital. CM Punk appeared on "Friday Night SmackDown" ready to take on any challenger that was ready to step to him after winning the Undisputed WWE Championship against Sami Zayn. Punk entered the ring in Oklahoma City and called back to the "Monday Night Raw" after WrestleMania 42 when he told Cody Rhodes he’d be ready to deliver if a championship opportunity fell "out of the sky." Cody Rhodes and CM Punk face off during SmackDown at Paycom Center in Oklahoma City, Okla. (Craig Ambrosio/WWE via Getty Images) Punk named potential SmackDown superstars he’d think might come for the title, including Gunther, Finn Balor, Royce Keys, Damian Priest and Trick Williams. He even said that Zayn could come back around and get his rematch if he wanted. He didn’t mention Rhodes’ name, but the "American Nightmare" came out uncalled and marched his way down to the ring. "I don’t think you and I can run away from each other anymore," Punk told Rhodes.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Despite knee injury, Shohei Ohtani hits leadoff home run in Dodgers’ loss</h4>
+                <p>Ohtani didn’t make his scheduled pitching start on Friday in the Dodgers’ 9-3 loss to the Arizona Diamondbacks, getting scratched from the mound before the game with what the team described as “continued irritation in his left knee.” Nevertheless, that didn’t stop the two-way star from serving as the club’s designated hitter –– or, three pitches into his first at-bat, taking All-Star left-hander Eduardo Rodriguez deep the other way for a resounding, and reassuring, leadoff home run. After plaguing him for a month, he is set to have it drained on Sunday and will likely get a pain-relieving injection after that.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Former Heat teammates Bam Adebayo, Tyler Herro involved in heated Las Vegas exchange: report</h4>
+                <p>Colin Cowherd discusses Bam Adebayo’s 83-point explosion against the Washington Wizards, and asks how this game will be remembered. Tensions between former Miami Heat teammates Bam Adebayo and Tyler Herro reportedly boiled over in Las Vegas early Friday. ESPN reported, citing sources, that the two NBA stars were involved in a physical altercation at an NBA Summer League practice facility, during which the Heat center allegedly struck the Milwaukee Bucks guard in the head area. NBA Summer League returned to the Las Vegas area on Thursday. Herro attended Friday's Bucks-Heat Summer League matchup at Thomas & Mack Center on UNLV's campus.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Pirates acquire Jacob Gonzalez, Brandon Eisert for draft pick, prospect in rare trade with White Sox</h4>
+                <p>But you rarely see a draft pick dealt in the way you do in basketball, football and hockey, but the Pirates and White Sox combined to make a fairly unusual trade on Friday — one day before the MLB draft. Pittsburgh acquired infielder Jacob Gonzalez and reliever Brandon Eisert from the White Sox in exchange for left-handed pitching prospect Jaden Woods and the No. 34 overall pick in the 2026 draft, ESPN’s Jeff Passan first reported. While Gonzalez and Eisert strengthen Pittsburgh’s infield and bullpen depth, the biggest storyline might be the inclusion of a draft pick, which is from the Competitive Balance Round A between Rounds 1 and 2.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/07/931/523/Kate-Middleton-Romance-Prince-William.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Prince William dumped Kate Middleton with one phone call and then came ‘crawling back,’ royal author claims</h3>
+                <p class="lead-summary"><strong class="drop-cap">C</strong>hristopher Andersen, author of "Kate!," recounts how Kate Middleton rebounded after her 2007 breakup with Prince William before the couple reunited. Before they became the Prince and Princess of Wales, Prince William walked away from Kate Middleton — only to come "crawling back." The claim was made by Christopher Andersen, author of "Kate!," which explores how the once commoner became the universally adored face of the British monarchy. Fox News Digital reached out to Kensington Palace for comment. A spokesperson previously told Fox News Digital it does not comment on books. PRINCE WILLIAM, KATE MIDDLETON ARE READY TO LEAD THE MONARCHY, SOURCES SAY: 'THANK GOD THEY’VE GOT EACH OTHER' Catherine, Princess of Wales and Prince William, Prince of Wales walk in the orchards as they visit to Long Meadow Cider on October 14, 2025, in Craigavon, Northern Ireland. Their love story is being revisited in a new book by Christopher Andersen. (Chris Jackson/Getty Images) "Kate Middleton certainly was strategic in winning Prince William back," Andersen told Fox News Digital. "And she had [her mother] Carole Middleton as her general or field marshal or strategist — we’re going to call it. But Kate was crushed in the beginning. [It] was completely out of the blue. I was in London when they broke up in 2007, and it was shocking. Everyone thought they were on the verge of announcing their engagement."</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>What songs are on Usher and Chris Brown’s setlist? Get discounted tickets</h4>
+                <p>The pair, who recently launched their co-headlining, stadium ‘R&B Tour,’ have been going all out at their live shows. Based on our findings at Set List FM, the party-starting hit-makers often perform 50+ songs between the two of them over a marathon three hours. Notable tracks to make the cut from Usher include fan favorites like “Yeah!,” “Caught Up,” “U Remind Me,” “My Boo” and “Burn” to name just a few. Meanwhile, Brown unloads radio staples “Poppin’,” “Loyal,” “Look at Me Now,” “Run It!” and “Yo (Excuse Me Miss)” along with 25 other classics and newer tunes from his recently-released 12th studio album “Brown.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>'Shameless' star Emmy Rossum reveals secret marriage at 21 after boyfriend's alleged shocking ultimatum</h4>
+                <p>"Shameless" star Emmy Rossum admitted she ignored glaring red flags when an alleged ultimatum from her then-boyfriend led to a rushed, secret wedding. Rossum admitted she accepted a marriage ultimatum at 21, kept the wedding a secret and was already thinking about divorce before saying "I do" during an appearance on "Call Her Daddy." She had been dating Interscope music executive Justin Siegel for a few months after working together recording her first album, "Inside Out."</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Taylor Swift’s ‘incredible’ wedding detailed by Kylie Kelce as Jason Kelce jokes about 15 beers</h4>
+                <p>Fox News Chanley Painter reports on pop star Taylor Swift and NFL player Travis Kelce getting married at Madison Square Garden. One week after exchanging vows with Travis Kelce at Madison Square Garden, the Grammy winner was spotted in Montana spending time with her brother-in-law, Jason Kelce, and his wife, Kylie Kelce, according to People.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/06/931/523/fathers-day-tech-privacy.jpeg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Fake VA shoe offer targets veterans</h3>
+                <p class="lead-summary"><strong class="drop-cap">A</strong> flyer offering "free athletic shoes from VA" may look official at first glance. It uses VA-style branding, talks about health and wellness and even lists the MyVA phone number. That is what makes it so dangerous. VA says the message falsely claims Veterans can receive free athletic shoes from VA. The agency says the promotion did not come from VA and has no connection to any official VA program. The scam appears to be spreading through a flyer and online posts. It tells Veterans they may be eligible for free athletic shoes "at no cost to you." It also shows popular shoe brands, steps to "redeem" shoes and a process that appears to involve a VA provider. That may be enough to get someone to click, call, share or forward before they stop to think. Veterans are being warned not to click links, scan QR codes or share personal information tied to a fake VA shoe offer. (Kira Hofmann/picture alliance via Getty Images) VA says the free athletic shoe promotion is fake. It did not come from an official VA program, including VPRs, Central Office or Whole Health. That is important because the flyer borrows the look and feel of a trusted government agency. It also uses health language to make the offer sound like a wellness benefit. But let's be real here. A free pair of shoes can sound harmless until the next step asks for your personal details. This scam works because it mixes familiar names with an official-looking design. The flyer uses VA branding, a health-focused message and well-known athletic shoe brands. It also presents the offer as a benefit. That can make people feel like they may miss out if they do not act. Scammers know that veterans and families often deal with a lot of paperwork, benefit updates and health care messages. A fake flyer can slide into that confusion and feel more believable than it should. One sneaky detail stands out. The flyer lists the MyVA number, but that alone does not make the flyer real. Scammers often mix real information with fake offers. A real phone number, real logo or familiar agency name can make people lower their guard.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Would you pay $8,000 for a robot to fold laundry?</h4>
+                <p>If your clean laundry has been sitting in a basket long enough to qualify as furniture, Isaac 1 may sound like the robot you have been waiting for. Weave Robotics has introduced Isaac 1, a mobile home robot designed to handle household chores that many of us keep pushing off to tomorrow. It can pick up dirty clothes, handle loaded hampers, fold laundry and put clothes away.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Fox News AI Newsletter: Microsoft cuts thousands of jobs</h4>
+                <p>Microsoft Chairman and Chief Executive Officer Satya Nadella speaks during the Microsoft Build 2025, conference in Seattle, on May 19, 2025.  (JASON REDMOND/AFP via Getty Images) TECH TRANSITION: Microsoft said on Monday that it will eliminate roughly 4,800 jobs – or about 2.1% of its global workforce – as it restructures parts of the company to prioritize artificial intelligence investments and other long-term business goals.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
