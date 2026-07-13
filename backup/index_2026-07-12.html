@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>SUNDAY, JULY 12, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F07%2F134161553.jpg?quality%3D90%26strip%3Dall" alt="Lead Story Image" class="news-photo">
+                <h3>Irish murderer who strangled American nurse led perverted life tracking women to hook up with</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>he Irish murderer who strangled American nurse Mackenzie Michalski after a night out in Budapest was identified as a perverted fiend who frequently filmed women in public before they rejected his advances. Lorcan Tadgh Murphy – who was convicted on Thursday in the Nov. 5, 2024, killing of Michalski in his Budapest apartment – kept troves of files of his secretly recorded encounters with random women on his computer, the Irish Independent reported. Hungarian police painted a theory of Murphy’s “perversion” using the recordings and digital diary entries where he said his only motivation in life was picking up and having sex with women. Murphy, who was 37 during his deadly encounter with the 31-year-old Michalski, had footage of 16 different women, all of whom declined his offers, according to the outlet. He kept a personal record of the best European cities where he found the most success with “hot and how willing” women were. He also made a record of his attempts with women, hoping to get to 1,000 before the fatal encounter with Michalski. Murphy claimed he had “a few whiskeys” at his apartment before going to a bar where he saw the New York native talking to another man, he told the Budapest Metropolitan Court on Tuesday. Michalski, who was working as a nurse in Portland, Ore., had just finished a European trip with a friend and was experiencing Budapest nightlife ahead of her return flight to the US. “I saw her three times [in the bar],” Murphy said, according to the outlet. “Initially, Mackenzie was with another man. I saw her sitting on a bench. She was looking at me. She kept looking at me. I interpreted this as an invitation [to approach her].” Murphy eventually made his way closer to Michalski, where they ordered a few 16-ounce beers and talked before finding a “more secluded part of the bar.” The Irish man told the court he didn’t think Michalski was drunk as they left the bar to go to a nightclub to dance. Video footage captured the two walking hand-in-hand as they made it to Murphy’s apartment building before the two made it inside and on an elevator, the last known footage of Michalski. Michalski’s autopsy report found her hands had been tied with a belt while Murphy assaulted her, beating her hands and chest, biting her upper arms and strangling her for roughly three minutes, the outlet reported. Michalski’s corpse showed signs of blunt force trauma to the head along with injuries throughout the rest of her body.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Lindsey Graham, longtime senator from South Carolina, dies at 71</h4>
+                <p>Graham, a staunch Trump ally and key GOP foreign policy voice, was running for reelection this year. He died of a “brief and sudden illness,” his office said.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>The Secret Behind Ryan Gosling’s Grip On Young Men</h4>
+                <p>Democrats don’t know what to make of young men — look no further than their catastrophic attempts to sanitize Graham Platner as proof — but finding a figure who resonates with guys isn’t that hard. In fact, there’s a Hollywood star whose roles always seem to connect with men. Of course, it’s Ryan Gosling. “Project Hail Mary,” whose screen time was dominated primarily by Gosling and a puppeteered alien, scored the biggest opening weekend this year for a non-franchise film. Making $683.3 million worldwide, the movie also received 94% on Rotten Tomatoes. The film’s success is due in no small part to Gosling, who has become one of the most beloved and relatable actors in Hollywood.</p>
+                <p class="source-credit">— Daily Wire</p>
+            </div>
+            <div class="story-minor">
+                <h4>Only Christ can banish the terror of death</h4>
+                <p>Atheists may pretend it doesn't bother them, but deep down we all want our lives to have cosmic meaning. When Paul describes what the gospel consists of, he lists two foundational elements — “Christ died for our sins” and “he was raised on the third day.” Both events happened “in accordance with the Scriptures,” and the risen Jesus was seen by numerous individuals (1 Corinthians 15:3⁠–8). 'After all the reasoning and all the rationales, I’d still desperately prefer to be a conscious, healthy human being than a corpse. Who wouldn’t?' Unlike most other religions, whose teachings consist of moral or metaphysical principles, Christianity depends crucially on the historical death and resurrection of its founder.</p>
+                <p class="source-credit">— The Blaze</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/07/931/523/toronto-canada-shooting-festival2.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Gunfire shatters Toronto Latin street festival, leaving at least 2 dead and multiple wounded</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>he Toronto Police Service is investigating after gunfire broke out Saturday night at a large Latin street festival in Midtown Toronto, leaving at least two people dead and four others wounded. Police said they received reports of a shooting at St. Clair Avenue West and Arlington Avenue at 8:12 p.m. local time and discovered an active shooter situation. First responders found six people suffering from gunshot wounds, officials said. Two of the victims were pronounced dead at the scene. Police respond to an active shooter at the Salsa on St. Clair event in Toronto, Saturday, July 11, 2026. (Keito Newman/The Canadian Press via AP) It is unclear what led to the shooting, and authorities said suspect(s) are still "outstanding." No arrests have been made as of Saturday evening, police said. Toronto Police Deputy Chief Frank Barredo said during a news conference there seemed to be an "exchange of gunfire" between two individuals targeting each other. "This is a very chaotic scene," he said. "I think we had something in the neighborhood of 13,000 people participating in this festival."</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>After leader’s funeral, an emboldened Iran tests Trump, risking renewed war</h4>
+                <p>Iran’s Islamic Revolutionary Guard Corps said the Strait of Hormuz would be closed until further notice, accusing the United States of interfering in the waterway.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Irish police under fire for refusing to identify reported asylum seeker sought in American mother's murder</h4>
+                <p>Dublin City Councilor Gavin Pepper says Irish police should have publicly identified the person of interest in the murder of American mother Jamey Carney, arguing the delay gave him a significant head start before leaving Ireland. An international manhunt is in its fifth day after the murder of an American woman in Ireland, but Irish police have yet to name a suspect or provide any description of the man they are seeking. And that decision is drawing sharp criticism from many, including a former FBI agent and an Irish politician.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Beloved musicians among victims in deadly Bahamas plane crash; aviation authority grounds flights</h4>
+                <p>Ten people were confirmed dead after a plane crash in North Andros, Bahamas, and Bahamian authorities launched safety investigations into two aviation incidents in one day. (Credit: Our News Bahamas via AP) A devastating double aviation crisis in the Bahamas, including a deadly North Andros plane crash and a separate aircraft fire Friday, prompted the government to suspend flight operations for a local airline and launch a federal safety probe.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F07%2Fcrop-39959715.jpg?quality%3D90%26strip%3Dall" alt="Lead Story Image" class="news-photo">
+                <h3>Conor McGregor speaks out after crushing UFC 329 injury in loss against Max Holloway: ‘Destroyed’</h3>
+                <p class="lead-summary"><strong class="drop-cap">C</strong>onor McGregor wrote that he’s “beyond dark here” and that he can “only describe it as hell” in a somber X post following his brutal knee injury at UFC 329 on Saturday night at T-Moblie Arena in Las Vegas. On his first official attempt at a kick in his first UFC fight since 2021, McGregor slipped and appeared to injure his right leg, and his fight against Max Holloway ended after just 69 seconds. My head gasket is gone. Destroyed. I had no injury / injuries going into the fight. I was throwing kicks, planted and jumping, all throughout camp as well as backstage before the fight. This came out of nowhere. I am beyond dark here. I can only describe it as hell. “My head gasket is gone,” McGregor wrote on social media early Sunday morning. “Destroyed. I had no injury / injuries going into the fight. I was throwing kicks, planted and jumping, all throughout camp as well as backstage before the fight. This came out of nowhere.” McGregor’s post occurred just over an hour after he bolted from T-Mobile Arena barefoot — and after declining a request from Paramount Plus for an interview — following his loss. Dana White, the president and CEO of UFC, said they’re assuming that McGregor, 37 blew out his ACL, and McGregor’s post confirmed reporting from The Post’s Erich Richter that the injury didn’t occur before the fight — despite what speculation on social media, and a viral clip, suggested.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Conor McGregor's long-awaited Octagon return cut short by apparent knee injury seconds into UFC 329</h4>
+                <p>UFC star Bo Nickal joins Sean Hannity to discuss his rapid rise to MMA stardom, UFC 300, Dana White, fighting at the White House for America 250, his rivalry with Colby Covington, wrestling roots, faith, family, and mentoring young men. Nearly five years after his last walk to the Octagon, Conor McGregor made his long-awaited UFC return Saturday night against fellow MMA star Max Holloway in the main event of UFC 329 in Las Vegas.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Conor McGregor was fully healthy for UFC 329 before ugly injury</h4>
+                <p>The “Notorious” Conor McGregor threw a crazy head kick at opponent Max Holloway that didn’t fully land in his quick UFC 329 loss on Saturday night at T-Mobile Arena. McGregor landed wrong on his right knee, fell to the ground, and appears to have torn at least one ligament in his knee. A source told The Post McGregor did not enter the fight injured and was fully healthy before throwing that head kick. McGregor had been practicing that wild head kick as recently as this week, throwing it over and over as he prepared to pounce on Holloway. “My head gasket is gone. Destroyed. I had no injury / injuries going into the fight. I was throwing kicks, planted and jumping, all throughout camp as well as backstage before the fight. This came out of nowhere. I am beyond dark here. I can only describe it as hell.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Argentina survives another scare courtesy of Switzerland to advance to World Cup semifinals</h4>
+                <p>Fox News correspondent Garrett Tenney reports on how Kansas City, Mo., is welcoming thousands of soccer fans from around the world as it hosts World Cup matches on 'Fox Report.' Argentina and Switzerland had some very different World Cup resumes coming into Saturday night's quarterfinal match in Kansas City.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F07%2F134102882.jpg?quality%3D90%26strip%3Dall" alt="Lead Story Image" class="news-photo">
+                <h3>Legendary LA studio complex to be sold in shocking blow to dying Hollywood film industry</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>elevision City, a legendary studio lot in central Los Angeles, is expected to be sold over its owners debt in the latest sign of economic stress tearing through Hollywood. The lot’s owner, Hackman Capital Partners is struggling as production levels hit all-time lows. A group of Hackman’s lenders led by Deutsche Bank is owed more than $357 million, according to the Hollywood Reporter. The lenders have started the process of selling Television City, described as one of the most desirable locations in LA. Shows ranging from “All in the Family” to “American Idol” have filmed there. “The studio market is evolving, and the financing environment for studio assets remains complex,” a spokesperson for Hackman said in a statement. “We are engaged in active discussions with our lending partners and are carefully evaluating the most appropriate path forward.” California Post News: Facebook, Instagram, TikTok, X, YouTube, WhatsApp, LinkedInCalifornia Post Sports Facebook, Instagram, TikTok, YouTube, XCalifornia Post  Opinion California Post Newsletters: Sign up here!California Post App: Download here!Home delivery: Sign up here!Page Six Hollywood: Sign up here! Potential buyers reportedly include former mayoral candidate Rick Caruso, who owns the nearby Grove shopping center and was outbid by Hackman last time Television City was up for sale. The Gillmore family, which owns a neighboring farmers market, could also be in contention.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Prince Harry's Invictus Games show the 'asset' the British royal family lost: experts</h4>
+                <p>Katie Nicholl, royal correspondent for Vanity Fair and co-host of "The Royals Uncensored," discusses Harry's UK security battle, the king's offer of a royal residence and growing palace frustration. Prince Harry is back in the U.K. to mark the one-year countdown to the 2027 Invictus Games, with a royal expert saying the event showcases the "best" of the Duke of Sussex.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>NYC comedian hilariously phones his overprotective, unfiltered mother live on stage — uses off-the-cuff chats for material</h4>
+                <p>Comedian Eric Neumann has carved out a niche for himself in the standup world by phoning his overprotective and unfiltered mother while on stage — and using their off-the-cuff conversations as material. The Queens native, 39, who now lives in Hudson Yards, said the bit came about organically after his mom Paula happened to call him when he was performing at New York Comedy Club. “I was like, ‘Hello?’ She was like, ‘Eric, I’m mad at your brother,’ and the crowd started laughing,” Neumann told The Post. “I was like, ‘Mom, I’m on stage, I can’t do this right now.’ She was like, ‘I’m sorry. Call me later.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Mick Jagger doesn't want to 'lecture' fans, says his job is to make people 'have the best time'</h4>
+                <p>Rapper Vanilla Ice discusses his decision to perform at the America 250 event, emphasizing music's power to unite people across political divides. He addresses the controversy surrounding musicians involving themselves in politics and explains his perspective as an entertainer.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/07/931/523/3-Meta_Verified_scam_threatens_Facebook_deletion.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Meta Verified scam threatens Facebook deletion</h3>
+                <p class="lead-summary"><strong class="drop-cap">H</strong>alimah Delaine Prado, Google's general counsel, reveals the rise of AI-powered phishing scams originating from China's 'outsider enterprise.' She explains how these criminals use artificial intelligence to create highly convincing fake websites, impersonating trusted brands like T-Mobile to defraud hundreds of thousands of Americans, causing millions in losses. A message like this can make your stomach drop. It looks like it came from Meta, uses the company logo and threatens your Facebook account. That scary mix is exactly why this scam works. "Forwarding a screenshot of a threat I got on Facebook... It looks suspicious! I tried following the prompts and think it's a scam. Just reporting to you because you're the cyber guy!" A fake Meta warning can look official at a glance, but urgent deletion threats are a major sign you should stop before clicking. (Kurt "CyberGuy" Knutsson) Angela was right to be suspicious. The screenshot has nearly every warning sign of a Facebook phishing scam, from a misspelled account name to a suspicious PDF attachment. Let's break down what this message is really trying to do and how you can spot the trap before it steals your login. Join us Wednesday, July 22, at 1 p.m. ET for a free CyberGuy Live class that will help you cut down on robocalls, spam texts, junk email and other unwanted messages. Kurt "CyberGuy" Knutsson will walk you step by step through simple ways to filter spam, clean up your inbox and recognize the messages that could put your personal information at risk. No technical experience is needed. You’ll also receive our spam-stopping checklist, and every registrant will get a link to the class recording afterward. The message claims to be a "Meta Announcement" and says your Facebook account "will be closed in the future." It then accuses your profile of unusual activity, including fraud and harassment. That language is meant to scare you into acting fast. Scammers know that losing access to Facebook can feel personal, especially if you use it for family photos, business pages, groups or Marketplace. So, they lead with the biggest threat they can: Your account may disappear.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Robotaxi pit stops could pop up near you</h4>
+                <p>Atlanta residents captured alarming video of dozens of Waymo driverless cars continually circling their quiet neighborhood for hours. Tech expert Kurt Knutsson warns this 'AI takeover' raises significant safety concerns, especially for children, highlighting a critical lack of human intervention and company accountability from Waymo regarding these autonomous vehicles and potential glitches.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
