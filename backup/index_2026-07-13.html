@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>MONDAY, JULY 13, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://i0.wp.com/www.nationalreview.com/wp-content/uploads/2026/07/tyler-robinson-1.jpg?fit=617%2C360&ssl=1" alt="Lead Story Image" class="news-photo">
+                <h3>The Damning Case Against Tyler Robinson</h3>
+                <p class="lead-summary"><strong class="drop-cap">D</strong>uring the pretrial hearings, prosecutors teased a mountain of evidence that makes a mockery of Charlie Kirk assassination conspiracy theories.</p>
+                <p class="source-credit">— National Review</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Michigan Dem senator throws support behind candidate to replace him in contentious primary</h4>
+                <p>The ongoing Graham Platner scandal in Maine jeopardizes Democratic bids for Senate control, making the midterm elections even more precarious. Chief Congressional Correspondent Chad Pergram analyzes several other crucial Senate races featuring controversial candidates, including Abdul El-Sayed in Michigan and Mary Peltola in Alaska, whose rhetoric and past remarks are drawing scrutiny.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Lindsey Graham died of aortic dissection, preliminary medical report says</h4>
+                <p>Graham died hours after returning from a trip to Ukraine. Trump said he spoke with the senator Saturday evening and that “could’ve been his last call.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Yellowstone visitor flung into the air by bison identified as grandfather who immediately laughed it off</h4>
+                <p>The Yellowstone National Park tourist tossed into the air like a rag doll by a marauding bull bison has been identified as a community-minded grandfather who immediately cracked jokes about his painful, now-viral ordeal. Carl Isom-McDaniel suffered multiple broken bones in the frightening encounter with the beast Friday night at the Bridge Bay Campground near Yellowstone Lake in the southeast quadrant of the park, where he was traveling with his grandson. But he made light of the attack even as he waited for a park ambulance to arrive, according to the professional photographer who captured the now-wildly viral moment.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/07/931/523/jalisco-traffic-accident.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Four Americans caught in horrific Mexico highway pileup that killed at least 10</h3>
+                <p class="lead-summary"><strong class="drop-cap">F</strong>our Americans were reportedly caught in a fiery multi-vehicle crash in Mexico that left at least 10 people dead and about 10 others injured. The massive pileup happened Sunday after a tractor-trailer crashed into multiple vehicles on a highway in the western state of Jalisco, according to the Secretariat of Security and Citizen Protection of Nayarit. While the agency reported 10 deaths, Mexico's Army, Air Force and National Guard said nine people were killed. Jalisco Civil Protection told Reuters that four Americans suffered minor injuries and were transported to a local hospital. A vehicle was left charred and mangled following a massive multi-vehicle pileup in Jalisco, Mexico, on Sunday. (Secretariat of Security and Citizen Protection of Nayarit﻿) "Four patients in minor condition, all U.S. citizens, were transferred to the Arboledas Hospital in Guadalajara by a private ambulance from the highway," Jalisco Civil Protection said. Another two of the injured were identified as National Guard members who suffered serious injuries and were taken to a hospital in Guadalajara, according to Reuters.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>U.S.-Iran airstrikes intensify as Tehran says deal is in ‘crisis phase’</h4>
+                <p>Iran has claimed control of the Strait of Hormuz and declared it closed, imperiling negotiations that the Iranian Foreign Ministry says are continuing.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Massive fire rips through pub, killing at least 27 as patrons flee smoke-filled venue</h4>
+                <p>A massive fire ripped through a Bangkok pub early Monday, killing at least 27 people and injuring several others as patrons tried to flee the smoke-filled venue, officials said. The blaze was reported around midnight at the Na Ladprao pub in the northern part of Thailand’s capital, The Associated Press reported, citing rescuers.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Fire at Bangkok bar kills 27; exits may have been blocked, officials say</h4>
+                <p>Preliminary investigations indicated that the fire may have been started by electrical short circuits, and that emergency exits may have been blocked.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/07/931/523/TNA-KC-Navarro-071326-3.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>TNA Wrestling's KC Navarro 'got back in record time' after knee injury, highlights upcoming Lockdown event</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>NA Wrestling star KC Navarro talks to Fox News Digital about getting back into the ring after a knee injury and the company's Lockdown PPV. KC Navarro is among the rising talents on the Total Nonstop Action Wrestling (TNA) roster and has been in the championship conversation since he returned from a serious knee injury. Navarro was out for several months recovering from a torn ACL he suffered last year. He told Fox News Digital in a recent interview he was feeling good and that his match against A.J. Francis was the first time he felt back to his true self. "I'm doing great. If you were to ask me when I first came back, I was definitely a little nervous, which everybody kind of told me, hey, when you come back from an ACL your first year, you're going to kind of be like, ‘ah.’ But I think by the time I wrestled A.J. Francis in the street fight was the first time I really felt like myself," he said. "And then when I wrestled (Mustafa) Ali for the international title, I was like, ‘Oh, yeah. I'm definitely back.’ So, the confidence is back. I'm feeling great. I'm doing good.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Why did Argentina wear black arm bands in their quarterfinal match against Switzerland?</h4>
+                <p>KANSAS CITY — During Argentina’s 3-1 tense victory over Switzerland in the 2026 FIFA World Cup quarterfinals at Arrowhead Stadium on Saturday night, one detail stood out against the Albiceleste’s iconic white-and-and-sky-blue jerseys: black armbands wrapped around every player’s and coaches’ sleeve. If you’re wondering why Lionel Messi and his teammates wore this all black armband, it was reserved as a tribute for Antonio Rattin, the former Argentina captain and Boca Juniors legend who died at 89 years old after a suspected stroke on Saturday. At the request of the Argentine Football Association, FIFA granted permission for the team to wear the black armbands in his honor.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>AEW star Chris Jericho brings Vietnamese pro wrestling to spotlight, highlighting sport's unifying force</h4>
+                <p>All Elite Wrestling star Chris Jericho talks to Fox News Digital about his upcoming documentary "Vietslam." Chris Jericho has stepped up to many challenges in his professional wrestling career, and, in some situations, had the odds stacked against him and succeeded time and time again.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Matt Damon recalls the frantic flight that nearly cost him Red Sox history</h4>
+                <p>Matt Damon rearranged his travel plans so he wouldn’t miss one of the biggest moments in Boston sports history. The Oscar-winning actor recently recalled racing home from Europe during the filming of “Syriana” so he could watch the Boston Red Sox begin their historic 2004 World Series run after the team defeated the New York Yankees in the American League Championship Series (ALCS). Damon shared the story during a recent episode of Amy Poehler’s podcast, “Good Hang,” as the two looked back on one of the most memorable moments in Red Sox history. At the time, Damon said he was filming “Syriana” in Dubai and had been watching Boston’s comeback against the Yankees from Geneva, Switzerland.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F07%2F134204064.jpg?quality%3D90%26strip%3Dall" alt="Lead Story Image" class="news-photo">
+                <h3>‘Sopranos’ mob heavy Vito reveals new health kick: ‘I don’t actually like baby carrots’</h3>
+                <p class="lead-summary"><strong class="drop-cap">“</strong>Sopranos” actor Joe Gannascoli is mirroring the healthy lifestyle his hefty mobster alter ego ended up embracing on the show — doing everything he can to whack his current extra pounds with a special fitness regimen and strict diet featuring made meals to get fit for an upcoming TV project. “I don’t actually like baby carrots,” the TV Mafia heavyweight recently quipped to The Post, referencing Vito’s hilarious stress-eating scene in the HBO hit’s final season, which included him posing for an ad for a weight-loss company, the Thin Club. At 67, the chef-turned-“Vito Spatafore” actor is shooting to shed 40 pounds, dropping from 250 to around 210, so he will be camera-ready for a new TV project based on his Mafia-themed cookbook, “A Meal to Die For.” “That’s when I’m going to be at my goal, which is now four months away,” said Gannascoli, who moved from Brooklyn to East Rockaway about 20 years ago, around when “The Sopranos” finale aired. Gannascoli starts with a 6 a.m. early-bird round of golf on the south shore of Long Island and usually hits a local pickleball court by 8 a.m. either with friends or for a pickup game with strangers. “I just started hitting every body part, and I’m doing that four times a week,” Gannascoli said. “Now I’m doing heavier weights and less reps. … I like to get a good sweat going.” The calorie-counting camera-loving capo, meanwhile, goes on “salad binges,” eats little red meat and employs intermittent fasting, rarely eating after 2 p.m., to complement his physical-fitness push.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>New Zealand actor Sam Neill dies at age 78 after cancer recovery, family says</h4>
+                <p>New Zealand actor Sam Neill died suddenly at age 78 on Monday after he recovered from cancer, his family announced. "It is with immense sadness that the whānau of Sam Neill share the news of his passing on Monday 13th July, in Sydney, Australia," his family said in a statement shared on Neill's Instagram page.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Hollywood’s covert race to produce the first AI blockbuster — with Scorsese, Affleck involved</h4>
+                <p>Hollywood is secretly full throttle on Artificial Intelligence, creating a “new space race” to generate the first (mostly) AI blockbuster. The film industry is notoriously slow to adopt change. Some directors refuse to swap 35mm film for digital, others feel using CGI or blue screen “compromises their art.” Therefore, AI has officially been met with extreme skepticism by more entrenched filmmakers. However — as is always the way in two-faced, back-biting, cutthroat Hollywood — that also means behind the scenes, every studio, filmmaker, and screenwriter worth their salt are desperately trying to harness its power to push the boundaries and create something new to wow audiences with.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Kelly Osbourne stuns in corseted swimsuit on yacht months after shutting down body-shaming critics</h4>
+                <p>Pastor Dylan Novak, who has witnessed to more than 2,000 celebrities, recalls Ozzy Osbourne’s surprising response to a gifted Bible and how the encounter led fans to seek faith after the rock legend’s death. Kelly Osbourne exuded confidence while posing in a chic white swimsuit during a sun-soaked outing on a yacht.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/07/931/523/Data-Brokers-Photo-1.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Why careful people still end up on data broker sites</h3>
+                <p class="lead-summary"><strong class="drop-cap">J</strong>PMorgan Chase Head of Consumer Fraud and Scam Prevention Darius Kingsley discusses bank scams in an interview with Kurt "CyberGuy" Knutsson for the "Beyond Connected" podcast. Your data broker profile can expose more than most of us realize. It may include your current address, old addresses, relatives, phone numbers and public records that were never tied to a phishing link or hacked password. That is what makes this so frustrating. Strong passwords, two-factor authentication and smart online habits all help protect your accounts. However, they do not stop data brokers from collecting public records and commercial sign-up data. Those details can then show up on people-search sites. Even worse, scammers can use them to make a fake call, text or email sound personal and believable. Here is where data broker profiles get their information, why careful online behavior alone falls short and what steps can help reduce what strangers can find about you. Join us Wednesday, July 22, at 1 PM ET for a free CyberGuy Live class that will help you cut down on robocalls, spam texts, junk email and other unwanted messages. Kurt "CyberGuy" Knutsson will walk you step by step through simple ways to filter spam, clean up your inbox and recognize the messages that could put your personal information at risk. No technical experience is needed. You’ll also receive our spam-stopping checklist, and every registrant will get a link to the class recording afterward. Strong passwords protect your accounts, but they do not stop data brokers from collecting public records and selling personal information to people-search sites. (Chris Ratcliffe/Bloomberg via Getty Images) Most people assume data brokers get information the same way hackers do, through breaches, weak passwords or phishing links. That can happen. However, a lot of personal information comes from public records and commercial lists. Data brokers can build profiles from records that may exist even when someone barely uses the internet, including: In many U.S. states, these records are public under state or local rules. Data brokers do not need to hack anything to collect them. They can buy, scrape or license the information on an ongoing basis. A home purchase, marriage, divorce or voter registration can create a public record. That record may include a name and address. Once filed, it can become raw material for a data broker profile.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Rescue robot of tomorrow may be a cockroach in scuba suit</h4>
+                <p>See how advanced robotics are scaling destroyers and amphibious ships to detect structural problems faster than traditional methods — part of a new $71 million Navy initiative to boost readiness and cut maintenance delays. (Credit: Gecko Robotics) A cockroach in a tiny scuba suit sounds like something you would run from, not something you would send into a disaster zone. Yet scientists say this strange little setup could one day help rescue teams search places people and larger robots cannot safely reach.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Google may use your photos and voice to train AI</h4>
+                <p>Halimah Delaine Prado, Google General Counsel, reveals the rise of AI-powered phishing scams originating from China's 'outsider enterprise.' She explains how these criminals use artificial intelligence to create highly convincing fake websites, impersonating trusted brands like T-Mobile to defraud hundreds of thousands of Americans, causing millions in losses. Prado highlights Google's strategy to combat these evolving threats.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
