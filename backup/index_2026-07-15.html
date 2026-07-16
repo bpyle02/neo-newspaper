@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>WEDNESDAY, JULY 15, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://pagesix.com/wp-content%2Fuploads%2Fsites%2F3%2F2026%2F07%2F134377133.jpg?quality%3D90%26strip%3Dall" alt="Lead Story Image" class="news-photo">
+                <h3>How to watch Hannah Waddingham, Octavia Spencer in ‘Ride or Die’ for free</h3>
+                <p class="lead-summary"><strong class="drop-cap">P</strong>rime Video is debuting its latest action comedy “Ride or Die” today, July 15. The eight-episode series stars Oscar winner Octavia Spencer and “Ted Lasso” Emmy winner Hannah Waddingham. Per Prime Video, the series “follows best friends Debbie Claybourne (Spencer) and Judith Burton (Waddingham) who thought they knew everything about each other, except Judith turns out to be an international assassin.” When one of Judith’s hits goes horribly wrong, she and Debbie go on the run with their lives on the line. On a road trip across Europe, they’ll find law enforcement, highly trained assassins and some very dangerous criminals at their heels. All eight episodes of “Ride or Die” were released today, July 15, and are now streaming on Prime Video. If you aren’t a Prime Video subscriber yet, you can get started with a 30-day Amazon Prime free trial, including Prime perks like the Prime Video streaming service, free two-day shipping, exclusive deals, and more. After the free trial, Amazon Prime costs $14.99/month or $139/year. All 18- to 24-year-olds, regardless of student status, are eligible for a discounted Prime for Young Adults membership as well, with age verification. After a six-month free trial, you’ll pay 50% off the standard Prime monthly price — just $7.49/month — for up to six years and get all the perks. Octavia Spencer and Hannah Waddingham star as Debbie and Judith, respectively. They play best friends forced to go on the run together. Bill Nighy, Ed Skrein, Sylvia Hoeks, Calam Lynch, Savannah Steyn, Jamie Parker, Katherine Drysdale, Fernando Santos and Jacky Ido round out the cast. This article was written by Angela Tricarico, Commerce Streaming Reporter for the New York Post, Page Six, and Decider. Angela keeps readers up to date with information on how to watch all of your favorite reality TV shows and movies on each streaming service. Not only does Angela test and compare the streaming services she writes about to ensure readers are getting the best prices, but she’s also a superfan specializing in the intersection of shopping, tech, sports, celebrities and pop culture. Prior to joining The Post in 2023, she wrote about streaming and consumer tech at Insider Reviews Our community is about connecting people through open and thoughtful conversations. We want our readers to share their views and exchange ideas in a safe space. In order to do so, we've created a simple set of rules that will improve your experience.</p>
+                <p class="source-credit">— Https://pagesix</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>The Plan to Confiscate AI Company Stock</h4>
+                <p>No need to tax them if you own them.</p>
+                <p class="source-credit">— National Review</p>
+            </div>
+            <div class="story-minor">
+                <h4>Tom Homan Sets the Record Straight on ICE Ending Vehicle Stops</h4>
+                <p>There was probably a lot of frustration within Immigration and Customs Enforcement today: the agency was ordered by Department of Homeland Security Markwayne Mullin to stop nearly all traffic stops following the officer-involved shooting in Maine. It seems to be an obstacle to enforcing the law. Footage of the ICE-involved shooting was released earlier today, showing Joan Sebastian Guerrero, 26, an illegal alien from Colombia, being shot and killed after he reportedly tried to run over federal agents. 🚨 JUST IN: DHS Secretary Markwayne Mullin PERSONALLY gave the order for ICE to SUSPEND ALL "non-urgent" vehicle stops, Susan Collins confirmsThis is TOTAL CAPITULATION to the left. ICE arrests will drop off a CLIFF — just as leftist terrorists demanded.Illegals will now… pic.twitter.</p>
+                <p class="source-credit">— Townhall</p>
+            </div>
+            <div class="story-minor">
+                <h4>Docs: Democrat Special Counsel Jack Smith Spied On, Lied To Congress</h4>
+                <p>An executive agent spying on members of a legislature not only violates the Constitution but is a hallmark of authoritarian states. Public documents newly released by Sens. Chuck Grassley and Ron Johnson show that Jack Smith spied on Congress as a special counsel, then lied to them about it. It’s the latest in a congressional investigation Grassley says has already uncovered criminal abuse of power by Democrats that is far “worse than Watergate.” During the Biden Department of Justice’s investigation of Donald Trump under the pretext of prosecuting Jan. 6, 2021, unrest and complaints about 2020 election lawbreaking, Smith’s team ignored required procedures to view text messages written by 44 members of Congress. Yet Smith testified to Congress that he only had obtained “toll records,” or data about the texts, such as timestamps and recipients, not the text content.</p>
+                <p class="source-credit">— The Federalist</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/03/931/523/kharg-island-satellite-view.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Trump won’t rule out Kharg Island takeover: What a US assault could look like</h3>
+                <p class="lead-summary"><strong class="drop-cap">E</strong>xclusive: Retired Vice Adm. Robert Harward tells Fox News how a U.S. operation to seize Iran's oil export terminal could unfold, why intelligence determines success, and why holding the island could prove harder than capturing it. Hundreds of U.S. Marines storm ashore as helicopters thunder overhead, Navy warships and fighter jets establish overwhelming air and sea superiority, and commanders issue one final warning to Iranian forces: surrender or be overrun. That is how military experts envision the opening hours of a potential U.S. operation to seize Iran's Kharg Island—the tiny but strategically vital island that handles roughly 90% of the Islamic Republic's crude oil exports and has become the centerpiece of Washington's economic pressure campaign against Tehran. The scenario was thrust back into the spotlight Tuesday after President Donald Trump declined to rule out taking the island. "I can't say that to you because if I did, it would be foolish," Trump told Fox News chief foreign correspondent Trey Yingst during an exclusive interview on ‘Special Report’ when asked directly whether he planned to seize Kharg island. He added that previous U.S. strikes intentionally avoided the island's oil facilities because they are "a chunk of the world economy."</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>U.S. hits dozens of Iranian targets as Trump threatens power plants and bridges</h4>
+                <p>The president’s threats of further military strikes underscored his rising frustration over the collapse of a preliminary truce agreement and Tehran’s refusal to bow to American demands.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>To quell graft allegations, Nigel Farage runs against a man wearing a trash can</h4>
+                <p>The British ally of President Donald Trump wanted a vote of confidence. Instead, other parties dumped their campaigns, and a comedian stepped in.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>FBI snares an American heir indicted for allegedly bankrolling anti-cop, pro-Hamas communist revolution</h4>
+                <p>FBI Co-Deputy Director Chris Raia says investigators have identified subjects tied to financing violent protest activity and are working to build prosecutable cases as the bureau follows the money. The Justice Department and FBI have a new communist financier in their crosshairs for alleged financial crimes: James "Fergie" Cox Chambers Jr., the estranged bad-boy heir to the Cox cable empire.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/07/931/523/rob-manfred-71426.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Inside MLB CBA negotiations as Manfred, players union exec discuss issues as sides attempt to save 2027 season</h3>
+                <p class="lead-summary"><strong class="drop-cap">D</strong>an Dakich, Jason Hammer & Dan Zaksheske discuss the upcoming issues that the MLB is facing in their next offseason The 2026 MLB All-Star Game may have been the last we see for quite a while — and, unfortunately for baseball fans, that is not hyperbole. The clock has been ticking for a while, but now, an impending MLB work stoppage is upon us. The current collective bargaining agreement expires on Dec. 1, and even this one took numerous leaps and hurdles to reach an agreement. The 2022 season was delayed due to an owners' lockout after the expiration of the previous CBA the prior December. However, the sentiment at the time among baseball experts was, if you thought that was bad, wait until 2026. Commissioner of Major League Baseball Robert D. Manfred speaks during the 2026 All-Star Legacy Veterans Multi-Service Center renovation at Veterans Multi-Service Center on Monday, July 13, 2026, in Philadelphia, Pennsvlvania. (Daniel Shirey/MLB Photos via Getty Images) In the days of the largest contracts in the history of the sport, baseball has reached an impasse of large-market teams taking over players, dollars and — in more recent years — titles, while small-market teams are being left out to dry more than ever.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>MLB fans blast Patti LaBelle’s national anthem performance at All-Star Game in her hometown of Philadelphia: ‘Completely disrespectful’</h4>
+                <p>Fans are calling out legendary R&B singer Patti LaBelle for whiffing on her rendition of the national anthem to kick off the 2026 MLB All-Star Game in her hometown of Philadelphia. The 82-year-old two-time Grammy winner had the honor of singing the Star-Spangled Banner at the 96th Midsummer Classic before a packed crowd at Citizens Bank Park Tuesday evening — just five miles from Independence Hall and little more than a week after the nation’s 250th birthday. LaBelle appeared to drop a few words along the way and dragged out the anthem longer than most during the performance, but gutted her way across home plate with her singing before the first pitch of the game.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>American League stars outshine National League in 96th MLB All-Star game</h4>
+                <p>American 3D pop artist Charles Fazzino unveils his custom hand-painted home plate for the 2026 MLB All-Star Game in Philadelphia, discussing his unique pop-up art style. The 2026 MLB All-Star Game arrived in Philadelphia with the feel of a 250th birthday bash for the United States, complete with plenty of red, white and blue and a roster full of stars who had earned their stripes.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Post expert makes 2026 Open Championship picks</h4>
+                <p>The romantic pick. Born and raised in the shadow of Birkdale, maybe this is the son of Southport’s time. It seems almost too good to be true, but why not? He’s won five times in the past two-plus years, including his breakout victory at last year’s Scottish Open followed by a tie for third at the British. Gotterup loves the creativity of links golf and is a master of the Tiger Woods “stinger’’ low shot. With the Birkdale turf baked out and firm, figure on him hitting stinger irons off the tee all week. Fitzpatrick always seems to be right there in tournaments. He’s won three times already this year and has finished inside the top five in six of his past 11 starts.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F07%2FGeddy-Lee.jpg?quality%3D90%26strip%3Dall" alt="Lead Story Image" class="news-photo">
+                <h3>RUSH is coming to Chicago. Get discounted last-minute concert tickets today</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>he last time RUSH performed in Chicago was in June 2015 when they rocked the Bulls and Blackhawks’ home United Center as part of their ‘R40 Live: 40th Anniversary Tour.’ That night, they delivered a blistering 27-song set comprised of hits like “Tom Sawyer,” “The Spirit of Radio,” “Closer To The Heart,” “Subdivisions” and “Working Man” along with deep cuts “Jacob’s Ladder” and “The Main Monkey Business” according to Set List FM. Now, a little more than a decade later, Geddy Lee and Alex Lifeson are returning for their triumphant ‘Fifty Something Tour.’ This time around, they’ll be playing four shows at the United Center once again but with drummer Anika Nilles taking the late Neil Peart’s place at the kit. The quartet of concerts are scheduled to take place: If you’d like to be there, our team found the best price on tickets for all four gigs in the Windy City. At the time of publication, the lowest price we could find on seats for any one show was was $169 including fees on SeatGeek. Make sure to use promo code NYPOST10 for $10 off purchases over $250 at checkout (Editor’s Note: this discount is only valid for users’ first purchase on SeatGeek). Ahead of this brief Midwest residency, RUSH has played arenas all over North America and impressed critics in the process. “It can safely be said that Rush is truly back and reborn,” The Phoenix New Times wrote in an emphatic review of their opening night on this run in Los Angeles. “It’s worth every penny.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Prince Harry longs for his old royal life as America isn't what he expected, experts say</h4>
+                <p>Dan Wakeford, founder of "Celebrity Intelligence," says Prince Harry misses his former life in the U.K. as he and Meghan Markle face questions about their long-term financial strategy. Prince Harry will always have a soft spot for his home country, even as he continues to navigate life in America.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Gavin Newsom’s tax scheme could kill Hollywood jobs, lawmakers warn</h4>
+                <p>California Gov. Gavin Newsom pushed in his final state budget a cap on business tax breaks in an effort to save money — but the film industry and some lawmakers are calling it a colossal screwup that would inadvertently kill jobs in the state’s struggling film industry. Around three dozen California lawmakers sent a letter last Friday to the governor asking him to fix the mistake. They asked for an exemption for the state’s film and television tax credit program that Newsom has touted many times as helping to boost Hollywood. “It creates significant uncertainty for production companies, in terms of when, how and even, if, they will be able to monetize earned tax credits.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Country singer RaeLynn files for divorce from Army veteran husband after decade-long marriage</h4>
+                <p>Dana Perino discusses the anticipated Taylor Swift-Travis Kelce wedding, offering her perspective on marriage. She stresses that happiness in a marriage is built on mutual trust rather than extravagant costs or prenups. Perino emphasizes a commitment-first approach for couples considering long-term unions.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/07/931/523/samsung-fridge-screen-1.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>You paid for it. So why is your device showing ads?</h3>
+                <p class="lead-summary"><strong class="drop-cap">S</strong>mart refrigerators, cars and computers can show ads after updates, raising privacy and ownership concerns, Kurt "CyberGuy" Knutsson explains. You paid for the product. So why does it feel like the company still controls the screen? That is the question more of us are starting to ask as smart devices get updated long after we bring them home. A refrigerator can show ads in your kitchen. A car can flash offers on the dashboard. Even a Windows 11 computer can surface promotions before you get to work. The frustrating part is that this often happens through software updates. You tap update because you want your device to stay secure and work properly. Then one day, the product you bought starts acting like a billboard. This is also why it pays to understand the hidden privacy clauses and settings that come with smart products before those screens start doing things you never expected. Smart devices from refrigerators to cars and computers can show ads after software updates, raising questions about who controls screens consumers already paid for. (Michele Tantussi/Getty Images) Join us Wednesday, July 22, at 1 p.m. ET for a free CyberGuy Live class that will help you cut down on robocalls, spam texts, junk email and other unwanted messages. Kurt "CyberGuy" Knutsson will walk you step by step through simple ways to filter spam, clean up your inbox and recognize the messages that could put your personal information at risk. No technical experience is needed. You’ll also receive our spam-stopping checklist, and every registrant will get a link to the class recording afterward. Samsung Family Hub refrigerators are sold as connected kitchen hubs. You can use the screen for weather, calendars, grocery lists and other household features. But as we discussed on The CyberGuy Report podcast at CyberGuy.com, that same screen can also become a place for ads after a software update. Samsung began showing ads on some Family Hub refrigerator Cover Screens in the U.S.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Humanoid robots perform live surgery in world first</h4>
+                <p>A medical breakthrough was achieved as UC San Diego doctors successfully utilized $20,000 humanoid robots to perform remote gallbladder surgery on a pig. This development highlights the potential for artificial intelligence to address surgeon shortages and improve access to care globally. The discussion also delves into privacy concerns surrounding advanced AI robots, including a new $8K home robot for chores.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Before you connect another smart TV, tablet or phone, lock it down</h4>
+                <p>Kurt "CyberGuy" Knutsson warned of worrying privacy clauses in smart devices in a recent episode of the "Beyond Connected" podcast. If your home Wi-Fi is like most, it is packed with connected devices. Smart TVs, phones, tablets, laptops, refrigerators, robot vacuums and security cameras may all be sharing the same network.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
