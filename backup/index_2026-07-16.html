@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>THURSDAY, JULY 16, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://media.townhall.com/cdn/hodl/2025/20/6514197f-7142-4713-a520-bbb9f6b650e2.jpg" alt="Lead Story Image" class="news-photo">
+                <h3>Here's What Could Be Part of the 'Really Big News' Trump Will Drop Tomorrow Night</h3>
+                <p class="lead-summary"><strong class="drop-cap">P</strong>resident Donald Trump is slated to give a primetime address Thursday night. Things are being kept close to the vest, but some election integrity material will be disclosed. This week, the president only described his televised address as “really big news.” President Trump teases his Thursday night address:"It's really, big news. It's really, REALLY BIG news""It doesn't get bigger." 👀 pic.twitter.com/64A2sjm0Z7 Now, some things are leaking: some of the speech will center on Beijing’s meddling in our elections. As for whether this will be actually mentioned, the White House isn’t saying much (via CBS News): BREAKING via @CBSNews: Part of Trump's speech Thursday night will touch on previously unreported Chinese meddling in U.S. elections, sources told me. Some evidence shows Beijing compromised U.S. voter data -- and evidence the CIA knew about the action and didn't share that… Part of President Trump's speech Thursday night is expected to touch on previously unreported alleged Chinese meddling in U.S. elections, according to sources familiar with the matter. One component: Allegations that Beijing compromised U.S. voter data and evidence the CIA knew about the action and didn't share that information with Mr. Trump during his first term. The audience for the primetime speech is expected to include members of the president's cabinet. Among those invited are the heads of CIA, FBI, Office of the Director of National Intelligence and Department of Homeland Security, as well as other agencies and staff. Some cabinet members will not be there due to scheduling conflicts. Asked for comment on the contents of the president's address, White House press secretary Karoline Leavitt said: "As usual, anonymous sources are speculating about what President Trump will say during his speech on Thursday evening. The truth is, nobody knows yet what President Trump will ultimately say, which is why everyone should tune in." Editor's Note: Do you enjoy Townhall's conservative reporting that takes on the radical left and woke media? Support our work so that we can continue to bring you the truth. Copyright © Townhall.com/Salem Media.
+                            All Rights Reserved.</p>
+                <p class="source-credit">— Townhall</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Former police officer allegedly filmed herself having sex at middle school while students were inside building</h4>
+                <p>A former Tennessee police officer allegedly admitted to having an affair with another officer and filming their sexual activities before leaving the force. Lisa Vidrios is a former U.S. Marine and worked at the San Diego Police Dept. before transferring to the Metro Nashville Police Department in 2022. An investigative report said Vidrios had a sexual relationship with an unnamed 18-year veteran of the police force. The report, which was obtained by WKRN-TV, cited several videos found on Vidrios' phone, as well as text chains and images. At least one of those videos showed her engaging in the sexual activities in her office at Madison Middle School while school officials talked outside her door. She also admitted that children were present in the building during the four incidents.</p>
+                <p class="source-credit">— The Blaze</p>
+            </div>
+            <div class="story-minor">
+                <h4>AG Nominee Blanche: Trump’s DOJ Believes Biden’s Lax Abortion Pill Rules Are Wrong</h4>
+                <p>Attorney General nominee Todd Blanche told U.S. senators during his confirmation hearing on Wednesday that the Trump administration’s Department of Justice believes the Biden administration’s radically relaxed rules for obtaining abortion pills “were wrong.” In his exchange with Missouri Sen. Josh Hawley, Blanche explained that the DOJ is “not defending what Biden did, and will not,” when it stripped the safety regulations from mifepristone following the Supreme Court’s Dobbs v. Jackson decision. “We want to get to a good result consistent with President Trump’s administrative directive and priorities,” Blanche claimed.</p>
+                <p class="source-credit">— The Federalist</p>
+            </div>
+            <div class="story-minor">
+                <h4>House vote exposes Democrats’ widening divide over Israel</h4>
+                <p>The symbolic vote showed how far Democratic politics on Israel have shifted, as progressive candidates turn anger over Gaza and U.S. military aid into a campaign issue.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://static.foxnews.com/foxnews.com/content/uploads/2026/07/russian-soldier-3.gif" alt="Lead Story Image" class="news-photo">
+                <h3>WATCH: Russian soldier thrown through air as Soviet-era helicopter gun spins out of control</h3>
+                <p class="lead-summary"><strong class="drop-cap">V</strong>ideo obtained by East2West shows troops testing a YakB-12.7 machine gun on an improvised ground mount as Russia reportedly repurposes the Cold War-era weapon to target Ukrainian drones. (Credit: East2West) President Donald Trump said he believes Russian President Vladimir Putin is ready to reach an agreement to end the war in Ukraine, even as Moscow warned Wednesday that Western troops deployed to enforce any eventual peace deal would become Russian military targets. "I say, ‘Vladimir, it’s time for you to stop. It’s time for this war to end,’" Trump told Fox News chief foreign correspondent Trey Yingst in an interview released Tuesday. The intensifying drone war has forced both militaries to search for additional ways to intercept unmanned aircraft, sometimes using weapons designed decades before modern drones emerged. A video supplied by East2West shows a Russian soldier apparently losing control of a Soviet-era YakB-12.7 rotary machine gun mounted on an improvised ground platform. Russian President Vladimir Putin and President Donald Trump meet in 2019, before their relationship began to sour.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Europe edges toward U.S.-style boat strikes in fight against cocaine surge</h4>
+                <p>A French attack that disabled a drug-smuggling boat in the Atlantic opened a new front, but European proposals stop short of the Trump administration’s more aggressive tactics.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>U.S. and Iran exchange strikes after Trump threatens wider attack</h4>
+                <p>The latest round of attacks comes amid continued threats by Trump to “knock out” Iran’s power plants and bridges unless Tehran returns to the negotiating table.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>US troops unload China's only known aid flight to earthquake-ravaged Venezuela as Americans surge relief</h4>
+                <p>U.S. search and rescue teams, supported by military assets, were deployed to Venezuela after two devastating earthquakes. The disaster has resulted in at least 920 fatalities and 51,000 missing persons, with over 3,300 injured. U.S. troops unloaded what Fox News Digital is told was China's only aid flight sent to Venezuela so far as the country continues to reel from last month's back-to-back earthquakes.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F07%2Fnewspress-collage-fzwhaar29-1784181352925.jpg?quality%3D90%26strip%3Dall%261784167023" alt="Lead Story Image" class="news-photo">
+                <h3>Savannah Bananas ripped over ESPYs performance as Dave Portnoy leads backlash: ‘What the f— is this’</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>he Savannah Bananas were ripped by viewers after opening the 2026 ESPY Awards on Wednesday night as Barstool Sports founder Dave Portnoy demanded the team to “get off my TV.” The viral baseball team kicked off the annual sports awards show at New York City’s David H. Koch Theater at Lincoln Center with a choreographed performance of its first original song, “The Show Starts Now.” Dressed in their signature yellow uniforms, the Bananas danced, lip-synced and showed off their trademark on-field antics before DJ Khaled appeared onstage to introduce the rest of the ceremony. Bananas player and Broadway star Derek Klena led the performance of the song, which was produced by Grammy-winning songwriters Benj Pasek and Justin Paul, who composed music for the hit musical “Dear Evan Hansen” and the 2017 film “The Greatest Showman.” In a video of his reaction to the broadcast, he added, “What the f—? What the f— is this? Get the Bananas off my f—ing screen. What the f— are the Bananas doing? “What is this, the ESPYs? I don’t even know what channel this is on. I was watching ‘Chronicle’ on ABC, I look up and the Bananas are on my TV. “Ruining baseball tbh. Kids all dressing like clowns on the field these days with egos to boot,” someone else wrote. However, other fans rushed to defend the Bananas, who brought their show to Yankee Stadium for the second straight year in April. “It’s sad how many sports fans lack self awareness. Like this is an event sponsored by Disney that celebrates adults who are the best at playing GAMES!! Lmaoo have a little fun and go Bananas!!” one fan wrote.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>NFL quarterback Will Grier retires at 31</h4>
+                <p>Colin Cowherd lists his Top 10 NFL QBs entering the 2026/27 NFL season following the reveal that Lamar Jackson was 69th on the NFL Top 100. He lists off Patrick Mahomes, Josh Allen, and more. Will Grier, a former West Virginia Mountaineers star quarterback who played two games in the NFL, decided to retire from the sport at the age of 31.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Sam Kerr starts second tenure with Gotham FC on winning note</h4>
+                <p>The last time Sam Kerr donned a Gotham jersey, it was known as Sky Blue FC, and its home games were played at Yurcak Field on the Rutgers campus. On Wednesday night, Kerr made her second Gotham debut Wednesday, this time at Citi Field in the Queens Classic against the archrival Washington Spirit. She subbed in in the 64th minute and had nine touches in her team’s 1-0 win with one shot on goal. In two years, Gotham will share a permanent home with NYCFC across the street at Etihad Park, marking Gotham’s move from New Jersey’s Sports Illustrated Stadium to New York City’s first soccer-specific stadium.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Marcello Hernández roasts Jake Paul, Tiger Woods and Bill Belichick in ESPYs monologue</h4>
+                <p>Colin Cowherd reveals why he's one of the only main sports personalities where no one knows where he leans politically, and explains why ESPN mixing politics with sports was losing their fanbase. The ESPYs brought some of the biggest names in sports and entertainment to New York City on Wednesday night, a day that typically ranks among the slowest on the sports calendar.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F07%2Fwill-ferrell-the-hawk-review.jpg?quality%3D90%26strip%3Dall" alt="Lead Story Image" class="news-photo">
+                <h3>Will Ferrell’s golf show ‘The Hawk’ isn’t up to par: review</h3>
+                <p class="lead-summary"><strong class="drop-cap">W</strong>ill Ferrell’s Netflix golf comedy series, “The Hawk,” is a pale imitation of his earlier work. He’s been all over the place doing outrageous antics to promote it. It’s a shame he didn’t seemingly put that effort into making sure the show wasn’t a dud. Now streaming, “The Hawk” was co-created by Ferrell, Harper Steele (who was in the documentary “Will & Harper” with him), and Chris Henchy. It follows Lonnie “The Hawk” Hawkins (Ferrell), a pro golfer trying to launch a late-career comeback, just as his adult son, Lance (Jimmy Tatro), is upstaging him as golf’s latest star. Since this is a Ferrell character, Lonnie is a narcissistic buffoon who makes his son’s success all about himself. It’s a story that might have made for an amusing yet forgettable five-minute “Saturday Night Live” sketch. It’s tedious, as a five-hour series. The cast is rounded out by other “SNL” alums, like Molly Shannon as Lonnie’s ex wife, and Chris Parnell as a golf executive. Both make valiant efforts to salvage the show, but their parts are too small. Luke Wilson also shows up as a rival golfer. In a grim – and likely unintentional – case of the show getting meta, Lonnie is a character whose best days are behind him. “The Hawk” makes you wonder if the same can be said of Ferrell. At the very least, it’s obvious that his skills are best for a movie, not stretched across a ten-episode series. “The Hawk” is painfully unfunny, and borders on mean-spirited (such as a sequence where Lonnie is so self-absorbed that he doesn’t care about a friend’s death).</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Inside Princess Diana and JFK Jr.'s secret meeting that fueled romance rumors for decades</h4>
+                <p>Caroline Hallemann, author of "The Kennedys and the Windsors," shares new details about the private 1990s meeting between JFK Jr. and Princess Diana, explaining why he wanted her on the cover of George magazine — and why she turned him down. In December 1995, the world's two most famous people met in secret at New York City's Carlyle Hotel.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Why Howard Stern should quit now and retain a little dignity, rather than flogging his dead horse of a show any longer</h4>
+                <p>The one time “King of all Media” has been limping along like an aging star athlete desperately clinging to his youth and glory. This week it was reported he laid off about a dozen staffers on Zoom, telling them his Sirius show was being cut down to once a week after Labor Day. The rest of the time will be filled with archives. But other than inflating his ego and filling his already overflowing bank account, what’s the point in going on with the show? His reign has long been over, so his best idea would be to simply pack it in already. Stern is now 72. He’s been at it since the late ’70s and for decades he not only dominated radio and entertainment but managed to stay on the cutting edge. Now, in 2026, he’s just another voice in a crowded podcast space.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Monica Lewinsky details her 'dark decade' and moving past public shame</h4>
+                <p>Activist Monica Lewinsky told Fox News Digital that her personal definition of power has evolved over the years. Monica Lewinsky is reflecting on her experience with shame and how she was able to overcome it. During a recent episode of her podcast, "Reclaiming with Monica Lewinsky," the 52-year-old activist spoke with actress Jamie Lynn Sigler about her memoir, "And So It Is...: A Memoir of Acceptance and Hope," with Lewinsky telling her the title resonated with her.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/07/931/523/Woman_looking_at_smartphone_in_kitchen.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Apple AirDrop, Android Quick Share flaws put phones at risk</h3>
+                <p class="lead-summary"><strong class="drop-cap">K</strong>urt "CyberGuy" Knutsson warned of worrying privacy clauses in smart devices in a recent episode of the "Beyond Connected" podcast. Apple AirDrop and Android Quick Share are the kind of phone features you probably use without thinking much about them. You want to send a photo across the room. You want to move a file from your phone to your laptop. So you tap share, pick a nearby device and move on. Now, new security research shows those handy nearby-sharing tools can also create a wireless opening around your phone. Researchers at the CISPA Helmholtz Center for Information Security examined Apple AirDrop and Android Quick Share. They found six vulnerabilities across Apple, Samsung and Google implementations. The flaws include AirDrop crash bugs, Samsung Quick Share protocol issues and a Google Quick Share for Windows bug that could potentially lead to remote code execution. AirDrop and Quick Share make file sharing easy, but researchers say nearby sharing can also expose phones to wireless attacks in crowded places. (Kurt "CyberGuy" Knutsson) That can affect you in a very everyday way. Your phone may be sitting in your pocket at an airport gate, in a coffee shop or inside a packed conference room while it listens for nearby sharing requests. If a bad actor gets close enough, they could try to take advantage of that open wireless doorway before you even realize anything happened. So, before you leave AirDrop or Quick Share open again, here is what the research found and the settings worth checking now. Join us Wednesday, July 22, at 1 p.m. ET for a free CyberGuy Live class that will help you cut down on robocalls, spam texts, junk email and other unwanted messages. Kurt "CyberGuy" Knutsson will walk you step by step through simple ways to filter spam, clean up your inbox and recognize the messages that could put your personal information at risk. No technical experience is needed. You’ll also receive our spam-stopping checklist, and every registrant will get a link to the class recording afterward. The researchers call this a proximity problem. AirDrop and Quick Share are built to find nearby devices without the usual setup of pairing first. That convenience is the whole point. It also means the sharing software has to listen before it fully trusts the other device.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Insurance breach exposes 7M driver's licenses</h4>
+                <p>Kurt "CyberGuy" Knutsson explains how a reader named Rosette made a Google search and wound up handing her credit card number and birth date to a scammer. AssuranceAmerica, an auto insurance provider that works through a network of independent agents, has disclosed a data breach affecting nearly 7 million people. The exposed information includes driver's license numbers and other personal details tied to auto insurance customers.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
