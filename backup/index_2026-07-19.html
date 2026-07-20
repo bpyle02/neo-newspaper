@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>SUNDAY, JULY 19, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/07/931/523/mcconnell-hawley.png?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>WATCH: Josh Hawley issues blistering rebuke of McConnell over ‘obligation’ to country</h3>
+                <p class="lead-summary"><strong class="drop-cap">S</strong>en. Josh Hawley, R-Mo., told Fox News Digital that Sen. Mitch McConnell has an "obligation" to let his constituents know "what's going on." (Credit: Nicholas Ballasy for Fox News Digital) As questions persist about Kentucky Republican Sen. Mitch McConnell’s condition, Sen. Josh Hawley, R-Mo., issued a blistering rebuke about his team’s handling of the crisis, reminding them of their "obligation to your constituents." The 84-year-old former Senate majority leader has been absent from the upper chamber for over a month now after a fall at his home left him hospitalized. His absence, coupled with the sudden death of late Sen. Lindsey Graham, leaves Senate Republicans down two crucial votes amid a dead sprint to wrap up key parts of President Donald Trump's agenda. Speaking with Fox News Digital, Hawley, a conservative populist, said he wishes McConnell and his family well and hopes for a recovery. At the same time, however, Hawley said that "at a certain point you do have an obligation to your constituents and the country to tell them what’s going on." Sen. Josh Hawley (right), R-Mo., called for transparency from Sen. Mitch McConnell (left), R-Ky., following his prolonged absence from the Senate. (Courtesy of Sen. Mitch McConnell's office; Anna Moneymaker/Getty Images) While Hawley said he would "defer" to Senate Majority Leader John Thune, R-S.D., on how to handle McConnell’s situation, he noted that the lack of GOP votes is hurting priorities like the voter integrity measure, the SAVE America Act. "I just hear a lot from leadership that, ‘Well, we don’t have the votes for this.’ Like the voter I.D., we don’t have the votes for that. Well, we might want to do something about that," he said. Hawley also said that he too has been "totally in the dark" about McConnell’s condition and said, "I never had any idea about any of his health stuff." "I hope he recovers, but I also hope that they get the transparency out there to help people know what the situation is," he said. WASHINGTON, DC - FEBRUARY 20: Sen. Mitch McConnell (R-KY) is pushed in a wheelchair at the U.S. Capitol on February 20, 2025 in Washington, DC. McConnell, 83, the seven-term Senator from Kentucky who served 18 years as the Republican leader, announced he will not seek reelection and will retire after his current term.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Voters are struggling to keep up with Iran war’s twists and turns</h4>
+                <p>Americans have grown frustrated with President Donald Trump over his handling of the war. Here’s what several said about how they’re processing the constant changes.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Mamdani administration makes cash-for-syringes pilot program permanent</h4>
+                <p>The Mamdani administration has quietly made permanent a controversial pilot program that pays junkies cash for turning in used needles — a move critics contend will only encourage illegal drug use. The city’s massive $126 billion budget for the new fiscal year that began July 1 includes $3 million to retain the Health Department’s Community Syringe Redemption Program, which pays the public 20 cents per syringe. The announcement was made with little fanfare in budget documents the agency provided to the NYC Council on June 30, shortly before members approved Zohran Mamdani’s first spending plan as mayor.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Great Filmmaking, Lazy Philosophy: How ‘Disclosure Day’ Settles For Straw Men</h4>
+                <p>For all of it's pretty visuals and compelling mystery elements, Spielberg's latest settles for good when it could've been extraordinary. Steven Spielberg has spent much of his career asking audiences to believe in the impossible. In “E.T.,” “Close Encounters of the Third Kind,” and “A.I.,” he treated the unknown with awe rather than fear. “Disclosure Day” continues that fascination with first contact, but this time Spielberg aims higher than simply telling another alien story. He wants to ask what happens when humanity learns, beyond all doubt, that we are not alone — and more provocatively, what happens to religion and civilization itself when that truth arrives.</p>
+                <p class="source-credit">— Daily Wire</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/07/931/523/brooklyn-bridge-71726.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Canadian wildfire smoke ignites cross-border feud over Ottawa's 'willful negligence'</h3>
+                <p class="lead-summary"><strong class="drop-cap">D</strong>r. Marc Siegel, Fox News senior medical analyst, discusses the health affects of Canadian wildfire smoke, including short-term respiratory issues and long-term risks. He also addresses the cyclospora outbreak. As smoke from Canadian wildfires continues to drift across parts of the United States, forestry experts say Canada could reduce the severity of some fires through more aggressive forest management. The issue reached the White House Friday, with President Donald Trump accusing Canada of failing to properly manage its forests and threatening to factor the economic cost of the smoke into tariffs on Canadian imports. "We are holding Canada responsible for the fact that they are not properly maintaining their Forests, and Brush therein, and the United States is being unnecessarily invaded by filthy, polluted, and unhealthy air," Trump wrote on Truth Social. He said he planned to call Canadian Prime Minister Mark Carney and accused Canada of refusing to engage in "basic Forest Management and Debris Removal," calling it "Willful Negligence." Smoke from massive wildfires in Canada engulfed the New York City skyline, reducing visibility and casting an orange haze over the city July 16, 2026.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Andy Burnham prepares to lead Britain — and face Trump</h4>
+                <p>The incoming prime minister takes office Monday with little foreign policy background and daunting global challenges to confront.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Incoming UK PM Andy Burnham rejects Thatcher-era policies, signals leftward shift</h4>
+                <p>Britain's governing Labour Party elected Andy Burnham as its new leader, clearing the way for him to take office as prime minister on Monday. (Reuters.) Britain’s incoming Prime Minister Andy Burnham used his first speech as Labour leader Friday to condemn the economic model established in the 1980s by Margaret Thatcher and promise greater public control of essential services, signaling a shift to the left from outgoing Prime Minister Keir Starmer.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>U.S. strikes Iran after 2 service members killed, 1 missing in attack on Jordan base</h4>
+                <p>The attacks mark the eighth consecutive day that U.S. forces have bombed Iran. The latest fatalities pushed the American military death toll from the conflict to 16.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/07/931/523/Lionel-Messi-Lamine-Yamal-split.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>How to watch Argentina vs Spain: Live stream the 2026 FIFA World Cup final match</h3>
+                <p class="lead-summary"><strong class="drop-cap">S</strong>ports analyst Dan Dakich previews the FIFA World Cup Final between Argentina and Spain, highlighting Lionel Messi's leadership. Dakich predicts Argentina will win, praising Messi's consistent greatness. The discussion then shifts to WNBA star Caitlin Clark, whom NBA Commissioner Adam Silver called a 'political football' amid physical play controversies. Dakich attributes some issues to WNBA players' jealousy and envy. The two soccer powerhouses will look to etch their names in the history books and become World Cup champions when they play at 3 p.m. ET on Sunday at MetLife Stadium. The game will be broadcast on FOX. For Argentina, they have the opportunity to become the first back-to-back World Cup winner since Brazil did it in 1958 and 1962, and just the third country to win back-to-back titles overall. Italy first won consecutive World Cups in 1934 and 1938. (Left) Argentina's Lionel Messi (10) reacts during the World Cup semifinal soccer match between England and Argentina in Atlanta, Georgia, on July 15, 2026. (Right) Spain's Lamine Yamal (19) reacts during warm-up ahead of the World Cup Round of 16 soccer match between Portugal and Spain in Arlington, Texas, near Dallas, on July 6, 2026.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Mets plan to find time for Luis Robert Jr. in crowded outfield after he makes injury return</h4>
+                <p>PHILADELPHIA — Luis Robert Jr. could return to the Mets for their series in Milwaukee this week, leaving the team with more outfielders than starting spots. Join Post Sports+ for exciting subscriber-only features, including real-time texting with Mike Puma about the inside buzz on the Mets. “He’s looking better and better,” interim manager Andy Green said Saturday before the Mets lost to the Phillies. The Mets traded for Robert last winter to serve as their starting center fielder, but during his time on the injured list with lumbar spine disc herniation, rookie A.J. Ewing has emerged as a bright spot, joining rookie Carson Benge and Juan Soto in the outfield.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>England beats France in instant classic to earn third place at 2026 FIFA World Cup</h4>
+                <p>‘The Big Weekend Show’ asks fans in New York City for their predictions ahead of the FIFA World Cup final between Argentina and Spain. It's the game that no one ever wants to play in, but there was still a lot on the line for both England and France in the third-place match at the 2026 FIFA World Cup on Saturday.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Smoky, stormy weather expected to clear in time for World Cup final</h4>
+                <p>After days of wildfire smoke from Canada cast a gray haze over northern New Jersey, Saturday’s steady rain and rolling thunderstorms arrived with a purpose beyond just disrupting Spain’s and Argentina’s training sessions. The steady downpour likely scrubbed a significant amount of smoke and fine particulate matter from the atmosphere, hopefully setting the stage for a favorable forecast during the 2026 FIFA World Cup final at MetLife Stadium. Earlier in the week, Spain trained under skies so smoky that players admitted they could both see and smell the haze, with breathing noticeably more difficult.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/07/931/523/growing-pains-split.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>'Growing Pains' child star Ashley Johnson reveals 'dark' moment armed fan tried to abduct her from set</h3>
+                <p class="lead-summary"><strong class="drop-cap">A</strong>shley Johnson is recalling a terrifying moment from her childhood in Hollywood, revealing a fan grabbed her and tried to abduct her during a live taping of "Growing Pains." The former child star says she was just 7 years old when an armed fan broke from a studio audience line, grabbed her and tried to carry her away during a live taping after production had received a threat warning that someone planned to bring a gun to the set. Johnson said the man was armed. "It was in the first year that I was on, and we had only done a couple of film nights," Johnson began on the "Weird Kids" podcast. The child star behind Chrissy Seaver, Ashley Johnson, reveals how lax security on the "Growing Pains" set led to a terrifying kidnapping attempt by an armed fan. (Christopher Polk/NBCU Photo Bank/NBCUniversal via Getty Images) Back then, she said, security around the cast was far less restrictive than it is today. "So, I hadn't done that many yet … and at that time, all of the cast sort of had trailers, and they were like old camper trailers," Johnson said. "Like they're not like the fancy trailers that they are now."</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Mick Jagger makes surprise appearance in Napa Valley</h4>
+                <p>Mick Jagger, legendary lead singer of the Rolling Stones, rolled up to a shindig in Napa Valley on Friday to show support for longtime girlfriend. The iconic 82-year-old rocker attended Festival Napa Valley alongside fiancée Melanie Hamrick, 39, a choreographer who produced the event’s dance gala, which pairs classical ballet with music from The Stones. Jagger was seen letting out a laugh while sporting a light green blazer jacket and patterned dress shirt, while Hamrick donned an all-black dress and red slippers. The appearance comes a week after the Rolling Stones released “Foreign Tongues,” the band’s 25th studio album and second collection of original material in three years.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Ricky Gervais rejects calls to tone down comedy: 'Be offended if you want'</h4>
+                <p>The comedian doubled down on his long-held defense of free speech during a recent radio interview, saying he has no interest in changing his material to avoid offending audiences and arguing that backlash only adds to the joke. "I don't tell people not to be offended; I tell them I don't care if they are. Be offended if you want, it makes it funnier for me," Gervais said during an appearance on BBC Radio 2.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Dwayne ‘The Rock’ Johnson is one of Hollywood’s top-paid actors — and the King of Flops</h4>
+                <p>There are some myths you hear repeated so many times during your life, you assume they must be true. About that last one: Hollywood has clung to this tenet like fingers to a cliffside the last 10 years. It’s mystifying. I’ve never been anywhere that I’ve heard so much of a whisper of, “I love the Rock.” But, no. The 54-year-old wrestler-turned-thespian — wrespian? — consistently underwhelms where it matters most: at the box office. And yet he’s still one of Hollywood’s highest paid performers. In 2024, Johnson actually held the No. 1 slot, taking home a reported $88 million. Johnson’s latest project to get KO punched was last weekend’s “Moana,” Disney’s live-action remake of the 2016 cartoon, which had a three-day domestic opening of just $43 million and a RottenTomatoes score of 31%. These are existential crisis numbers.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
