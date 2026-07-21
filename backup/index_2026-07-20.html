@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>MONDAY, JULY 20, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://pagesix.com/wp-content%2Fuploads%2Fsites%2F3%2F2026%2F06%2FVice-President-JD-Vances-wife-Usha-gives-birth-to-baby-No.-4.jpg?quality%3D90%26strip%3Dall" alt="Lead Story Image" class="news-photo">
+                <h3>Vice President JD Vance’s wife, Usha, gives birth to baby No. 4</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>he politician’s wife, Usha Vance, has given birth to the couple’s fourth child, a boy named Alec Neel Vance. “We are excited to announce that our baby boy, Alec Neel Vance, was born this morning. Usha and the baby are happy and healthy, and our kids are overjoyed to meet their little brother,” the couple said in a statement on Instagram Sunday. “The incredible military doctors and staff members of Walter Reed Medical Center and the White House Medical Unit have been a blessing,” Usha and JD added. JD and the second lady, who tied the knot in 2014, started their family three years later with son Ewan, who was born in June 2017. In November 2025, JD, 41, and Usha, 40, announced they had another son on the way in a joint Instagram post. “We’re very excited to share the news that Usha is pregnant with our fourth child, a boy,” they wrote at the time. “Usha and the baby are doing well, and we are all looking forward to welcoming him in late July.” Elaborating on the “exciting and hectic time,” the duo added, “We are particularly grateful for the military doctors who take excellent care of our family.” They also thanked “the staff members who do so much to ensure [they] can serve the country while enjoying a wonderful life with [their] children.” The reveal came on the heels of divorce speculation, sparked by Usha being spotted in public without her wedding ring. “She is a mother of three young children, who does a lot of dishes, gives lots of baths, and forgets her ring sometimes,” Usha’s rep said at the time. JD joked during a March speech in Michigan that he was “persuasive” in convincing his wife to have another child — after she previously insisted he could either “become vice president or … have a fourth baby.” Usha, who met her husband when they were both attending Yale Law School, clarified to NBC News that same month she had “never closed the door” on conceiving again. “I just wasn’t sure,” she told the outlet. “But as time passed, I realized that I was feeling more and more excited about that possibility.” Our community is about connecting people through open and thoughtful conversations. We want our readers to share their views and exchange ideas in a safe space. In order to do so, we've created a simple set of rules that will improve your experience. Thanks for reading our community guidelines. Don't forget, freedom of speech is not the freedom of reach!</p>
+                <p class="source-credit">— Https://pagesix</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>The late-game drama, star turns and controversies that made this World Cup a smash hit</h4>
+                <p>Following in the footsteps of the Knicks and Carolina Hurricanes — both of whom went 16-3 en route to capturing championships in the NBA and NHL, respectively, this spring — Spain was an equally dominant champion that outscored its opponents 14-1 in eight matches. The Year of Playoff Dominance started with another 2026 domestic champion: The Super Bowl-winning Seahawks outscored their three playoff opponents by a total of 55 points. Unlike in 1994, the World Cup didn’t come to the United States with the pressure to revolutionize American interest in soccer, which already can make a case to be the fourth-most popular sport at home.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Socialist-backed Michigan Senate hopeful calls American politics a 'disease' after professing love for US</h4>
+                <p>Abdul El-Sayed, a Democratic candidate for Michigan's U.S. Senate seat, told supporters that ICE, health insurers and corporate interests should see him as "dangerous." (Credit: Youtube/Bernie Sanders) Michigan Senate candidate Abdul El-Sayed on Sunday described America's political system as a "disease" moments after professing his love for the country where he was raised.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Antisemitism Is Always Evil</h4>
+                <p>Learn from the second century already!</p>
+                <p class="source-credit">— National Review</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/05/931/523/marines-hormuz.jpeg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Steve Forbes urges Trump to keep the Strait of Hormuz open at all costs</h3>
+                <p class="lead-summary"><strong class="drop-cap">P</strong>ublisher Steve Forbes argues the Strait of Hormuz is a strategic asset that must remain open at all costs, advises Trump to keep all options on the table in dealing with Iran Steve Forbes says the United States must double down on efforts to topple the Tehran regime, arguing that free passage through the Strait of Hormuz should remain a non-negotiable American imperative. As the U.S. struck targets in Iran for a ninth consecutive day on Sunday, pressure on the Tehran regime continued to build. Speaking at Freedom Fest in Las Vegas, the chairman and editor-in-chief of Forbes and former presidential candidate recently sat down with Fox News Digital to discuss Iran and the Trump administration's foreign policy. Forbes Media chairman Steve Forbes warns the U.S. has storm clouds ahead following latest CPI data and new EPA restrictions on gas cars. (Fox News) "Going back to Thomas Jefferson, a core foreign policy plank of the United States is freedom of the seas. Freedom of navigation got us into another war with Great Britain, the War of 1812," Forbes said.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>A U.K. prime minister takes charge with a promise to dilute power</h4>
+                <p>Andy Burnham, until recently the mayor of Greater Manchester, has replaced Keir Starmer as head of the Labour Party. Burnham becomes prime minister on Monday.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Ex-counterterrorism official Joe Kent continues calling for US military withdrawal from Middle East</h4>
+                <p>'The Big Weekend Show' co-hosts discuss CENTCOM's announcement of a ninth straight night of strikes against Iran. Former National Counterterrorism Center Director Joe Kent is reiterating his call for the withdrawal of US forces from the Middle East amid the ongoing war with Iran.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>ISIS poised to exploit historic US Iraq exit, terror group 'actively waiting in the gaps,' expert warns</h4>
+                <p>President Donald Trump announced U.S. troops will leave Iraq by the end of September, ending a 23-year presence. The Islamic State is quietly rebuilding as the United States prepares to complete its withdrawal from Iraq, raising fears the terror group could exploit a security vacuum, a regional security expert warned Sunday.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F07%2Fnewspress-collage-tibamrkn8-1784517863669.jpg?quality%3D90%26strip%3Dall%261784503585" alt="Lead Story Image" class="news-photo">
+                <h3>Argentina’s semifinal hero becomes World Cup final scapegoat after recklessness turns into red card</h3>
+                <p class="lead-summary"><strong class="drop-cap">F</strong>ive days ago, he was the hero who rescued Argentina with a stunning late equalizer in the semifinal against England. But on the sport’s biggest stage, he went from savior to scapegoat in a matter of minutes. His red card in second-half stoppage time didn’t just put Argentina in a precarious position down a man, it stripped the defending champion of its last realistic path to win the match, ultimately falling to Spain in the 2026 FIFA World Cup final 1-0 in extra time. “Enzo’s sending off … I think the first yellow card could have been avoided by the referee, but it is what is,” Argentina manager Lionel Scaloni said. “Of course he wasn’t thinking about booking him with a second yellow card. It’s a World Cup Final and I think there’s things that could have been avoided.” After already struggling to create anything on offense against Spain’s suffocating press, Argentina had failed to register a single shot in regulation. As the game was headed to extra time, Argentina was hoping to survive and find one fleeting moment on the counterattack to steal victory from the jaws of defeat against Spain. In the 82nd minute, Fernández was shown a yellow card for dissent after protesting a non-foul decision by Slovenian referee Slavko Vincic. It was a needless booking from one of Argentina’s emotional leaders, but it would soon become more significant than anyone realized. As Pau Cubarsí chased a loose ball near midfield, Fernández lunged into a reckless challenge that left Vincic with little choice but to show the Argentine midfielder a second yellow and in turn, a red card. Argentina was down to 10 men with stoppage time winding down and an additional 30 minutes of extra time still left to play.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Why Conor McGregor calls his exact knee injury 'quite shocking' after finding out results</h4>
+                <p>Fox News Justice correspondent David Spunt discusses the eight men indicted after allegedly plotting to attack the UFC 250 Freedom event at the White House on 'The Story.' Conor McGregor has finally revealed what exactly happened to his right knee during a very short return to the UFC octagon on July 11 in Las Vegas.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Marine Johannes questionable after exiting early in another Liberty injury concern</h4>
+                <p>INDIANAPOLIS — The Liberty may be without yet another key rotational player for Monday’s game against the Dallas Wings because of injury. Join Post Sports+ for exciting subscriber-only features, including real-time texting with Madeline Kenney about all things Liberty and WNBA. Fiebich didn’t make this road trip as she’s dealing with a left foot injury that has sidelined her since July 3. DeMarco hasn’t unveiled an official return-to-play timeline for either, though he said Sabally won’t return before the All-Star break. New York was supposed to play the Wings on Thursday but the Liberty’s travel issues resulted in a postponement.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Josh Kerr crushes 27-year-old world mile record after delivering on bold promise in London</h4>
+                <p>British runner Josh Kerr ran the fastest mile in history Saturday, clocking 3 minutes, 42.66 seconds to shatter the men's mile world record at the London Diamond League. Kerr's historic run broke Moroccan Hicham El Guerrouj's mark of 3:43.13, set in Rome in 1999, ending a record that had stood for 27 years, according to The Associated Press.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F07%2Fnewspress-collage-ypl1epw9b-1784470360588.jpg?quality%3D90%26strip%3Dall%261784455987" alt="Lead Story Image" class="news-photo">
+                <h3>Liam Payne pal finally off the hook for star’s tragic death — but prosecutors still investigating 2 others</h3>
+                <p class="lead-summary"><strong class="drop-cap">B</strong>UENOS AIRES — Liam Payne’s high roller friend is finally off the hook for the One Direction star’s tragic death in October 2024 after judges formally dismissed the last charge against him, The Post can reveal. But authorities are still investigating two other men more than 18 months after Payne’s fatal plunge from a Buenos Aires hotel balcony. Argentine businessman Rogelio Luis “Roger” Nores, 38, has been completely cleared of any wrongdoing, according to court records. Prosecutors had alleged that Nores acted as a host and controlled the pop singer’s expenses before he fell from a balcony and died after taking hard drugs at the luxury CasaSur Palermo hotel in the Argentinean capital. “There is no chance that Nores will be brought back into the case. The court was clear in its ruling that cleared him of any criminal wrongdoing,” Nores’ defense attorney Rafael Cúneo Libarona told The Post. “Roger never had the duty of caring for Payne, much less caring for his addictions. He was not Liam’s guarantor. He was his friend, not his physician, nurse, or therapist.” Nores was indicted on a manslaughter charge in November 2024, and Payne’s father, Geoff Payne, was a key witness against him. The manslaughter rap was dropped in February last year but Nores had remained accused of a drug supply charge since June 2025 until that was thrown out this past April, In a decision signed on June 9, three appeal court judges agreed with the prior ruling that found that Payne, 31, was an adult who was free to decide to use drugs and Nores was not responsible in any way.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Jennifer Lopez reveals what makes a man 'sexy' to her</h4>
+                <p>The singer and actress shared her thoughts on it during her performance at the Dolce & Gabbana show in Taormina, Sicily, on Thursday. "But you know what really makes a man attractive? It’s not the watch. It’s not the car. It’s not the private jet. It really isn’t, although that’s nice," the 56-year-old star began.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>'Resurrection of the Christ' writer reveals Mel Gibson's dark spiritual warning about 'Passion' sequel</h4>
+                <p>Fox News contributor Raymond Arroyo calls out the ultimate threat to democracy in Los Angeles and dissects a musical glorifying accused United Healthcare CEO killer Luigi Mangione on The Ingraham Angle. Mel Gibson's longtime collaborator Randall Wallace revealed the dark spiritual warning that the two-time Oscar winner gave him before they began writing the sequel to "The Passion of the Christ."</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Matt Damon, Tom Cruise and Shakira headline packed celebrity crowd at World Cup final</h4>
+                <p>Actor Matt Damon claimed that Netflix is requesting filmmakers to repeat the plot "three or four times" in dialogue for viewers who are looking at their phones. The celebrities came out in full force at the FIFA World Cup final match game on Sunday, when Spain triumphed over Argentina 1-0.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/07/931/523/laptop-and-cash-1.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>How sweepstakes entry data can reach scammers</h3>
+                <p class="lead-summary"><strong class="drop-cap">S</strong>mart refrigerators, cars and computers can show ads after updates, raising privacy and ownership concerns, Kurt "CyberGuy" Knutsson explains. It's summer. Mall kiosks promise free cruises. Retailers run drawings at checkout. Entry cards sit in stacks near the register. You fill one out, drop it in the box and forget about it by the time you reach your car. That may be the last moment the information feels contained. Many sweepstakes are legitimate. Still, the official rules or privacy policy may allow the sponsor, its affiliates or marketing partners to use and share your information. The privacy risk grows when those details become part of a larger marketing profile, move through the data broker industry or reach buyers running deceptive campaigns. Join us Wednesday, July 22, at 1 p.m. ET for a free CyberGuy Live class that will help you cut down on robocalls, spam texts, junk email and other unwanted messages. Kurt "CyberGuy" Knutsson will walk you step by step through simple ways to filter spam, clean up your inbox and recognize the messages that could put your personal information at risk. No technical experience is needed. You’ll also receive our spam—stopping checklist, and every registrant will get a link to the class recording afterward. A simple sweepstakes form can collect personal details that later become part of a larger marketing profile.  (Kurt "CyberGuy" Knutsson) A basic sweepstakes entry may ask for your name, email address and phone number. Some promotional forms request far more, including your age range, household income, health interests, medications or magazine subscriptions. Those extra questions can have marketing value even when they have little connection to selecting a winner. The Federal Trade Commission has found that data brokers collect information from online and offline sources, including purchases, magazine subscriptions, income data and other personal details. Brokers can combine those records into profiles that help marketers predict what may capture your attention. Before entering, ask yourself whether the sponsor truly needs each answer. The more information you provide, the more detailed the resulting profile can become.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Silicon Valley is embracing armed robots. Washington is making room.</h4>
+                <p>The administration is pushing the military to use AI, testing long-standing opposition to weapons systems that can pick and attack targets on their own.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Would this survival pod make you feel safer?</h4>
+                <p>Disaster prep used to mean bottled water, flashlights and maybe a generator in the garage. Now a French startup is taking all of that to the next level. Momentum Technologies recently showed off its LifePods survival capsules. According to the company's website, the capsules are designed to protect people, families, response teams and critical infrastructure during natural disasters, industrial risks and security threats.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
