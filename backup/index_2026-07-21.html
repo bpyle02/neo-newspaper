@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>TUESDAY, JULY 21, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://media.townhall.com/cdn/hodl/2014/274/f5c2c2a8-24a3-4324-992b-b18c22102803.jpg" alt="Lead Story Image" class="news-photo">
+                <h3>AZ Dems Facing Total Disaster in This Must-Win House Race</h3>
+                <p class="lead-summary"><strong class="drop-cap">A</strong>rizona’s 1st congressional district is a crucial race for Democrats aiming to flip the House in the upcoming midterm elections. It has instead turned into a fierce showdown, where Democrats face a complete disaster regardless of who wins the July 21 primary. The ads have become extremely harsh, and while the Democratic Congressional Campaign Committee promised to support whoever comes out on top, Democratic operatives have admitted this race has gone from a mess to a circus (via NYT): #AZ01NYT: Democrats Fight Over an Arizona House Seat They Need BadlyDemocrats have a chance to flip a competitive battleground district in and around Scottsdale, but the winner of Tuesday’s primary will emerge bloodied and broke.https://t.co/stvXcNAlBB For more than a decade, Democrats have tried and failed to win a House seat in the swing district around Scottsdale, Ariz. Now, in a midterm election when gerrymandering has dramatically narrowed the playing field, the evenly drawn open seat is a must-win. But the run-up to the Democratic primary on Tuesday has been marred by infighting, about $3 million in spending from outside groups and bitter charges of meddling by the national party in Washington. Whoever emerges victorious this week is likely to be broke and battered. “It is accelerating from mess to circus,” said Stacy Pearson, a longtime Democratic consultant who lives in the district. For the Democratic quest to take the House, the stakes are high. Arizona’s First Congressional District is one of about a dozen pure tossup seats held by Republicans. The national party is backing Marlene Galán-Woods, a Republican-turned-Democrat with a deep political pedigree, against a scrappy door-knocking doctor, Amish Shah, who was the Democrats’ nominee in 2024. Ms. Pearson, the Democratic consultant, said the “bloody” Democratic primary race had been one of the most negative that she could recall. Democratic voters have been here before. Two years ago, Dr. Shah and Ms. Galán-Woods also met in the House primary; Ms. Galán-Woods finished third. This time, the House Democrats’ official campaign arm has intervened to boost Ms. Galán-Woods after rallying behind Dr. Shah in the 2024 general election. In recent weeks, multiple political action committees have bolstered Galán-Woods, pouring more than $2.5 million into digital and television ads and mailers attacking Dr. Shah. Another PAC backing a more progressive candidate in the race, Jonathan Treble, has also spent nearly $300,000 against Dr. Shah.</p>
+                <p class="source-credit">— Townhall</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Heidi Klum’s Refreshing Take On Body Image Rejects Absurd Weight Loss Culture</h4>
+                <p>Victoria’s Secret angel and Sports Illustrated swimsuit supermodel Heidi Klum may be the last person you’d assume would have a healthy self-image. But at 53, after adding a few pounds to her former size 24 figure, she’s loving the woman she sees in the mirror. “What makes a person sexy is knowing their self-worth and knowing who they are,” she told Us Weekly. “When people are looking at every measurement of their booties, [or] at cellulite, it’s like, ‘Is this really what makes me who I am? There’s so much more to me.’ It’s about feeling great in your skin and knowing what you can do.” If it all sounds like she’s just reading a Post-It on her bathroom mirror, this mom of four practices what she preaches. The host of “Project Runway” and “Germany’s Next Top Model” recently opened up about Ozempic culture and whether or not she would ever consider using GLP-1s in cult-like solidarity with the rest of Hollywood’s shrinking celeb set. While she asserts that she supports others who use weight loss drugs to feel good about their bodies, for her, the answer is a definite no.</p>
+                <p class="source-credit">— Daily Wire</p>
+            </div>
+            <div class="story-minor">
+                <h4>J.D. And Usha Vance Welcome A New Baby Into The Vice Presidential Family</h4>
+                <p>Vance has been at the forefront of a pro-kids campaign for years, and he and his wife are taking their own advice. On Sunday, Vice President J.D. Vance and his wife Usha announced the birth of their fourth child, Alec Neel Vance, the first child born to a sitting vice president in 156 years. In a signed statement released on X, Vance said that his wife and newborn son were both healthy, and expressed his thanks to the doctors and staff at Walter Reed Medical Center and in the White House Medical Unit. Alec Neel Vance joins 9-year-old Ewan, 6-year-old Vivek, and 4-year-old Mirabel to bring the Vance family to six total members.</p>
+                <p class="source-credit">— The Federalist</p>
+            </div>
+            <div class="story-minor">
+                <h4>Democrat set to replace Platner in Maine led state Senate with a temper</h4>
+                <p>Troy Jackson, the presumptive Democratic nominee to challenge Sen. Susan Collins (R-Maine), yelled and cursed at fellow state lawmakers, interviews reveal.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/07/931/523/Daniel-Ortega-elections-rule.png?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Nicaragua's Ortega says country will 'never again' hold elections, shutting out opposition</h3>
+                <p class="lead-summary"><strong class="drop-cap">L</strong>ibby Cantrill, Pimco's Head of Public Policy, outlines how the upcoming midterm elections could reshape markets, tax policy, and the economy. She explains that while the House may flip to Democratic control, the Senate is less likely to change hands, impacting legislative predictability. Nicaraguan leader Daniel Ortega said the Central American country would no longer hold elections, further closing off any potential path for the opposition to challenge the government he leads with his wife, Rosario Murillo. Ortega, Nicaragua’s longest-serving leader, has remained in power since 2007 after previously governing during the 1980s. His current presidential term is scheduled to run through 2027. "There won't be any more elections here for them to try to seize the government and seize power," Ortega said. He delivered the remarks Sunday during a speech commemorating the 1979 Sandinista revolution, in which Ortega participated in the overthrow of the U.S.-backed dictatorship of Anastasio Somoza. Nicaragua's President Daniel Ortega said officials in the Central American country will no longer hold elections.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>A Red Sea blockade threatens a new front in U.S.-Iran war</h4>
+                <p>After a 10th night of U.S. strikes, Tehran retaliated with fresh attacks in Jordan and Bahrain.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Sinaloa Cartel boss 'El Mayo' sentenced to life, ordered to pay $15B in drug trafficking profits</h4>
+                <p>Mexican President Claudia Sheinbaum strongly criticizes the U.S. government for its alleged involvement in the 2024 abduction of former Sinaloa Cartel boss 'El Mayo' Zambada. Sheinbaum explicitly states the U.S. lied about its participation, claiming a violation of Mexican sovereignty. This incident raises serious questions about diplomatic relations between the two nations and American intervention in Mexico.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Nearly 100 U.S. troops injured in last two weeks of Iran war, Pentagon says</h4>
+                <p>An intensifying cycle of violence has left at least three U.S. service members dead since the resumption of hostilities a week ago.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F07%2Fcrop-40043400_9575de.jpg?quality%3D90%26strip%3Dall" alt="Lead Story Image" class="news-photo">
+                <h3>Baker Mayfield made it clear how personal Jets game was for him in new video: ‘F–k him’</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>he Buccaneers quarterback went in-depth on his history with ex-Jets defensive coordinator Steve Wilks, who was Mayfield’s interim head coach in Carolina when he was released in 2022, on the new season of Netflix’s “Quarterback.” “This is personal for me. Wilks cut me. F–k him,” Mayfield said in a huddle before the Week 3 contest. “[Wilks] was the defensive coordinator there, and then he was the interim head coach, which is kind of where things started to take a downward spiral in our relationship,” Mayfield explained in a sit-down interview for “Quarterback.” “This is personal for me. Wilks cut me. F*** him.”Baker Mayfield was extra motivated to get the W against the Jets last season 😂 pic.twitter.com/aUMN2REyVC “I could tell that I was not his favorite, which is fine, but the only thing you can really ask for in this business is to be upfront and honest,” Mayfield said. “When I was going to be released, or inactive first, they asked me what I wanted to do, that they would grant me my release, and I was like, ‘Listen, if you want me to ask for my release, I’ll say it, but if you’re going to cut me, just tell me that.’ … He’s ultimately the one that made that decision, that I wasn’t gonna be active.” Mayfield led a game-winning field goal drive to beat the Jets 29-27 in that revenge game. Postgame, Mayfield referenced the iciness with Wilks. “Also their D-coordinator was the one that cut me in Carolina. Lot of stuff was personal today. Haason Reddick, former Jet. … Lot of people,” he mused.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>SJSU volleyball coach's alleged assault victim speaks out for the first time since allegations surfaced</h4>
+                <p>Former SJSU volleyball star Brooke Slusser spoke out against her former coach Todd Kress after Fox News Digital reported the school was told of decades-old allegations against the coach during Slusser's last season in 2024. EXCLUSIVE: The woman who has accused current San Jose State University (SJSU) head volleyball coach Todd Kress of attacking her in a hotel room has come forward with her first statements since the allegations went public. Kress is widely known for overseeing the controversial 2024 season that was overshadowed by a trans athlete scandal involving Blaire Fleming and female teammate Brooke Slusser.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Tempo veteran supports Sandy Brondello after ‘laughable’ suspension for ‘species’ comment toward Angel Reese</h4>
+                <p>Several people around the WNBA have come to the defense of Sandy Brondello since her one-game suspension for calling Angel Reese a “protected species.” One of Brondello’s defenders is her center, Temi Fagbenle, who took to Threads on Saturday to respond to discourse on the incident. “‘Protected species’ is a figure of speech and I see nothing suspension-worthy with what @brondellosandy said,” wrote Fagbenle, who was teammates with Caitlin Clark on the Fever in 2024. ‘Species’ is the unfortunate and touchy word of this well-known phrase especially in the US’ racially charged climate, but if she was saying it about CC (an appropriate comparison re popularity) there would be no outrage, now would there,” she said.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Ferran Torres sports 'Make Spain Great Again' hat similar to Trump's slogan at World Cup homecoming parade</h4>
+                <p>Fox News chief correspondent Jonathan Hunt reports on Spain winning the 2026 FIFA World Cup final against Argentina in a match at New York New Jersey Stadium on ‘The Big Weekend Show.’ Spain’s World Cup Final hero, Ferran Torres, decided to celebrate the country’s victory on Monday with a nod to President Donald Trump.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F07%2FGarth-Brooks.jpg?quality%3D90%26strip%3Dall" alt="Lead Story Image" class="news-photo">
+                <h3>Garth Brooks has four Indianapolis concerts coming up. Which is the cheapest?</h3>
+                <p class="lead-summary"><strong class="drop-cap">D</strong>ue to overwhelming demand, the country icon — who had a lengthy Las Vegas residency from 2023-25 — recently announced he’s extended his two-night ‘Blame It All On My Roots Tour’ stint at Indianapolis’ Gainbridge Fieldhose from two to four nights. If you’d like to be at any of these gigs, tickets are available for all four Garth Brooks Gainbridge Fieldhouse shows. At the time of publication, the lowest price we could find on tickets for any one Indy show was $201 including fees on SeatGeek (that’s for the Sunday matinee). Make sure to use promo code NYPOST10 for $10 off purchases over $250 at checkout (Editor’s Note: this discount is only valid for users’ first purchase on SeatGeek). “No one was prepared for this,” Brooks, 64, shared via Instagram. “Nearly 400,000 in the Ticketmaster queue. Your patience is so appreciated. This is crazy! THANK YOU!” A press release describes these upcoming shows as “a full-scale return to featuring the return of the iconic drum pod [from Brooks;’ 1996 arena tour] and the production that changed live music forever.” Prior to this brief residency, the “Friends In Low Places” singer last performed at London’s Big Summer Time on June 27. According to Set List FM, he brought 19 songs to the festival that day. Highlights included “The Dance,” “The Thunder Rolls,” “Unanswered Prayers,” “If Tomorrow Never Comes” and, of course, “Friends in Low Places.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Prince William, Kate Middleton finally feel free to show affection in public: experts</h4>
+                <p>Christopher Andersen, author of "Kate!," recounts how Kate Middleton rebounded after her 2007 breakup with Prince William before the couple reunited. Prince William and Kate Middleton's increasingly affectionate public appearances have caught royal watchers' attention, with experts saying the couple are entering a happier, more relaxed chapter following a difficult few years.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>I talked to Zeds Dead about their postponed NYC show and tour — Here’s what’s next</h4>
+                <p>Zeds Dead may have been rained out in New York City this past weekend, but the Canadian electronic music duo isn’t done with the city just yet. After thunderstorms forced Dylan Mamid and Zach Rapp-Rovan — better known as DC and Hooks — to postpone their Forest Hills Stadium show, the pair announced they’ll return to Queens on Friday, Aug. 14, as part of their ongoing ‘Journey of a Lifetime Tour.’ “It was a tough call,” Dylan told The Post in an exclusive interview after the original show was postponed. “We were going back and forth all day long, but it seems like all the major events in New York got canceled tonight.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Sydney Sweeney shares bikini and underwear photos in Instagram dump from Australia trip</h4>
+                <p>FOX Business contributor Katrina Campins discusses criticism of Sydney Sweeney’s ‘freaky’ scenes on HBO’s ‘Euphoria’ and Jessica Simpson reportedly flying first class to Hawaii while her children flew coach on ‘Jesse Watters Primetime.’ Sydney Sweeney's latest photo dump includes an up-close and personal shot of her bikini top and casually brushing her teeth in her underwear.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/07/931/523/android-phone-photo-1.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>RedHook Android malware can quietly hijack your phone</h3>
+                <p class="lead-summary"><strong class="drop-cap">H</strong>alimah Delaine Prado, Google General Counsel, reveals the rise of AI-powered phishing scams originating from China's 'outsider enterprise.' She explains how these criminals use artificial intelligence to create highly convincing fake websites, impersonating trusted brands like T-Mobile to defraud hundreds of thousands of Americans, causing millions in losses. Prado highlights Google's strategy to combat these evolving threats. Your phone rings, and the caller sounds official. They say your bank account or government service needs immediate verification. A link arrives moments later. The page looks like Google Play, and the caller tells you to install an app to fix the problem. Then the app asks you to turn on Accessibility access, a powerful Android permission that can let an app read the screen and control taps. That approval can give the latest RedHook Android malware far more control than a regular app should have. Researchers at Group—IB, a global cybersecurity company that investigates online fraud and digital crime, analyzed the new threat. They say the upgraded remote access trojan, a type of malware that lets criminals control a device remotely, abuses Android's Wireless Debugging feature to gain shell-level privileges. That means it can run powerful system commands and change protected settings that ordinary apps cannot access, although it does not gain full root control. RedHook can then watch the screen, record what you type, operate apps and steal login information. The new technique also helps it install or remove apps without showing the usual approval prompts. That makes one rushed permission decision especially costly. Join us Wednesday, July 22, at 1 p.m. ET for a free CyberGuy Live class that will help you cut down on robocalls, spam texts, junk email and other unwanted messages. Kurt "CyberGuy" Knutsson will walk you step by step through simple ways to filter spam, clean up your inbox and recognize the messages that could put your personal information at risk. No technical experience is needed. You’ll also receive our spam-stopping checklist, and every registrant will get a link to the class recording afterward.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Amazon Leo satellite internet takes on Starlink</h4>
+                <p>Kurt 'CyberGuy' Knutsson reveals common tactics used by ticket scammers during the World Cup, including fake websites, social media ads and AI-generated offers. Amazon Leo satellite internet is getting closer to turning on service for customers. Amazon launched 29 more satellites into low Earth orbit on July 2, bringing its deployed total to 396 satellites, according to Amazon's latest mission update. That launch gives Amazon enough satellites for an initial service rollout later this year. However, the newest satellites still need to move into their assigned operating positions before they can support customers.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
