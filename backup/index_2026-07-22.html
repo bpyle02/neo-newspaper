@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>WEDNESDAY, JULY 22, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F07%2F135117232.jpg?quality%3D90%26strip%3Dall" alt="Lead Story Image" class="news-photo">
+                <h3>Best of the Babylon Bee: President Xi boasts that China ‘would never rig an election’ after winning with 100 percent of vote</h3>
+                <p class="lead-summary"><strong class="drop-cap">E</strong>very week, The Post will bring you our picks of the best one-liners and stories from satirical site the Babylon Bee to take the edge off Hump Day. Want more of a chuckle? Be sure to click the links. “My support for free and fair elections is so strong that everyone votes for me every single time,” Jingping explained. READ MORE At publishing time, Hutchins had asked that all neighbors please form one line to offer an apology and another line to beg for toilet paper. READ MORE The lesbians were currently being held awaiting extradition to the UK, where it’s presumed that they would later be set free if they confess to being Muslims. READ MORE “Moderate voters are overrated,” she said. “Real change only happens when we embrace both hope and the complete annihilation of this imperialist nightmare we call the United States.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>PA Democrat Paige Cognetti Isn't Being Transparent With Voters About Work With National Democrats</h4>
+                <p>Paige Cognetti is currently the Mayor of Scranton, Pennsylvania. Prior to that, she served on the Scranton School Board and during that time she voted for a city budget that cut 89 teachers and raised taxes on hardworking families while still resulting in a $4 million deficit. Cognetti herself admitted in 2024 that she only came to the city for political reasons. Elected Mayor in 2019, some Scranton residents were unhappy with Cognetti's work, calling her a "carpetbagger" who "doesn't reflect the region."  Cognetti clearly doesn't want to remain Mayor of Scranton forever and sees her time as Mayor as a springboard to higher office.</p>
+                <p class="source-credit">— Townhall</p>
+            </div>
+            <div class="story-minor">
+                <h4>Homer’s Odyssey, Nolan’s Cinema, And Our Search For Wisdom</h4>
+                <p>The last major director in Hollywood is Sir Christopher Nolan. We have other famous names — think of Tarantino — but they’re not working. There are more prestigious men still alive and working — Scorsese — but they seem lost in their own art, uninterested in the viewing public, never mind the future. Nolan dedicated his career to finding out what the future holds and making that future a reality. He was early to the superhero genre and made his definitive contribution to cinema with The Dark Knight. He also made the most successful sci-fi movies of our time with Inception and Interstellar. His astonishing success is more clearly seen if we ignore the Oscars (18 wins out of 49 nominations for his movies) and the exorbitant fortunes made (over $6 billion) in order to look at the effect on the audience, which skews male (very rare in any endeavor nowadays outside of tech), younger, and more interested in digital technology. He tries to bring together the interest in tech and manliness, in innovation and popularity — his admirers call his protagonists heroes and are spellbound by his spectacular IMAX movies. Accordingly, he dominates the IMDb Top 250 (with a unique 8 movies on the list).</p>
+                <p class="source-credit">— Daily Wire</p>
+            </div>
+            <div class="story-minor">
+                <h4>Mandatory Compliance With The Regulatory State Is A Lucrative Business Model For A New California NGO</h4>
+                <p>Landbell USA secured mandatory payments totaling tens of millions of dollars a year as its corporate revenue, then promised to hire some people and form the organization. First get paid, then start creating your company. If you’ve ever built a business the old-fashioned way, you’ll want to pay close attention to the way a for-profit German corporation built a lucrative California nonprofit organization with a government-guaranteed revenue stream. As The Federalist reported last week, companies that make or distribute any form of textiles in California are required to start making payments this year to a nongovernmental organization (NGO) that has been designated by the state as the official “producer responsibility organization” (PRO), which will develop a statewide textile recycling plan. Under the terms of the Responsible Textile Recovery Act of 2024, mandatory payments to the NGO in 2026 start at $1,000, then shift to an “eco-modulated” future sum that has yet to be determined.</p>
+                <p class="source-credit">— The Federalist</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/07/931/523/pastor-nigeria-4.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Nigerian pastor highlighted by Trump says he’s next after militia kills his relatives</h3>
+                <p class="lead-summary"><strong class="drop-cap">R</strong>ep. Riley Moore, R-W.Va., joins 'The Faulkner Focus' to weigh in on the Christian persecution in Nigeria, President Donald Trump's efforts to pressure terrorist organizations responsible and share firsthand stories of survivors. JOHANNESBURG: A Nigerian Pastor highlighted by President Trump on social media, says that nine members of his family have been killed. The minister is an outspoken critic of the killing of Christians by radicalized Muslim members of the Fulani militia. Rev. Ezekiel Dachomo now says that the same militia has issued a death threat against him. Dachomo, is the regional leader of the Church of Christ in Nations, in Nigeria’s Middle Belt. The State Department and a leading U.S. non-profit Christian organization have demanded the Nigerian government take more action to stop what the State Department described to Fox News Digital as "a shocking level of violence against Christians". AMERICANS TRAVEL TO PAKISTAN TO FREE CHRISTIANS TRAPPED IN MODERN-DAY SLAVERY: 'GOD'S HAND WAS IN IT' Rev. Ezekiel Dachomo, regional leader of the Church of Christ in Nations, in Nigeria’s Middle Belt, preaching at a funeral of murdered Christians.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Hegseth says Iran war has cost $37.5 billion, defends request for more</h4>
+                <p>Some lawmakers appeared frustrated as they sought clarity on the Trump administration’s strategy for the conflict amid renewed hostilities and a $67 billion funding request.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Death of Moroccan man in Italian police custody sparks protests, violence</h4>
+                <p>The death of Abderrahim Fakir in Italy drew parallels to the death of George Floyd.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Iran regime change talk resurfaces as Trump says Tehran 'wants to meet' amid US strikes</h4>
+                <p>The U.S. has launched strikes on Iranian targets following attacks that killed three American service members in Jordan and Iraq. Elements of the Trump administration are again debating whether the United States should support the downfall of Iran’s government as the war intensifies again, according to a recent analysis.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/07/931/523/TNA-Elayna-Black-072226-5.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>TNA star Elayna Black shares why she joined company, how she wanted to be in The Beautiful People</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>NA Wrestling's Elayna Black shares with Fox News Digital why she decided to join the company and how bad she wanted to be in The Beautiful People. Elayna Black was one of the hottest free agents on the pro wrestling market when she departed WWE in 2025. Formerly known as Cora Jade in NXT, Black hit the independent circuit performing in places like Atomic Legacy Wrestling, Black Label Pro and Game Changer Wrestling before taking time off. Total Nonstop Action Wrestling (TNA) was an option for Black and she was very familiar with the company’s programming. She told Fox News Digital she grew up watching TNA and became a fan of Jeff Hardy and the female faction known as The Beautiful People. "At the time I started watching TNA, Jeff Hardy was in the company," Black said. "So, I was a huge Jeff Hardy fan … I started watching WWE first. At first that was the only wrestling company I knew. When you're a kid, you don't really know anything else. And then slowly I discovered TNA and you discover, oh, Jeff Hardy was in WWE and I was young, so I didn't know. So, just discovering Jeff Hardy was crazy because I was like, I love wearing black nail polish and like I was getting into my little emo phase at the time. So, I loved Jeff Hardy.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Did a YouTube account spoil LeBron James’ free agency decision?</h4>
+                <p>What appears to be a mistake by one team might have spoiled the fun — or maybe not. The Heat’s YouTube page published and then quickly deleted a video titled “LeBron James Introductory press conference” along with the date of July 27, 2026. However, the Miami Herald reported that the team’s social media department accidentally published the video, which was being prepared in case he did sign with the Heat, not that the team had notice of James’ actual decision. James, as of the early hours on Wednesday morning, has not yet officially made his highly anticipated choice in free agency. The 41-year-old’s next move has been speculated on for weeks since it became clear he was not returning to the Lakers, and this inadvertent posting of a video to the web has only added fuel to the fire.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Vicious Vicki talks TNA Knockouts TV Championship tournament, why the promotion is where she wants to be</h4>
+                <p>Vicious Vicki talks to Fox News Digital about getting into the TNA Knockouts TV Championship tournament. Vicious Vicki has been a rising talent on the women’s wrestling scene, performing for Awesome Championship Wrestling (ACW) among other places over the last year.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Luis Robert Jr. lauds Mets outfield teammates after his mammoth homer: ‘It’s a beautiful thing’</h4>
+                <p>MILWAUKEE — If Luis Robert Jr. was forgotten by the Mets, they received a reminder Tuesday night of what they missed for 2 ½ months. The outfielder crushed a 451-foot homer — the longest blast at American Field Family this year — to give the Mets their final run in a 4-0 victory over the Brewers. Join Post Sports+ for exciting subscriber-only features, including real-time texting with Mike Puma about the inside buzz on the Mets. Robert was playing only his second game after his removal from the injured list. He had been sidelined since April 27 with lumbar spinal disc herniation. “[Monday] and today, those first couple of at-bats I was just trying to get into a rhythm,” Robert said through an interpreter.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/07/931/523/Prince-William-Kate-Middleton-Concerned.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Prince William, Kate Middleton wrestled with major decision over Prince George's future: expert</h3>
+                <p class="lead-summary"><strong class="drop-cap">K</strong>atie Nicholl, Vanity Fair royal correspondent and co-host of "The Royals Uncensored," says Prince George passed Eton's admissions process like other applicants before accepting his place at the prestigious school. Katie Nicholl, Vanity Fair's royal correspondent and co-host of "The Royals Uncensored," first reported that Prince George received "no special treatment" and had to pass Eton College's entrance exams just like every other applicant. Kensington Palace recently announced that George, who turns 13 on July 22, will attend the prestigious boarding school where his father and uncle, Prince Harry, were educated. The Prince and Princess of Wales, seen here on the Isle of Mull, western Scotland, on April 30, 2025, have agreed that their eldest, Prince George, will attend Eton College. (Oli Scarff/AFP via Getty Images) "I had been reporting for a while that Eton was the top choice," Nicholl told Fox News Digital. "Although behind the scenes, I think there was a bit of yo-yoing about whether it was the right choice. You've got to remember that George will one day be king. And, of course, William and Catherine are thinking about the future. They're thinking about creating a very modern monarchy that feels relevant."</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Los Angeles ticket scalpers jump on ‘The Odyssey’ hysteria to make fast cash</h4>
+                <p>Los Angeles ticket scalpers are seeing more than a mythical journey in their future with Christopher Nolan’s “The Odyssey.” Multiple IMAX 70MM tickets were seen by The California Post on resale marketplaces well above the normal price for theater tickets. Most of the listings were for the only AMC theater in the area showing IMAX 70MM — Universal CityWalk. One ticket package on eBay was priced at $1,299 for four tickets to the August 7 showing of the epic at Universal CityWalk. The listing showed the seats were closer to the back of the cinema, an ideal spot for the wide field of view used by the format, but in the middle.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Jelly Roll's daughter fiercely denies cheating rumors, days after divorce from Bunnie Xo finalized</h4>
+                <p>Country music singer Jelly Roll isn't afraid to tackle the ‘uncomfortable stuff’ in his marriage to TikTok star Bunnie XO to keep their marriage strong, the ‘Son of a Sinner’ musician shared with Fox News Digital. Jelly Roll's daughter fiercely defended her family, days after his divorce from Bunnie Xo was finalized.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>RUSH has four MSG concerts next week. Get the cheapest tickets with a discount</h4>
+                <p>RUSH has not one, not two, not three but four (!) ‘Fifty Something Tour’ concerts at Madison Square Garden. If you’d like to be there to see Geddy Lee, Alex Lifeson live in NYC for the first time since June 2015, last-minute tickets are still available. At the time of publication, the lowest price we could find on seats for any one show was $248 including fees on SeatGeek. Their other shows at the Knicks and Rangers’ home have tickets starting anywhere from $263 to $295 including fees. Make sure to use promo code NYPOST10 for $10 off purchases over $250 at checkout (Editor’s Note: this discount is only valid for users’ first purchase on SeatGeek).</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/07/931/523/mac-malware-photo-1.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>CrashStealer Mac malware steals passwords and wallets</h3>
+                <p class="lead-summary"><strong class="drop-cap">K</strong>urt 'CyberGuy' Knutsson reveals common tactics used by ticket scammers during the World Cup, including fake websites, social media ads and AI-generated offers. A polished installer can make risky software feel routine. You see a familiar Mac window, follow the directions and enter your password when asked. By then, the app may already be working against you. Security researchers at Jamf Threat Labs have uncovered CrashStealer, a new Mac information stealer that impersonates Apple's crash-reporting software. Jamf first tracked the malware in May 2026 while it appeared to be under development. By early July, researchers detected it in active attacks. Join us this Wednesday, July 22, at 1 PM ET for a free CyberGuy Live class that will help you cut down on robocalls, spam texts, junk email and other unwanted messages. Kurt "CyberGuy" Knutsson will walk you step by step through simple ways to filter spam, clean up your inbox and recognize the messages that could put your personal information at risk. No technical experience is needed. You’ll also receive our spam-stopping checklist, and every registrant will get a link to the class recording afterward. Mac users are being warned about CrashStealer, a credential-stealing malware that uses fake password prompts and a signed installer to evade suspicion. (Photo by Ute Grabowsky/Photothek via Getty Images) CrashStealer targets information many people rely on every day. It searches for browser credentials, password-manager data and cryptocurrency wallet information. The malware can copy the Mac login Keychain as well. The malware stands out because its developers wrote it in native C++. Many common Mac stealers rely on AppleScript or simpler software wrappers. CrashStealer also encrypts the files it collects before sending them to an attacker-controlled server. Meanwhile, anti-debugging features make the malware harder for researchers to examine. However, the first app a victim sees isn’t called CrashStealer. The attack begins with a disk image branded as "Werkbit Setup." The Werkbit Setup disk image contains a polished installer. Its directions tell the user to right-click the app and choose Open. That action often appears in instructions for software that needs to get around a Mac security warning. In this case, the installer already carried a valid Apple Developer ID and a notarization ticket. Therefore, it could clear Gatekeeper on its first launch. Jamf also found that the disk image itself had been signed, which researchers called unusual for malicious Mac delivery.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Could a paint-on electronic tattoo spot heart attacks?</h4>
+                <p>Fox News senior medical analyst Dr. Marc Siegel joins 'Fox & Friends' to discuss the release of the ACTXA Core Smart Ring, a new AI-wearable for non-invasive glucose monitoring. A colorful shark painted on your hand might look like a temporary tattoo. However, the design could also monitor the electrical activity of your heart. Penn State engineers have developed a paint-on electronic tattoo made from conductive ink. Researchers apply the ink directly to the skin, where it dries into a working electrode.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
