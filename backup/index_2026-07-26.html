@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>SUNDAY, JULY 26, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://www.theblaze.com/media-library/image.jpg?id=67535191&width=980" alt="Lead Story Image" class="news-photo">
+                <h3>How Lucifer fell: The origin of Satan and sin in heaven</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>he fall of the angel Lucifer is a story that oftentimes doesn’t get a lot of attention, as many Christians tend to focus on how the devil plagues humanity today. But how did Lucifer become the devil? What did that devolution look like, and when did sin really begin? On this episode of “Strange Encounters,” BlazeTV host Rick Burgess sits down with Pastor Mac Brunson to dive into the origin story of the cosmos’ greatest enemy. “Somewhere in eternity past before God created the heavens and the earth, He created what we call, or what Scripture calls, angels,” Brunson says, noting the different varieties of angelic beings, including seraphim, cherubim, Michael the archangel, and messenger angels like Gabriel. Lucifer, he notes, was none of these, however. “Created above all the others,” his name means “light-bearer,” and he was “far more beautiful” than the others. Rick argues that God, despite being all-knowing, “is not afraid of choices” and allowed the angels to make their own. “He certainly gave angels intelligence; he gave them personality. They each have a name. ... They also have the ability to communicate, not only to communicate with man ... [but also] with each other,” Brunson adds, highlighting the individuality and agency of angelic beings. Brunson, reading from Isaiah 14, recounts Lucifer’s evil desire to “ascend to heaven,” “raise [his] throne above the stars of God,” “sit on the mount of assembly,” “ascend above the heights of the clouds,” and “make [himself] like the Most High.” “And he makes that choice, and Revelation tells us that a third of the angels went along with him, and, of course, they were cast out of heaven,” he says. “So sin did not begin on earth; it began in heaven? That’s why Jesus says we’re going to have a new heaven and a new earth?” Rick asks. To hear more of the theological deep dive into the origins of heaven and Satan, watch the episode above. To enjoy more bold talk and big laughs, subscribe to BlazeTV — the largest multi-platform network of voices who love America, defend the Constitution, and live the American dream.</p>
+                <p class="source-credit">— The Blaze</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>John Cusack reveals why he stepped back from Hollywood after decades of films</h4>
+                <p>The “Being John Malkovich” star, 60, said he wanted to tell stories without studio executives weighing in, prompting him to write his upcoming graphic novel “Momo.” “I always thought [graphic novels] were the closest things to film, really,” he told Variety at San Diego Comic-Con on Friday. “You’re picking out shots, they’re so cinematic.” “When you ask somebody to put $20 million or $30 million into a bank account [for a film], they want to have an opinion and they’re afraid and all that stuff,” he said. “This was just like, I wrote it, and I said, ‘I like the story,’ and then I got this beautiful, wonderful artist, Ignacio Noé, to do the illustrations and so nobody edited anything I wrote or that he drew,” Cusack said.</p>
+                <p class="source-credit">— Https://pagesix</p>
+            </div>
+            <div class="story-minor">
+                <h4>Republicans see ‘scary’ lack of enthusiasm among core voters ahead of midterms</h4>
+                <p>Pollsters and GOP groups are raising the alarm about an unmotivated base in an election year that would be tough no matter what, given the president’s low approval.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Fulton Sheen and the Conscience of the West</h4>
+                <p>The soon-to-be-beatified archbishop’s insights remind us of the importance of defending human dignity in the face of communism and materialism.</p>
+                <p class="source-credit">— National Review</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/07/931/523/police-after-car-rams-germany-festival.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>At least 1 dead, several injured after van rams into crowd at Pride festival; suspect 'known to police'</h3>
+                <p class="lead-summary"><strong class="drop-cap">G</strong>erman authorities on Saturday canceled a popular Pride festival after one person was killed, and numerous others were injured, when a van rammed into a crowd in Berlin. The incident occurred during the European city's annual Christopher Street Day festival, an LGBTQ+ Pride event. In an ongoing manhunt for a suspect, Berlin police said they had identified a person who has not been arrested and has alleged ties to Islamic groups, The Associated Press reported. "The suspect is known to police. He is known to us as a member of Islamic circles here in Berlin, and our search for this person is proceeding at full speed," said police spokesman Florian Nath. "We still have no information whatsoever regarding his specific motives, the exact sequence of events, or his role in the crime itself." Police officers were on the scene after the cancellation of Christopher Street Day in Berlin Saturday. (Fabian Sommer/DPA via AP) "We are conducting an intensive manhunt for suspects," police added, later clarifying that there could be one or more suspects. "At this point, we don’t know anything about possible motives, the identity of the perpetrator or the perpetrators, or anything of that nature," Police spokesperson Alexander Klute told The Associated Press.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>See what it’s like to use a North Korean smartphone under Kim Jong Un</h4>
+                <p>North Koreans are banking, watching makeup tutorials and using period trackers on their phones. But under Kim, these digital comforts are also tools of control.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Houthis claim attack on Saudi oil refinery as Iran war widens to Red Sea</h4>
+                <p>The strikes by Yemen's Iran-backed Houthi rebels could add to the pressure on global oil markets on top of disruptions caused by the closure of the Strait of Hormuz.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/07/931/523/Caitlin-Clark-WNBA-All-Star-game.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>WNBA All-Star Game draws record crowd as Caitlin Clark’s Team Spoon holds off Team Coop</h3>
+                <p class="lead-summary"><strong class="drop-cap">W</strong>NBA star Caitlin Clark went scorched earth on the WNBA saying it needs to improve in numerous categories, including officiating, stopping hate, and more. The WNBA continued its 30th-season celebration Saturday night, bringing the All-Star Game back to Chicago for the first time since 2022. The game itself had plenty of scoring, but Jonquel Jones supplied the all-around performance that helped Caitlin Clark and Team Spoon outlast Marina Mabrey and Team Coop. Jones finished with 22 points, 13 rebounds and eight assists in a 129-122 win and was named the most valuable player of the game. A general view of Team Spoon playing Team Coop during the 2026 AT&T WNBA All-Star Game at the United Center on July 25, 2026, in Chicago, Illinois. (Sage Zipeto/Getty Images) Eight Team Spoon players scored in double figures in a defense-light All-Star Game that featured 127 3-point attempts, with Allisha Gray adding 19 points and Clark finishing with 17. The annual summer showcase was played before a record crowd of 19,783 at the United Center, the longtime home of the Chicago Bulls. Friday night’s 3-point contest and Shooting Stars competition were held at the smaller Wintrust Arena a few miles away.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Red Sox adding Curtis Mead from Nationals in trade for Connelly Early as deadline domino falls</h4>
+                <p>The Red Sox, who surged up the standings and are back in playoff contention three months after firing Alex Cora, added to their infield ahead of the trade deadline. Boston acquired third baseman Curtis Mead from the Nationals in exchange for Connelly Early, a 24-year-old with just 21 MLB starts on his ledger, on Saturday night, The Post’s Jon Heyman confirmed — parting with a talented young arm to stock up for an American League East race that also includes the Yankees and the Rays. The Nationals ended Saturday night one game over .500 (53-52) and just two games back of the Diamondbacks for the final wild-card spot in the National League, and the addition of Early — who’s currently injured and recovering from left elbow inflammation — gives them a young arm in their rotation, too.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>WNBA commissioner vows to crack down on 'racism, misogyny,' dodges big questions at All-Star press conference</h4>
+                <p>Rep. Marlin Stutzman details when the WNBA's mistreatment of Caitlin Clark officially becomes a referendum on league Commissioner Cathy Engelbert WNBA Commissioner Cathy Engelbert dedicated the first serious portion of her news conference at the league's All-Star game to addressing "harassment" against players.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Liberty’s Jonquel Jones wins WNBA All-Star Game MVP award after double-double</h4>
+                <p>CHICAGO — Liberty star Jonquel Jones on Saturday night hoisted the All-Star MVP trophy above her head, prompting the United Center crowd to roar even louder. Join Post Sports+ for exciting subscriber-only features, including real-time texting with Madeline Kenney about all things Liberty and WNBA. “It means a lot to win the MVP at the All-Star Game,” Jones said after leading Teresa Weatherspoon’s team to a 129-122 win in front of a WNBA All-Star record crowd of 19,783 fans. “There’s so many great players that have come before that have done it. … New York means so much to me and every time I put the jersey on. I know that I represent a city that loves the game and players that have come before me that have really paved the way so I think it was really a big deal to come here tonight and to play in a way that represented the game well.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/07/931/523/ted-danson-smiling.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Ted Danson wanted to 'stop being a liar' at the end of 'Cheers' saying he 'f---ed up' his life so badly</h3>
+                <p class="lead-summary"><strong class="drop-cap">‘</strong>Cheers’ actor Ted Danson tells Fox News Digital why he doesn’t think a reunion will happen in the future. Ted Danson is getting real about the state of his personal life toward the end of his run on "Cheers." During a recent episode of his podcast, "Where Everybody Knows Your Name," the 78-year-old actor gave listeners an idea about what his life was like when "Cheers" came to an end in 1993. "People say, 'What was it like? What did you do when she was over?' I said, 'I had f---ed up my life so much that I didn't even realize 'Cheers' was over,'" he said. Elsewhere in the conversation, Danson admitted he "barely knew myself" and took a "postgrad grow-up class fast" the last year he was on the hit show. Danson admits he had messed up his life during the last year of "Cheers." (Robin L Marshall/Getty Images) He described driving to Long Beach to see his mentor, whom he called "amazing," saying he gave him "a whole different kind of therapy spirituality kind of thing." "I wanted to stop being a liar," he said. "I wanted to be emotionally mature. I wanted to change."</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Seth Rogen and Jonah Hill snap at YouTuber who crashed their set: ‘Don’t f–k with people trying to make their show’</h4>
+                <p>A YouTuber learned an important lesson in film and TV production etiquette in Los Angeles when he stumbled across the set of Apple TV Plus’ “The Studio.” Yung Mooch, who boasts 134K followers on Instagram and 558K subscribers on YouTube, posted a video on Friday dubbed “Los Angeles is Falling Apart,” where he wandered around the City of Angels, interviewing random people about their lives. He eventually made his way to Venice Beach, where he ran into Hollywood stars Seth Rogen and recent LA exile Jonah Hill, who were filming Season 2 of “The Studio,” though they were not met warmly. Mooch ran up to Rogen and Hill, who were both seated on electric scooters, and said, “How are you doing? I just wanted to say hi,” but Rogen immediately replied, “No! We’re working!</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Singer Zach Top slams modern country music, says it lacks 'soul'</h4>
+                <p>Zach Top is sharing his hot take on modern country music, saying it now sounds "perfect" and lost some of its "soul." During a recent interview with Rolling Stone, the 28-year-old country singer spoke about his new song, "Good Girls & Cowgirls," and why he thinks bluegrass music, which is what he started out playing, is now growing in popularity.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>LA’s burglary epidemic has Hollywood stars on edge: ‘Everyone I know has gotten robbed’</h4>
+                <p>Los Angeles’ crime crisis is hitting everyone — from everyday residents to the rich and famous — and reality TV star Morgan Stewart says she’s learned that the hard way. Stewart pulled back the curtain on the string of burglaries that have targeted her home during Friday’s episode of the “Therapuss” podcast, describing how thieves repeatedly made off with luxury items despite private security. One of the most painful losses came just two days after she returned from France with a coveted Hermès Birkin bag. “Bought it in France, brought it home, stolen out of my house two days later,” Stewart recounted.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
