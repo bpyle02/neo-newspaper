@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>MONDAY, JULY 27, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://media.townhall.com/cdn/hodl/2016/365/0fabb16e-7023-4484-8f51-1b08b4a51849.jpg" alt="Lead Story Image" class="news-photo">
+                <h3>The NYT Reported on the State of the Democratic Party. It's a Total Disaster</h3>
+                <p class="lead-summary"><strong class="drop-cap">Y</strong>ou know the Democratic Party is a mess. Some fundraising operations are nearly broke and can't afford to fight both the GOP and the socialist insurgency at once. Yes, the party in power has the advantage in fundraising, but this gap is outrageous. It’s partly because Democrats have a poor reputation, and their big donor base is still shocked and disgusted by the 2024 crushing defeat to Donald Trump, which cost them $1 billion. The generic congressional ballot remains strong for the GOP; anything under a D+5 margin gives Republicans a solid chance to keep control of Congress. In the latest sign that the Democratic National Committee is financially struggling, they’re now asking vendors to bill them after the 2026 midterms. Moreover, its chair, Ken Martin, has become a hermit, retreating into the bunker, becoming increasingly paranoid, and known for violent outbursts, some of which have landed him calls from the DNC’s human resources department—you can’t throw phones at staffers, Ken (via NYT): At the center is Ken Martin, the 53-year-old party chairman, who has found himself increasingly isolated, gripped by the fear that he will lose his job and relying on a vanishingly small circle of people he trusts, according to interviews with more than two dozen Democrats, including current and former D.N.C. officials and members. Most of them spoke on the condition of anonymity to discuss the party’s troubled state of affairs. Mr. Martin’s fraying nerves are showing. In a pique of frustration in early July, he threw his phone at the desk of a junior aide while upbraiding the person. The phone-tossing incident resulted in a formal complaint to the D.N.C.’s human resources department. The fallout from the phone-throwing episode was described by half a dozen people familiar with the incident, who spoke on the condition of anonymity because they were not authorized to discuss internal party matters. None of them witnessed the encounter, and there was some dispute over how aggressively the phone was tossed. Mr. Martin was said to have thrown the phone at the desk, rather than at the aide. Mr. Martin later met with D.N.C. human resources officials about his behavior, according to three of the people. … the Democratic Party and its allies are far behind Republicans when it comes to money. Mr. Trump controls a $400 million super PAC, and the Republican National Committee is sitting on nearly $130 million. Mr. Martin’s D.N.C. is $2 million in debt.</p>
+                <p class="source-credit">— Townhall</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Don’t Let Graham Platner’s Replacement Fool You. He’s Still A Crazy Leftist</h4>
+                <p>Democrats have undemocratically replaced an awful Senate candidate in Maine with someone who seems to be an okay candidate, possibly giving them a better chance of picking up a seat in November. Troy Jackson has won a bunch of elections, serving multiple terms in both houses of the state legislature, though he’s also lost quite a few. He’s been pretty good at the practical work of getting bills passed. Most significantly, Jackson really is the things that Graham Platner was cosplaying: He’s a logger and union guy who became a public figure as a leader in a 1998 blockade to keep Canadian labor out of Maine’s lumber industry, on the premise that foreign labor competition drives down American wages. Build the wall, eh?</p>
+                <p class="source-credit">— The Federalist</p>
+            </div>
+            <div class="story-minor">
+                <h4>It’s Time to Reexamine Monetary Policy Rules</h4>
+                <p>Pure unpredictable discretion is no way to operate an economy.</p>
+                <p class="source-credit">— National Review</p>
+            </div>
+            <div class="story-minor">
+                <h4>Rep Thomas Massie says the Iran war has 'significantly weakened' America 'all for Israel'</h4>
+                <p>Republican Rep. Thomas Massie of Kentucky argued Sunday that the war with Iran has "weakened" the United States. "The U.S. has been significantly weakened by the war with Iran," the congressman wrote in a Sunday post on X. "This administration depleted our missile defenses, drained our oil reserves, sacrificed our men & women, inflated the price of consumer goods, increased our debt, and neglected our domestic needs…" he continued, adding, "all for Israel."</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/07/931/523/New-Hamas-Leader-Khalil-al-Hayya-.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Hamas taps 'ultimate institutional survivor' as terror chief, sending message to Israel: expert</h3>
+                <p class="lead-summary"><strong class="drop-cap">E</strong>x-political prisoner and activists says people are frustrated with Hamas leadership after Israel’s killing of senior commanders, as many residents say civilians — not Hamas leaders — have paid the price of the war (Credit: Jusoor News) An old hand very familiar to Israel has emerged as the new political leader of Hamas following a secret insider election that took months to unfold, and one regional expert said the development signals the terrorist group will not be charting a new course. Khalil al-Hayya, who has been a key negotiator for Hamas and who has survived multiple alleged assassination attempts, will now lead the group's political bureau. But Middle East Institute Senior Fellow Jaser AbuMousa told Fox News Digital his election is not exactly a passing of the torch. "Expect more of the same, deliberately," AbuMousa said. "Al-Hayya is Hamas's chief negotiator and its ultimate institutional survivor, so you'll see continued engagement at the negotiating table, ceasefire talks, prisoner exchanges, but do not mistake that for moderation." Al-Hayya, Hamas' longtime chief negotiator in indirect ceasefire and hostage talks with Israel, will now lead its political bureau.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Europe will one day thank Trump for 'shaking' it out of its 'complacency': UK defense chief</h4>
+                <p>President Donald Trump, speaking at the NATO Summit in Ankara, Turkey, criticizes Spain, Italy and the UK for not offering immediate support to the U.S. in a potential conflict with Iran. Trump describes their response as a 'bad moment' but later emphasizes the 'tremendous unification' among NATO members, expressing mutual love and respect.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Toronto police investigate gunfire, vandalism targeting Jewish-owned bakery chain</h4>
+                <p>A Jewish-owned bakery chain in Toronto, Canada, was targeted in two separate incidents on Sunday morning, including one location that was struck by gunfire, authorities said. No injuries were reported and investigators are working to determine whether the incidents are connected, Toronto Police said.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Berlin Pride attack suspect killed in police confrontation: AP</h4>
+                <p>Fox News' Chanley Painter reports Berlin police are conducting a manhunt for 21-year-old Abdul B, identified as the suspect in a deadly van attack at a German Pride Festival. One person was killed and 16 others were injured after the van crashed into a crowd near the parade route. Authorities are investigating reports of additional stab wounds and suspect terrorism, noting the individual's ties to Islamic groups.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/07/931/523/Brunson-Porter-Jr.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Jalen Brunson's Knicks status on full display as he walks in venue with wife while Nets star checks guest list</h3>
+                <p class="lead-summary"><strong class="drop-cap">A</strong>fter a 53-year wait, the New York Knicks captured their first NBA championship, sparking celebrations across New York City. Thousands of fans lined the streets of Manhattan for a historic ticker-tape parade, turning a Thursday workday into a spontaneous holiday as the city honored its victorious team. Just look at what happened when Jalen Brunson, an NBA champion with the New York Knicks, and Michael Porter Jr., who stars for the Brooklyn Nets on the other side of town, arrived at a venue in a video that has since gone viral. Brunson, who was alongside his wife, Ali, happened to arrive at a World Cup after-party hosted by Justin Bieber in New York City at the same time as Michael Porter Jr., who was with his former Denver Nuggets teammate Peyton Watson. New York Knicks star Jalen Brunson and Brooklyn Nets star Michael Porter Jr. had two different experiences at a nightclub in New York City. (GETTY) Porter may make more than Brunson per season ($40.8 million per season compared to $37.7 million), but the latter has achieved the ultra-rare "King of New York" status.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>FIFA chief Gianni Infantino accuses World Cup critics of spreading hate in open letter</h4>
+                <p>FIFA President Gianni Infantino has hit back at critics of ​the World Cup, accusing them of spreading hate and false narratives while defending the tournament as a success ‌that celebrated unity, safety and inclusion. In an open letter published on Monday, Infantino, 56, said detractors had overlooked the joy and togetherness experienced by millions of fans around the world who witnessed the tournament, won by Spain and staged across the United States, Canada and Mexico. “To those behind their pens ​and papers, behind their screens spreading hate and false rumors, I want to say that ⁠while you are sitting behind, we at FIFA are on the front lines organizing, working hard, and delivering the ​best show in the world.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Athletics' Shea Langeliers, top MLB trade deadline target, could be out for season after devastating injury</h4>
+                <p>New York Yankees infielder Jose Caballero got into a heated discussion with a home plate umpire about his pitch clock antics on Wednesday. (This video contains AI-assisted content.) One of MLB’s top trade candidates ahead of the Aug. 3 deadline might be out for the remainder of the season.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>How new veteran leaders are transforming Rams at training camp</h4>
+                <p>They traded for All-Pro cornerback Trent McDuffie. Signed cornerback Jaylen Watson. Traded for two-time NFL Defensive Player of the Year Award winner Myles Garrett and drafted their future franchise quarterback in Ty Simpson. But the Rams didn’t just spend the offseason collecting Pro-Bowlers, they assembled veteran leaders that can also help teach the next generation of young players. Sunday marked the Rams’ first day of training camp at Loyola Marymount University, an opportunity for the entire team to get together and practice what football is all about: 11-on-11, the best on offense going against the best on defense. And after that first day, one theme echoed through the noise: The Rams have a bevy of veteran leaders in all three facets of the game that can help teach the younger players.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F07%2F135589788.jpg?quality%3D90%26strip%3Dall" alt="Lead Story Image" class="news-photo">
+                <h3>All the epic mythical creatures featured in Christopher Nolan’s ‘The Odyssey’</h3>
+                <p class="lead-summary"><strong class="drop-cap">V</strong>iewers of Christopher Nolan’s “The Odyssey” may be surprised by how many mythological creatures are packed into Homer’s ancient epic. Filled with A-list stars, the major box-office hit takes audiences from one mythical encounter to the next as Odysseus fights to make it home. “The movie is visually stunning. It needs to be seen in the theater,” said Joel P. Christensen, provost and senior vice president for academic affairs at the CUNY Graduate Center and a professor of classics. Christensen, a Homer scholar, told Fox News Digital that audiences don’t need to read “The Odyssey” beforehand because Nolan provides enough context to follow the story. Unlike many modern blockbusters with a single central villain, nearly every stop on this journey brings a new monster or supernatural threat. As Christopher Nolan’s adaptation introduces new audiences to the ancient epic, here’s a look at the legendary creatures that define Odysseus’ journey in the book, according to Encyclopedia Britannica. The most famous of the Cyclops, Polyphemus traps Odysseus and his crew in his cave before devouring several of the men. The name Polyphemus roughly translates to “rich in songs and legends” or “widely talked about,” per Britannica. Odysseus eventually blinds Polyphemus with a sharpened wooden stake — allowing him and his remaining crew to escape the Cyclops’ cave. Polyphemus is one of the sons of Poseidon — prompting the sea god to curse Odysseus’ journey home.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>'Friday Night Lights' star Adrianne Palicki says Texas gave her something Hollywood couldn't</h4>
+                <p>"Friday Night Lights" star Adrianne Palicki found something in Texas that she knew Hollywood would never give her. During an interview with Fox News Digital at a special fan screening celebrating 20 years of the iconic show — hosted by Plex and ATX TV, Palicki explained that she found "heart," which she did not have while living in the "negativity" of Los Angeles.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Prince William likely 'livid' over Meghan Markle's 'tasteless' photos at Princess Diana's home: expert</h4>
+                <p>Christopher Andersen, author of "Kate!," recounts how Kate Middleton rebounded after her 2007 breakup with Prince William before the couple reunited. Meghan Markle shared photos of her children, Princess Lilibet and Prince Archie, frolicking around the late Princess Diana's childhood home and experts are calling Markle's move "tasteless."</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Katy Perry blasts White House for using hit song 'Firework' she sold in $225M catalog deal</h4>
+                <p>Podcast host Benny Johnson speaks on the Democratic Party’s next potential presidential candidate on Jesse Watters Primetime. Katy Perry blasted the White House for using her hit 2010 song "Firework" in a TikTok video without her permission, years after the pop star sold the majority of her music catalog in a reported $225 million deal.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/07/931/523/ikairos-ai-wearable-tech-1.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>AI wearable watches you to predict what you need</h3>
+                <p class="lead-summary"><strong class="drop-cap">F</strong>ox News senior medical analyst Dr. Marc Siegel explains ACTXA's Core Smart Ring, an AI-powered wearable offering non-invasive glucose monitoring. This new technology senses blood flow and pulse, using machine learning to detect elevated blood sugar. Siegel notes its importance given the nearly quadrupled global diabetes cases since 2000, emphasizing lifestyle changes alongside technological advancements for better care. Would you wear a small AI device that periodically looks at you and studies the world around you? A Singapore-based smart hardware and AI company, Lingverse, is betting people may be ready for that level of attention. Lingverse has raised $29 million to develop an AI wearable called iKairos. The company describes it as a personal AI guardian that can offer help before you ask. The device can turn toward your surroundings or toward you. Lingverse says this two-way view could give its AI more context about what is happening in your life. That extra perspective could make AI more useful in daily life. However, it also creates a very personal trade-off. The device may need to observe you closely before it can understand what you need. The iKairos AI wearable can observe its user and surrounding environment, raising questions about convenience, consent and privacy. (Lingverse) Our free CyberGuy Live class, "Sick of Spam?", has ended, but you can still watch the full replay and download our spam-stopping checklist. Kurt "CyberGuy" Knutsson walks you step by step through simple ways to reduce robocalls, spam texts, junk email and unwanted messages. You’ll also learn how to curb political texts, clean up your inbox and spot messages that could put your personal information at risk. Most AI assistants wait for a command. You ask a question or tap a button, then the software responds. Wearable AI devices can gather more context because they travel with you. Many use outward-facing cameras to identify objects or describe what appears nearby. Lingverse wants iKairos to gather a second type of context. The device can turn its camera toward the person wearing it. Lingverse says this dual-perspective design could help iKairos understand both you and your environment. In turn, the device may be able to choose a more useful moment to offer assistance.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Fox News AI Newsletter: White House monitoring OpenAI containment escape, Hugging Face hack</h4>
+                <p>OpenAI CEO Sam Altman talks to reporters following a meeting with Sen. Bernie Sanders, I-Vt., at the Dirksen Senate Office Building in Washington, D.C., on June 3, 2026. (Anadolu via Getty Images) The White House's Michael Kratsios was reportedly briefed on the incident and has been monitoring the situation.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Self-dressing clothes could help older adults</h4>
+                <p>Most of us get dressed every day without thinking twice about it. However, a stiff shoulder can make pulling on a shirt surprisingly difficult, while balance problems can turn a simple pair of pants into a real challenge. That is what makes a new invention from South Korea's KAIST and Stanford University worth watching.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>ClickLock Mac malware locks apps until you give in</h4>
+                <p>A routine "verify you are human" page should never ask you to open Terminal, the Mac app used to run computer commands. Yet that is how a new malware attack appears to get onto a Mac. The page tells you to copy and paste a command into Terminal. It then shows a convincing progress bar while the command quietly downloads malicious software in the background.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
