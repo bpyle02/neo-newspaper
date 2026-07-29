@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>TUESDAY, JULY 28, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F07%2Fnewspress-collage-hwuphbzyt-1785195446945.jpg?quality%3D90%26strip%3Dall%261785181261" alt="Lead Story Image" class="news-photo">
+                <h3>Why Mason Miller should be the Yankees’ top trade target — and the lower-cost options on radar</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>he Yankees need bats. Desperately. They completed the weekend having mustered more than five runs just twice in the past 33 games. They can talk about Aaron Judge returning at some nebulous date; sure, fine. But that appears no place close. And it is more pipe dream than strategy to hope that Giancarlo Stanton gets healthy, stays healthy and is quickly productive after missing this much time or that Austin Wells’ recent uptick in performance is the real thing or that Jasson Domínguez hits like a Martian and not 2024 Alex Verdugo. And then just as an ice-cold Cody Bellinger was re-heating, he suffered a hamstring injury over the weekend that will cost him at least four weeks, Aaron Boone said. If they repeat for another month what they have done offensively for the past month-plus, they are going to do more than just imperil winning the AL East. These Yankees are threatening to waste elite run prevention (the majors’ lowest ERA even after allowing 11 runs Sunday to Philadelphia).</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>‘Sad’ Eric Roberts detailed his relationship ‘loss’ with daughter Emma years before missing her wedding</h4>
+                <p>Eric Roberts pulled back the curtain on his and daughter Emma Roberts’ strained relationship years before missing the actress’ wedding to Cody John. When asked what was the “toughest time” of his life during an October 2024 podcast episode, the actor replied, “Probably the loss of a relationship with my daughter.” The 70-year-old, however, denied to “Inside of You” listeners that there was “pain” surrounding their connection. He described it, instead, as “a sadness for the most likely misunderstandings we’ll all have forever because we’re human.” Eric noted at the time that becoming a grandpa brought this feeling to light because his eldest grandchild, who “looks like Emma,” has taken “a liking” to him — and “reminded” him of “what [he] didn’t have.</p>
+                <p class="source-credit">— Https://pagesix</p>
+            </div>
+            <div class="story-minor">
+                <h4>The Questions About the Delay Regarding the Presser About the Seattle Shooting Rattle Its Mayor</h4>
+                <p>There was a horrific shooting at the Bite of Seattle food festival over the weekend. On Sunday, two suspects reportedly engaged in a gun battle. It turned the last day of the festival into a mass casualty event. Three people were killed, and another four were wounded. Two handguns were recovered, with a 15-year-old suspect being apprehended. Another person of interest, described as a “young person,” remains at large. Mayor Katie Wilson is a socialist who has never run anything in her life, and it showed Sunday night. The press conference was a mess, delayed by hours, with municipal and state officials caught up in a blame game sparked by the Seattle Police Department. They claimed the delay was due to the arrival of dignitaries participating, namely Gov. Bob Ferguson and Rep. Pramila Jayapal, though they were only informed of a press conference until after 10 p.m..</p>
+                <p class="source-credit">— Townhall</p>
+            </div>
+            <div class="story-minor">
+                <h4>They Have No Idea What We Think</h4>
+                <p>The online discourse about ideological bias in academia proves that leftists don’t know what conservative beliefs are.</p>
+                <p class="source-credit">— National Review</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/07/931/523/Morad-Tahbaz-American-Freed-hostage.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Freed American reveals brutal Iran prison ordeal, warns hostages face greater danger</h3>
+                <p class="lead-summary"><strong class="drop-cap">M</strong>orad Tahbaz, who spent nearly six years in Evin Prison, says Western governments have failed to deter Iran’s hostage-taking and warns renewed conflict could worsen conditions for Americans still held. For nearly six years, American conservationist Morad Tahbaz lived in what he described as hell inside Iran’s prison system. The worst four months were spent completely alone in a small cell, beneath a bright light that never went dark. Tahbaz was held in Ward 2A of Iran’s Evin Prison, which he described as a high-security detention facility controlled by the intelligence branch of Iran’s Islamic Revolutionary Guard Corps. He was allowed out only twice a day for about 10 minutes and was forced to wear a blindfold whenever he left, Tahbaz told Fox News Digital. His weekly call with his wife lasted only a few minutes and was monitored so closely that an official interrupted whenever he spoke in English. "This is probably the harshest and toughest imprisonment that any prisoner will go through," Tahbaz, who was finally released in September 2023, told Fox News Digital of the Islamic Revolutionary Guard Corps intelligence detention facility inside Iran's Evin Prison.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>In China, sober-curious young people challenge a tradition of heavy drinking</h4>
+                <p>Alcohol has been a fixture of professional and social life in China for decades, but a new generation is resisting pressure to drink excessively — or at all.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Gunman fired at US consulate in Toronto, second time building was shot at this year</h4>
+                <p>Harris Faulkner speaks with Rep. Rick Crawford R-Ark., chairman of the House Intelligence Committee, about the shooting at the U.S. Consulate in Toronto, Canada. A gunman fired at the U.S. Consulate in Toronto on Monday, marking the second time this year someone shot at the building, according to authorities.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Russia closes window for dissent as Ukraine’s attacks stir public dismay</h4>
+                <p>Moscow is coming under increasing pressure over Kyiv’s relentless drone strikes. Ukraine’s president is due to meet in Washington with President Donald Trump on Tuesday.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2024/10/931/523/vita-vea.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Pro Bowl player requests trade from Tampa Bay Buccaneers on eve of training camp amid contract dispute</h3>
+                <p class="lead-summary"><strong class="drop-cap">A</strong>s negotiation tactics go, asking for a trade the day before training camp opens is the NFL equivalent of reaching for the nuclear codes before deciding to type them in. But that's exactly what Tampa Bay Buccaneers nose tackle Vita Vea has done. The two-time Pro Bowl player has grown so frustrated with contract discussions this offseason that he's decided he doesn't see a future with the team, and has asked to be traded, a league source confirmed to Fox News Digital. That doesn't mean a trade will happen. Vea is under contract for the 2026 season and is scheduled to make up to $18 million if he can play all 17 games in the final year of his current contract. Atlanta Falcons quarterback Kirk Cousins (18) scrambles away from Tampa Bay Buccaneers defensive tackle Vita Vea (50) during the first half of an NFL football game Thursday, Oct. 3, 2024, in Atlanta. (AP Photo/Butch Dill) A.J. BROWN HEADED TO NEW ENGLAND TO REUNITE WITH MIKE VRABEL AFTER A SEASON OF EAGLES UNHAPPINESS The Bucs aren't simply going to hold a fire sale to avoid the trade talk distraction, per a source. Vea wants more money and points to the fact he is currently the 19th-highest-paid interior defensive lineman in the league. And he believes he is much better than the 19th-best defensive lineman in the league. Vea is, for all intents and purposes, the structural centerpiece of the Tampa Bay defense. He is arguably the team's best run defender and, as all NFL defensive coordinators often note, if a defense cannot stop the run it is unable to do much of anything else.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Yankees’ Ali Sanchez relishes first MLB home run: ‘Living the dream’</h4>
+                <p>CHICAGO — As he rounded the bases Monday night at Rate Field, Ali Sánchez transported back to his hometown of Carora, Venezuela. The Yankees catcher had envisioned this moment “a lot” in his mind, but finally it had arrived in reality, in his fifth season and 75th game in the major leagues: his first home run. Join Post Sports+ for exciting subscriber-only features, including real-time texting with Greg Joyce about the inside buzz on the Yankees. “Literally a kid running the bases from Venezuela and living the dream,” Sánchez said of what was going through his mind after hitting a three-run shot in the Yankees’ 9-5 win over the White Sox.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Kyle Shanahan 'this close' to losing his right eye in horrible car crash, NFL analyst reveals</h4>
+                <p>RB Raheem Mostert joins Colin Cowherd to discuss playing for Mike McDaniel and Kyle Shanahan and how both coaches compare to each other. He also dives into how McDaniel will positively impact the Los Angeles Chargers, then breaks down the difference between playing for teams with good and bad cultures. Mostert also shares the players he enjoyed playing with the most, including Maxx Crosby.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Conor McGregor teases ‘last dance’ UFC fight for potential injury return</h4>
+                <p>Conor McGregor hinted at his “last dance” following the knee injury that cut his comeback fight against Max Holloway at UFC 329 short. McGregor lasted just 1:09 before the injury to his right knee following a jump kick that forced the official to call the match, as it became abundantly clear that the controversial fighter wouldn’t be able to continue after landing awkwardly. The well-known MMA fighter is now going through the recovery process and will need to undergo surgery that will keep him out of the octagon for several months. McGregor tore both his ACL and meniscus. But the Irishman hinted at when he would return in a social media post on Monday, likely pointing to next July.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F07%2FUsher-Chris-Brown.jpg?quality%3D90%26strip%3Dall" alt="Lead Story Image" class="news-photo">
+                <h3>How much are tickets to see Usher and Chris Brown at MetLife Stadium?</h3>
+                <p class="lead-summary"><strong class="drop-cap">U</strong>sher and Chris Brown are officially Garden State-bound. The talented twosome touch down at East Rutherford, NJ’s MetLife Stadium for a pair of concert next week. Their shows, as part of their ongoing summer 2026 ‘R&B Tour,’ are set to take place: At the time of publication, the lowest price we could find on seats was $170 including fees on SeatGeek. Floor-level seats — which could potentially lead to a headline-generating shirtless serenade (!) — start at $1,055 including fees. Make sure to use promo code NYPOST10 for $10 off purchases over $250 at checkout (Editor’s Note: this discount is only valid for users’ first purchase on SeatGeek). In the event you can’t make either of those concerts, the co-headliners will be at Syracuse’s JMA Wireless Dome on Saturday, Aug. 1. Power 105.1 reports that the duo typically deliver 50+ songs between the two of them, per show. Classic tracks to make the cut from Usher include fan favorites like “Yeah!,” “Caught Up,” “U Remind Me,” “My Boo,” “Burn” and many, many more. As for Brown, he takes radio staples “Poppin’,” “Loyal,” “Look at Me Now,” “Run It!” and “Yo (Excuse Me Miss)” along with 25 other classics and newer tunes from his recently-released 12th studio album “Brown” to the stage. “Chris Brown and Usher kicked off the first of three sold-out shows with a high-energy celebration of R&B that kept much of the crowd on its feet from beginning to end,” Parklife DC noted in a glowing review from a huge show at Northwest Stadium.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Monica Lewinsky's Lindsey Graham tribute draws criticism and praise for placing people over party: expert</h4>
+                <p>Activist Monica Lewinsky told Fox News Digital that her personal definition of power has evolved over the years. Monica Lewinsky's tribute to Lindsey Graham following his death sparked interest across the aisles, not only for her respectful candor, but also served as a reminder of the late senator's impact on history.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>It’s Shark Week—Here’s where you can watch live for free, plus a full schedule</h4>
+                <p>The 38th annual Shark Week began yesterday, July 26, but there’s still six whole days of shark-themed programming on the way from Discovery Chanel. Shark Week 2026’s programming slate includes 20 new premieres, including the return of some fan-favorite franchises, like “Air Jaws: Red, White and Breach.” “Expedition Unknown” host Josh Gates will explore the truth behind history’s first recorded shark attack and whether an infamous sea monster was a shark all along in a new shark-themed installment of that series. World-class cliff diver Molly Carlson will attempt a harrowing, record-setting dive into shark-infested waters in “Ultimate Shark Dive,” and per Discovery, this year will also see the return of Paul de Gelder, Forrest Galante, Dr. Tristan Guttridge, who “push the boundaries through bold new expeditions and high-intensity investigations.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>White House fires back after John Mellencamp mocks Trump's Gulf of America during concert</h4>
+                <p>The White House is hitting back after John Mellencamp took direct shots at President Donald Trump's Gulf of America. Mellencamp paused his Saturday night show Holmdel, N.J. to mock Trump's executive order to rename the "Gulf of Mexico" to "Gulf of America." On Monday, Davis Ingle, WH Spokesman, shared a statement with Fox News Digital. "Nobody in their right mind cares what out-of-touch, woke Hollywood celebrities have to say," Ingle said.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/07/931/523/on-vaction-home-robbery.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Your home is empty. Do burglars already know?</h3>
+                <p class="lead-summary"><strong class="drop-cap">R</strong>etired LAPD lieutenant Jeff Wenninger explains how criminals exploit obituaries, routines and public clues to time home break-ins and what families can do to reduce risk. In Argentina, authorities recently arrested three Chilean men wanted in the U.S. in connection with a South American theft group accused of burglarizing the homes of professional athletes. Federal prosecutors linked the group to break-ins involving Kansas City Chiefs stars Patrick Mahomes and Travis Kelce, Milwaukee Bucks player Bobby Portis and other athletes. Two of the suspects were also arrested in connection with a burglary at the home of tennis legend Juan Martín del Potro in Argentina. According to prosecutors, the group identified targets through publicly available schedules and location information, then struck while athletes were away or playing games. Separately, the FBI has warned that international theft groups surveil homeowners to learn their routines and advises travelers to avoid announcing vacations on social media. Online criminals can research your address, family, travel plans and estimated property value without ever driving down your street. Here's how criminals piece together those digital clues and what you can do to make your home harder to target. Alleged members of a South American theft ring pose with stolen valuables. Federal investigators say the group targeted professional athletes while they were away competing in games. (U.S. Attorney's Office, Middle District of Florida/Photo by Bryan M. Bennett/Getty Images) Our free CyberGuy Live class, "Sick of Spam?," has ended, but you can still watch the full replay and download our spam-stopping checklist. Kurt "CyberGuy" Knutsson walks you step by step through simple ways to reduce robocalls, spam texts, junk email and unwanted messages. You’ll also learn how to curb political texts, clean up your inbox and spot messages that could put your personal information at risk. It may be tempting to assume these crimes only affect people with mansions, expensive cars and celebrity lifestyles. Those cases make the news, but professional athletes and entertainers are far from the only targets. Security researchers and law enforcement agencies have tracked burglary crews using the same methods against everyday homeowners.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>What to look for in antivirus software without the jargon</h4>
+                <p>Shopping for antivirus software can feel harder than it should. Many product pages lead with buzzwords, lab scores and long feature lists. Most of us just want a simple answer: Will this help keep my computer safe without making life harder? That question gets more important every day. Scammers use fake texts, phishing emails, bogus websites and infected downloads to trick you into giving up your money, passwords or access to your personal files.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>AI wearable watches you to predict what you need</h4>
+                <p>Fox News senior medical analyst Dr. Marc Siegel explains ACTXA's Core Smart Ring, an AI-powered wearable offering non-invasive glucose monitoring. This new technology senses blood flow and pulse, using machine learning to detect elevated blood sugar. Siegel notes its importance given the nearly quadrupled global diabetes cases since 2000, emphasizing lifestyle changes alongside technological advancements for better care.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Fox News AI Newsletter: White House monitoring OpenAI containment escape, Hugging Face hack</h4>
+                <p>OpenAI CEO Sam Altman talks to reporters following a meeting with Sen. Bernie Sanders, I-Vt., at the Dirksen Senate Office Building in Washington, D.C., on June 3, 2026. (Anadolu via Getty Images) The White House's Michael Kratsios was reportedly briefed on the incident and has been monitoring the situation.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
