@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>THURSDAY, JULY 30, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://i0.wp.com/www.nationalreview.com/wp-content/uploads/2026/07/tiny-zaps-tattoo.jpg?fit=617%2C360&ssl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Let People Ink for Themselves</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>he government should not be in the tattoo-regulation business.</p>
+                <p class="source-credit">— National Review</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>States cast doubt on Trump’s claim that China hacked their voter rolls</h4>
+                <p>Declassified evidence points to Beijing seeking personal data for espionage, not election interference.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Guess Which Republican Senator Is Being a Pain Over Todd Blanche As Attorney General</h4>
+                <p>Sen. John Cornyn (R-TX) is on a revenge tour. He’ll never admit it, but he’s whining about his side talking about canceling the August recess—he wants to go home—and folks being unrealistic about passing the SAVE America Act. Wrong, John. It can be passed easily, but the Senate GOP is loaded with too many panics, too many losers, and too many Cornyn folks who think nuking the filibuster is a bad idea. It’s going to happen; it’s only a question of which side it happens first. For now, the Republicans seem keen on sliding the loaded gun to the Democrats to use on them, because that’s how the GOP has operated for years.</p>
+                <p class="source-credit">— Townhall</p>
+            </div>
+            <div class="story-minor">
+                <h4>'No mother deserves that': Florida man shot and killed his mother before abusing her body, police say</h4>
+                <p>The man said his mother had molested him for years, but her friend absolutely rejects the accusation. A 23-year-old was arrested for allegedly shooting and killing his mother, whom he accused of abusing him for many years, according to Florida police. George Beemer called police on Saturday morning complaining of chest pains, according to the Lee County Sheriff's Office. After he was transported to a hospital, another 911 call reported that the home had caught fire. Police said that Beemer's friend told them he had admitted to killing his mother and lighting the home on fire. A medical examiner ruled the woman's cause of death was a gunshot wound and the manner of death a homicide.</p>
+                <p class="source-credit">— The Blaze</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/03/931/523/trump-iran.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Trump retaliates after Iran attack as expert warns regime is growing more dangerous</h3>
+                <p class="lead-summary"><strong class="drop-cap">F</strong>DD’s Behnam Ben Taleblu says Tehran is becoming more risk-tolerant and warns the U.S. must restore deterrence or face additional missile and drone attacks. The United States resumed airstrikes inside Iran Wednesday night in retaliation for Tehran’s attempted surprise ballistic-missile attack on American forces, as an Iran expert warned that the regime has become increasingly willing to test Washington despite its weakened military capabilities. "The strikes are a powerful response to yesterday’s attempted Iranian attack on U.S. forces based in the Middle East," U.S. Central Command said as the new operation began, according to The Associated Press. The renewed strikes marked the first U.S. attacks inside Iran since President Donald Trump paused the bombing campaign Friday after 13 consecutive nights to allow diplomacy another chance. Iran’s missile launch shattered that brief pause and returned the conflict to direct exchanges between Washington and Tehran. Trump had signaled the retaliation earlier Wednesday, saying the United States would hit Iran "very hard."</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Death of 15 elephants in Kenyan national park sparks outrage, investigation</h4>
+                <p>The unexplained deaths over the past month have raised fears of poisoning.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Trump threatens to hit Iran ‘hard’ following missile attack on U.S. assets</h4>
+                <p>The threat came after Saudi Arabia joined U.S. military strikes on Iranian proxies.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Russia launches ballistic missile attack on Kyiv hours after Zelenskyy warns of major strike</h4>
+                <p>Paul Gigot discusses Trump's decision to grant Ukraine a license for Patriot missile production. Seth Jones analyzes the move's impact on Ukraine's defense, current battlefield challenges and potential Russian escalation against NATO. Russian air strikes killed at least 13 people across Ukraine early Thursday, including one in Kyiv, as ballistic missiles targeted the capital and multiple explosions rocked the city, according to Ukrainian officials.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F07%2F135952694.jpg?quality%3D90%26strip%3Dall" alt="Lead Story Image" class="news-photo">
+                <h3>Sophie Cunningham rips Storm co-owner Celeste Keaton for leaving teen girls in tears amid controversy: ‘Truly embarrassing’</h3>
+                <p class="lead-summary"><strong class="drop-cap">I</strong>ndiana Fever guard Sophie Cunningham has spoken out after two teenage fans claimed Seattle Storm co-owner Celeste Keaton berated them as “f—ing insane” over a sign supporting the WNBA star. Cunningham described Keaton’s actions inside Climate Pledge Arena in Seattle on Tuesday night as “truly embarrassing” while praising the young fans for “standing up for what they believe.” “I truly believe there is a safe space and love for EVERYBODY,” she wrote on X on Wednesday night. “Biological girls, biological boys, trans women, and trans men. Everyone is welcome at my table! You can disagree and still be kind.” She also praised the two girls, adding: “Bravo to those girls for standing up for what they believe. You’ll be hearing from me soon yay for gifts. The two girls were sitting courtside and holding a sign reading, “Thank you, Sophie for speaking up for girls!” when Keaton confronted the duo during the Storm’s 105-95 loss to the Fever. Keaton allegedly told the girls that “Jesus loves everyone” when they voiced their support for Cunningham’s comments opposing transgender women competing in women’s sports, the teens told Brandi Kruse on the Undivided podcast. They alleged Keaton then told them, “I hope Jesus can forgive you for what sin you’ve done,” before calling them “f—– insane” while pointing at her head and adding, “God can save you,” leaving one of the fans in tears. “I’ve had people hate on me on the internet, but it doesn’t really affect me as much, because it’s people online. But that just caught me by surprise because I thought she was going to be nice, and she started screaming at us, and cussing at us.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Matthew Stafford, Josh Allen headline 'Madden NFL 27' ratings as 99 Club members</h4>
+                <p>Chicago Bears quarterback Caleb Williams will aim to avoid the "Madden Curse" in a pivotal third NFL season after being tabbed as the video game's cover athlete. NFL training camps are opening across the league, and the countdown to the latest edition of "Madden NFL" is officially underway.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Cam Schlittler’s strong Yankees start spoiled by seventh-inning hiccup</h4>
+                <p>But the Yankees right-hander was left with a sour taste in his mouth after an otherwise terrific start ended poorly on the way to a brutal 6-5, 12-inning loss to the White Sox at Rate Field. Join Post Sports+ for exciting subscriber-only features, including real-time texting with Greg Joyce about the inside buzz on the Yankees. Schlittler had allowed just one baserunner — a broken-bat single in the fourth inning — entering the seventh, with the Yankees leading 4-0, before he walked Munetaka Murakami on a full count. His next pitch was a 98 mph sinker that hit Miguel Vargas on the hands, and one out later, Andrew Benintendi roped a double down the right-field line to score the White Sox’s first run and end Schlittler’s night.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Malik Nabers 'looked good' in surprising full practice as Giants kick off training camp in West Virginia</h4>
+                <p>The NFL season is only 6 weeks away, and Danny Parkins, Greg Jennings, and Eric Mangini discuss the biggest stories from training camp. They ask if the New York Giants are playoff contenders under John Harbaugh, if the Denver Broncos can repeat their success from last season, and if the Detroit Lions can protect Jared Goff with their new offensive line.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/07/931/523/george-amal-clooney-france-wildfires.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>George and Amal Clooney evacuate France home as wildfires spread across Europe</h3>
+                <p class="lead-summary"><strong class="drop-cap">W</strong>ildfires are sweeping across Spain and France, forcing more than 250,000 people to evacuate. One blaze is threatening France's famed Bordeaux wine region, while Spain has declared a national emergency. France has deployed the military, and the Tour de France has been shortened as firefighters battle the massive blazes. A representative for George Clooney confirmed the evacuation to People and shared a letter the couple sent to Brignoles Mayor Didier Brémond The couple and their 9-year-old twins left their home in Brignoles, in France's Provence-Alpes-Côte d'Azur region, as fires threatened large swaths of the Mediterranean, the outlet reported. A representative for George Clooney confirmed to People that the couple sent a letter to Brignoles Mayor Didier Brémond before leaving. "Dear Didier, At this point we have no idea whether our beautiful home makes it through this terrible moment," the letter began. George and Amal Clooney reportedly evacuated their home in southern France as fast-moving wildfires spread across parts of Europe.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Oscar-winning musician Glen Hansard’s final hours revealed — before early morning fatal motorcycle crash</h4>
+                <p>Oscar-winning singer-songwriter Glen Hansard was enjoying a night of Irish music before his fatal motorcycle accident west of Ireland’s capital city early Wednesday morning. The 56-year-old, who died in a single-vehicle motorcycle crash just before 4:30 a.m. in western Dublin, spent his final moments at the Wren’s Nest pub attending a trad session, The Irish Times reported. Hansard was a regular at the watering hole on Tuesday nights when the bar hosted trad sessions — which are casual gatherings of musicians playing Irish music together — with the musical group Trad 15. Tuesday’s musical session was advertised as a celebration of the Mayo County football team’s win in the All-Ireland Senior Football Championship over the weekend, according to the outlet.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Megan Moroney cancels show mid-performance, leaves stage in tears</h4>
+                <p>Country music star Megan Moroney told Fox News Digital she is not ‘emotionally available’ for a romantic relationship, putting all her energy into her music career. Country star Megan Moroney cut her Denver concert short Tuesday night after becoming too sick to continue performing, later telling fans it was "the hardest decision" she has ever had to make.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>What do last-minute Chance the Rapper ‘Coloring Book’ tickets cost?</h4>
+                <p>From August through October, Chicago’s favorite son will take his ‘The Coloring Book 10 Year Anniversary Tour’ with special guest La Reezy to theaters, music centers, rooftops, pavilions, auditoriums and resorts all over North America. While out and about, the three-time Grammy winner is scheduled to make not one, not two, not three but four (!) stops in New York and New Jersey. They’re slated to go down at: The Vine at Del Lago Resort and CasinoWaterloo, NYFriday, Aug. 14Capital One City Parks Foundation SummerstageNew York, NYTuesday, Aug. 18The ParamountHuntington, NYFriday, Aug. 21Stone PonyAsbury Park, NJSunday, Aug.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
