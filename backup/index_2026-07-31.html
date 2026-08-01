@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>FRIDAY, JULY 31, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F07%2Fx-com-davidsantosvlog-status-2083120402641862987-136070388.jpg?quality%3D90%26strip%3Dall" alt="Lead Story Image" class="news-photo">
+                <h3>Thousands of illegal African migrants overrun Spanish enclave, turn streets into open toilets and bathe in fountains: ‘An apocalypse’</h3>
+                <p class="lead-summary"><strong class="drop-cap">A</strong>n unprecedented wave of nearly 50,000 illegal migrants from Africa has flooded the Spanish enclave of Ceuta, prompting Spain to deploy its military – as locals liken the invasion to an “apocalypse.” Harrowing local media reports reveal residents and business owners in Ceuta – a Spanish territory located on the north African coast – are terrified to open their doors amid the surge of migrants, many of whom arrived wearing nothing but swimwear without a penny or possession to their name. “Businesses closed. Shops shut because if you open a business, it gets overrun … We’re scared. The streets are packed. There are no measures in place. It’s every man for himself. They’re not giving us any help,” a terrified downtown restaurant owner who didn’t want to give their name told state-owned Spanish media outlet RTVE. The socialist Spanish government, which just months ago launched a program to give legal status to some 500,000 illegal immigrants in the country, said it deployed 200 specialized police officers and 60 troops from the mainland to assist Ceuta’s own forces, but the reinforcements were powerless in the face of such a massive migrant deluge, which consisted mostly of military-age men. “It’s like an apocalypse. Waves of people everywhere. You can see as many people wandering around as you want,” José Carlos Lara, owner of a sign-making business just over the border, told RTVE. He said local authorities have “no capacity” to deal with the chaos, and that the new arrivals are already sleeping in the streets and washing themselves in public fountains. A video shared on X by David Santos, director of right-leaning Spanish media outlet La Bandera, shows a migrant defecating on the side of a building in broad daylight. Lara added that other business owners – particularly food stores – have shut their doors in a panic, fearing widespread looting. “I’m not ⁠opening this afternoon because the situation is extremely tense … The first thing I have to do is protect my business and my family,” women’s clothing shop owner Enrique Serrano told Reuters, noting that businesses are taking self-defense matters into their own hands because they lack faith in cops’ ability to protect them. The same is true of local residents, many of whom are afraid to walk the streets. “People aren’t leaving their homes, only to buy food and then return. There’s a lot of uncertainty,” said Sebastián Antón, who works at a small supermarket in the middle of Ceuta. He compared the response of locals to what was seen during the darkest days of the pandemic.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Trump Touts A ‘Historic’ Gaza Disarmament Agreement</h4>
+                <p>The deal, mediated by Egypt, Qatar, and Turkey would mark a major victory for Trump's Board of Peace. President Donald Trump announced Thursday that negotiators have his reached what he described as a “historic agreement” aimed at ending Hamas’ control of Gaza, though the deal still awaits final approval from the terrorist group. “Today, the Board of Peace reached a HISTORIC agreement for the COMPLETE DISARMAMENT of Hamas and all other armed groups in Gaza,” Trump wrote on Truth Social. “This is a monumental step toward lasting PEACE and SECURITY.” Axios reported Thursday that U.S. officials and the Board of Peace believe Hamas could formally sign the agreement within days after agreeing to its terms during negotiations mediated by Egypt, Qatar, and Turkey. However, the outlet noted that Israeli officials and Western diplomats remain skeptical that Hamas will ultimately follow through with its commitments.</p>
+                <p class="source-credit">— Daily Wire</p>
+            </div>
+            <div class="story-minor">
+                <h4>The next abortion battle is over Kansas’s highest court</h4>
+                <p>Voters will decide whether to replace a nearly 70-year-old appointment system with direct elections that could reshape the state Supreme Court for decades.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Shocking video shows alleged kidnapper shooting victim in car trunk after police chase in quiet SoCal neighborhood</h4>
+                <p>The peace and quiet of a residential street in Southern California was shattered on Wednesday evening when police shot and killed a man they watched allegedly shoot and kill a kidnapped victim after a car chase. Video captured of the shocking incident shows the driver of the car getting out of his vehicle after being pulled over by police, then calmly walking back to the trunk and shooting someone lying inside. San Bernardino County Sheriff's Department deputies were dispatched to a home on Monteverde Drive in Chino Hills at about 10:14 p.m. over a report of gunshots and screaming, according to a press release.</p>
+                <p class="source-credit">— The Blaze</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://static.foxnews.com/foxnews.com/content/uploads/2026/07/Spain-Migrant-Crisis.gif" alt="Lead Story Image" class="news-photo">
+                <h3>Spain deploys military after thousands of migrants overwhelm border enclave, at least 18 dead</h3>
+                <p class="lead-summary"><strong class="drop-cap">V</strong>ideo shows migrants swimming and arriving by boat in Ceuta as Spain deploys its military following a mass border crossing that left at least 18 people dead. (Credit: Associated Press) Spain is deploying its military to the North African enclave of Ceuta after thousands of migrants overwhelmed the territory's border with Morocco, prompting a major security response as officials confirmed at least 18 people died during the crossings. The Spanish government said the armed forces will support the Civil Guard in restoring order after local officials warned the city could no longer handle the influx. Prime Minister Pedro Sánchez and Interior Minister Fernando Grande-Marlaska are expected to visit Ceuta as Madrid scrambles to contain the crisis. The surge marks one of the largest migrant waves to hit Ceuta since 2021, when more than 8,000 people entered the Spanish territory over two days, triggering a diplomatic dispute between Spain and Morocco. "The situation is absolute chaos," Rachid Sbihi, who heads an association representing Spain's Civil Guard officers in Ceuta, told The Associated Press. "It's not possible to give precise numbers, but there are thousands of migrants crossing."</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>How the U.S. war with Iran is widening inequality in Africa</h4>
+                <p>In Angola, the conflict has driven up prices for food, fuel and fertilizer, increases felt most acutely by the poor. But for the wealthy and well-connected, it's been a boon.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>White House blasts Spanish government as thousands of migrants surge from Morocco, emergency request denied</h4>
+                <p>Thousands of migrants from Morocco pored over the country's border with Spain and into Spain's African enclave of Ceuta July 30, 2026. (Reuters) The White House bashed Spain's left-wing government after the border between Spain's North African enclave of Ceuta and Morocco collapsed Thursday.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>NATO member scrambles fighter jets as Russian attack on Ukraine kills 8</h4>
+                <p>Ukrainian President Volodymyr Zelenskyy says Ukraine's military has transformed dramatically, now supported by more than 500 defense companies. He says Russia is losing 30,000 troops each month and argues the initiative in the war is no longer in Russian President Vladimir Putin's hands.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F07%2Fnewspress-collage-mqcfm317t-1785489036800.jpg?quality%3D90%26strip%3Dall%261785474646" alt="Lead Story Image" class="news-photo">
+                <h3>Freddy Peralta may be making last start with Mets as trade deadline looms</h3>
+                <p class="lead-summary"><strong class="drop-cap">F</strong>reddy Peralta is scheduled to remain on turn and start Friday night against the Marlins at Citi Field, according to interim manager Andy Green. The veteran right-hander is one of many Mets expected to be moved ahead of the trade deadline. Join Post Sports+ for exciting subscriber-only features, including real-time texting with Mike Puma about the inside buzz on the Mets. The Mets acquired Peralta in the offseason for prospects Jett Williams and Brandon Sproat, hoping he would lead the starting rotation. A year ago with the Brewers, Peralta had a 2.70 ERA and finished fifth in the Cy Young Award voting. He was also an All-Star. On the trading block like Peralta, the right-hander made his second minor league rehab start Tuesday for Single-A Port St. Lucie, throwing 59 pitches across for shutout innings. Holmes could find himself on another team by Sunday, the next time he is ready to pitch. Since the All-Star break, the Mets bullpen has the lowest ERA in the National League at 1.93. Their relievers haven’t given up an earned run over their last 20 ¹/₃ innings. Francisco Lindor passed Keith Hernandez and moved into 11th place on the all-time Mets RBI list with 469. … The Mets are now 17-16 against the NL East and 17 games under .500 against everyone else.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>49ers bring back Deebo Samuel to fill void left by Ricky Pearsall's knee injury: report</h4>
+                <p>The 2026/27 NFL season is 6 weeks away, and Danny Parkins lists the biggest stories entering training camp, including the San Francisco 49ers’ core having The San Francisco 49ers’ receiving corps took an early training camp hit as Ricky Pearsall’s knee injury became a growing concern.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Port Washington on cusp of NY state little league title after last year’s heartbreak</h4>
+                <p>The Nassau County boys of summer are now a game away from being crowned New York champs after a heartbreaking semifinal exit in last year’s state tournament. “It’s a true team,” manager David Gabriel told The Post. “Every kid is contributing to where we are today. It’s really just something special.” Friday night’s finals at 7 p.m. in West Nyack will be a duel between Long Island and Staten Island. Port Washington takes on Mid-Island Little League to climb one step closer to the Little League World Series. The victor represents the Empire State in the LLWS regional tournament, where they will travel to Bristol, Conn., and face the best teams from New Jersey, Rhode Island and the Constitution State in games televised on ESPN.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Falcons announce defensive coordinator Jeff Ulbrich's wife Cristina died after battle with cancer</h4>
+                <p>Kyler Murray and J.J. McCarthy are battling to be the starting QB of the Minnesota Vikings. Danny Parkins, Eric Mangini and Greg Jennings ask which QB should start and whether the Atlanta Falcons are already in trouble. Cristina Ulbrich, the wife of Atlanta Falcons defensive coordinator Jeff Ulbrich, died Sunday after a battle with cancer, the team announced.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F07%2FNoah-Kahan_df31ab.jpg?quality%3D90%26strip%3Dall" alt="Lead Story Image" class="news-photo">
+                <h3>Noah Kahan has just a few ‘Great Divide’ concerts left. What do tickets cost?</h3>
+                <p class="lead-summary"><strong class="drop-cap">A</strong>t the time of publication, Noah Kahan only has 13 ‘Great Divide’ shows with Gigi Perez remaining on his summer 2026 calendar. Rose Bowl StadiumPasadena, CASaturday, Aug. 15Petco ParkSan Diego, CAMonday, Aug. 17Oracle ParkSan Francisco, CAFriday, Aug. 21 If you’d like to see the “Stick Season” singer-songwriter live, last-minute tickets are available for the final 13 ‘The Great Divide Tour’ gigs. As of now, the lowest price we could find on tickets for any one performance was $199 including fees on SeatGeek outside of the super last-minute July 30 night in Arlington.. Prices start at $210 including fees for the trio of California concerts (that’s for the San Diego show). Make sure to use promo code NYPOST10 for $10 off purchases over $250 at checkout (Editor’s Note: this discount is only valid for users’ first purchase on SeatGeek). According to Set List FM, the two-time Grammy nominee makes sure Busyheads get their money’s worth at all concerts, delivering 24 songs per show, mostly from 2022’s “Stick Season” and 2026’s “The Great Divide.” “Dial Drunk,” “The Great Divide,” “Everywhere, Everything,” “American Cars” and, of course, the seminal “Stick Season” are just a few of the biggest tracks he takes to the stage. “There’s a certain type of catharsis that comes with a Noah Kahan concert,” Rough Draft Atlanta wrote about a recent show at the Braves’ Truist Park. “The experience of letting all [his] dark feelings out somehow feels intimate, despite being surrounded by thousands of other people. In his performance, Kahan exemplifies the tension that’s always existed when small town musicians are suddenly able to sell out stadiums.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Kate Middleton is 'indispensable' to royal family as slimmed-down monarchy faces mounting pressure: expert</h4>
+                <p>Katie Nicholl, Vanity Fair royal correspondent and co-host of "The Royals Uncensored," says the Princess of Wales won public respect through duty and resilience after health challenges. Kate Middleton has become one of King Charles' most beloved family members, with one royal expert calling her the "monarchy's greatest asset."</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>We found the best last-minute My Chemical Romance concert tickets</h4>
+                <p>My Chemical Romance is about to kick off their 2026 ‘Black Parade Tour’ with huge special guests at ballparks, stadiums, festivals and bowls all over North America from August through October. Their run gets underway at Queens’ Citi Field on Sunday, Aug. 9 with special guest Franz Ferdinand. Other shows on the nationwide trek include stops with household name openers like Pierce The Veil (Aug. 13 in Nashville), Modest Mouse (Aug. 18 in Washington, D.C.), Iggy Pop (Aug. 21 in Detroit), Jimmy Eat World (Sept. 6 in Phoenix) and The Mars Volta (Sept. 12 in San Antonio) among others. Hoping to catch Gerard Way and co. and knock seeing MCR live off your bucket list this year?</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Jessica Simpson celebrates turning 46 in bikini and reveals her children have never seen her perform</h4>
+                <p>The singer marked the occasion with a close-up selfie showing her tanning in a black-and-white polka-dot bikini, simply captioning the photo, "💫46💫 July 10/26." Simpson reclined beneath a purple crocheted cover while wearing oval dark sunglasses. Her blonde hair was styled in a loose side braid, and she accessorized the polka-dot bikini with layered turquoise bead necklaces, a square green pendant, dangling stone earrings and stacked bracelets.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/07/931/523/traffic-pole-sensor-solar-panel-san-francisco.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>License plate cameras are tracking drivers everywhere</h3>
+                <p class="lead-summary"><strong class="drop-cap">F</strong>ormer FBI Special Agent Nicole Parker and Criminal Defense Attorney Josh Ritter discuss the use of AI-powered license plate readers. Parker notes their utility in law enforcement investigations, citing Miami Beach's successful implementation. Ritter, referencing the Supreme Court's "Shattery" ruling on geofencing, expresses concern about mass data collection without warrants. One minute, you are driving to the grocery store. The next, a camera above the road photographs your car and adds the sighting to a searchable database. You probably will not hear a click or see a flash. In fact, you may never notice the camera mounted on a pole near the intersection. Automated license plate readers have quietly spread across the country. As of our reporting, the open-source DeFlock map displayed about 119,000 readers across the United States. DeFlock is a community-powered project that maps reported camera locations using public submissions and data from OpenStreetMap. Because the map relies partly on crowdsourced information, it may miss some cameras or include locations that have changed. Flock Safety cameras account for about 83% of the mapped total. California has the largest number of mapped readers, with more than 16,000. Major clusters appear around Los Angeles and the Bay Area. Police say the cameras help locate stolen cars and vehicles connected to serious crimes. A solar-powered Flock Safety camera shows how roadside surveillance hardware can blend into the landscape while watching vehicles pass. (Flock Safety) However, privacy advocates warn that the same network can reveal where ordinary people travel throughout the day. Each sighting can include a vehicle's plate number, appearance, location and the time it passed the camera. Flock says its system can search by plate, vehicle type and visible features. Our free CyberGuy Live class, "Sick of Spam?" has ended, but you can still watch the full replay and download our spam-stopping checklist. Kurt "CyberGuy" Knutsson walks you step by step through simple ways to reduce robocalls, spam texts, junk email and unwanted messages. You’ll also learn how to curb political texts, clean up your inbox and spot messages that could put your personal information at risk.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Sam Altman courts Washington as OpenAI pushes a powerful new AI</h4>
+                <p>Altman described an upcoming product that would enable  “agents” to divide tasks while also transforming the American economy.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
