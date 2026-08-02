@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>SATURDAY, AUGUST 01, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://media.townhall.com/cdn/hodl/2026/212/bbdb48c1-4de1-400b-815a-5ac91097daec.jpg" alt="Lead Story Image" class="news-photo">
+                <h3>The Illegal Africans Who Stormed Into Spanish North African Territories Are Pooping Everywhere</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>he Spanish territory of Ceuta in North Africa has been overwhelmed by at least 60,000 African migrants who are now causing chaos everywhere. It follows the Spanish Supreme Court's ruling that migrants who enter by sea cannot be immediately deported. The images are horrifying, almost apocalyptic, as local police are now overwhelmed (via Associated Press): Tens of thousands of migrants who crossed into Spain’s tiny Ceuta territory returned voluntarily to Morocco on Friday, a day after the influx triggered chaos in the North African city and reignited the immigration debate in Europe and beyond. At least 57 migrants died on the journey. Ceuta’s president put the number of migrants at 60,000, which was equivalent to 70% of the territory’s population. But most of them soon went back, the Spanish government said, after the sudden arrival of so many people sparked a humanitarian crisis. Some migrants swam several miles through the sea and faced down authorities who tried to turn them back with water cannons, tear gas and warning shots. Those who died included some who drowned or were killed in a stampede to cross a breakwater barrier near a border checkpoint. Thousands of illegal African migrants overrun Spanish enclave, turn streets into open toilets and bathe in fountains: 'An apocalypse' https://t.co/aqoQLta1am pic.twitter.com/ULfX8K4aUa An unprecedented wave of 60,000 illegal migrants from Africa has flooded the Spanish enclave of Ceuta, prompting Spain to deploy its military – as locals liken the invasion to an “apocalypse.” Harrowing local media reports reveal residents and business owners in Ceuta – a Spanish territory located on the north African coast – are terrified to open their doors amid the rush of migrants, many of whom arrived wearing nothing but swimwear without a penny or possession to their name. “Businesses closed. Shops shut because if you open a business, it gets overrun … We’re scared. The streets are packed. There are no measures in place. It’s every man for himself. They’re not giving us any help,” a terrified downtown restaurant owner who didn’t want to give their name told state-owned Spanish media outlet RTVE. “It’s like an apocalypse. Waves of people everywhere. You can see as many people wandering around as you want,” José Carlos Lara, owner of a sign-making business just over the border, told RTVE. He said local authorities have “no capacity” to deal with the chaos, and that the new arrivals are already sleeping in the streets and washing themselves in public fountains.</p>
+                <p class="source-credit">— Townhall</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Kamala Harris backs major changes to the Supreme Court, Electoral College ahead of possible 2028 campaign</h4>
+                <p>'The Story' covers Kamala Harris's outreach to progressive groups, signaling a potential 2028 presidential campaign. Harris seeks to mend fences with the far-left, including pro-Palestinian organizations and New York City Mayor Zohran Mamdani, while navigating internal party divisions. Fox News contributors discuss her strategy.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Spain’s Illegal Alien Invasion Shows It Would Take Democrats Only A Few Hours To Destroy Trump’s Border Progress</h4>
+                <p>The invasion of Ceuta is just a snapshot of what Democrats will do with America’s border next time they get power. It only took hours for tens of thousands of Moroccan illegal aliens to invade the Spanish territory of Ceuta this week. Removing those who remain will take far longer — if Spain even manages to remove them, given a recent court ruling that prohibits immediately deporting migrants who arrive by sea, as many did. But let Spain’s overrun border be a reminder to Americans when measuring President Donald Trump’s deportation efforts against the mess left by the Biden administration: A government can destroy its border and country within a matter of days, sometimes weeks. Restoring sovereignty after your country is flooded with foreigners is a much more difficult and slow undertaking — and punishing Trump in the midterms won’t make the problem better.</p>
+                <p class="source-credit">— The Federalist</p>
+            </div>
+            <div class="story-minor">
+                <h4>Weekend Plans With Tori Hope Petersen, Champion For Foster Families</h4>
+                <p>Weekend Plans is our exclusive lifestyle feature where we highlight the real off-duty routines of the most exciting people in culture. This weekend, wife, mother, bestselling author, and foster parent Tori Hope Petersen chats with The Daily Wire ahead of the lauch of her third book, “Safe House: A Guide to Practicing Radical Hospitality and Welcoming Others into Your Heart and Home.” She’s here to rally critical support for vulnerable youth, reveal how she built the family of her dreams, dish her secret to nailing that work-life balance (let there be bipimbap!), and tug on the heartstrings of anyone who’s ever wanted to belong.</p>
+                <p class="source-credit">— Daily Wire</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/07/931/523/slovenia-janez-jansa.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>What’s old is new again: Trump-style conservative is back as PM of European nation</h3>
+                <p class="lead-summary"><strong class="drop-cap">Š</strong>KOFJA LOKA, Slovenia: The Republic of Slovenia, the central European nation known for being the birthplace of First Lady Melania Trump and LA Lakers star Luka Dončić, is undergoing a radical shift in politics as the country comes to terms with its new larger-than-life prime minister. Prime Minister Janez Janša recently scraped together a coalition that did away with the country’s leftist leader, Robert Golob. In what is his fourth term, Janša has begun what many see as Trump-like policy corrections. He has reversed Golob’s anti-Israel policies by announcing his intent to move the Slovenian embassy to Jerusalem, freezing Slovenia’s recognition of a Palestinian state and revoking a 2025 ban on military trade with Israel. Right-wing Slovenian Democratic Party (SDS) leader Janez Jansa addresses the media after his investiture vote as Slovenia's Prime Minister at the National Assembly in Ljubljana on May 22, 2026.  (Jure Makovec / AFP via Getty Images) Janša also believes in strong U.S. relations. During an America 250 event hosted by the U.S. Embassy in Ljubljana, and with the First Lady's father, Viktor Knavs, in attendance, Janša described how America was the beacon for Slovenian independence. "We imagined America, the United States of America, as the ideal embodiment of that free world... That Slovenia, too, would become the home of the brave in a land of the free."</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Migrants overrun a Spanish outpost, stirring European outrage</h4>
+                <p>Widely circulated video showed thousands of Moroccans storming into a Spanish outpost in North Africa. The White House condemned Spain as weak on immigration.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>American climber's remains found after avalanche in Pakistan, other mountaineers still missing</h4>
+                <p>A Sherpa guide who vanished on Mount Everest was found alive and crawling toward base camp nearly a week later. The remains of an American mountain climber who got caught in an avalanche in Pakistan were found on Friday, according to Pakistani officials. Sarah Mallory Geis was climbing Broad Peak in Pakistan's Karakoram mountain range with an international group of at least 10 people when they went missing on Thursday.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Migrant crisis pushes Italy to restore border checks with Spain, testing Europe's open-border system</h4>
+                <p>Spain deploys military forces to its enclave of Ceuta after a massive surge of over 49,000 migrants overwhelms the border in a single day. Nile Gardiner, former advisor to Margaret Thatcher, joins Brian Kilmeade to warn that the United States faces a similar catastrophic border threat if current migration policies are not urgently reversed.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F07%2FGettyImages-2287430559.jpg?quality%3D90%26strip%3Dall" alt="Lead Story Image" class="news-photo">
+                <h3>Twins acquire Dean Kremer from Orioles ahead of deadline</h3>
+                <p class="lead-summary"><strong class="drop-cap">O</strong>ne day after acquiring A.J. Minter from the New York Mets, the Twins added Dean Kremer from the Baltimore Orioles, according to Ken Rosenthal of The Athletic. Rosenthal noted that Kremer is owed about $1.7 million the rest of the 2026 MLB season. Dan Hayes of The Athletic notes that 18-year-old prospect Jhonmardo Reyes is going back to Baltimore in the deal. MLB Pipeline rated Reyes as the No. 24 prospect in their farm system before the deal. Kremer, 30, has made just seven starts this season because he has battled a right quad strain. In his seven starts, Kremer has posted a 6.50 ERA, allowing 26 runs in just 36 innings. Kremer, who has been with the Orioles for the entirety of his pro career, has a lifetime 4.37 ERA in the majors across seven seasons of pro baseball. The Stockton, California native started in 29 of his 31 appearances last season, finishing with 4.19 ERA, striking out 142 hitters in 171 innings pitched.a Reyes, while at the Rookie Ball level for the Twins in the Florida Complex League, posted a .950 OPS with seven home runs and 44 RBIs in just 49 games. The Dominican outfielder has also played six A-ball level games this season, though he has gone just 2-for-19 in those games. At 56-55, the Twins aren’t exactly juggernauts, but they’re just three games behind the Chicago White Sox for the Al Central lead. The Twins are tied with the Guardians for the final AL wild-card spot.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Bill Belichick avoids specifics as North Carolina launches probe into GM Michael Lombardi</h4>
+                <p>UNC HC Bill Belichick joins Colin Cowherd to discuss how he’s building a culture at UNC, and what the differences are between coaching in the NFL and in College. Before North Carolina played its first game under Bill Belichick, off-field headlines largely drowned out the football conversation.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Amed Rosario’s homer promising Yankees sign against lefty pitching</h4>
+                <p>CHICAGO — Amed Rosario is a hardworking veteran and a valuable resource for some younger teammates, but at the end of the day, he is on the Yankees to crush lefties. Too often of late, though, especially at a time when they are missing some of their best hitters against lefties, he has not been able to do that. Join Post Sports+ for exciting subscriber-only features, including real-time texting with Greg Joyce about the inside buzz on the Yankees. But Rosario picked a big spot to provide another jolt against a southpaw, taking Cubs lefty Shota Imanaga deep to spark the Yankees in a 2-0 win Friday afternoon at Wrigley Field.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Pro Bowl offensive lineman Andrus Peat announces his retirement from the NFL at 32</h4>
+                <p>New Orleans Saints great Andrus Peat announced his retirement from the NFL after 11 seasons in a social media post. (This video contains AI-assisted content) Peat, 32, played in the NFL for 11 seasons after being selected with the No. 13 overall pick in the 2015 NFL Draft out of Stanford by the New Orleans Saints.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F07%2Fnewspress-collage-qykll3m82-1785516994849.jpg?quality%3D90%26strip%3Dall%261785502652" alt="Lead Story Image" class="news-photo">
+                <h3>How to watch ‘Fightland’ for free: Cast, release date</h3>
+                <p class="lead-summary"><strong class="drop-cap">“</strong>Fightland” premiered today, July 31, and will continue airing weekly through mid-September with one new episode per week. 🚨Today only 🚨 Free Fightland🤝New York Post paper at these subway entrances: 📍5th Ave & 42nd📍6th Ave & 42nd📍8th Ave & 42nd📍Lexington & 42nd📍Vanderbilt Ave & 42nd📍Grand Central📍7th Ave & 34th📍Penn Station 32nd St📍14th St Union Sq📍The OculusTune in to… pic.twitter.com/ILZCzHHAOO Per Starz’s official synopsis, “Fightland” follows “Maduka “Duke” Kilroy (Howard Charles), a disgraced, formerly incarcerated boxing champion who returns to London to seek vengeance against the crime family he thinks betrayed him.” If you’re looking to stream and save at the same time, you can bundle Starz with MGM+ and AMC+, Crunchyroll, Hallmark+ and BritBox – all at discounted rates. Season 1 of”Fightland” will have eight episodes. They will continue debuting weekly every Friday through September 18. Episodes debut on the Starz streaming service at 12 a.m. ET on their respective release dates. This article was written by Angela Tricarico, Commerce Streaming Reporter for Post Wanted Shopping, Page Six, and Decider.com. Angela keeps readers up to date with cord-cutter-friendly deals, and information on how to watch your favorite sports teams, TV shows, and movies on every streaming service. Not only does Angela test and compare the streaming services she writes about to ensure readers are getting the best prices, but she’s also a superfan specializing in the intersection of shopping, tech, sports, and pop culture. When she’s not writing about (or watching) TV, movies, and sports, she’s also keeping up on the underrated perfume dupes at Bath & Body Works and testing headphones. Prior to joining Decider and The New York Post in 2023, she wrote about streaming and consumer tech at Insider Reviews.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>'Criminal Minds' star Mandy Patinkin shares unconventional plan for after his death</h4>
+                <p>The 73-year-old said on his "Don't Listen to Us" podcast that he remembered memorizing a speech from "Rosencrantz and Guildenstern Are Dead, "and it was about being in a box … But the idea — I'm very claustrophobic, very claustrophobic, and the idea of being put in a box, knowing that I'm going to be in a box when whatever I'm familiar with is drastically changed is just unacceptable to me. Period. Full stop."</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>The wellness craze Zendaya says she’ll never do — and should other women skip it too?</h4>
+                <p>The “Odyssey” and “Spider-Man: Brand New Day” actress may be one of Hollywood’s biggest trendsetter, but there’s one wildly popular wellness trend she has zero interest in embracing — and according to one expert, women may actually be better off following her lead. “I’m definitely not a cold water girl,” she told Vogue. “I like to take very long, hot showers. Everybody knows that’s my thing. When I’m overwhelmed, I just need to go sit in the shower. Sometimes I’ll even bring in an iced tea or whatever, and just sip my little drink.” Cold plunges involve climbing into icy water — usually between 50 and 60 degrees Fahrenheit — and staying there from one to five minutes, though some die-hard devotees stick it out much longer, despite experts warning against it.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>'Fire Country' star Diane Farr leaves Los Angeles after 30 years to start her 'third act'</h4>
+                <p>The 56-year-old actress took to Instagram to share snippets from her "Last Day in LA," noting she has lived in the city for "exactly 30 years" and that "more importantly- I chose LA." "I wasn’t born here, I didn’t go to school here - I just had a chance for representation as an actor and I moved out of NYC the summer I was 26," she wrote. "I came like most of the people I love in Hollywoodland - none of which I saw this week bc moving sucks."</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/04/931/523/humanoid-robot-mass-production-1.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Foreign robot ban targets China over security fears</h3>
+                <p class="lead-summary"><strong class="drop-cap">S</strong>en. Bernie Moreno, R-Ohio, introduces the bipartisan Connected Vehicle Security Act of 2026, aiming to effectively block Chinese-made electric vehicles from the U.S. market. Moreno warns against these vehicles, saying they could potentially allow remote control and pose significant national security threats. He emphasizes protecting the American auto industry and workers from subsidized Chinese exports. A humanoid robot can carry equipment through a factory or help researchers test new artificial intelligence. However, its cameras can watch everything nearby. Its internet connection can also send valuable information beyond the building. The Trump administration now sees that combination as a potential national security problem. On July 28, the Federal Communications Commission added foreign-produced advanced robots and connected power inverters to its Covered List. The action blocks many new models from receiving the FCC authorization required before companies can import or sell them in the United States. Although the final language applies broadly to foreign-produced equipment, China reportedly sits at the center of the crackdown. Officials want to prevent surveillance and cyberattacks while reducing America's reliance on Chinese technology. They also hope companies will move more manufacturing to the United States. Our free CyberGuy Live class, "Sick of Spam?", has ended, but you can still watch the full replay and download our spam-stopping checklist. Kurt "CyberGuy" Knutsson walks you step by step through simple ways to reduce robocalls, spam texts, junk email and unwanted messages. You’ll also learn how to curb political texts, clean up your inbox and spot messages that could put your personal information at risk. The FCC is blocking new foreign-made advanced robots and connected power inverters over cybersecurity and national security concerns. (Tang Yanjun/China News Service/VCG via Getty Images) Humanoid robots are no longer limited to flashy demonstrations that rack up views online. Companies are preparing them for factories and warehouses. Researchers are also testing them inside laboratories. Four-legged robots can inspect dangerous areas or patrol large properties. Meanwhile, robot developers are building new safety systems as these machines begin working closer to people.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Fox News AI Newsletter: AI models accessed systems of 3 real organizations, company reveals</h4>
+                <p>Anthropic Co-founder and CEO Dario Amodei speaks at the "How AI Will Transform Business in the Next 18 Months" panel during INBOUND 2025 Powered by HubSpot at Moscone Center on September 04, 2025 in San Francisco, California (Chance Yeh/Getty Images for HubSpot))</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>KARR Bluetooth flaw exposes 2.2M cars to theft risk</h4>
+                <p>Could a small device hidden beneath your dashboard make your car easier to break into? Nancy from Newtown, Pennsylvania, asked me where she should look for the KARR or SWDS "code" in her 2025 Cadillac XT5 and 2024 Hyundai Tucson Limited Hybrid. Here is the first thing you need to know. There is no code to find in your vehicle's settings. KARR and SWDS refer to aftermarket security hardware that a dealership may have installed before selling the car. SWDS stands for Southwest Dealer Services, the company associated with several KARR-branded vehicle protection products.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
