@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>SUNDAY, AUGUST 02, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://i0.wp.com/www.nationalreview.com/wp-content/uploads/2026/08/rolling-stones.jpg?fit=617%2C360&ssl=1" alt="Lead Story Image" class="news-photo">
+                <h3>The Rolling Stones Know How to Grow Old</h3>
+                <p class="lead-summary"><strong class="drop-cap">O</strong>n Foreign Tongues, the band remains rooted in the blues — and intent on whatever comes next.</p>
+                <p class="source-credit">— National Review</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Nine Books To Bring On Your Late Summer Vacation</h4>
+                <p>Maybe it’s just that I’m planning a mid-August vacation this year, but it seems to me that a lot of people are waiting until the final month of summer to hit the beach, hop a flight, or just delete Slack and spend a week pretending to be an unbothered billionaire. If you’re among the many planning a late summer getaway — or if you’re just hoping to get those Goodreads numbers up before football season completely nukes your nights and weekends — here are nine books to keep you busy. What if the Allies planned to drop a third nuclear bomb on Japan? What if the plane carrying that bomb crashed somewhere in Japan and the bomb didn’t detonate? That’s the premise of Hawley’s novel, one of the most exciting books of 2025. “Daikon” largely tells the story of Keizo Kan, a physicist whose wife and daughter have been lost to Imperial Japan’s increasingly futile war efforts. Blending military history, science, and suspense, “Daikon” is the kind of page-turner begging to be tossed on a sandy towel.</p>
+                <p class="source-credit">— Daily Wire</p>
+            </div>
+            <div class="story-minor">
+                <h4>Inside the behemoth Smithsonian museum network drawing fire from the Trump administration</h4>
+                <p>President Donald Trump orders warning signs outside the Smithsonian, alleging politicized exhibits that emphasize activism over history. The institution faces scrutiny for promoting racial reparations and for a 2020 infographic criticizing 'white culture.' A congressional hearing further ignited debate over the museum's 'woke' displays and their historical accuracy, highlighting the growing tension.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Iranian revolution can happen ‘any day now’ as protest leaders try to arm: sources</h4>
+                <p>The streets of Iran are near a breaking point over public executions, economic collapse and a war that’s been raging on for more than five months, anti-regime figures in Tehran told The Post. “A revolution can happen any day now — people want revenge,” a protest leader said, referring to the regime’s brutal January crackdown that President Trump said killed 52,000 people. An independent journalist active in the Iranian underground said that preparations are already being made for the next uprising, and that activists from all walks of life are determined to make a final, decisive blow against the regime.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/07/931/523/israeli-kids-orphans-broadway-trip.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Israeli orphans of fallen heroes find pride, connection on US journey</h3>
+                <p class="lead-summary"><strong class="drop-cap">A</strong>viva and Keith Siegel, freed hostages from Hamas, recount their harrowing experiences in Gaza and thank first lady Melania Trump for her efforts to secure their release. Twenty-eight children from across Israel who lost a parent killed while serving in the country's security forces participated in a three-week delegation to North America as part of the IDF Widows & Orphans Organization's annual Bar/Bat Mitzvah program. The journey began earlier this month in Chicago, where the children spent a weekend with host families before traveling to Camp Chi in Wisconsin for nearly a week of activities with American kids. They then continued to New York City, where they visited Times Square and saw The Lion King on Broadway, before heading to New Jersey. For many, it was their first visit to the United States. The IDF Widows & Orphans Organization's annual Bar/Bat Mitzvah program delegation in NYC at Times Square. (Yiftach Moran) "Everything is planned very carefully. The Lion King, for instance, is more than a Broadway show for them. It’s the story of an orphan who is able to honor his father’s memory and move forward because of the support of his friends. Nothing about this trip is accidental. It is deliberately designed to give them as powerful and meaningful an experience as possible," Daniel Elbaum, executive director of the IDF Widows & Orphans Organization, told Fox News Digital.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Spain pushes migrants back to Morocco as suspicions swirl over mass border breach</h4>
+                <p>The crisis in Ceuta, on the African coast, instantly became a touchstone in the global migrant debate as suspicions swirled that the viral incident was orchestrated.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>US companies win billions in African data center deals in direct competition with China</h4>
+                <p>JOHANNESBURG: The U.S. is beating China in a high-tech trade war over data centers in a fierce battle being waged across Africa. Major new deals have been engineered in a public-private partnership between the Trump administration and U.S. companies in Africa, while States across the U.S. clamp down on the centers over their massive reliance on electricity.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Zelensky says Ukraine has ‘no interceptors’ as ballistic missiles hit Kyiv</h4>
+                <p>Ukrainian President Volodymyr Zelensky had appealed for American air-defense missiles during a White House meeting on Tuesday.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/08/931/523/Cyrus-Allen-NFL-Kansas-City-Chiefs.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Chiefs rookie standout Cyrus Allen exits practice after scary collision with teammate Kaiir Elam</h3>
+                <p class="lead-summary"><strong class="drop-cap">P</strong>atrick Mahomes was cleared to fully participate in Kansas City Chiefs training camp. Danny Parkins, Eric Mangini, and Greg Jennings discuss the expectations for the Chiefs and Mahomes this season, and if Fernando Mendoza should start for the Las Vegas Raiders week 1. A scary training camp collision briefly threatened Cyrus Allen’s strong start with the Kansas City Chiefs, but the rookie wide receiver appeared to avoid a serious injury. Initial tests showed Allen sustained only a shin bruise, with no tear or broken bone, ESPN reported, citing sources. Allen was not the only Chiefs receiver to have an injury scare Saturday. Xavier Worthy went down during an 11-on-11 period after hauling in a deep pass near the end zone and landing on his shoulder. Kansas City Chiefs wide receiver Xavier Worthy receives a pass during practice at Chiefs training camp in St. Joseph, Missouri, on Aug. 1, 2026. (Roman Puno/Cal Sport Media/Sipa USA) Worthy has already dealt with shoulder-related concerns early in his NFL career. He injured his right shoulder on the third snap of last season after colliding with tight end Travis Kelce on a crossing route during a game against the Los Angeles Chargers. Worthy later underwent an offseason procedure to address the injury.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>WWE, Brock Lesnar didn’t go far enough in passing torch to Oba Femi inside Hell in a Cell at SummerSlam</h4>
+                <p>News of Randy Orton and Kevin Owens returning to the company soon took a little bit away from the Vipers’ return as WWE punted on giving us a clear resolution between CM Punk and Cody Rhodes — leaving it for a potential WrestleMania match. Brock Lesnar finished making Oba Femi, but what we got in that match didn’t need to be inside Hell in a Cell, which really wasn’t used once other than to contain them inside U.S. Bank Stadium on Saturday. There were some fun things during this show, including Nick Aldis crushing his in-ring return and WWE debut, along with Liv Morgan and Iyo Sky taking us on a heck of a ride to decide the Women’s World Championship and a Bella Twins heel turn.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Oba Femi shows the future of WWE is here as he takes down Brock Lesnar in Hell in a Cell match at SummerSlam</h4>
+                <p>WWE Hall of Famer John Bradshaw Layfield talks to Fox News Digital about Brock Lesnar vs. Oba Femi at SummerSlam. The beast has been slayed. The next big thing is in the past. The future is now. Oba Femi ruled the ring and defeated Brock Lesnar in an epic Hell in a Cell match at SummerSlam at U.S. Bank Stadium in Minneapolis. It was a car crash from the start.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Arvell Reese’s overlooked coverage skills could fill huge Giants need</h4>
+                <p>WHITE SULPHUR SPRINGS, W.Va. — All the draft hype surrounding Arvell Reese centered around his potential as a pass-rusher. For months, the debate was whether the Jets should take Reese or David Bailey with the No. 2 pick. Get texts from Paul Schwartz with all the latest Giants news and insights, exclusive to Sports+ subscribers. After the Jets went with Bailey — who is hounding quarterbacks early in their training camp — and the Giants took Reese at No. 5, the talk switched to using him as a chess piece who could pass rush alongside Brian Burns, Abdul Carter and Kayvon Thibodeaux. It all overlooks the possibility that Reese could provide as a rookie something that the Giants have been chasing for a long time: a coverage linebacker.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/08/931/523/snooki-mask-brown.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Nicole 'Snooki' Polizzi undergoes major surgery six months after her cervical cancer diagnosis</h3>
+                <p class="lead-summary"><strong class="drop-cap">N</strong>icole "Snooki" Polizzi is giving fans an update on her health, six months after sharing her cancer diagnosis. In an emotional Instagram video shared on Saturday, the 38-year-old reality star revealed she underwent a hysterectomy six months after she was diagnosed with cervical cancer. The video started off with clips of Polizzi arriving at the hospital and getting ready for surgery as she narrated what was going on via voice-over, before transitioning to her speaking directly to the camera following the procedure. "I told you guys in general I’m not good with pain, and I’ve really been trying to be tough, but it’s not great," Polizzi said. "And the reason is because we did that C-section cut, and he obviously ended up taking out the uterus, my cervix and then some parts of my vagina just to make sure we get everything. So that was crazy. The fallopian tubes, all of it. We kept my ovaries so I don’t go into pre-menopause, which is nice." Polizzi shared on Instagram that she underwent a hysterectomy six months after receiving her cervical cancer diagnosis.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>How is the mysterious new ‘Game of Thrones’ play?: ‘Like binge-watching HBO onstage’</h4>
+                <p>But a new play based on George R.R. Martin’s “Game of Thrones” books is a big success in the UK right now. The entire run at the Royal Shakespeare Company is sold out, and it’s only just started previews. Called “The Mad King,” the show is a prequel to the novels and massively popular TV series. It’s four hours long. However, rather than being set centuries earlier — a la “House of the Dragon” — the play focuses on younger versions of “GoT” favorites. Ned and Catelyn Stark, Jaime and Cersei Lannister, Robert Baratheon, Elia Martell and more spar while Daenerys Targaryen’s batty dad Aerys (the Mad King) rules over Westeros.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>'The Sopranos' actor Vincent Pastore dead at 80</h4>
+                <p>Retired FBI agent Séamus McElearney details the arrest and cooperation that cracked the DeCavalcante crime family and exposed the real-life inspiration for "The Sopranos." The actor's manager, Robert Attermann, confirmed his death to Fox News Digital, saying, "Vinny passed away either yesterday or today at home in The Bronx."</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>‘Baywatch’ star Brooks Nader reveals she secretly bought bikinis banned by her parents</h4>
+                <p>The model-turned-actress told The Post that once she puts on the reboot’s iconic red one-piece, she’s fully prepared to make a splash. However, the brunette beauty — who was raised by strict Christian parents in Baton Rouge, Louisiana — once got a thrill wearing two-pieces, since they were banned in her household growing up. “I do have early memories of sneaking into Victoria’s Secret and buying bikinis and going skinny dipping and stuff. That was when I was like, ‘OK, I think I can do both, bikini and one-piece,'” said Nader, 29. This is Nader’s first acting gig, which she called a “pinch-me moment,” since she’s always admired the stars of the original “Baywatch,” which debuted in 1989.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/07/931/523/daniele-pucci-generative-bionics-humanoid-robot.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Humanoid robot skin senses people before contact</h3>
+                <p class="lead-summary"><strong class="drop-cap">W</strong>orking beside a metal humanoid robot would probably make you watch every step it takes. After all, a collision between a heavy robot and a human body will usually end worse for the person. Italian startup Generative Bionics believes its Gene.01 humanoid robot could help reduce that risk. The company covered the robot with sensor-filled skin that can detect a person approaching before physical contact occurs. The system also senses touch, temperature and force. As a result, Gene.01 can gather information about what surrounds its body and what happens during an interaction. That sounds reassuring. However, the real question is whether the sensors and control software can react quickly enough when people start working beside the robot. Our free CyberGuy Live class "Sick of Spam?" has ended, but you can still watch the full replay and download our spam-stopping checklist. Kurt "CyberGuy" Knutsson walks you step by step through simple ways to reduce robocalls, spam texts, junk email and unwanted messages. You'll also learn how to curb political texts, clean up your inbox and spot messages that could put your personal information at risk. Gene.01 uses sensor-filled skin across its body to detect nearby people before physical contact occurs. (Generative Bionics) Gene.01 carries distributed sensors across its torso and limbs. The company says this smart skin detects touch, temperature, proximity and force at the same time. Proximity sensing gives the robot an early warning when someone enters the space around its body. The basic idea feels familiar. You may feel heat near a stove and pull your hand away before touching the surface. In a similar way, Gene.01 can detect a nearby person before the person touches its sensor-covered body. That information gives the robot's control system a chance to respond before contact. It can also continue measuring force if contact happens. However, Generative Bionics has not released detailed workplace safety data showing how the system performs during full industrial shifts. For now, the safety benefits remain company claims tied to a newly introduced platform.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>She left her ex. He secretly tracked her through a network of policing cameras.</h4>
+                <p>Flock’s array of license-plate cameras was built to fight crime. But at least 50 law enforcement officers were charged with or accused of misusing it and other systems.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
