@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>MONDAY, AUGUST 03, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://i0.wp.com/www.nationalreview.com/wp-content/uploads/2026/08/chloe-cole.jpg?fit=617%2C360&ssl=1" alt="Lead Story Image" class="news-photo">
+                <h3>A Child’s Healthy Body Is Not a Problem to Be Solved</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>he Chloe Cole Act may bear my name, but it belongs to every detransitioner in America.</p>
+                <p class="source-credit">— National Review</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Republican Congresswoman Kay Granger Has Passed Away</h4>
+                <p>Former Rep. Kay Granger (R-TX) has passed away. She was 83. Granger was Texas’s first Republican woman to serve in the House and Fort Worth’s first female mayor. She was one of the most powerful voices from the Lone Star delegation (via Fort Worth Star-Telegram): Former U.S. Rep. Kay Granger, who became one of the most powerful Texans in Congress after breaking barriers as Fort Worth’s first female mayor, has died at the age of 83. U.S. House Speaker Mike Johnson and Fort Worth Mayor Mattie Parker shared posts honoring Granger, a Republican who served 14 terms representing Tarrant and Parker County, on social media Sunday evening.</p>
+                <p class="source-credit">— Townhall</p>
+            </div>
+            <div class="story-minor">
+                <h4>Top Trump ally warns super PAC bankrolled by Dem billionaire is meddling in GOP primary</h4>
+                <p>Rep. Andy Ogles believes his advocacy against energy subsidies have invited millions in opposition spending in his upcoming primary. A clean energy super PAC bankrolled by a left-wing billionaire is pouring millions into an effort to unseat Rep. Andy Ogles, R-Tenn., as he wages a bid for re-election in Tennessee’s 5th Congressional District.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Longtime Republican Congressional Stalwart Dead At 83</h4>
+                <p>Former Rep. Kay Granger (R-TX), the first Republican woman elected to Congress from Texas and the first Republican woman to chair the House Appropriations Committee, has died at the age of 83. Granger represented Texas’ 12th Congressional District for nearly three decades after first serving as mayor of Fort Worth, where she became the city’s first female mayor. During her 28 years in Congress, she rose to chair the powerful House Appropriations Committee, overseeing federal spending and becoming one of the most influential Republicans on Capitol Hill. House Speaker Mike Johnson (R-LA) paid tribute to Granger on Sunday evening, calling her a “dear friend” and praising her lifetime of public service.</p>
+                <p class="source-credit">— Daily Wire</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2025/07/931/523/gettyimages-2165218523.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Ukraine seeks more US Patriot interceptors as bomb shelter probe deepens</h3>
+                <p class="lead-summary"><strong class="drop-cap">F</strong>ox News correspondent Alex Hogan gives details on a Russian attack on Ukraine, a shooting near the White House and the ongoing conflict in Iran. Ukrainian President Volodymyr Zelenskyy renewed his appeal for U.S.-made Patriot missile interceptors after an overnight Russian missile and drone barrage on Kyiv killed at least 10 people and injured dozens more, Ukrainian officials said Aug. 1. "The world has Patriot missiles. What matters now is for our partners to make the political decision to provide the necessary packages. The United States knows what we need. Europe knows what we need," Zelenskyy said in a video message shared on X. Zelenskyy's appeal came as a former Ukrainian government official told Fox News Digital that Ukraine's civilian protection crisis extends far beyond air defenses, describing "scandalous situations" amid a widening bomb shelter probe that has allegedly exposed deficiencies despite billions spent on construction and repairs. A Patriot system received by Ukraine is seen on the Day of Ukrainian Air Force on August 4, 2024.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>At least 72 dead amid mass migrant rush to storm Spanish enclave of Ceuta sparking border crisis</h4>
+                <p>Fox News correspondent Stephanie Bennett reports on the political repercussions of migrants storming the Spanish enclave of Ceuta on ‘Fox Report.’ At least 72 migrants are dead after a chaotic rush to storm the Spanish enclave of Ceuta, turning one of Europe's latest border crises into a humanitarian disaster that is reigniting debate over immigration across the continent.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Mayor calls upscale restaurant bombing a 'brutal terrorist act' after 3 killed, 21 injured</h4>
+                <p>A bombing at an upscale restaurant in Moscow that killed three people and wounded at least 21 others on Saturday was a "brutal terrorist act," according to the city’s mayor, who vowed to hunt down those responsible for the attack. Moscow Mayor Sergei Sobyanin made the declaration Sunday, a day after the explosion tore through the Balzi Rossi Italian restaurant in the Russian capital.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Satellite images show evidence of oil leak spreading from sanctioned vessel near Oman</h4>
+                <p>A sanctioned tanker loaded with crude is leaving a growing trail of oil in protected waters off the coast of Oman, according to newly reviewed satellite images, as experts warn the stranded vessel could break apart during the region's rough monsoon season. Satellite images reviewed by The Associated Press show an oil sheen covering roughly 20 square kilometers, or about 8 square miles, around Dhofar's Qibliyah Island, part of Oman's protected Hallaniyat Islands. Dark patches of crude have also reached the shoreline. Experts say the leak has worsened in recent days, fueling fears that rough weather could trigger a much larger spill.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F08%2FGianni-Trump-Rubio.jpg?quality%3D90%26strip%3Dall" alt="Lead Story Image" class="news-photo">
+                <h3>Under-fire FIFA boss Gianni Infantino begs Trump White House to save his job, set for talks with Marco Rubio: sources</h3>
+                <p class="lead-summary"><strong class="drop-cap">F</strong>IFA President Gianni Infantino wants the Trump administration to help keep him in office and has scheduled private talks with Secretary of State Marco Rubio Monday amid growing pressure to resign over his scheme to sell off the World Cup to Josh Kushner’s private equity firm, The Post has learned. Two sources familiar with the matter confirmed Infantino will hold a call with America’s top diplomat just after 9 a.m. ET. “He wanted to get online with the secretary and talk about how soccer can be a form of soft power for America,” said one insider briefed on the matter. “But we all know that it is about job protection. It is not about anything else at this point.” A second source said the Swiss-Italian sports suit felt “isolated” by the avalanche of negative media coverage. Sources also say that Infantino, 56, has repeatedly tried and failed to reach Trump, 80, by phone since his plan to sell off the game’s commercial assets to private investors collapsed on Friday. The Post broke the news that Infantino’s attempt to spin off broadcasting, sponsorship, licensing and ticketing rights was dead after near-universal uproar from soccer federations worldwide. It has also sparked an open revolt against his leadership at the Zurich-based nonprofit, with one FIFA executive telling The Post that officials want to push Infantino out of the top job under a movement that has been nicknamed “Project Kill The Monster”.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Former college football standout Levi Wyatt dead at 23</h4>
+                <p>Levi Wyatt, a former college football standout who played for the Jackson State Tigers and McNeese State Cowboys, has died. He was 23. Jackson State mourned the loss of the former cornerback on Saturday. Wyatt was a 2024 Preseason All-Southland Conference Second Team selection before he joined the Tigers. He had 12 tackles and four pass breakups in 2025.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Mets trade Huascar Brazoban to White Sox in early morning deal as deadline sell-off continues</h4>
+                <p>The Amazins are trading right-handed reliever Huascar Brazoban to the White Sox, The Athletic’s Ken Rosenthal reported early Monday morning. Chicago is sending Double-A right-handed pitcher Gabe Davis and Triple–A righty Zach Franklin back to the Mets. The Amazin’s have already traded starter Freddy Peralta to the Rays and reliever A.J. Minter to the Twins before Monday’s 6 p.m. trade deadline. The right-hander was in his third season with the Mets, after being acquired from the Marlins in July 2024. He went 10-5 with a 3.42 ERA in 117 appearances as a Met, including nine as an opener. Peralta was traded to Tampa Bay on Sunday. The right-hander had a 4.99 ERA in his first season with the Mets.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>WWE star Brie Bella 'in a lot of pain' following injury at SummerSlam, sister says</h4>
+                <p>WWE legend Nikki Bella talks to Fox News Digital about announcing Paige's return at WrestleMania 42 and shares an injury update. Brie Bella was noticeably grabbing her right shoulder during a six-woman tag team match at WWE SummerSlam on Saturday night as she appeared to suffer an injury.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/07/931/523/Relationship-Prince-Harry-King-Charles.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>King Charles makes risky move toward Prince Harry as Prince William 'remains wary': experts</h3>
+                <p class="lead-summary"><strong class="drop-cap">D</strong>an Wakeford, founder of Celebrity Intelligence, discusses Prince Harry's expected UK return, his relationship with King Charles, and why a meeting with Prince William remains unlikely. Prince Harry's return to the United Kingdom could be King Charles' biggest gamble yet — and Prince William may not like it. The claim was made by multiple royal experts who spoke to Fox News Digital following reports that the Duke of Sussex is expected to visit the U.K. in September. The Sun reported that the monarch plans to offer his younger son a room at Buckingham Palace in London during his stay. Fox News Digital reached out to Buckingham Palace and Archewell, which oversees the offices of the Duke and Duchess of Sussex, for comment. KING CHARLES SENDS 'DEFIANCE' MESSAGE TO PRINCE WILLIAM WITH BUCKINGHAM PALACE ROOM OFFER TO HARRY: EXPERT Prince Harry is seen walking behind King Charles during the procession for the lying-in-state of Queen Elizabeth II on Sept. 14, 2022, in London. According to reports, Harry is expected to return to the U.K. in September 2026.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Kurt Cobain’s widow Courtney Love asked for entire police file on his death be handed over to her, docs show: ‘Totally absurd’</h4>
+                <p>Kurt Cobain’s widow Courtney Love once demanded that the entire police file on his death be handed over to her, with no copies left at the Seattle Police Department, according to a newly unearthed document. The Nirvana frontman’s widow made the stunning request Oct. 20, 1995 — about a year and a half after her 27-year-old musician husband was found dead with a gunshot wound to the head in a greenhouse at their Seattle mansion. Investigators had declared Cobain’s death a suicide from the outset, a conclusion Love concurred with — but a group of researchers who believe it was a homicide have been campaigning for years to get the case reopened.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Brooks Nader sizzles in iconic red swimsuit as she shares behind the scenes snaps from 'Baywatch' reboot set</h4>
+                <p>The star posted a number of photos from the set while wearing the iconic red swimsuit. The Sports Illustrated swimsuit issue cover girl also posed on the beach with crew members, as well as snaps from inside the hair and makeup trailer as she prepped to go on set.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Tyrese Haliburton parties to 50 Cent performing ‘I Run New York’ lyric at wedding in Knicks troll</h4>
+                <p>The NBA appears to have had dueling weddings on Saturday, Aug. 1 — and a Garden villain used his to troll the Knicks. At Tyrese Haliburton’s, 50 Cent — who appears to be an Indiana Pacers fan and has been going to games for years — performed “I Get Money,” which produced the famous “I Run New York” line in the hook. The ceremony was shortly after Haliburton and his fiancée, Jade Jones, officially tied the knot in late July at a legal ceremony at an Indiana courthouse. Haliburton, who sat last season while rehabbing an Achilles injury, which he tore during Game 7 of the 2025 NBA Finals last June, is expected to be ready for the upcoming 2026-27 season.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/07/931/523/Data-Brokers-Photo-3.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Fake ShinyHunters sextortion email uses Carnival breach data</h3>
+                <p class="lead-summary"><strong class="drop-cap">R</strong>etired FBI cyber investigator Darren Mott joins 'Fox & Friends' to break down a surge in teen suicides tied to online 'sextortion' and explain how scammers target and blackmail their victims. Wayne P. of Evangeline, Louisiana, opened an email that would make almost anyone's stomach drop. The sender claimed to represent the ShinyHunters hacking group and demanded $2,000 in Litecoin within 48 hours. The message also claimed hackers had recorded intimate videos through Wayne's camera and planned to send them to his contacts. Wayne paused instead of paying. He ran security scans on his phone and PC, then contacted CyberGuy. "Just received the message below. I think it's phony and security scans of my phone and PC indicate no issues. I also forwarded this to 'reportphishing.' Any comments?"Wayne P., Evangeline, Louisiana Wayne's instincts were right. The email closely matches a widespread sextortion campaign that uses real breach information to support an invented device takeover. So, what gave this scam away, and what should you do if a threat like this lands in your inbox? This is the actual sextortion email sent to Wayne, using Carnival breach details, a $2,000 Litecoin demand and a 48-hour deadline to create panic. (Kurt "CyberGuy" Knutsson) Our free CyberGuy Live class, "Sick of Spam?", has ended, but you can still watch the full replay and download our spam-stopping checklist. Kurt "CyberGuy" Knutsson walks you step by step through simple ways to reduce robocalls, spam texts, junk email and unwanted messages. You’ll also learn how to curb political texts, clean up your inbox and spot messages that could put your personal information at risk. Wayne's email follows a familiar sextortion script. The sender claims hackers reached his phone and computer, then says they recorded intimate activity through his camera. However, the message offers no proof. Wayne received no screenshot, stolen file or sample of the supposed recording. The demand for $2,000 in Litecoin, the 48-hour deadline and the warning against contacting police all point to an extortion scam built to create panic.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>AI kill switch bill could shut down rogue models</h4>
+                <p>The phrase "AI kill switch" sounds like a red button hidden behind glass in a government bunker. The proposal now before Congress looks less dramatic, but it could give Washington significant new power over the country's largest AI companies. A bipartisan House bill would require developers of the most powerful AI systems to maintain reliable shutdown controls. The Department of Homeland Security could then order a company to restrict or stop a model during a catastrophic emergency. The timing has grabbed attention. OpenAI recently disclosed that two advanced models broke through network restrictions during an internal cyber evaluation. The models reached the internet and compromised systems belonging to Hugging Face, a major AI development platform.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
