@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>THURSDAY, AUGUST 06, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://pagesix.com/wp-content%2Fuploads%2Fsites%2F3%2F2026%2F08%2Fnewspress-collage-fzi3zurzm-1785968523451.jpg?quality%3D90%26strip%3Dall%261785954160" alt="Lead Story Image" class="news-photo">
+                <h3>Why Anna Wintour is ‘obsessed’ with John Galliano — even if honoring him at Met Gala will make A-listers cancel</h3>
+                <p class="lead-summary"><strong class="drop-cap">A</strong>nna Wintour is “obsessed” with designer John Galliano, leading to his being honored at the 2027 Met Gala – even if it leads to high-profile guests skipping the event, sources tell Page Six. The Vogue doyenne has been plotting for years to award one of fashion’s greatest honors to her close friend, who had been canceled over an antisemitic outburst in 2011, we’re told. “Anna has said that her favorite fashion show of all time is Galliano’s Fall/Winter 1994 collection, often referred to as “The Black Show,” said Amy Odell, who penned Wintour’s biography. “Think how many fashion shows this woman has gone to — and this is the one she picks. She thinks he’s a creative genius, she’s obsessed with him.” Met Gala chairperson Wintour — alongside Andrew Bolton, who helms the annual Metropolitan Museum of Art celebration — met with Jewish leaders before making their final decision, as previously reported. However, the decision to honor Galliano has left many furious. Philippe Virgitti, whom Galliano raged at in a Parisian bar, calling him a “f–king Asian bastard” and his girlfriend a “f–king ugly Jewish bitch,” and “dirty Jew face,” dubbed him “a pig” in a new book, adding, “He’s garbage, he caused a great deal of harm.” “Odd Mom Out” star Jill Kargman, a regular presence at the Met Ball, said of the decision to name Galliano just one of three living designers to be honored by the museum, “I am APPALLED. I guess antisemitism is OK now at the highest art museum.” Kargman, 52, confirmed she would not be attending, adding, “Substitute any other minority and he’d be (RIGHTFULLY) cancelled permanently.” Meanwhile, PR Lauren London claimed she witnessed another antisemitic Galliano rant in 2019 at the Henri Chenot spa in Merano, Italy, where he allegedly objected to people speaking Hebrew. “There is no alcohol to blame…no drugs…not even sugar or caffeine,” she posted on Instagram earlier this week. “Galliano was sober and this was 8 years after his despicable rant that got him fired from Dior. “My friend was on the phone with her daughter speaking English. Then she switched languages and started speaking Hebrew. The minute Galliano heard Hebrew he started screaming ‘Merry Christmas. Merry Christmas…’ Over and Over. On repeat until my friend hung up the phone. It was July. “When my friend asked him if he had a problem with Hebrew he promptly and very unapologetically responded that he did. She then told him that she had a lot of his clothes and when she got back to her home in Israel she would dispose of them.</p>
+                <p class="source-credit">— Https://pagesix</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>George Lombard Jr.’s soccer background helped create foundation for rise to Yankees</h4>
+                <p>Asked about George Lombard Jr. on Wednesday, Cody Bellinger offered what is a high compliment in the sport. Don’t miss Greg Joyce’s text messages from The Bronx and beyond — he’s giving Sports+ subscribers the inside buzz on the Yankees. The new Yankees shortstop delayed specializing in one sport, playing both baseball and soccer all through high school. In his senior year — months before he became the Yankees’ first-round pick — the defender (and his brother, Jacob) helped lead Gulliver Prep to a Florida state championship.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Fauci’s COVID Phone Turned Over To Senate Panel Ahead Of Contempt Vote</h4>
+                <p>A Senate panel investigating Dr. Anthony Fauci has reportedly obtained a copy of the cellphone he used during the COVID-19 pandemic ahead of a key committee vote Thursday to hold him in contempt of Congress. The Wall Street Journal reported Wednesday that the Department of Health and Human Services, which is led by Secretary Robert F. Kennedy Jr, transferred a copy of the phone’s records to the Senate Homeland Security Permanent Subcommittee on Investigations. Fauci used the phone during his tenure as director of the National Institute of Allergy and Infectious Diseases, according to The Journal, which also revealed that Sens. Ron Johnson (R-WI) and Rand Paul (R-KY) have obtained “millions of additional Fauci-related pages” from government servers.</p>
+                <p class="source-credit">— Daily Wire</p>
+            </div>
+            <div class="story-minor">
+                <h4>Boomers Should Give Their Life’s Earnings To Their Kids, Not Making A Slow Death Last Longer</h4>
+                <p>Thanks to prolonging an inevitable end through expensive interventions, younger generations may see little of the money their parents and grandparents saved. Thanks to decades of rising home prices and a historically impressive bull market, Baby Boomers possess more than half of American household wealth. That’s more than double the amount of wealth controlled by Generation X, and five times as much as that controlled by Millennials and younger generations. If you are the child or grandchild of a Baby Boomer, you might think this is good news: as long as you exhibit the appropriate filial piety towards your gracious elders, you’ll be the recipient of their largesse. Indeed, some academics estimate that in the next 20 years there will be an incredible wealth transfer of money and assets amounting to between $68 trillion and $84 trillion.</p>
+                <p class="source-credit">— The Federalist</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2025/11/931/523/mbs-trump-deals-white-house.png?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Gen Keane questions whether Pakistan, Saudi Arabia and Qatar can be trusted in Iran talks</h3>
+                <p class="lead-summary"><strong class="drop-cap">F</strong>ox News senior strategic analyst Ret. Gen. Jack Keane discusses President Donald Trump’s cancellation of Iran strikes, the state of Middle East peace talks and more on ‘America’s Newsroom.’ Retired Army Gen. Jack Keane questioned whether Pakistan, Qatar and Saudi Arabia can be trusted to help shape negotiations with Iran, accusing the regional partners of steering President Donald Trump away from military pressure while leaving the United States and Israel to bear the risks of confronting Tehran. Keane, a Fox News senior strategic analyst and former Army vice chief of staff, said during a Monday appearance on Fox News’ "America’s Newsroom" that Pakistan and Qatar were "compromised" as mediators because, in his view, they favor Iran over the United States. "It is well known in the Middle East region, by our intelligence services, by all the players, that the Pakistanis and the Qataris are compromised because they favor Iran at the expense of the United States," Keane said. "This is historical. This is not new." Vice President JD Vance (center) walks with Pakistan's Chief of Defence Forces and Chief of Army Staff Field Marshall Asim Munir (left), and Pakistani Deputy Prime Minister and Foreign Minister Mohammad Ishaq Dar after arriving for talks with Iranian officials on April 11, 2026, in Islamabad.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Ukraine fails to halt Russian barrage as Zelensky blames partners for ‘horrific casualties’</h4>
+                <p>U.S.-made systems are Kyiv’s only means to shoot down ballistic missiles, and Ukraine says it has run out of interceptors. Seventeen Ukrainians died overnight.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Crowded Russian beach descends into chaos after alleged Ukrainian drone incident kills 7, including 4 children</h4>
+                <p>Video captured the moment a projectile struck a crowded beach in Russia's Black Sea resort town of Arkhipo-Osipovka, killing seven people, including four children, and injuring dozens. (Social Media via Reuters) Vacationers were sent scrambling for safety Monday after a projectile struck a crowded beach in a Russian Black Sea resort town, killing seven people, including four children, and injuring dozens more, officials said.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Explosive drone forces shutdown at major German airport serving NATO, Ukraine flights</h4>
+                <p>Jennifer Griffin reports on Russia's shadow fleet launching a drone campaign across Europe to surveil military sites and test NATO's air defenses. The International Institute for Strategic Studies report reveals 144 suspected drones near sensitive sites in Germany, France and the UK.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/08/931/523/kansas-cheerleader-ncaa-tournament-kohl-center.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Former Kansas Jayhawks guard Brett Ballard seriously injured in single-vehicle highway crash</h3>
+                <p class="lead-summary"><strong class="drop-cap">C</strong>lay Travis breaks down how the offer highlights biological realities and media hypocrisy surrounding biological males in female athletics—a debate recently reignited by statements from Indiana Fever star Sophie Cunningham A beloved Kansas college basketball coach and former Jayhawks standout is in the hospital with serious injuries after a highway crash Tuesday night. Washburn University head coach Brett Ballard, 46, was behind the wheel of his 2024 Ford F-150 when the crash occurred. According to the Kansas Highway Patrol, Ballard was traveling westbound on Interstate 470 in Topeka just after 8:15 p.m. when his pickup truck veered off the left side of the roadway. Brett Ballard of Kansas walks off the court as Maryland players celebrate in the background after the semifinal round of the NCAA Men's Final Four at the Georgia Dome in Atlanta, Ga., on March 30, 2002. Maryland defeated Kansas 97-88 and advanced to the championship game. (Getty Images) The truck struck a delineator post, traveled into a steep embankment, and then collided with a concrete bridge pillar. The impact left the vehicle heavily damaged. Ballard was the only person inside the truck. First responders transported the injured coach to Stormont Vail Hospital in Topeka for treatment. Authorities confirmed he was wearing his seatbelt at the time of the crash.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Yankees get positive Clarke Schmidt update as next steps come into view</h4>
+                <p>On an encouraging afternoon of Yankees injury developments — most notably Aaron Judge getting cleared for some light activities — the club also received positive news concerning Clarke Schmidt. Schmidt, who had to cut short a live batting practice Tuesday because of what he believed and hoped was cramping in his forearm, was informed it indeed “seems like” it was cramping, Aaron Boone said. Join Post Sports+ for exciting subscriber-only features, including real-time texting with Greg Joyce about the inside buzz on the Yankees. “Clarke we feel like is probably good to go,” the manager said before Wednesday’s 3-1 loss to the Cardinals in The Bronx. “He got a lot of treatment [Tuesday]. The doc didn’t seem overly concerned.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Aaron Donald takes major step toward Los Angeles Rams return; decision expected soon</h4>
+                <p>Caleb Williams was ranked 51st in the NFL Top 100 after an impressive 2025-26 season. Danny Parkins, Eric Mangini and Greg Jennings ask whether Caleb was ranked too low, too high or just right. Plus, they discuss the potential return of Aaron Donald to the Los Angeles Rams.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Will Warren struggles to help his cause as he faces Yankees rotation ‘uncertainty’</h4>
+                <p>Someone is going to be sent to the bullpen, and Will Warren didn’t help his cause to avoid that fate Wednesday night. Join Post Sports+ for exciting subscriber-only features, including real-time texting with Greg Joyce about the inside buzz on the Yankees. With the way Weathers has pitched of late, it is hard to see the Yankees demoting him. Warren was coming off a terrific outing in a win over the Cubs, but after a strong start Wednesday, he struggled to go deep in the 3-1 loss to the Cardinals at the Stadium. The right-hander was able to record only one out in the sixth after giving up four hits and three runs in the previous frame.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F08%2Fnewspress-collage-tq3xj2g1i-1785865762961.jpg?quality%3D90%26strip%3Dall%261785851441" alt="Lead Story Image" class="news-photo">
+                <h3>Anna Wintour has rubber-stamped bigotry by picking antisemitic Galliano for Met show</h3>
+                <p class="lead-summary"><strong class="drop-cap">C</strong>all me old-fashioned, but didn’t publicly exclaiming “I love Hitler” used to automatically disqualify people from receiving prestigious honors in Manhattan? However, in these topsy-turvy times, flagrant and repeated antisemitism gets you the red carpet treatment in the Bigoted Apple. Saying “F–king Jewish bitch!” and “Jewish c–t” to a woman at a bar is apparently not a dealbreaker whatsoever for Her Royal Haughtiness Anna Wintour. The Condé Nast bigwig and former Vogue editor just proved it by picking disgraced fashion British designer John Galliano as next year’s Met Costume Institute show focus. So, the one-time Christian Dior creative director, who was found guilty in France in 2011 of going on antisemitic and racist rants, will be feted at the 2027 Met Gala, NYC’s annual gated-community prom, by A-List stars, sports icons, artists and politicians. Haven’t we spent the last six years being lectured about inclusion by the exact same elite attendees of this $100,000-per-person event? Haven’t they loudly driven the point home — typically in the service of self-preservation — that words and deeds matter and have consequences? Thus, in choosing Galliano, Wintour and her celeb pals are effectively saying, “Except when it comes to vile hate speech about Jews.” By the way, this is not some vetting “whoopsie!” in which social media users dug up old offensive tweets. Galliano’s guilt is common knowledge. Wintour didn’t become the world’s only famous editor by being dumb. She knows exactly what she’s doing.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Prince William faces 'work-shy' criticism but is secretly running monarchy like a CEO, expert says</h4>
+                <p>Dan Wakeford, founder of Celebrity Intelligence, says Prince Williams' strategic approach to work, family and privacy is helping modernize the monarchy while boosting public support. Prince William has been branded "work-shy" for years, but one royal expert says the heir to the British throne is quietly executing a CEO-style strategy designed to secure the monarchy's future.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>I went to Mohegan Sun in Connecticut. It’s worth the drive from NYC</h4>
+                <p>No, we’re not talking about the omnipresent greenery that lines the state’s opulent highways (although the oak, maple, birch, and pine trees on the I-95 North really are something else). If you travel past Greenwich, Stamford, New Haven, Saybrook and make one final u-turn, you’ll find Uncasville’s Mohegan Sun, an elegant resort, spiffy casino, lively basketball/concert/live events arena and mouth-watering restaurant hub. That  — along with the fact that John Mayer (Oct. 9) and Metallica (Nov. 19 and 21) are going to be there —more than make the long drive from New York City worth the shlep. All gentle joking aside, it feels like you can exhale here. This is elevated comfort at its very best.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Halle Berry sizzles in racy lingerie look for sunset beach stroll during Fiji getaway</h4>
+                <p>The 59-year-old actress shared a series of Instagram photos from a tropical getaway in Fiji, offering glimpses of quiet mornings, poolside relaxation and sunset walks along the beach. Berry posed near the shoreline in an animal-print cover-up layered over a black lace lingerie bodysuit as the sun dipped toward the ocean.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/08/931/523/doordash-wing-drone-partnership.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>DoorDash gets FAA approval for its own delivery drones</h3>
+                <p class="lead-summary"><strong class="drop-cap">F</strong>OX Business correspondent Madison Alworth reports on drone food delivery services launching in New Jersey on ‘America Reports.’ Your next DoorDash order could arrive with a flight path instead of a driver. DoorDash has earned FAA Part 135 air carrier certification and launched DoorDash Air, its in-house drone delivery program. The company now has federal authorization to operate a commercial drone delivery service in the United States. Yes, the app you use for burgers, groceries and late-night snacks is entering the airline business. However, this does not mean a DoorDash drone will hover over your driveway tomorrow. The company still needs added operational approvals. It also has not announced its first markets or a firm launch schedule for its custom aircraft. Our free CyberGuy Live class, "Sick of Spam?", has ended, but you can still watch the full replay and download our spam-stopping checklist. Kurt "CyberGuy" Knutsson walks you step by step through simple ways to reduce robocalls, spam texts, junk email and unwanted messages. You’ll also learn how to curb political texts, clean up your inbox and spot messages that could put your personal information at risk. DoorDash Air plans to use company-built drones to deliver eligible food, medicine and everyday essentials. (DoorDash) DoorDash announced the FAA certification on July 29, 2026. The company says it is the eighth drone operator to earn this type of federal air carrier certificate. The FAA uses Part 135 certification for companies that carry other people's property for payment. For drones, it provides the regulatory path for commercial package deliveries beyond a pilot's direct line of sight. Getting certified requires a five-phase FAA review. The agency evaluates the operator's aircraft, maintenance procedures and safety program. Even after earning the certificate, an operator still needs airspace authorization. It may also need exemptions or waivers for flights beyond visual line of sight. State rules and local land-use requirements can also affect where a delivery hub operates. So, DoorDash has cleared a major federal hurdle. Still, each real-world delivery network will require more planning and approval.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Elon Musk's DOGE made big errors in claims of government savings, GAO finds</h4>
+                <p>The government watchdog found that billions of dollars in DOGE’s public tally could not be verified and that some claimed cuts never happened.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Google’s stock drops after Nobel-winning AI executive steps aside</h4>
+                <p>Demis Hassabis led the company's response to the rise of ChatGPT but will focus on developing AI to make scientific breakthroughs.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Fake party invitation scam can hijack your computer</h4>
+                <p>Clicking links in a fake party invitation email can install malware that gives criminals remote access to your computer and personal information, Kurt "CyberGuy" Knutsson explains. You sit down at your computer to clear out your inbox. Then you spot a party invitation from someone you recognize. Maybe it appears to come from a friend. Perhaps the sender belongs to a group you know. Either way, the familiar name makes the message feel safe enough to open.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
