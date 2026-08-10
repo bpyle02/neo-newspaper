@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>SUNDAY, AUGUST 09, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://www.theblaze.com/media-library/why-christian-nationalists-are-liberals-whether-they-realize-it-or-not.jpg?id=67106992&width=980" alt="Lead Story Image" class="news-photo">
+                <h3>Why ‘Christian nationalists’ are liberals — whether they realize it or not</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>he political doctrine embraced by many on the right owes more to the French Revolution than to Christendom. Doesn’t it seem like conservatives are always trying to “out-conservative” each other? If you think of yourself as a real-deal, red-blooded conservative, rest assured there’s someone out there ready to tell you you’re not conservative enough. And more often than not, it’s the self-proclaimed “Christian nationalists” who claim the top spot on the conservative totem pole. If you care about preserving your people, their country, and their ethnic integrity, then you should not be a nationalist. It’s a funny phenomenon to me, because If you actually examine it, “Christian nationalism” — and much of the conservative status hierarchy built around it — turns out to be a paradox: a supposedly conservative idea that isn’t conservative at all. And that’s not hyperbole. Sure, the Christian nationalist’s pitch is that he’s the purest advocate for the normalization and institutionalization of Christianity. He’s staunch on all the “radical” positions (pro-life, anti-gay-marriage, anti-immigration, pro-Jesus), and he’ll tell you the nation needs to be Christian, that the government itself needs to reflect Christian values. He believes he’s a patriot because his beliefs as a Christian reflect the best interests of his nation. It all sounds good on paper. When we think of a nation, we picture a distinct people who share a history, a culture, and, yes, even a race. Peoples have always belonged to their nations; it’s an ancient biblical concept — and an immutable one. But nationalism is not the same thing as the “nations” it claims to speak for. Nationalism is a modern political doctrine, and once you trace where it actually came from, you find something the “Christian nationalist” won’t want to hear. It isn’t a conservative idea at all. It’s a liberal one. Historical nationalism is the doctrine that concerned itself with the feudal peasant’s liberation from his king and church. It’s the idea that a country is governed by the masses of its native people, not the throne and altar. That’s the key distinction here. Political nationalism isn’t necessarily about preserving demographic and cultural integrity, although that is a key component. It’s about the legitimacy and authority of the people of the nation. Under a nationalist framework, the citizen is the sovereign. Authority flows from the bottom up, not the top down.</p>
+                <p class="source-credit">— The Blaze</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Atlanta’s ‘Master of Disguise’ accused of robbing 10 stores at gunpoint during ‘reign of terror’</h4>
+                <p>An Atlanta-area man dubbed the “Master of Disguise” is accused of robbing 10 stores at gunpoint during his months-long “reign of terror.” Tracy Daryl Mingo, 33, of College Park, Ga., was arraigned Thursday on 20 federal counts tied to the alleged robberies, which took place between October 2025 and January 2026, according to the Department of Justice. Mingo allegedly targeted Circle K, Subway and Family Dollar stores in College Park, Decatur, East Point, Fairburn, Marietta and Union City during his crime spree, targeting the businesses late at night when few or no customers remained. In each case, Mingo allegedly pulled a gun on store employees and demanded money, prosecutors said.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Is There a Boomer–Zoomer War?</h4>
+                <p>Young people don’t believe that the status quo is setting them up for success. They feel it’s further cushioning the Boomers’ retirement.</p>
+                <p class="source-credit">— National Review</p>
+            </div>
+            <div class="story-minor">
+                <h4>Hundreds Of Women And Children Freed From Forced Jihad In Massive Hostage Rescue</h4>
+                <p>Nigerian forces freed at least 308 people held by jihadist kidnappers in the past week in what is being called the largest single-day rescue operation in the country’s history. The majority of the victims came from two groups. One hundred sixty-three of the victims were taken from the Woro community in Kwara State during a February 3 raid. In that same attack, the jihadists killed an additional 160 people in the village. The victims told the Associated Press they believed they had been taken as punishment for refusing to accept the religious preachings of the jihadists. One woman, Hauwa Saliu, said her captors constantly asked the victims if they had accepted jihad yet.</p>
+                <p class="source-credit">— Daily Wire</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/08/931/523/Hauwa_Saliu.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Nigeria's largest rescue operation frees 308 hostages held by militants in Kwara State</h3>
+                <p class="lead-summary"><strong class="drop-cap">A</strong>bdulRahman AbdulRasaq, the governor of Nigeria's Kwara State, says the country is still assessing victims' health after Nigerian forces rescued hundreds of women and children after six months in jihadi captivity. Credit: Associated Press Victims held for six months in captivity at the hands of jihadi kidnappers in Nigeria detailed Friday the harrowing conditions they were kept in after being liberated in what Nigerian officials are calling the largest rescue operation in the country's history. Nigerian forces rescued at least 308 victims from captivity in the past week, with the bulk of the victims coming from two distinct groups. One hundred and sixty-three of the victims were taken from the Woro community in Nigeria's Kwara State in a Feb. 3 raid that saw their jihadi kidnappers kill an additional 160 people in the Woro village. The victims told The Associated Press they believed they had been taken as punishment for refusing to accept and acquiesce to the religious preachings of the jihadis. One woman, Hauwa Saliu, told the outlet her captors constantly asked the victims if they had accepted jihad yet.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Iran says deal with Oman is close — but its demands leave Hormuz opening uncertain</h4>
+                <p>Tehran insists on compensation and the lifting of sanctions, among other concessions from the U.S., as a condition for reopening the strait.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Spain's migrant surge reignites debate over Europe’s Islamist terror threat</h4>
+                <p>Lorenzo Vidino warns the Senate about the Muslim Brotherhood's covert influence inside the United States. He explains how the group infiltrates American education and politics to advance its agenda. The estimated 72,000 Moroccan migrants who flooded into the Spanish city of Ceuta within 24 hours is shining a spotlight on Europe’s massive problem of illegal and legal migration and the threat of growing Islamic terrorism.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F08%2Fnewspress-collage-t420mqusa-1786247979966.jpg?quality%3D90%26strip%3Dall%261786233607" alt="Lead Story Image" class="news-photo">
+                <h3>Liberty coach Chris DeMarco explains reasons behind Betnijah Laney-Hamilton decision</h3>
+                <p class="lead-summary"><strong class="drop-cap">B</strong>arclays Center will be packed Sunday for a blockbuster matinee — a rematch of the Commissioner’s Cup title game, a battle of the past two WNBA champions, an opportunity for the Liberty to avenge their only loss of the past three weeks. But the battle against four-time MVP A’ja Wilson and the Aces will come without “the heart” of the Liberty, who waived Betnijah Laney-Hamilton on Thursday — ending the guard’s six-season run in New York — then saw the former All-Star get claimed off waivers by the Washington Mystics on Saturday. “Betnijah’s a tremendous player and a tremendous person,” Liberty head coach Chris DeMarco said following Saturday’s practice. “She meant a lot to this organization and still does. I know it was really difficult trying to find the right trade partners for her and still in the end, we wanted to give her an opportunity where she’s able to contribute and have a larger role and that’s why we got to this point. “Even at the start of the season, she expressed if there’s other opportunities, she wanted to look at those. It came to the point, just as a team we all understood what this is and what we’re trying to accomplish. For her, it was trying to find her the right place where she can succeed and feel good. “Coming off a major injury … it was a tough year all-around for her. … It’s just one of those things where she felt like she wanted another opportunity and we did our best to try to help her.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Jorge Messi, Lionel Messi's Father And Longtime Agent, Dies At 68</h4>
+                <p>Jorge Messi, the father of soccer star and Argentina captain Lionel Messi, died Saturday at a hospital in the central Argentina city of Rosario. He was 68. The Rosario-based Club Atlético Newell’s Old Boys announced his death in a social media post that said he had undergone treatment in recent months for an unspecified illness. The post described him as "the pillar and the person who, with vision, rigor and affection, supported the career of the best player of all time, alongside his wife, Celia Cuccittini."</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Mets get positive news on Carson Benge injury</h4>
+                <p>PITTSBURGH — Carson Benge received a break Saturday, but not the kind that appears likely to send him to the injured list. The rookie outfielder was diagnosed with a bone bruise, a day after he jammed his left wrist while completing a sliding catch in left field. Benge was removed from the game with discomfort in the wrist and X-rays were negative. Imaging on Saturday indicated the bone bruise, interim manager Andy Green said before the Mets’ 9-0 loss to the Pirates. It left the Mets without one of their hottest hitters for the short term, but likely in position to reinstate him into the lineup within the next few days.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Chris Sale and Gerrit Cole set up a pitching duel as Atlanta Braves host the New York Yankees</h4>
+                <p>We hit another winner on the diamond yesterday with the Rays and Drew Rasmussen getting the victory over the Mariners. It was a very low-scoring game, but that didn't matter because we came out on the correct side of it. Unfortunately, I lost the full game bet on the Padres, so it was basically a wash. However, I hit on our Jose Altuve bet, so we did end up profitable for the day, and that's the ultimate goal. Let's get some profit here as the Braves take on the Yankees.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/08/931/523/scott-eastwood-suit.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Scott Eastwood says his father sent Kevin Costner home from set while filming 'A Perfect World'</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>he actor bought his dad a Silverado truck for Christmas once he found success as an actor. Scott Eastwood is getting candid about how his father once asked a well-known actor to leave a movie set. During a recent interview on the "Armchair Expert" podcast, the 40-year-old actor shared that everybody has "a lot of respect" for his father, Clint Eastwood, on set and that he "didn't raise his voice ever" while on set. He then shared a "legendary story" about when his father worked with Kevin Costner, and how he reacted when the actor wouldn't leave his trailer, noting "I’m sort of going to paraphrase it, and I’ll probably tell it a little wrong." "Kevin Costner sort of going through maybe, the Kevin Costner rise to fame and maybe got a big ego, you know, blah blah blah, but they were doing 'Perfect World,'" he said. "Apparently, he didn't want to come out of his trailer for some reason." Scott Eastwood said his dad never raised his voice while on set.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>You again? These Hollywood  actors are now in every movie</h4>
+                <p>Audiences have gone back to the movies this summer after several years of will-they-won’t-they tension. And filmgoers probably have found themselves thinking the exact same thing. Not that they mind multiple encounters with their favorite stars. But undeniably, through a strange confluence of factors, the big screen has been dominated by just a handful of top actors this year. I’ve narrowed it down to a fantastic five: Zendaya, Tom Holland, Robert Pattinson, Anne Hathaway and Pedro Pascal. This quintet has practically turned Hollywood into a repertory company, a theater in which one group of performers appear in all the shows.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Molly Sims flaunts toned abs in mismatched bikini during perfect beach day with her kids</h4>
+                <p>The supermodel tells Fox News Digital at The Paley Center Gala in New York the healthy habits she prioritizes in summer. The 53-year-old model and actress took to Instagram to share how she and her family spent "a perfect beach day" together. She posted a series of photos on her Instagram stories featuring her children swimming in the ocean and building sandcastles, as well as one of her in a mismatched bikini with the words, "Oh hey," written over it.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>How Paul Simon’s classic album ‘Graceland’ almost didn’t get made</h4>
+                <p>In 1985, when South Africa was still under apartheid, a car drove into the black township of Soweto with an unusual passenger — one of the world’s most famous singer/songwriters — concealed in the back seat. Paul Simon had been invited to Soweto by Sipho “Hotstix” Mabuse, a black South African pop star at the time, but told he would have to take precautions. “[They] said, ‘You’ll have to hide under a blanket in the back seat’ — which I did,” Paul Simon says in the new book, “Days of Miracle and Wonder: Paul Simon and the Trials and Triumphs of Graceland” by Ashley Kahn (Atria, Aug. 11). Kahn describes the dangers and controversies Simon had to navigate to record “Graceland” with the South African musicians who lent it a uniquely joyous sound, brilliantly contrasting with the character of Simon’s introspective lyrics.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
