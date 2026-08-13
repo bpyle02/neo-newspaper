@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>WEDNESDAY, AUGUST 12, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://pagesix.com/wp-content%2Fuploads%2Fsites%2F3%2F2026%2F08%2Fnewspress-collage-9kwqkatd6-1786524286184.jpg?quality%3D90%26strip%3Dall%261786509931" alt="Lead Story Image" class="news-photo">
+                <h3>Rod Stewart cancels remaining US tour dates after coronary stent procedure</h3>
+                <p class="lead-summary"><strong class="drop-cap">R</strong>od Stewart will be unable to continue his “One Last Time” farewell tour following a coronary stent procedure and after postponing and canceling a few performances, a representative for the singer has confirmed. Stewart canceled his Tuesday night performance at Rocket Arena in Cleveland shortly after postponing his Sunday concert in Cincinnati at Riverbend Music Center. The latter venue said at the time that it was due “to an unforeseen but minor medical procedure that required prompt attention.” Stewart also canceled a few dates earlier this year, including two in Las Vegas and one in San Diego. “Following further medical evaluation, Sir Rod Stewart has successfully undergone a routine coronary stent procedure. Doctors are pleased with his recovery, and Rod is doing very well and has returned to his normal daily activities,” a statement from his publicist read. “On the advice of his doctors, he will take the next four weeks to recuperate and regain full fitness before returning to the stage. Unfortunately, this means he will be unable to continue his current tour dates.” It added that “information regarding affected performances will be communicated by the respective promoters and venues.” Stewart, 81, was scheduled to appear through Sept. 3 in North America, including his six-night residency at The Colosseum at Caesars Palace in Las Vegas and a few dates in Mexico. “I’m already feeling better and very much on the mend. I want to thank the doctors, nurses and everyone who has taken such wonderful care of me,” Stewart said in the statement. “I’m deeply disappointed to miss these shows and sorry to let my fans down, but I look forward to getting back on stage and having a good time with you all again soon.” The Grammy Award-winning Stewart, whose signature rasp made him a rock ‘n’ roll legend, has sold millions of records across his career’s many decades. Perhaps best known for hits like “Maggie May” and “Tonight’s the Night,” he has been inducted into the Rock & Roll Hall of Fame twice. Our community is about connecting people through open and thoughtful conversations. We want our readers to share their views and exchange ideas in a safe space. In order to do so, we've created a simple set of rules that will improve your experience. Thanks for reading our community guidelines. Don't forget, freedom of speech is not the freedom of reach!</p>
+                <p class="source-credit">— Https://pagesix</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>LIVE PRIMARY RESULTS: Voters in Six States Head to the Polls</h4>
+                <p>Voters in six states headed to the polls for their primary elections today. This includes Alabama, Connecticut, Minnesota, South Carolina, Vermont, and Wisconsin. In South Carolina, voters had a special election to replace the late Sen. Lindsey Graham, who died unexpectedly on July 11. Darline Graham, Lindsey's sister, was appointed to the seat after his death and is endorsed by President Trump.</p>
+                <p class="source-credit">— Townhall</p>
+            </div>
+            <div class="story-minor">
+                <h4>Are data centers enough to flip a key House race?</h4>
+                <p>Democratic and Republican candidates nationwide are running on their opposition to data center projects.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Trump's Iran strategy is the one America needs</h4>
+                <p>America is engaged in negotiations to end the war in Iran on terms favorable to the United States. It is difficult to believe this will be achieved through negotiations alone, however hopeful President Trump is about the prospects. Like many Americans, the president wishes to bring this war to a close. After all, America is not the policeman of the world. Nor is the U.S. the protector of the Middle East. When the United States spends the blood and treasure of the American people, we do so for the good of the American people. This is both the beginning and the end of President Trump’s strategic view of the war in Iran.</p>
+                <p class="source-credit">— The Blaze</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/02/931/523/north-korean-leader-kim-jong-un-speaks-during-congress-session.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>North Korea launches another ballistic missile as US, South Korea prepare for military drills</h3>
+                <p class="lead-summary"><strong class="drop-cap">M</strong>ark Montgomery, a senior fellow with The Foundation for Defense of Democracies, speaks to Fox News Digital about North Korea recently test-firing a short-range ballistic missile during the U.S. conflict with Iran. North Korea launched another ballistic missile Tuesday, marking its second reported ballistic missile launch in less than a week. Japan’s prime minister’s office announced the latest launch Tuesday. Details about the missile’s trajectory, range and where it landed were not immediately available. The U.S. military said it was monitoring the launch and consulting with allies and partners in the region. NORTH KOREA EXPERT WARNS US CAN 'NEVER TAKE THEIR EYE OFF' KIM JONG UN FOLLOWING MISSILE TEST DURING IRAN WAR North Korean leader Kim Jong Un watches a sea-to-surface strategic cruise missile test from the destroyer in an image released by North Korean state media. (KCNA via KNS / AFP via Getty Images, File) "We are aware of the recent missile launch and are consulting closely with our allies and partners. Based on current assessments, these events do not pose an immediate threat to U.S. personnel or territory, or to our allies," U.S. Pacific Command said in a statement. "The United States remains committed to the defense of the U.S. homeland and our allies in the region."</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Trump says ceasefire in Lebanon is working. For residents, it’s a ‘prison.’</h4>
+                <p>Israeli forces continue to occupy buffer zone in effort to dismantle Hezbollah’s infrastructure, with restrictions drawing parallels to those in the West Bank.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Rescuers search collapsed hospitals for patients trapped by Colombia quake</h4>
+                <p>Dogs and drones were deployed to search for survivors. At least 220 people were reported dead in the nation’s strongest earthquake in a decade.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Taliban wipes out decades of progress as 2.4M Afghan girls remain locked out of school, UN agency says</h4>
+                <p>UConn international student Sadaf Zarei discusses the plight of the Iranian women's soccer team, whose captain dropped her asylum bid in Australia fearing for her family's safety from the oppressive Iranian regime. Zarei highlights the pervasive digital blackouts and human rights abuses, advocating for an end to the "criminal terrorist entity" currently in power.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F08%2Fcrop-40300062.jpg?quality%3D90%26strip%3Dall" alt="Lead Story Image" class="news-photo">
+                <h3>Dodgers rally for dramatic walk-off win over Royals after blowing late lead</h3>
+                <p class="lead-summary"><strong class="drop-cap">I</strong>n the eighth inning on Tuesday night, it looked like the Dodgers were trying to give the game away. In a back-and-forth, twist-and-turn, 5-4 thriller of a win over the Kansas City Royals, the Dodgers took another step forward from their recent two-week slump –– overcoming a bafflingly blown two-run lead in the eighth by ultimately winning on Max Muncy’s walk-off single in the 10th. “I just love the way we really, really bore down and competed tonight,” manager Dave Roberts said, harkening back to calls for renewed urgency after the Dodgers’ recent 1-8 skid. “You just have to keep moving forward,” Muncy added. “I think that’s been one of the biggest things we’ve been doing.” The Dodgers certainly had to move forward on Tuesday, in a game such dramatics shouldn’t have been required. The team got a dominant six-inning, one-run start from Blake Snell in his return from the injured list. They broke a 1-1 deadlock with a two-run rally in the seventh, when Mookie Betts, Alex Call and Teoscar Hernández all hit doubles. But instead of coasting the rest of the way with a 3-1 advantage, they quickly let the game go flying back off the rails. Right-handed reliever Evan Phillips created a mess in the top of the eighth, following a one-out walk by allowing three-straight singles that tied up the score again. Dreyer got Carter Jensen to hit a routine fly ball to deep center. But after making the catch, outfielder Andy Pages somehow let the ball slip out of his hand on the transfer and sent it skipping behind him back toward the wall.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Chiefs receiver Rashee Rice says he is '100% locked in' after serving 30-day jail time for probation violation</h4>
+                <p>Before Rashee Rice was back with his Kansas City Chiefs teammates for the upcoming season, he had to serve 30 days in jail following a probation violation stemming from a multi-vehicle crash back in 2024. "It was a learning experience and a reality check," Rice said, via ESPN. "Don’t focus on the past. Focus on what’s going on now. I’m doing [well] mentally."</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Aaron Boone believes sticking with Trent Grisham in center is ‘best way to go’ despite defensive limitation</h4>
+                <p>Among 59 outfielders who had seen at least 10 opportunities in center this season, Trent Grisham ranked 59th in sprint speed. By the same metric, which measures a player’s top running speed, Spencer Jones entered play Tuesday No. 39 of 521 major leaguers, an elite athlete who would be one of the faster center fielders in baseball if he were a center fielder. Join Post Sports+ for exciting subscriber-only features, including real-time texting with Greg Joyce about the inside buzz on the Yankees. Yet Grisham was back in center for a 97th time this season, having played zero games in a corner, as the Yankees won the series opener 4-1 over the Mariners in The Bronx while Jones, who has moved all around the grass, was in right field.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>CBS Sports president says 'no timetable or final decision' on Tony Romo's future after OWI arrest</h4>
+                <p>Fox News national correspondent Kevin Corke reports on Tony Romo’s refusal to take a breathalyzer test on ‘The Will Cain Show.’ Tony Romo’s status with CBS remains a fluid situation, but the president of CBS Sports said "there is no timetable or final decision" following his OWI arrest last month.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/08/931/523/kellan-lutz-fanexpo-chicago-2025.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>‘Twilight’ star Kellan Lutz traded California for Tennessee land and Bible studies</h3>
+                <p class="lead-summary"><strong class="drop-cap">D</strong>ennis Quaid reflects on leaving Los Angeles for Nashville, saying residents are frustrated with high taxes, poor services and the fallout from devastating wildfires. Kellan Lutz said this week that he left California three years ago for Tennessee after the pandemic. "I love California, I really do," he explained on "Inside of You" with Michael Rosenbaum. "The whole Tennessee move happened when we had our second kid." The "Twilight" actor said they moved from Orange County – and his wife, Brittany Lutz, hopes to eventually move back there or at least to be "bi-ish coastal." Lutz’s wife was born and raised in Orange County. "Her family is awesome. But post-COVID, a lot of people flew, like fled California. A lot of people lost jobs and wanted to move somewhere a little bit more peace given." His wife’s family chose to leave California, and he said they followed them to Tennessee, mainly because otherwise she wouldn’t have had a support system when he goes on location for work, and she’s left at home with the children.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Olivia Dean is at MSG this week. We found the cheapest tickets</h4>
+                <p>Later this week, internationally-renowned pop star Olivia Dean is swinging into New York City’s Madison Square Garden for four concerts as part of her ongoing, international ‘Art of Loving Tour’ with special guest Baby Rose. And, if you “Man I Need” to be there, last-minute tickets are available for her extended Empire State stint. At the time of publication, the lowest price we could find on seats for any one of the quartet of Big Apple gigs was $320 including fees on SeatGeek. Make sure to use promo code NYPOST10 for $10 off purchases over $250 at checkout (Editor’s Note: this discount is only valid for users’ first purchase on SeatGeek).</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>‘The Office’ star Lucy Davis ‘at peace’ with 'incurable' cancer diagnosis after nearly ignoring warning sign</h4>
+                <p>Lucy Davis revealed a devastating Stage 4 breast cancer diagnosis after quietly battling the disease for the past year and a half. "The Office" actress said the cancer had metastasized to her spine, right hip and ribs and was now "incurable," with chemotherapy no longer an option.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Backstreet Boys Las Vegas Sphere tickets are cheaper than ever. Get them now</h4>
+                <p>Way back in 1999, when the Backstreet Boys were at the height of their powers, ticket prices started in the $30 to $40 range. Somehow, 25 years (and significant inflation) later, we found seats to see Nick, Howie, AJ, Kevin and Brian’s ‘Into The Millennium’ residency live at Las Vegas’ Sphere for dollar amounts that would have almost made sense…at the turn of the Millennium. Based on our findings, some tickets to see one of the ’90s definitive boy bands this weekend are going for as low as $70 including fees on SeatGeek at the time of publication. Other concerts of theirs from Aug. 13-15 have inventory starting anywhere from $83 to $147 including fees.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/07/931/523/ibm-computer-man-using-laptop.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Shared VPN vs dedicated IP: Which one is right for you?</h3>
+                <p class="lead-summary"><strong class="drop-cap">G</strong>oogle General Counsel Halimah Delaine Prado joins 'Fox & Friends' to detail how Google is fighting AI-powered phishing scams. If you've started shopping for a VPN, you've probably come across the terms shared IP and dedicated IP. While they may sound technical, the difference is actually pretty straightforward, and choosing the right one can make your online experience smoother. Both options encrypt your internet traffic and protect your connection, but they serve different purposes. One prioritizes maximum privacy by blending your activity with thousands of other users. The other gives you your own personal IP address, making it easier to access certain online services without additional verification. Join us Saturday, Aug. 29, at 10 a.m. ET for a free CyberGuy LIVE class covering five simple steps to help defend yourself against AI scams, fraud, identity theft and financial hacks. Kurt "CyberGuy" Knutsson will explain how to set up bank alerts, strengthen your account logins, protect your phone number, freeze your credit and help secure your retirement savings against unauthorized transfers. No technical experience is needed. You’ll also receive our financial protection checklist, and every registrant will get a link to the class recording afterward. Shared and dedicated VPN IP addresses both encrypt internet traffic, but they offer different advantages for privacy, convenience and online logins. (Kurt "CyberGuy" Knutsson) A shared IP is exactly what it sounds like: multiple VPN users connect through the same public IP address. When dozens, or even hundreds, of people are using the same IP at different times, it becomes much harder for websites or other observers to associate online activity with any one individual. That's one reason shared IPs are the default choice for most VPN services. The trade-off is that shared IPs can sometimes trigger CAPTCHAs, blocked logins or extra verification if a website sees too much activity coming from the same address. That is one reason some people look for ways to fix a VPN that keeps getting blocked.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Cleveland Clinic launches prescription drone delivery</h4>
+                <p>A medical drone takes off during testing as part of a program aimed at speeding up the delivery of critical healthcare supplies. The effort is focused on transporting lab samples, blood and donor matching materials between smaller communities and larger hospital hubs, where timing can impact diagnoses and treatment. Developers say faster, on-demand flights could help reduce delays for rural patients, who often face longer travel times for care, with future plans to expand the technology to carry transplant-related materials.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
