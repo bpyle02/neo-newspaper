@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>THURSDAY, AUGUST 20, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://www.theblaze.com/media-library/image.jpg?id=67641777&width=980" alt="Lead Story Image" class="news-photo">
+                <h3>VIRAL VIDEO: Christian claims Muslims want all Christians and Jews removed from Chicago</h3>
+                <p class="lead-summary"><strong class="drop-cap">W</strong>hen organizers began preparing for a Jesus March in Chicago, they were shocked to find a large Muslim demonstration already taking place at the same location. “We’ve got Muslims conquering Chicago as well now. They haven’t conquered the entire country, just most of it,” BlazeTV host Pat Gray comments. “So it’s good to see that they’re infiltrating Chicago as well.” In a video posted to Instagram, Christian Sean Feucht revealed what he stumbled upon when he went to get ready for the Jesus March. “Can’t make this up, guys, I am standing in the exact place where we are doing a Jesus March in one hour. And look who’s here. A massive march, a massive Muslim march where right now they’re singing over Chicago, ‘Muhammad is the only one. May Allah be lifted up,’” Feucht said. “They’re declaring that all Jews and all Christians would be removed from this city,” he explained. “Our cities in our nation are being fought for in the spirit. I don’t know if you need any more example than this right here. We didn’t make this happen,” he continued. “We literally just walked up to the exact place where we’re doing a Jesus March today in Chicago. There's a massive Muslim march where they have been declaring over the city. “And you know what? The church in America is asleep. I’ve been saying it over the last week. This is a perfect example. The church in America is asleep. We need to wake up,” he added. To enjoy more of Pat's biting analysis and signature wit as he restores common sense to a senseless world, subscribe to BlazeTV — the largest multi-platform network of voices who love America, defend the Constitution, and live the American dream.</p>
+                <p class="source-credit">— The Blaze</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>‘ECONOMIC D-DAY’: Trump Announces Unprecedented Operation To Crush Iran’s Shadow Economy</h4>
+                <p>POTUS says any country that provides an economic lifeline to Iran will face "TREMENDOUS Economic Consequences" President Donald Trump announced what he called an “ECONOMIC D-DAY” against Iran on Wednesday, threatening economic consequences for countries that continue providing a lifeline to the despotic regime. Writing on Truth Social on Wednesday evening, Trump slammed the Islamic Republic for refusing to come to the table, warning that the time for polite diplomacy is officially over. “No one has given the Islamic Republic of Iran a greater opportunity to make a Deal than me,” Trump wrote. “TRAGICALLY, for them, they have failed to take it. Therefore, today, I am announcing the MOST CRUSHING ECONOMIC OPERATION EVER TAKEN AGAINST ANY COUNTRY!</p>
+                <p class="source-credit">— Daily Wire</p>
+            </div>
+            <div class="story-minor">
+                <h4>Well, I'd Never Thought Trump Would Do an Interview With This Guy</h4>
+                <p>Former President Donald Trump will give an interview to his former attorney, Michael Cohen. Yeah, I couldn’t believe it either: the attorney who became a turncoat and slammed his former boss before Congress will do an interview with Trump. Details about the sit-down were leaked, and Cohen confirmed the interview when asked (via MS Now): Michael Cohen's long and winding relationship with his former boss, President Trump, is poised to take another unexpected turn Thursday when the man he testified against in two separate trials calls into his radio show. https://t.co/whVqoMTnQq I remember when some guy kept putting a turkey on Michael Cohens face during a live stream hahaha. https://t.co/4TAcXm6eHI pic.twitter.</p>
+                <p class="source-credit">— Townhall</p>
+            </div>
+            <div class="story-minor">
+                <h4>Tim Robbins urges Democrats to drop outrage and ‘get their stuff together’</h4>
+                <p>The Oscar winner criticized the state of Democratic politics, arguing that the party needs to stop leaning so heavily on the opposition. “I personally am not a happy guy with either [party],” Robbins said of the political landscape. “I got to say, there got to be better ideas and better, you know, better motivation for people to vote for Democrats. They have to get their stuff together. They really do.” The “Shawshank Redemption” star offered his assessment of the Democratic Party during an appearance on the “SmartLess” podcast with Jason Bateman, Sean Hayes and Will Arnett. Robbins, 67, reflected on his 1992 directorial debut, “Bob Roberts,” a film about a conservative politician who uses folk music and media savvy to build his public persona. Robbins said the film’s themes have taken on new resonance in today’s political climate.</p>
+                <p class="source-credit">— Https://pagesix</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/04/931/523/aragchi-putin.jpeg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Iran taps financial lifeline, Russian arms as Trump escalates 'crushing' economic warfare</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>ehran is deepening its financial and military ties with Beijing and Moscow, forging a critical lifeline as it seeks to circumvent U.S. sanctions and weather Washington’s renewed "maximum pressure" campaign, regional security analysts warned Wednesday. As the U.S. continues to ramp up Operation Economic Fury, Iran, they say, has turned to non-Western blocs and alliances to unite further with Russia and China while positioning itself as a "linchpin" in a network that directly challenges American influence. The warning came as President Donald Trump announced Wednesday what he called the "most crushing economic operation ever taken against any country," threatening sweeping consequences for nations and businesses that provide Iran with an economic lifeline as he seeks to further isolate Tehran. "This will be Economic Warfare and Isolation on an unprecedented scale," Trump said in a post shared on Truth Social. Iranian Parliament Speaker Mohammad Bagher Ghalibaf, Chief Justice of Iran Gholam-Hossein Mohseni-Eje'i, Iranian President Masoud Pezeshkian and IRGC Commander General Mohsen Rezaee attend a ceremony in Tehran, Iran, July 3, 2026.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Prince Harry and Meghan Markle will return to Britain after six years in U.S.</h4>
+                <p>The prince and his wife have been estranged from the royal family but are now returning to England with their children, Prince Archie, 7, and Princess Lilibet, 5.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>UK Home Office guide tells asylum seekers not to rape, harass women or make kissing noises</h4>
+                <p>'Lost our way' — Nigel Farage, leader of Reform UK, discusses how mass migration has changed the UK — especially its cities. Farage was speaking at the Alliance for Responsible Citizenship conference in London. A guide published by Britain's Home Office reminds asylum seekers not to rape women or sexually harass people, while noting that women are allowed to "earn their own money" and "make their own decisions about their lives."</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>UAE says it is suspending trade with Iran after missile launch</h4>
+                <p>The UAE, one of Iran’s biggest trading partners, said the move was “in light of regional escalations that undermine regional and international peace and security.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F08%2F2-college-athletes-killed-9-137939023.jpg?quality%3D90%26strip%3Dall" alt="Lead Story Image" class="news-photo">
+                <h3>2 Milligan University students dead, 7 injured after driver crashes into school’s cycling team</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>wo Tennessee college athletes were killed and seven others injured when a reckless driver crashed into a cycling team during their training ride Wednesday morning. Milligan University sophomores Haylan Engdahl and Brayden Rogers were part of an 11-cyclist training session when they were allegedly struck by 69-year-old John Benfield just before 9:00 a.m. on Highway 19E in Hampton, Tenn, the Tennessee Highway Patrol said. “We are profoundly shocked and saddened to share that members of our cycling team were in an accident involving a vehicle this morning while cycling,” Milligan University said in a statement. “There are no words to adequately describe this level of loss. Our prayers are with all those impacted by this tragedy.” Engdahl and Rogers were pronounced dead at the crash site — which occurred approximately 11 miles from campus — while seven injured cyclists were rushed to nearby Johnson City Medical Center. Four victims are in critical condition in the Surgical Intensive Care Unit, with two others in stable condition, JMCU Trauma Director Dr. Bracken Burns said. “Today has been an extraordinarily difficult day for a lot of people in upper East Tennessee,” the Tennessee Highway Patrol said in a statement. “Families have lost loved ones. Others are waiting for news about people who were hurt. Teammates, coaches and an entire university community are trying to process something no one expected when this day began.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Orioles rip MLB technology after Pete Alonso blast ruled foul</h4>
+                <p>Join Post Sports+ for exciting subscriber-only features, including real-time texting with Greg Joyce about the inside buzz on the Yankees. The Baltimore Orioles certainly felt aggrieved Wednesday night against the Yankees after Pete Alonso’s deep fly to left field in the seventh inning was ruled foul — and the call was upheld on a review. The play occurred with the game tied at 3. The Yankees then scored twice in top of the eighth and went on to win 5-3. “I think a simple fix is like football, you have the pylon camera with the plane, where it shoots right across the goal line,” Alonso said. “And I feel like, for us, we could easily have a laser or a camera that shoots straight up.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Ryan McMahon exits with hand injury in Yankees’ win: ‘A little sore’</h4>
+                <p>BALTIMORE — Ryan McMahon exited Wednesday’s 5-3 win over the Orioles in the top of the eighth with a left-hand injury suffered sliding into second base in the top of the second. The third baseman, who initially remained in the game, underwent X-rays that McMahon said didn’t show any damage, although there will be more testing Thursday. Join Post Sports+ for exciting subscriber-only features, including real-time texting with Greg Joyce about the inside buzz on the Yankees. “It’s a little sore,’’ McMahon said of his thumb, which got caught on the slide when he was thrown out trying to stretch an RBI single into a double.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>LIV Golf CEO says rebel league ‘doing everything we can’ over vendor payment issues</h4>
+                <p>LIV Golf CEO Scott O’Neil did little on Wednesday to quell the ire over the league’s reported issues of paying vendors and contractors for work they’ve done when he responded to a recent report about the payments. Fresh Tape Media founder Jared Kleinstein had responded to a report by Front Office Sports that his media company, which produced LIV Golf’s preseason media days, was suing LIV for missed payments. It is among several vendors and contractors that have reportedly not been paid by the rebel golf league. “Look, I come from a family of entrepreneurs, a family of small business entrepreneurs and know the challenge that that is,” the LIV Golf CEO said when asked about the issue. “So what I would say to them is we’re doing everything we can to make sure we can do right by them and the work they committed, and I hope we can.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/05/931/523/hayden-panettiere-red.jpeg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Hayden Panettiere death: DEA reportedly joins probe into what happened to late star</h3>
+                <p class="lead-summary"><strong class="drop-cap">F</strong>ox News correspondent Max Gorden reports on the DEA’s involvement in the investigation and Panettiere’s boyfriend on ‘Jesse Watters Primetime.’ TMZ is reporting that the DEA has agents assisting parallel death investigations that are already underway. Panettiere died Sunday at the age of 36. She was found unresponsive and in cardiac arrest at an apartment in Greenville, South Carolina. Resuscitation efforts were unsuccessful and the "Nashville" and "Remember the Titans" actress was pronounced dead. Preliminary autopsy results found no signs of trauma that contributed to her death, Fox News Digital confirmed. The DEA is reportedly joining the investigation into the death of actress Hayden Panettiere. She died Sunday at the age of 36. (Emma McIntyre/Getty Images for amfAR) A police report obtained by Fox News Digital revealed Panettiere's on-and-off boyfriend, Brian Hickerson, and his brother, Zach, called 911 after finding the actress unresponsive. Hickerson later handed authorities a bag of medication Panettiere had allegedly been taking. Hickerson was among those at the Greenville apartment when Panettiere was found, and authorities executed a search warrant at the residence, according to the report. Police also conducted a welfare check Wednesday at a South Carolina home linked to the Hickerson brothers, but no one answered the door.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Bruno Mars is at MetLife this weekend. Get discounted tickets today</h4>
+                <p>Bruno Mars is swooping into East Rutherford, NJ’s MetLife Stadium for four huge shows as part of his ‘The Romantic Tour’ with special guests RAYE and DJ Pee .Wee. If you’d like to see the 16-time Grammy winner rock live, tickets are available for his quartet of Garden State concerts. Better yet, prices have dropped since we last reported on how much it cost to see Mars at MetLife. Back in late May, the lowest price we could find on seats for Meadowlands ‘Romantic Tour’ tickets was $176 including fees on SeatGeek. Now, nearly three months later, some seats are going for as low as $150 including fees.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Heather Graham flaunts fit physique in bikinis on romantic Italian escape</h4>
+                <p>Heather Graham soaked up the sun in style while enjoying a romantic Italian vacation with boyfriend Michele Civetta. The 56-year-old actress stunned in a series of bikini photos she shared on Instagram as she gave her fans a glimpse into her picturesque getaway in the famed village of Positano on Southern Italy's Amalfi Coast.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Harry Styles’ 2026 MSG residency starts soon. How much are last-minute tickets?</h4>
+                <p>On Wednesday, Aug. 26, Harry Styles will launch his highly-anticipated, 30-concert ‘Together, Together’ Madison Square Garden residency along with special guest Jamie xx in support of his his recently-released fourth studio album “Kiss All the Time. Disco, Occasionally.” After that gig, he’ll play the next 29 concerts over two months. The last one is set to take place on Saturday, Oct. 31 aka “Harryween.” When our team last reported on how much seats cost to see Styles at MSG in mid-March (right before he hosted “SNL”), the lowest price we could find to get into any one show was $281 including fees.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2022/01/931/523/North-Korea-Flag.jpeg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Thousands of North Korean IT workers are infiltrating corporate America</h3>
+                <p class="lead-summary"><strong class="drop-cap">F</strong>ox News senior national correspondent Rich Edson reports on North Korean IT workers fraudulently obtaining remote jobs at major U.S. companies to funnel money back to Pyongyang. Thousands of North Korean operatives posing as IT workers are applying for remote jobs at U.S. companies, and many are getting hired. Using stolen American identities, U.S.-based "laptop farms" and artificial intelligence to write résumés and help answer interview questions, Kim Jong Un’s regime is exploiting the remote work economy to get its workers inside American companies. In 2024 alone, the sprawling, state-directed workforce generated nearly $800 million for North Korea, according to the Treasury Department, helping the heavily sanctioned regime fund its weapons programs. "The North Korean regime targets American companies through deceptive schemes carried out by its overseas IT operatives, who weaponize sensitive data and extort businesses for substantial payments," Treasury Secretary Scott Bessent said in a statement. Once hired, the workers gain legitimate credentials and trusted access to corporate networks, potentially opening the door to theft, espionage, extortion and more sophisticated North Korean cyber operations. Fox News interviewed Michael "Barni" Barnhart, a former Army intelligence specialist turned cybersecurity threat hunter who tracks North Korean IT workers for a living. Barnhart said the workers are so pervasive that when he recently sampled 20 Fortune 500 companies, he found evidence that North Korean IT workers had applied to, worked for or targeted 18 of them. He joined the Army as a teenager, training in human intelligence before moving into signals intelligence and counterterrorism and deploying to Iraq. He later moved into cybersecurity, eventually helping build Mandiant’s North Korea-focused threat hunting operation before the company was acquired by Google. Now at cybersecurity firm DTEX, Barnhart focuses on nation-state insider threats, including the sprawling North Korean IT worker operation. Barnhart has tattoos on his feet commemorating North Korean hacking groups he has helped investigate, including APT43 and APT45, groups tied to operations targeting U.S. think tanks and healthcare organizations.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Before-and-after images show where SpaceX rocket crashed into the moon</h4>
+                <p>The Falcon 9 crash was not intentional, but NASA said lunar-surface impacts are actually an “accepted and safe” method of disposing of hardware.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Police departments weren’t looking for officers abusing Flock. We did it for them.</h4>
+                <p>An investigation by The Post led to the discipline of two officers accused of misusing license-plate readers. Their departments and many others had not done basic oversight.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
