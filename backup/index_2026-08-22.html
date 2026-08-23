@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>SATURDAY, AUGUST 22, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://www.theblaze.com/media-library/victory-nap-rosie-o-donnell-s-back-with-the-same-tired-trump-trash-talk.jpg?id=67657436&width=980" alt="Lead Story Image" class="news-photo">
+                <h3>VICTORY NAP: Rosie O'Donnell's back — with the same tired Trump trash talk</h3>
+                <p class="lead-summary"><strong class="drop-cap">Y</strong>ou would think her years-long sabbatical from the spotlight would have given her the time to come up with some choice zingers for her archnemesis, Donald Trump. To be fair, the Queen of Not-So-Nice is also well past her sell-by date. The "A League of Her Own" star hasn’t been hot since Avril Lavigne ruled the charts. And it got even cooler last year when she fled to Ireland in mortal fear of President Donald Trump 2.0. It’s hard to land acting gigs when you’re living thousands of miles away from La La Land. Now, she’s back. Sort of. O’Donnell had a brief Broadway run with a one-woman show, and she’s been hosting “Jimmy Kimmel Live!” all week. She used the ABC perch to mock President Trump, suggesting she was getting under his skin. Yes, Trump is the president of the greatest country in the world again, and O’Donnell had to leave her home fearing some make-believe threat he poses. You know what they say, Rosie: If you can't say something funny, don't say nothing at all. Woody Allen’s 51st feature is set to start shooting this October in Madrid. The Oscar winner hasn’t shared much about the project, but we know that local officials are helping defray the film’s $12 million budget. So why not the Big Apple? It’s complicated. First, Hollywood unofficially cut bait with Allen during the #MeToo movement. Suddenly, the industry took the disturbing allegations against the filmmaker seriously. He had previously been accused of molesting his daughter Dylan Farrow, but Hollywood looked the other way until it became uncomfortable to do so. Plus, U.S. investors aren’t as keen on backing his low-budget, low-ROI stories anymore, let alone support a star with a murky past. Then again, maybe the Jewish filmmaker is better off in Madrid, not the Big Apple. Does he really want to shoot a movie in Zohran Mamdani’s New York? Yahya Abdul-Mateen II snagged an Emmy nomination for playing the obscure Marvel Comics hero Wonder Man in the Disney+ show of the same name. The series earned a quick second season greenlight before the Mouse House said, “Psych!” and canceled it. Now the actor is suggesting to Vanity Fair that Marvel has a racism problem. Maybe. Sort of. Hey, he’s just asking questions. His proof? He brought up not just his show, which co-starred Ben Kingsley and race-swapped his character from the comics, but another doomed MCU affair. Remember the multiyear effort to reboot the “Blade” franchise, formerly featuring Wesley Snipes? The studio hired the uber-talented Mahershala Ali as the titular vampire before multiple attempts to launch the film failed.</p>
+                <p class="source-credit">— The Blaze</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>She’s a Trump acolyte. He’s a ‘gringo Sandinista.’ Meet the Harps.</h4>
+                <p>Trump aide Natalie Harp is estranged from her brother, Preston, who has used social media and recent interviews to criticize her and highlight his own left-wing politics.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>WNBA Team’s New She/They Mascot Is A Taurus DJ Who Loves Tacos</h4>
+                <p>Canada’s only WNBA franchise, the Toronto Tempo, unveiled two new official mascots this week, including a DJing snapping turtle that uses she/they pronouns. Dot the Arctic Hare and Dez the Snapping Turtle made their debut Tuesday night during halftime of the Tempo’s game against the Indiana Fever. The timing was particularly notable because Fever star Sophie Cunningham has emerged as one of the WNBA’s most outspoken critics of biological males competing in women’s sports. “Dez and Dot have completely different personalities, but they’re better together,” said Whitney Bell, chief marketing officer for the Toronto Tempo. “One knows when to slow things down, the other knows when to turn the energy all the way up.</p>
+                <p class="source-credit">— Daily Wire</p>
+            </div>
+            <div class="story-minor">
+                <h4>Senator launches assault on illegal immigration gaps as GOP races midterm clock to lock in key wins</h4>
+                <p>Sen. Jim Banks says Congress must act on illegal immigration before voters head to the polls, warning a future Democratic majority could reverse Trump policies. EXCLUSIVE: Republicans risk seeing some of President Donald Trump’s signature immigration priorities erased by a future Democratic administration unless Congress acts now to lock them into law, Sen. Jim Banks, R-Ind., told Fox News Digital as he presses the Senate to take up a package of seven immigration bills.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/08/931/523/cc86f9d6-burqa-women-kabul.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Portugal enacts 'burqa law' largely prohibiting face coverings in public</h3>
+                <p class="lead-summary"><strong class="drop-cap">L</strong>aura Ingraham, Jesse Watters, Sean Hannity and Greg Gutfeld bring Fox News viewers their fresh takes on the top news of the day. Portuguese President António José Seguro has enacted a measure that largely prohibits individuals from covering up their faces while out in public, a restriction broadly viewed as aimed at Muslim women, according to AFP. But the report noted various carve-outs to the prohibition, including for health, professional, artistic or weather-linked issues and for when people are at locations of worship, diplomatic missions or aboard planes. Those who fail to comply could be slapped with fines of 150 euros to 3,000 euros, according to the outlet. Those figures convert to around $175 and $3,500. Afghan burqa-clad women stand in a queue as they wait to receive food aid from a non-governmental organization at a gymnasium in Kabul Jan. 17, 2023. (Wakil Kohsar/AFP via Getty Images) The final edition of the measure, which has been characterized by local media as the "burqa law" in reference to the body and face covering that some Muslim women wear, was adopted by the Portuguese parliament last month, according to AFP.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Israel probes killing of Hind Rajab, Gaza child who called for help</h4>
+                <p>An Israeli fact-finding mission declined to refer some other “exceptional” cases, including the killing of World Central Kitchen aid workers, to military prosecutors.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Five reasons no one saw Prince Harry’s return coming</h4>
+                <p>The decision to trade what appeared to be an idyllic life on the sunny California coast for the Tupperware-gray skies of Britain came as a startling reversal.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/statics.foxsports.com/www.foxsports.com/content/uploads/2026/08/931/523/artboard-1-48.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Best LBs In The NFL: Has Fred Warner Been Dethroned As League's Best Linebacker?</h3>
+                <p class="lead-summary"><strong class="drop-cap">N</strong>o player has arguably been better than their peers at their respective position than Fred Warner since the turn of the decade. But as the San Francisco 49ers' star returns from a gruesome ankle injury that ended his 2025 season prematurely, is Warner still the NFL's best linebacker ahead of the 2026 campaign? We ranked the 10 best linebackers in the league as we prepare for the new year. Warner, a four-time first-team All-Pro, was one of two players to receive first-place votes in our rankings, with the Detroit Lions' Jack Campbell and the Baltimore Ravens' Roquan Smith among those vying for the top spot. Devin Lloyd had a Pro Bowl year with the Jaguars in 2025, landing him a rich deal with the Panthers. (Photo by Justin Edmonds/Getty Images) Greg Auman: Can takeaways be what takes Carolina’s defense from bad to good? In defensive coordinator Ejiro Evero’s first year in Charlotte in 2023, the Panthers had an NFL-low 11 takeaways, improving to 17 in 2024 and 21 last year. Lloyd signed a three-year, $42 million deal after a breakout Pro Bowl year with the Jacksonville Jaguars, in which he had five interceptions to help his former team record 31 takeaways, second-most in the NFL.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Linda Cohn shreds ESPN for its ‘lovefest’ with Pat McAfee: ‘Welcome to overexposure’</h4>
+                <p>Linda Cohn isn’t on ESPN’s airwaves anymore and she isn’t a fan of what her former employer is becoming. The longtime “Sportcenter” host, who retired from the Worldwide Leader in June, objected to the network’s “lovefest” with Pat McAfee. “I admire it all, but admiring what Pat McAfee has accomplished doesn’t mean I believe he needs to be everywhere at every time,” Cohn said on her self-titled podcast on Thursday. “Because, yeah, ESPN wants Pat McAfee to be everywhere at every time. How much Pat McAfee is enough Pat McAfee?! The answer apparently was more.” McAfee, in addition to his titular daily show on ESPN, is being added to the “Monday Night Countdown” roster as well as being slotted in for an alternate broadcast of “Monday Night Football,” according to The Athletic.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>FIFA Suspends 3 Argentina Players A Combined 18 Games For World Cup Final Scuffle</h4>
+                <p>FIFA banned three Argentina players on Friday, including a 10-match suspension for midfielder Leandro Paredes, for striking Spain opponents after losing the World Cup final. The ban for Paredes — who grabbed Spain's Eric Garcia by the throat and pushed Gavi to the ground — ranks with the FIFA sanctions for Uruguay forward Luis Suarez in 2014 as among the most severe in World Cup history.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Jets rookie David Bailey snags first sack of preseason</h4>
+                <p>PITTSBURGH — David Bailey gave everyone a glimpse Friday night of what the Jets have seen all summer. On the second Steelers series of the night, the Jets rookie pass rusher blew past Steelers tackle Broderick Jones and sacked quarterback Will Howard for a loss of 11 yards on third down. Text with Brian Costello all season as he brings Sports+ subscribers the latest Jets intel from on the field and off. “It felt amazing,” Bailey told The Post after the Jets’ 17-0 preseason win over the Steelers. “It was a sense of relief. It felt good knowing my interior line did their job and the coverage did their job and just allowed me to capitalize.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/08/931/523/meghan-duchess-sussex-chla-gala-los-angeles.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Meghan Markle’s acting return could spark fresh problems with Prince William, Kate Middleton: expert</h3>
+                <p class="lead-summary"><strong class="drop-cap">F</strong>oreign correspondent Jeff Paul provides details on Prince Harry and Meghan Markle's reported plans to relocate back to the United Kingdom. Royal correspondent Bronte Coy told BBC Radio Four’s "Today" Friday that the acting opportunity was "significant" and that Markle was "very excited about it." Markle is in talks to join Guy Ritchie's "The Gentlemen," according to The Hollywood Reporter. The part would be for the yet-to-be-announced third season of the British action-comedy series. Meghan Markle is reportedly eyeing a return to acting after years spent building a new identity outside the royal family. (Tommaso Boddi/Getty Images) After the years she spent building a new identity outside the royal family, experts argued a return to acting could give the Duchess of Sussex something her post-royal ventures have struggled to deliver: a chance to redefine herself. "[Markle] needs to find an extraordinary script the way Demi Moore did with ‘Substance’ and do something that shocks people and gets away from the princess arc," Dan Wakeford, founder of Celebrity Intelligence, previously told Fox News Digital.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Mary Houlihan wants people to stop screaming about politics and start joking instead. Get tickets</h4>
+                <p>20 years before she became a touring act, daring comedy journalist and popular podcaster, she spent her middle school afternoons watching “Tough Crowd with Colin Quinn.” “He would have macho, blue collar comedians debating through jokes with lefty anti-war comedians and I watched it as a comfort show,” Houlihan told The Post in an exclusive interview. Houlihan’s “Rough Crowd” — which she jokingly calls a shameless rip-off of “Tough Crowd with Colin Quinn” — brings together comics from both sides of the aisle to hash things out in today’s fraught political climate. “In the current state of politics, I think, ‘oh my God, we need something like this’‘ because comedians are getting so separate from one another. If someone has different politics than me but can be funny and kind in expressing their point of view, that’s great and a recipe for comedy. If you liked the comedians on ‘Opie and Anthony’ in the early 2000s, you’re going to like what we’re doing.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Hayden Panettiere’s boyfriend’s brother reveals what happened inside Airbnb before actress's death</h4>
+                <p>'Outnumbered' panelists break down news regarding the FBI's probe into former Rep. Eric Swalwell, D-Calif., and the Drug Enforcement Administration joining Hayden Panettiere's death probe. Hayden Panettiere’s sudden death sparked accusations and painful questions about what happened in her final hours.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>I talked to DJ Pauly D about why his live shows are like a ‘big party.’ Get tickets</h4>
+                <p>From August through October, the reality star/party-starter has shows lined up all over North America as part of his 2026 tour. That includes a stop at Atlantic City’s Borgata Outdoor Pool on Saturday, Aug. 22 and New York City’s The Rooftop at Pier 17 on Friday, Oct. 9. “It’s going to be like a big party,” the 46-year-old told The Post in an exclusive interview. “I’m bringing big energy, big vibes, and we’re just going to have a good time. I’m excited.” Other notable stops on his run include gigs in Everett, MA (Aug. 21), Boise, ID (Aug. 27), Salt Lake City (Aug. 28) and Albuquerque (Sept. 26).</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
