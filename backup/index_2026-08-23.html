@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>SUNDAY, AUGUST 23, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F08%2F138268070.jpg?quality%3D90%26strip%3Dall" alt="Lead Story Image" class="news-photo">
+                <h3>Fetterman aligns with Trump on AI push, warns China benefits from US ‘overreaction’</h3>
+                <p class="lead-summary"><strong class="drop-cap">S</strong>en. John Fetterman, D-Pa., on Saturday dismissed “AI doomsdaying,” warning that China benefits from “overreaction” by the United States as the two countries compete for dominance in artificial intelligence. Fetterman shared an article on X highlighting a Bloomberg analysis examining what it described as the narrowing US lead over China in the AI race and the faster pace at which Chinese companies are deploying advanced models. The Pennsylvania Democrat reacted to the report by arguing that advancements in AI are critical to national security. “China continues to fuel and benefit from our overreaction,” he wrote. “I reject the political pandering and hyperbole over data centers or AI doomsdaying.” Fetterman’s stance puts the Pennsylvania Democrat largely in step with Trump on the need to accelerate AI development and expand the nation’s data center infrastructure. Earlier this month, Fetterman reacted to an article reporting that Sen. Bernie Sanders, I-Vt., was eyeing a potential pause on AI development, arguing such a move would be welcomed by China. “America must lead in the development of AI, otherwise we live under China’s rules,” Fetterman wrote. “That must not happen.” Fetterman has also championed the development of data centers. In March, he pushed back against the prospect of imposing a moratorium on new AI data centers in the US, blasting the proposal as “China First.” His comments came after President Donald Trump earlier this week encouraged governors and local officials to welcome the construction of AI data centers. “The construction jobs are enormous. We’re building the biggest plants anywhere in the world. And I can say, if I were the mayor of a town or the governor of a state, and I had a chance to get a big plant in an AI plant or a data center, I would absolutely want it because the jobs are enormous, and the money paid, the taxes paid are just enormous,” Trump said at the White House on Wednesday. The president also said the AI industry needs “a little public relations help” as Americans have expressed concerns about data centers being built in their communities. A Gallup poll from May found a majority of Americans opposed the construction of new data centers near where they live. Those surveyed who opposed the facilities cited concerns including their electricity and water consumption and potential environmental impact. Trump signed an executive order in July aimed at expediting the permitting process for data centers.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Trump plays nuclear poker with Kim Jong Un — but who holds the cards?</h4>
+                <p>Victor Cha says Trump sees diplomacy as the pragmatic way to curb North Korea’s nuclear threat, potentially securing missile-test limits, a crisis hotline and a reduction in Pyongyang’s support for Russia. As President Donald Trump looks to revive summit diplomacy with Kim Jong Un, he faces a North Korea with a larger nuclear arsenal, a powerful new partner in Russia and far less incentive to strike a deal than it had during his first term.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>If Trump Wants To Reduce Beef Prices, He Should Help Struggling Farmers Grow Their Herds</h4>
+                <p>Instead of looking for short-term Band-Aids to mask the beef price problem heading into the mid-terms, the Trump admin should instead focus on ways to incentivize heifer retention in order to increase long-term cattle supply. While well-intentioned, President Trump’s plan to temporarily permit more foreign beef imports into America without paying higher tariffs will only exacerbate the long-term stock shortage in the cattle industry, and it will directly lead to higher long-term beef prices. Trump announced Friday that the United States “will allow up to 300,000 metric tons of product for ground beef to be imported with no out of quota tariff” for the next 90 days, and that such product “will be sold at 25 percent below current market prices.” While touted by the president as an effort to reduce ground beef prices for American families, the policy shift was met with concerned pushback from lawmakers representing rural states responsible for U.S. cattle production.</p>
+                <p class="source-credit">— The Federalist</p>
+            </div>
+            <div class="story-minor">
+                <h4>The Folly of Negotiating with Hamas</h4>
+                <p>The terror group can never be trusted to lay down arms, renounce violent jihad, and accept a settlement that abides Israel’s existence as a Jewish state.</p>
+                <p class="source-credit">— National Review</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/statics.foxsports.com/www.foxsports.com/content/uploads/2026/08/931/523/wc_5028-scaled.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Will Power 'Living Childhood Dream' Ahead Of INDYCAR Freedom 250 In Washington, D.C.</h3>
+                <p class="lead-summary"><strong class="drop-cap">W</strong>ill Power is living his childhood dream, but not even he could have imagined an INDYCAR race in Washington, D.C.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Odell Beckham Jr. came oh-so-close to proving to Giants, fans he still has it</h4>
+                <p>MIAMI GARDENS, Fla. — This was what all those Odell Beckham Jr. fans were waiting for. Perhaps it was what head coach John Harbaugh was waiting for, as well: a chance, a real opportunity to turn back the clock with a vintage highlight to allow all of Beckham’s many supporters to cry out, “See, he’s still got it!’’ Get texts from Paul Schwartz with all the latest Giants news and insights, exclusive to Sports+ subscribers. It was late in the second quarter of Saturday’s 26-3 preseason victory over the Dolphins, and the Giants fans on the scene at Hard Rock Stadium let out an audible gasp when Jameis Winston looked into the end zone from the Miami 14-yard line.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>MLB Schedule Today: Game Times, How to Watch, TV Channels, Streaming</h4>
+                <p>There are 15 games on today's MLB schedule. Four will air on FOX or FS1: Nationals at Marlins nationally on FS1, followed by a regionalized FOX window featuring Pirates at Dodgers, Giants at Red Sox and Cubs at Mariners. The Dodgers and Cubs enter the weekend with two of baseball's strongest records, while Boston is above .500. Viewers will receive one of the three FOX matchups based on their market and should check local listings. The FOX and FS1 coverage available in each market is streaming live and on demand on FOX One.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Mets’ Luis Robert Jr. belts two homers in win over his ex-team</h4>
+                <p>CHICAGO — Luis Robert Jr.’s visit to his old stomping ground undoubtedly will be remembered as a highlight of his season. Saturday night, the veteran outfielder blasted two homers against his former team to help the Mets beat the White Sox 10-5. Join Post Sports+ for exciting subscriber-only features, including real-time texting with Mike Puma about the inside buzz on the Mets. “It feels good to hit homers against any team at home,” Robert said through an interpreter. “But I will say it felt good to hit the home runs here, just because it was a stadium I played so many games over my career.” Robert, who spent seven seasons with the White Sox, hit a two-run homer in the third that gave the Mets a 4-1 lead. He also delivered a solo blast in the seventh.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F08%2Fnewspress-collage-5j8ajml00-1787420628881.jpg?quality%3D90%26strip%3Dall%261787406280" alt="Lead Story Image" class="news-photo">
+                <h3>Justin Trudeau is embarrassing himself with his Katy Perry relationship</h3>
+                <p class="lead-summary"><strong class="drop-cap">L</strong>ast week, a video dropped of former Canadian Prime Minister Justin Trudeau dancing like a fool in the aisle of a Montreal hardware store with girlfriend Katy Perry while holding a plunger. I’ve stayed silent for a year, but their true patriot love has become more than I can bear. Trudeau’s cringeworthy retail jam session is no less bizarre, really, than Tom Cruise wildly jumping on Oprah’s couch 21 years ago to proclaim his love for another Katie. Except Cruise is a Hollywood actor. They’re all loons. Pretty boy Trudeau, despite obviously craving the glamorous trappings of celebrity, is a former world leader who still desires to be taken seriously. Proving it, four days after he cut the rug with a toilet tool for an Instagram video, suddenly serious Trudeau spoke to news outlets about the ongoing trade negotiations between Canada and the US. He insisted they “will get to the right place.” But who’s going to listen to the guy who’s so very publicly living his teenage dream? Fifty-four-year-old Trudeau, who led his country for a decade before resigning last year, and the 41-year-old “I Kissed A Girl” singer have been Canada canoodling since last July. Trudeau separated from his wife of 18 years, Sophie Grégoire Trudeau, with whom he shares three kids, in 2023. And Perry split from fiancé Orlando Bloom in June 2025. They have a daughter. One month later, she was all aboot Justin.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Sydney Sweeney sizzles in Wonder Woman corset costume as she soaks up summer romance with Scooter Braun</h4>
+                <p>FOX Business contributor Katrina Campins discusses criticism of Sydney Sweeney’s ‘freaky’ scenes on HBO’s ‘Euphoria’ and Jessica Simpson reportedly flying first class to Hawaii while her children flew coach on ‘Jesse Watters Primetime.’ The "Euphoria" star channeled iconic "Wonder Woman" actress Lynda Carter as she and boyfriend Scooter Braun turned a lakeside escape into a superhero-themed affair in her latest social media post.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Janie Bradford Hobbs, Motown ‘unsung hero’ who co-wrote ‘Money,’ dead at 87</h4>
+                <p>Janie Bradford Hobbs, a key player in Motown’s early hitmaking machine, has died in Los Angeles at 87. The longtime LA resident died Saturday at Cedars-Sinai Medical Center following an extended illness, her family said. Bradford Hobbs later became a familiar face in the city’s music scene, where she ran the Heroes and Legends Awards for about 30 years. The annual event honored music icons, handed out scholarships and became a reunion spot for former Motown stars, according to her family. She also founded Mountain Goat Music and opened the Music Notes Gift Shop in Beverly Hills. Born in Charleston, Missouri, she moved to Detroit and was introduced to Motown founder Berry Gordy in the late 1950s by her neighbor, singer Jackie Wilson.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>‘Dukes of Hazzard’ star John Schneider admits he lied his way into iconic Bo Duke role at 18</h4>
+                <p>The ‘Dukes of Hazzard’ star told Fox News Digital he was proud to be asked by the White House to perform for the nation's 250th anniversary. At just 18 years old, the New York native convinced producers of "The Dukes of Hazzard" he was a 24-year-old Georgia farm boy with racing experience.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/07/931/523/White-House.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Trump plan taps US firms to fight foreign cybercrime</h3>
+                <p class="lead-summary"><strong class="drop-cap">M</strong>ost of the time, when I warn you about cybercriminals, I focus on how you can stop them before they get into your accounts or steal your money. Now the U.S. government wants to take the fight closer to some foreign criminal organizations behind cyber-enabled crime. Earlier this month, President Donald Trump signed a National Security Presidential Memorandum that creates a framework for vetted private U.S. companies to conduct cyber operations against certain foreign criminal groups. The federal government would direct and oversee those operations. The memorandum allows two broad types of activity. Companies could secretly collect intelligence from targeted computer systems. With federal approval, they could also manipulate, disrupt, deny access to, degrade or destroy systems and digital infrastructure that targeted criminal organizations control. So, what could these companies actually do, and what could this new approach mean for you? Join us on Saturday, Aug, 29, at 10 a.m. ET for a free CyberGuy LIVE class covering five simple steps to help defend yourself against AI scams, fraud, identity theft and financial hacks. Kurt "CyberGuy" Knutsson will explain how to set up bank alerts, strengthen your account logins, protect your phone number, freeze your credit and help secure your retirement savings against unauthorized transfers. No technical experience is needed. You’ll also receive our financial protection checklist, and every registrant will get a link to the class recording afterward. Vetted private U.S. companies could take part in cyber operations against certain foreign criminal groups under federal direction and oversight. (Kurt "CyberGuy" Knutsson) Cybercrime continues to cost Americans staggering amounts of money. The FBI's Internet Crime Complaint Center received 1,008,597 complaints in 2025, with reported losses reaching $20.877 billion. Those losses were up 26% from 2024. The White House says foreign-based criminal organizations are responsible for sophisticated campaigns involving ransomware, phishing, financial fraud and impersonation scams targeting Americans and U.S. interests.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>See the moment when Republican politicians turned against data centers</h4>
+                <p>In the past six months, Republicans' public statements about data centers have turned sharply negative, according to a Washington Post analysis.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Identity restoration: What to do after identity theft</h4>
+                <p>You get an alert saying your Social Security number, email address or other personal information showed up in a breach. Your first thought may be, What did someone do with it? I get why that can be unnerving. An alert can sound serious without telling you whether a criminal actually opened an account, took over something you already use or did nothing at all.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
