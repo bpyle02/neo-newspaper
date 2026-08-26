@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>TUESDAY, AUGUST 25, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://i0.wp.com/www.nationalreview.com/wp-content/uploads/2026/08/trump-media.jpg?fit=617%2C360&ssl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Trump Urged to Surrender Quickly in Hormuz Before Success Becomes an Option</h3>
+                <p class="lead-summary"><strong class="drop-cap">L</strong>eave it to the New York Times opinion page to argue that the U.S. president should just accept defeat.</p>
+                <p class="source-credit">— National Review</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Trump Admin Prepares To Revoke More Visas Than Ever Before</h4>
+                <p>"People in the US and all over the world are fed up with bogus asylum claims." The Trump administration is preparing to revoke up to 200,000 visas issued to foreigners who later sought asylum in the United States, part of an effort to crack down on what officials say is abuse of the immigration system, The Associated Press reported Monday. The State Department is expected to announce the effort soon, targeting foreigners with B1 and B2 business and tourist visas issued between 2016 and 2026 who later applied for asylum, according to the AP. The administration says some foreigners are obtaining temporary visas under false pretenses and then using the asylum process to remain in the United States.</p>
+                <p class="source-credit">— Daily Wire</p>
+            </div>
+            <div class="story-minor">
+                <h4>‘Hadestown’ comes to streaming — Here’s where to watch the ‘Hadestown’ proshot</h4>
+                <p>After a July 2026 limited release in theaters, the live stage recording of “Hadestown” is making its way to video-on-demand. You can stream “Hadestown” on platforms including Prime Video now. After a lengthy workshopping period, “Hadestown,” with music and lyrics by Anaïs Mitchell, opened on Broadway in 2019. The folk musical went on to win Best Musical at the 2019 Tony Awards. “Hadestown” retells the Orpheus and Eurydice myth alongside another well-known Greek myth: Hades and Persephone. The musical, which is entirely sung-through, uses these myths to explore enduring and contemporary themes such as poverty.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>SCOTUS Overturns Injunction On Trump’s Mail-In Voting Order</h4>
+                <p>‘The Order itself does not harm the States, so the District Court lacked jurisdiction to bar the Government from trying to implement it.’ The U.S. Supreme Court agreed to pause a lower court blockade on President Trump’s mail-in voting executive order on Monday. The vote was 6-3, with Justices Sonia Sotomayor, Elena Kagan, and Ketanji Brown Jackson dissenting. In its per curiam ruling, the high court granted the Trump administration’s emergency application to stay a June ruling by Massachusetts-based District Judge Indira Talwani. The Obama appointee and past Democrat donor issued an injunction barring the order from taking effect ahead of the 2026 midterms in the states that challenged the directive.</p>
+                <p class="source-credit">— The Federalist</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2025/11/931/523/ahmed-al-sharaa-donald-trump.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Syria off US terror blacklist after nearly 50 years as Trump admin clears investment hurdle</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>he United States on Monday formally removed Syria from its list of state sponsors of terrorism, a move Secretary of State Marco Rubio said eliminates the final major barriers to investment and economic recovery in the country. Rubio said in a statement that he had authorized the formal rescission after a mandatory 45-day congressional notification period ended. President Donald Trump had initiated the countdown in July after confirming to Congress that Syria’s government had ceased supporting acts of international terrorism. "I have also delisted Hay’at Tahrir al-Sham’s (HTS) designation as a Specially Designated Global Terrorist (SDGT)," Rubio said Monday. Syria’s president secured a major diplomatic boost as the U.S. removed the country from its terrorism blacklist, clearing key barriers to investment. (BING GUAN/POOL/AFP via Getty Images; Aaron Schwartz/CNP/Bloomberg via Getty Images) The actions, he said, represent "another historic step by President Trump to give the Syrian people a path to prosperity." Rubio said Washington had taken unprecedented steps over the past year to provide sanctions relief to the Syrian people.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Trump’s trade ‘war’ with Canada has Carney facing his biggest test yet</h4>
+                <p>The Canadian prime minister has said his government will match U.S. tariffs "dollar for dollar."</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Putin ‘panicked’ as defiant Ukraine marks Independence Day under Russian bombardment</h4>
+                <p>Ukraine's Independence Day faced heightened security risks as former Deputy Assistant Secretary of State Carrie Filipetti, now executive director of the Vandenberg Coalition, says Vladimir Putin is "panicked." Ukraine marked its 35th Independence Day on Monday under the shadow of continued Russian attacks, with one regional security expert arguing that Russian President Vladimir Putin is "panicked" as Ukrainian forces strike deeper inside Russia.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>U.S. withdraws from military exercises with South Korea set for next month</h4>
+                <p>The move comes as the Iran war strains U.S. military resources in Asia.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F08%2Fnewspress-collage-i6iym4lfj-1787625459909.jpg?quality%3D90%26strip%3Dall%261787611092" alt="Lead Story Image" class="news-photo">
+                <h3>Freddie Freeman’s wife Chelsea looks healthy in white dress after hospital scare</h3>
+                <p class="lead-summary"><strong class="drop-cap">L</strong>os Angeles Dodgers star first baseman Freddie Freeman’s wife, Chelsea, appears to be on the mend after a scary start to the month. Chelsea Freeman shared a photo of her in a hospital bed appearing to be hooked up to an IV earlier this month. The photo was captioned, “Had a little health scare yesterday… but thankfully I’m home & doing okay. So grateful for the amazing EMTs, nurses, doctors & my family who took such good care of me. “A good reminder that that health really is everything and if something feels off, getting checked out is always the right choice,” she added. Freeman later said that she awakened in the middle of the night with sharp pain in her chest and back, fearing she was experiencing a heart attack. She spoke with several doctors, who suspected that she may have experienced pericarditis (an inflammation of the pericardium, a sac-like structure that surrounds the heart) or myocarditis (inflammation of the heart muscle). The good news is that Chelsea is now feeling better. And she still looks great, which was shown by the Instagram post she made on Sunday, that showed her posing in a white dress in Malibu. The health scare was even more terrifying for the Freeman family because Freddie was on a road trip at the time. He and the Dodgers are headed to Atlanta to face the Braves on Tuesday, but he can rest assured knowing that his wife’s health appears to be stable.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>NYCFC keeping Nicolás Fernández Mercau despite transfer rumors</h4>
+                <p>Rumors have continued to swirl around New York City FC star Nicolás Fernández Mercau regarding his future with the club. But with a little more than a week left in the MLS summer transfer window, Fernández Mercau is expected to remain with NYCFC barring a massive last-second offer, a source with knowledge of the situation told The Post. Rumors had started earlier this summer after a report surfaced that NYCFC had turned down a sizable offer for Fernández Mercau and that the player had requested a transfer out of the Big Apple. Fernández Mercau has become a star with NYCFC since the club brought him in during the 2025 summer transfer window, and his 13 goals this season are tied for third among all MLS players during the regular season. While the rumors have raised questions, the source insisted that New York City FC “[doesn’t] want to let him go” and that, as part of the club’s commitment to winning, the 26-year-old Argentine footballer fits into that plan.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Dodgers star Kiké Hernández reveals the one Pokémon card he’ll chase ‘forever’</h4>
+                <p>For Kiké Hernández, one of the most meaningful connections of his baseball career began when baseball was temporarily taken away from him. The Los Angeles Dodgers superutility player has spent plenty of time on the injured list over the past two seasons, where the rhythms of a major league season suddenly give way to rehab rooms, empty hours and plenty of time in isolation. Somewhere inside that monotony, Hernández realized that baseball had consumed so much of his life that he didn’t have any real hobbies. “If I’m being honest, the IL is something that’s very boring and lonely,” Hernández told the California Post in an exclusive interview last Thursday at the Harold & Carole Pump Foundation 26th Anniversary Celebrity Dinner. “I’ve spent a lot of time on it the last two years.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Bryson DeChambeau furthers LIV Golf death spiral with ominous ‘good run’ post</h4>
+                <p>Bryson DeChambeau seemed to confirm what the entire golf world already knows to be true: LIV Golf is on its last legs. DeChambeau made an Instagram post on Monday afternoon that showed various photos of his best moments with LIV Golf, including him hoisting many of the trophies he won during his time with the league. It’s no secret that Saudi Arabia’s Public Investment Fund (PIF), which was LIV Golf’s primary means of financial support, has withdrawn its financial guarantees beyond the 2026 season. This is largely owed to the lack of interest and ratings in LIV Golf, as it failed to generate even a fraction of the interest that the PGA Tour sustains on an annual basis.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/08/931/523/sweeney-cruise.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Sydney Sweeney tells Tom Cruise to 'watch out' after strapping herself to top of airplane</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>he former "Dancing with the Stars" co-host nearly crushed the actor with a motorcycle before he saved the day. Sydney Sweeney is telling Tom Cruise to "watch out" after she strapped herself to the top of an airplane. On Monday, Sweeney uploaded a video of herself holding a GoPro camera and on top of a moving airplane. The "Euphoria" star showed the single-engine plane flipping upside down several times while she was attached to it. Sweeney was in casual leggings and a navy crew neck, with her hair styled in pigtail braids as she remained calm during the airplane's crazy maneuvers. BEAU BRIDGES SAYS TOM CRUISE ‘GETS BETTER WITH AGE’ AS ‘TOP GUN' STAR KEEPS DEFYING HOLLYWOOD ODDS After making a joke to Cruise, one of Hollywood's most famous stuntmen, the official Top Gun Instagram account commented on Sweeney's Instagram post: "Feel the need for speed🔥👏✈️." Just a few days prior to sharing the video, Sweeney shed some light into her summer, which has mostly been spent with her boyfriend, Scooter Braun. Sweeney took to Instagram on Saturday, Aug. 22, and captioned her post, "Camp '26," alongside a superhero emoji.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>We found the cheapest last-minute Tame Impala concert tickets with this discount</h4>
+                <p>The Grammy-winning psych rocker has shows lined up at arenas all over North America as part of his ongoing ‘Deadbeat Tour’ with special guest Dominic Fike. His concerts are slated to go down in major markets like Minneapolis (Aug. 28), Seattle (Sept. 1-2), Portland (Sept. 8), Phoenix (Sept. 14) and Houston (Sept. 19-20). If you’d like to see Kevin Parker and co. bliss out live, tickets are available for all 12 of his upcoming gigs. At the time of publication, the lowest price we could find on seats was $120 including fees on SeatGeek. Make sure to use promo code NYPOST10 for $10 off purchases over $250 at checkout (Editor’s Note: this discount is only valid for users’ first purchase on SeatGeek).</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Kacey Musgraves divides fans with immigrant children’s plea, faces boycott calls to ‘shut up and sing’</h4>
+                <p>Mickey Guyton said she "loves" both Reese Witherspoon and Kacey Musgraves and enjoyed working with them on the show "My Kind of Country." Kacey Musgraves is facing backlash after asking fans to donate to an immigrant children’s rights group as her birthday wish while kicking off her "Middle of Nowhere" tour.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Michelle Branch extended her tour. How much are the cheapest tickets?</h4>
+                <p>Michelle Branch extended her 2026 ‘Everywhere And Back Again Tour’ and will now play theaters, music halls, ballrooms, nightclubs and auditoriums from September through November all the way into March 2027. That includes not one, not two but three (!) concerts in New York and New Jersey. They’re scheduled to go down: Beacon TheatreNew York, NYThursday, Nov. 5The Stone PonyAsbury Park, NJFriday, Nov. 6Beacon TheatreNew York, NYThursday, March 25, 2027 If you’d like to see Branch branch out live, tickets are available for all of her upcoming concerts. At the time of publication, the lowest price we could find on seats for any one gig was $71 including fees on SeatGeek.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/08/931/523/vendor-swipes-customer-credit-card.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Card skimming scam is stealing food benefits nationwide</h3>
+                <p class="lead-summary"><strong class="drop-cap">Y</strong>ou swipe your card at the checkout, grab your receipt and walk away. Nothing looks unusual. However, a device sitting right on top of that payment terminal may have copied your card information and PIN. U.S. Secret Service agents recently swept hundreds of retailers across Los Angeles looking for skimmers. What they found shows how sophisticated these devices have become and how difficult they can be to spot. This card skimming scam is especially serious for people who rely on Electronic Benefit Transfer, or EBT, cards. Many of those cards still depend on magnetic-stripe technology that criminals know how to exploit. U.S. Secret Service agents found sophisticated skimmers on payment terminals during a Los Angeles sweep targeting suspected fraud. (U.S. Secret Service) Join us Saturday, Aug. 29, at 10 a.m. ET for a free CyberGuy LIVE class covering five simple steps to help defend yourself against AI scams, fraud, identity theft and financial hacks. Kurt "CyberGuy" Knutsson will explain how to set up bank alerts, strengthen your account logins, protect your phone number, freeze your credit and help secure your retirement savings against unauthorized transfers. No technical experience is needed. You’ll also receive our financial protection checklist, and every registrant will get a link to the class recording afterward. One of the most unsettling parts of the investigation is how quickly criminals can install a skimmer. Surveillance video from the investigation captured a suspect placing one over a payment terminal in less than two seconds. From there, the fake reader sits directly over the real terminal. When someone swipes a card, the device can capture account information and the PIN used during the transaction. We have previously shown you how skimmers and shimmers can steal your payment information. What stands out now is how convincing these newer devices can look. During the Secret Service sweep, agents found a skimmer that blended closely into the legitimate payment terminal. It even had what appeared to be a security hologram.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>AI chatbot privacy: What your AI may know about you</h4>
+                <p>Meta CEO Mark Zuckerberg outlines his ambitious open-source artificial intelligence vision, aiming to provide a personal superintelligence assistant to every user. Tech expert Kurt Knutsson joins 'Fox & Friends' to analyze Meta's latest AI model announcement, discussing what these advanced systems mean for consumer privacy and the future of digital personal assistants.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
