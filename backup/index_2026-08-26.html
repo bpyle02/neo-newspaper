@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>WEDNESDAY, AUGUST 26, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://media.townhall.com/cdn/hodl/2025/230/87023eed-a172-498c-ac3d-e129962f46e8.jpg" alt="Lead Story Image" class="news-photo">
+                <h3>Reports: Three Secret Service Members Placed on Leave Over Security Leaks</h3>
+                <p class="lead-summary"><strong class="drop-cap">W</strong>e have enemies everywhere, don’t we? Even within institutions that were supposedly unbiased. The FBI’s aversion to politics, once held as dogma, is no more. And now we have the Secret Service potentially spilling sensitive materials. Does this have to do with the secret flight President Trump took out of Turkey following a NATO summit wherein the Iranians threatened to assassinate him? We don’t know, but three top officials were placed on leave, according to RealClearPolitics’ Susan Crabtree, who has an ear to the inner workings of the agency: 🚨🚨@RCPolitics EXCLUSIVE and BREAKING: Three Secret Service officials/agents were walked out of their offices on Monday and made "do not admits" as part of a criminal investigation into leaked classified information to the media, according to two sources familiar with the… pic.twitter.com/96wlHSJ152 Yes, my sources said Secret Service spokesman/Communications Director Annthony Guglielmi was one of the three placed on admin leave as part of the FBI/CIA media leak probe.The other two were also USSS officials in media-related positions.As you recall, Guglielmi durect… Three Secret Service officials/agents were walked out of their offices on Monday and made "do not admits" as part of a criminal investigation into leaked classified information to the media, according to two sources familiar with the matter. It's unclear if the leaks to the media pertained to the controversy over President Trump's secret evacuation from Turkey because of intelligence about a surface-to-air missile threat to Air Force One from Iran. We later learned that Secret Service communications director and spokesman Anthony Guglielmi was one of those placed on leave. We got a mole hunt potentially happening within the agency. Someone leaked highly sensitive information about the president’s safety to the press regarding the Turkey flight, during which Trump left Air Force One in a catering truck. The disclosure of these details has placed future presidents at risk. Editor's Note: Do you enjoy Townhall's conservative reporting that takes on the radical Left and woke media? Support our work so that we can continue to bring you the truth.</p>
+                <p class="source-credit">— Townhall</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Sophie Cunningham sparked a revolt — and the WNBA bullies are floundering</h4>
+                <p>He cheered for the Fever’s Sophie Cunningham when she hit a 3-pointer — and that set off Sky player Natasha Cloud, who approached him aggressively, shouting and cursing. Security hustled on to the court to restrain her, but Freedom was the one escorted from the arena, ejected for the crime of defining a word featured in the league’s own name. It was the latest incident in a weeks-long drama, as the WNBA and its teams insist on treating biological reality as a violation of house rules. The conflagration started last month in Seattle, soon after Cunningham said she thinks girls should have their own sports and private spaces.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Grocers issue warning over Mamdani’s taxpayer-backed stores: 'We're going to go after' them</h4>
+                <p>Frank Garcia says immigrant-owned businesses are being pitted against one another and urges City Hall to back a private buying-group model instead. Private operators looking to run New York City’s planned government-owned grocery stores are being put on notice: Join Mayor Zohran Mamdani’s program, and grocers fighting the plan say they could face you in court.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Dolly Parton’s Catalog Is More Than Just Catchy Tunes</h4>
+                <p>Parton’s legacy is hard to put together in words. The thanks she’s owed for her contributions to music history cannot be measured. The great and iconic Dolly Parton passed away Tuesday at the age of 80, leaving behind a legacy of music that feels impossible to summarize. It felt like she somehow had a song for everything. And remarkably, even that wasn’t what made her so special. There are songs Parton wrote and performed, and then there are songs she didn’t write but made her own. No matter whether she wrote it or simply performed it, Parton did what many artists can’t. That is, she channeled deep emotions and sang them with such sincerity. She didn’t just have catchy tunes; she had a raw, deep, and real genuineness in her voice that could captivate anyone, anywhere.</p>
+                <p class="source-credit">— The Federalist</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/08/931/523/us-military-flight-russia.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>US military plane lands in Moscow, with Kremlin claiming it has no information: report</h3>
+                <p class="lead-summary"><strong class="drop-cap">A</strong> video captured a U.S. military C-17A Globemaster III aircraft coming in for a landing on Wednesday, Aug. 25, 2026, at Moscow's Vnukovo airport. (Credit: Reuters) Video captured a U.S. military transport plane coming in for a landing Tuesday at Moscow's Vnukovo airport, in a flight that the Kremlin reportedly claimed it had no information about. Data from the website Flightradar24 showed that the Boeing C-17A Globemaster III left Joint Base Andrews in Maryland early Sunday afternoon on a flight to Riga, Latvia. The aircraft then traveled from Riga to Moscow, Russia on Wednesday morning. The last time a U.S.-registered jet made a direct flight to Russia from Europe was in January when special envoy Steve Witkoff and President Donald Trump's son-in-law, Jared Kushner, visited Moscow for a meeting with Russian President Vladimir Putin about the war in Ukraine, according to Reuters. A Department of War spokesperson told Fox News Digital on Tuesday, "We have nothing to provide on this subject." Fox News Digital also has reached out to the White House and the U.S. Embassy in Moscow for comment.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Fastest-growing Ebola outbreak on record threatens to become worst in history</h4>
+                <p>The response to Congo’s raging Ebola epidemic has been hampered by a severe lack of funding and pervasive misinformation, according to people on the front lines.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Denmark's left-wing PM warns: 'Big enemy has started to grow from within' as Europe faces migrant reckoning</h4>
+                <p>Fox News host Mark Levin issues a warning about leftist immigration ideology in wake of a recent wave of illegal immigration into Spain on 'Life, Liberty & Levin.' Denmark's left-wing prime minister, Mette Frederiksen, has sent shock waves throughout the European left after recent comments about the Scandinavian nation's — and the continent's — failure to deal with radical Islam among migrant communities.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Canada announces retaliatory tariffs on U.S. products as trade war deepens</h4>
+                <p>Canada announced new tariffs of up to 50 percent on hundreds of American goods in retaliation for U.S. tariffs that took effect last week. Starting Sept. 8, Canada will double tariffs on American steel and aluminum to 50 percent and impose tariffs on around 700 other products.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F08%2Fnewspress-collage-ivlrcb26p-1787718508342.jpg?quality%3D90%26strip%3Dall%261787704198" alt="Lead Story Image" class="news-photo">
+                <h3>Christian Gonzalez gets real about ‘frustrating’ Patriots extension talks</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>he star cornerback is headed into the Patriots’ final preseason without the long-term contract extension that’s been hanging over his head the past few months. Wednesday marked Gonzalez’s return to practice this week after what coach Mike Vrabel called a minor injury kept him sidelined since Aug. 10 — though whispers of it having to do with his contract status loomed.. “I’m not going to get into that,” the 24-year-old told reporters. “I’m out here now. So it is what it is.” Gonzalez is entering the fourth year of a $15 million rookie contract, with New England having opted in for a fifth year. Heading into the Patriots’ third preseason game — a tilt with the Browns in Cleveland on Thursday — Gonzalez did make it clear that he wasn’t entirely happy with the situation. “It’s frustrating. But I’m focused on the season. I’m focused on here now and doing what I have to do,” he said. “I’m out here to compete and get better.” In July, Patriots owner Robert Kraft said he had offered the No. 17 overall pick in the 2023 draft the “highest contract in Patriots franchise history,” which would seemingly eclipse defensive lineman Milton Williams’ four-year, $104 million pact. Among cornerbacks, Devon Witherspoon’s four-year, $132 million extension with Seattle is the landmark deal. The Patriots are well aware of the what Gonzalez brings to the table — he allowed league-low 43.4% completion rate when targeted last season, according to Pro Football Focus.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Ja’Marr Chase says he’s ‘fine’ after scary Bengals practice injury</h4>
+                <p>The Bengals and Ja’Marr Chase appear to have avoided the worst with the star wide receiver’s injury scare on Tuesday. The five-time Pro Bowler hurt his left knee and limped off the field during Cincinnati practice, but Chase said afterward he only suffered a slight hyperextension and does not expect it to keep him sidelined. “Just a football play. A misstep, missed my footing. Just a little tweak,” Chase told reporters in the locker room. “I’m fine. Feel good.” Immediately after the play, Chase limped off to the sideline before collapsing back on the ground in a scary looking scene. He stayed on the sideline rather than heading to the locker room as Bengals brass held their breath, though Chase later eased those concerns with an encouraging update after the practice.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Kinley Rasmus breaks record for hits by girl at Little League World Series</h4>
+                <p>WILLIAMSPORT, Pa. — Kinley Rasmus is on a record-setting roll at the Little League World Series. The 12-year-old pitcher and shortstop for the Phenix City, Alabama, team representing the Southeast at the tournament had a pair of hits during a comeback win over a team from Tacoma, Washington, on Tuesday that kept Phenix City’s season alive. Rasmus has five hits during the double-elimination tournament, the most by a girl at the Little League World Series. The daughter of former major league pitcher Cory Rasmus has already distinguished herself on the mound. Kinley Rasmus allowed one hit in six innings in a game against Tacoma earlier in the tournament.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>SEC sends clear message to pro athletes: ‘College sports are for college athletes’</h4>
+                <p>The SEC is making its eligibility message clear: Once you turn pro you are not welcome back. In a meeting with league presidents, athletic directions, and chancellors, the premier collegiate conference  decided to prohibit anyone who has previously declared for professional basketball and football. The policy — which was unanimously voted upon by a 16-0 tally, according to ESPN — says that SEC institutions are “not permitted” to have athletes on its roster if they have: The conference’s announcement added that SEC commissioner Greg Sankey “is authorized to enforce this expectation with penalties against member institutions.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F08%2Fnewspress-collage-cgwgkb1pm-1787703249370.jpg?quality%3D90%26strip%3Dall%261787688883" alt="Lead Story Image" class="news-photo">
+                <h3>‘Paranormal Activity’ on Broadway review: Freaky horror show conjures real terror</h3>
+                <p class="lead-summary"><strong class="drop-cap">S</strong>o how refreshing and invigorating it is to watch a truly legitimate go at the horror genre onstage in the form of the new play “Paranormal Activity,” which opened Tuesday night at the August Wilson Theatre. Some of you are probably unshakable and won’t get so much as a rogue goosebump. But, hey, the show certainly freaked me out. As it did most of the audience. People screamed and jumped in unison just as they would at the cinema. It’s a lot of fun. At times, the spookiness is electric. And, far from creeping into deadly theme-park territory, patrons’ loud vocalizing comes from a rare and intense engagement. They’re riveted. That’s fantastic. If it’s OK to howl at “Oh, Mary!”, why not shriek at “Paranormal Activity”? Director Felix Barrett, the man partly responsible for “Sleep No More,” conjures genuine dread as we await the clever terrors that are to come. You may find yourself fixating on the shadowy upstairs bedroom or at the closed bathtub curtain, worried about what demons lurk behind it. Normally a director would prefer viewers to focus on, well, the actors. But the house by designer Fly Davis, at once modern and rotting, is as much a character as the poor married couple who have just moved in. Just about everything onstage has an ulterior motive. Neither plate nor pillow should ever be fully trusted. The spouses who don’t know what they’ve got coming are James (Travis A. Knight) and Lou (Cher Álvarez), Americans who’ve moved from Chicago to London for James’ job. Also, it’s gradually revealed, they’re fleeing turbulent pasts.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Dolly Parton dies at the age of 80: A look at her life through photos</h4>
+                <p>Dolly Parton got her start in the entertainment industry after making her debut at the Grand Ole Opry at the age of 13. Here is a look back at her career in music, film and philanthropy. Dolly Parton got her start in the entertainment industry after making her debut at the Grand Ole Opry at the age of 13. Here is a look back at her career in music, film and philanthropy.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>‘The Dog Stars’ review: Another dog of a movie from the once-great Ridley Scott</h4>
+                <p>There is a whole genre of films that can best be summed up as “It’s the end of the world, so let’s go on a hike.” The “A Quiet Place” franchise fits snugly in there. So do the new “28 Years Later” movies and much of “The End We Start From” starring Jodie Comer. On the small screen, the sensational HBO series “Station Eleven” is another one. The latest lacking variation that’s very much running on the fumes of the much better aforementioned titles is “The Dog Stars” from the once-great director (and now my tormentor) Ridley Scott. Their rough plots are all the same. Some cataclysmic event occurs (alien invasion, deadly virus, natural disaster), and thus it’s decided that the safest place to survive is in the woods. Only there’s a twist — the forest is not so nice after all. Extraterrestrials, zombies and bad guys, it turns out, also enjoy the fresh air and the sweet scent of pine sap.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Dolly Parton's ‘all-American heart’: How country icon forged special bond with US military</h4>
+                <p>Country music star Lee Greenwood remembers Dolly Parton’s life, legacy and lasting impact following her death. He reflects on her ‘humble beginnings’, her rise to stardom and the tributes honoring the country music icon on ‘America Reports.’ Dolly Parton wore rhinestones and fringe, not a military uniform, but the American music legend spent decades finding her own ways to serve those who served America.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/08/931/523/2-Google-Docs-password-leak-reveals-a-costly-security-mistake-photo-2.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Google Docs password leak reveals a costly security mistake</h3>
+                <p class="lead-summary"><strong class="drop-cap">G</strong>oogle General Counsel Halimah Delaine Prado joins 'Fox & Friends' to detail how Google is fighting AI-powered phishing scams. Passwords have a way of ending up in places they were never meant to live. Sometimes convenience wins in the moment, and security becomes tomorrow's problem. One company learned that lesson after a contractor stored credentials in a Google Doc so they could access them from different devices. Then something happened that should make anyone who uses Google Docs take a closer look at their sharing settings. A developer searching the company's domain on Google saw one of its staging hostnames appear in autocomplete alongside what looked like a credential string. The company investigated and found a Google Docs URL that anyone with the link could access. That's a rough way to discover that a password has traveled much farther than you intended. Here's how the exposure happened, what Google says about Docs privacy and the simple steps you can take to keep your own passwords and shared files safer. Join us Saturday, Aug. 29, at 10 a.m. ET for a free CyberGuy LIVE class covering five simple steps to help defend yourself against AI scams, fraud, identity theft and financial hacks. Kurt "CyberGuy" Knutsson will explain how to set up bank alerts, strengthen your account logins, protect your phone number, freeze your credit and help secure your retirement savings against unauthorized transfers. No technical experience is needed. You’ll also receive our financial protection checklist, and every registrant will get a link to the class recording afterward. A computer screen displaying text related to a Google Docs password leak security incident. (Kurt "CyberGuy" Knutsson) The story was reported by The Register and comes from Siim Kostabi, co-founder of Pageloot, a company that provides QR codes for businesses. Kostabi said his company brought in an outside contractor to help with back-end API integrations. The contractor had credentials for the company's staging environment, which is essentially a test version of its system.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Bill Gates was an AI optimist. Now he’s scared of what could go wrong.</h4>
+                <p>In an essay, the Microsoft co-founder sounds the alarm about artificial intelligence’s risks to safety and security, jobs and children’s well-being.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>AI may answer some New Orleans 911 calls</h4>
+                <p>Fox News host Emily Compagno discusses New Orleans' deployment of AI to answer 911 calls on 'Outnumbered.' Calling 911 is one of those moments when you expect a human voice on the other end. In New Orleans, though, an artificial intelligence system may answer in a limited situation involving certain calls about already reported auto crashes.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
