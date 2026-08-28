@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>THURSDAY, AUGUST 27, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://www.theblaze.com/media-library/the-data-center-backlash-is-getting-spiritual.jpg?id=67681318&width=980" alt="Lead Story Image" class="news-photo">
+                <h3>The data center backlash is getting spiritual</h3>
+                <p class="lead-summary"><strong class="drop-cap">A</strong>mericans are no longer arguing only about power bills, land use, or AI. Increasingly, tech itself is being cast as evil — and that changes the fight. As I — and numerous others — anticipated years ago, the populist backlash against the dystopian possibilities of super-duper artificial intelligence has begun in earnest, with the rise of data centers as the inciting event. It is easy to see why. Beyond the standard human response to unasked-for change at scale — isn’t there someone (me!) you forgot to ask? — the populist spirit in America has always run bone-deep. Americans do not like feeling mogged by their fellow citizens, and we like even less being lectured by the moggers about how we are unentitled to feel that way. Alexis de Tocqueville understood the democratic dynamics of envy and resentment. Under conditions of social equality, everyone feels precariously interchangeable with everyone else, so another person’s relative advantage can register not merely as inequality but as a wound to pride. Extend that dynamic to the “global town square,” where we spend more and more of our waking hours watching other people’s breakout advances in real time, and the sensation of being left behind goes nuclear. Americans do not like feeling mogged by their fellow citizens, and we like even less being lectured by the moggers about how we are unentitled to feel that way. Worse, somewhere beneath the resentment lurks the humiliating suspicion that we have helped put ourselves in the inferior position. Sensitive young men of ambition today — reminding me of my own “Fight Club”-era preoccupations — are once again stalking some kind of Nietzschean-Christian syncretism that promises, amulet-like, supreme confidence and supreme humility. The reason is that both Nietzsche and Christ condemned resentment. The gulf between the Übermensch and the God-Man is obviously enormous. Yet both traditions understand that resentment degrades the person who lives by it. And that is why the backlash against data centers has moved so quickly from personal grievance and political interest onto the higher plane of spiritual war. More Americans across the political spectrum now speak of data centers as if they are not merely ugly, expensive, noisy, or intrusive but evil — evil as “tech” itself has become in their imagination, evil as the “tech lords” who build it are presumed to be. On the secular left, where human justice perfected becomes an almost religious ideal, tech’s push toward superhuman capability readily appears sinister. On the woo-woo left, where witches warn that they cannot hex Trump, tech’s tilt toward post-humanity manifests as something post-natural and spiritually contaminating.</p>
+                <p class="source-credit">— The Blaze</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Watch How Abdul El-Sayed Deflects When Asked About His 'Bromance' With Communist Streamer</h4>
+                <p>Michigan Democrat Senate candidate Abdul El-Sayed is still refusing to disavow his relationship with communist livestreamer Hasan Piker. During a Q&A at a student town hall in Ann Arbor, a reporter asked El-Sayed about Democrat criticism of his relationship with Piker. “You've been taking in recent days from other Democrats in the state,” the reporter said. “Congressman Sculpton has been critical of your association with Hasan Piker. The Attorney General Nessel said today that she believed that you were perhaps making excuses for domestic terrorism. Are you going to speak with these folks? How do you respond to that criticism?</p>
+                <p class="source-credit">— Townhall</p>
+            </div>
+            <div class="story-minor">
+                <h4>Secret Service spokesperson is put on leave amid investigation</h4>
+                <p>The agency said two other non-law enforcement employees were also suspended in an unspecified misconduct investigation.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Trump keeps winning Republican primaries. His losses may be more revealing.</h4>
+                <p>Fox News correspondent Mark Meredith reports on Darline Graham’s victory in the South Carolina GOP U.S. Senate runoff and criticism over President Donald Trump’s endorsement of Graham on ‘Special Report.’ President Donald Trump took to social media ahead of the latest round of Republican primary elections to emphasize, "My Endorsements are stronger than ever....There has never been anything close!"</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/08/931/523/nepal-flood-aftermath-5.png?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Experts zero in on likely cause of deadly Nepal mudslide, with more than 1,400 missing</h3>
+                <p class="lead-summary"><strong class="drop-cap">M</strong>eteorologist Adam Klotz and geoscientist Simon Cook joined 'Fox & Friends First' to analyze the deadly glacial collapse, landslides and deadly floods along the China-Nepal border that left more than 1,300 missing. The catastrophic floods in Nepal and Tibet now estimated to have killed hundreds were likely triggered by a massive glacier collapse and debris flow that registered as a magnitude 5.2 landslide, according to the U.S. Geological Service (USGS). The USGS originally pinpointed the cause of the mudslides as a 4.4 magnitude earthquake but later updated its analysis after observing data from nearby seismic stations, long period seismic waves and satellite imagery. That data suggested that no earthquake had occurred. Climate experts at the Kathmandu-based International Centre for Integrated Mountain Development told The Associated Press that Wednesday’s flash floods were likely triggered by a glacial avalanche. "Hydrological observations indicate the exceptional speed and magnitude of the flood wave," they said in a statement, adding that at one point, the water levels on the Trishuli River rose by as much as 27 feet in just a half hour.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Rescuers race to find survivors after Himalayan floods kill at least 350</h4>
+                <p>Hundreds of people, including more than 600 tourists, remain missing after the floods hit the Nepal-China border.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>US counters China as Beijing’s ‘shock wave’ hits African economies</h4>
+                <p>China imposes retaliatory sanctions on U.S. firms and tightens drone export restrictions as trade tension escalates while Washington targets Chinese companies allegedly using Iranian fuel and weighs additional sanctions on Chinese A.I. firms. JOHANNESBURG: A top State Department official has hit out at China for what analysts are calling "the China shock wave" effect now crippling African economies.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Canada, pressured by Trump, wants new trade partners. Here’s why it’s hard.</h4>
+                <p>The country needs infrastructure and deals to expand exports beyond the United States.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F08%2Fnewspress-collage-2finb13dd-1787852425689.jpg?quality%3D90%26strip%3Dall%261787838063" alt="Lead Story Image" class="news-photo">
+                <h3>Shannon Sharpe bashes NFLers for Pro Bowl’s demise: ‘You ruined it’</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>he NFL announced Wednesday it was finally ending the all-star game, opting to bestow a title on players instead of having them risk injury in an exhibition. Sharpe, an eight-time Pro Bowler during his Hall of Fame tight end career, compared the loss of the game element to the NBA’s troubles with its All-Star Game. “You saw with the NBA, Adam Silver says, ‘Okay, if you all don’t start playing we’re going to cut it out. We done tried everything. It was the East vs. the West, then we let LeBron [James] and we let KD [Kevin Durant] and we let Giannis [Antetokounmpo], we let them select the squad, we let Steph [Curry] and Bron select the squad, you all still wouldn’t play. We tried it like this and you all still wouldn’t play’,” he said on his “Nightcap” podcast on Thursday night. “Adam Silver said, ‘You’re heading for a situation where there ain’t going to be no All-Star Game. And do you want to be the one?’ “And you NFL players that’s responsible for this that played the last decade, you ought to be embarrassed. Because something that’s been going on before your parents were born, you all ruined it. You ended it. Y’all did. Y’all did that. So be proud of yourself. Because that’s what you’ve done.” During Sharpe’s playing days — 1990-2003 — the Pro Bowl was a star-studded event cloaked with respect. In recent years, it’s become something of a farce. Numerous big-name players opt out in the name of risk mitigation — injury and otherwise — with the NFL turning a second tier of stars to fill in the gaps — Giants tackle Jermaine Eluemunor called the Pro Bowl “laughable” last season after Browns QB Shedeur Sanders made it despite playing in just eight games as a rookie with seven touchdowns to 10 interceptions on his ledger.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>2026 College Football Playoff Predictions: Will Big Ten's Dominance Come To An End?</h4>
+                <p>It's about that time, as the offseason winds down, and predictions start looming. Which teams are bound to make waves this college football season? As Oregon returns plenty of production from their 2025 team and Indiana aims for a repeat title, the competition for conference championships and a national title are wide open.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>New details emerge on Ketel Marte refusing to leave Boston hotel room for game: ‘Getting your heart ripped out’</h4>
+                <p>The three-time All-Star, who refused to leave his hotel room to play in a game against the Red Sox on Aug. 17, is facing the loss of a close family member, according to someone close to Marte who he did not authorize to speak publicly, per The Athletic. The Diamondbacks, in a race for the third and final NL wild-card spot against the Padres, waited until the very last second to place Marte on the restricted list without pay for the second straight season. They posted their lineup 15 minutes out from first pitch, announcing Jose Fernandez was recalled from Triple-A Reno. The team knew where Marte was, people briefed on the situation told The Athletic, and they were in contact with him through his agent, Charisse Espinosa-Dash. However, no one knew, including his agent, whether he would show up to Fenway Park.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Could The Cowboys Miss The Postseason? Predicting Every NFC Division Winner</h4>
+                <p>Will the Seattle Seahawks be able to fend off the Los Angeles Rams and win the NFC West again? Who will win the tight battle for the NFC North? With the regular season quickly approaching, Colin Cowherd provided his division predictions and projected playoff field for the NFC on Wednesday's edition of The Herd.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/08/931/523/stella-dolly-parton-red-tent-womens-conference.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Dolly Parton offered to try experimental drugs if ‘no hope’ for cancer battle to help others, sister says</h3>
+                <p class="lead-summary"><strong class="drop-cap">D</strong>olly Parton, the Grammy-winning singer, songwriter and philanthropist whose career spanned over six decades, has died at 80. Dolly Parton stared down her own health crisis with one final act of generosity in mind. Parton had quietly battled cancer in the months before her death on Aug. 25. The "Islands in the Stream" singer had informed fans she was struggling with her health, but never disclosed details. As she privately faced the devastating diagnosis, she was already thinking about how her fight could help others. Stella Parton, Dolly's sister, revealed the country music icon had offered to let doctors test experimental drugs on her if she ran out of treatment options, hoping what they learned could someday save someone else. Dolly Parton's sister revealed her kindness remained even during her private health battle. (Terry Wyatt/Getty Images) "My sister was one of the most generous, thoughtful and kind people I’ve ever known," Stella wrote on Facebook. "What the world saw is exactly who she was, so much so, she told me recently that if there was no hope for her, she would still allow her medical team to try experimental drugs in the hope of helping others in the future."</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>What do the cheapest last-minute Ella Langley concert tickets cost?</h4>
+                <p>The rapidly rising country crooner has gigs lined up at arenas all over North America as part of her ongoing ‘Dandelion Tour’ in support of her recently-released second album with special guests ERNEST, Gabriella Rose, Kameron Marlowe and Laci Kaye Booth. If you’d like to see the gifted vocalist belt live, last-minute tickets are available for all upcoming shows of hers. At the time of publication, the lowest price we could find on tickets for any one concert was $136 including fees on SeatGeek. Most importantly, prices are dropping for most shows. When our team last reported on how much seats cost to see Langley in Newark on June 26, seats began at $229 including fees.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Navy veteran trades military uniform for Miss Georgia sash following heartbreaking loss</h4>
+                <p>Miss Georgia USA Jade Kircus shares how she went from serving as a naval officer to competing for Miss USA and why faith guided her unexpected journey. After eight years of serving her country in a Navy uniform, Jade Kircus is trading it for a pageant sash. At 36, the wife and mother of three is representing Georgia in her first-ever pageant: Miss USA. The competition takes place Aug. 27 in Miami.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Dolly Parton’s high school band pays tribute: ‘She was a tiny giant’</h4>
+                <p>Dolly Parton once fooled a marching band into thinking she was old friends with their director — even though the two had never met. Nathan Hickman, the band director at Parton’s alma mater, Sevier County High School, told The Post that he first met the country legend in 2013, when his students played a Dollywood concert in nearby Pigeon Forge. “My students asked if I knew her,” said Hickman. “Of course, I said yes and that we had been friends for years… Truthfully, I had never met her.” Apparently, Parton overheard the exchange and knew immediately how to make the high school band teacher into a hometown hero. “When she walked out on stage, she said, ‘Hey Nathan! I’m so glad you are at Sevier County now!’ and greeted me with a hug,” Hickman recalled. “The students’ minds were blown!</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://static.foxnews.com/foxnews.com/content/uploads/2026/08/robo-crash-gif-2.gif" alt="Lead Story Image" class="news-photo">
+                <h3>Survivor's Christian Hubicki marvels at China's robotics games records: 'Willing to break the robots to do it'</h3>
+                <p class="lead-summary"><strong class="drop-cap">F</strong>lorida State robotics professor Christian Hubicki, a star from reality TV's "Survivor," breaks down why humanoid robots can now outrun Usain Bolt — but still lack the intelligence to reliably think, react and stop. The World Humanoid Robot Games made headlines this week, putting robotics experts in awe and leaving social media scrollers laughing at the robots’ histrionics, viral stumbles, and dramatic crashes and burns. In its second year, it is making an annual event out of stress-testing the limits of technological advancement, while allaying fears to the public that SkyNet is not on the verge of taking over the world. "The goal of this event really was to show how fast we can get robots to go," Christian Hubicki, Florida State University mechanical-engineering professor and robotics lab director, told Fox News Digital on the final day of the five-day event. "What happens to them afterwards? Well, as we can see, it's a bit dramatic. "They didn't care so much how they stopped. In fact, they had this big wall that they just smashed into." The robots might be running faster than Usain Bolt before they know how to stop, but the tech is still at the stage of standing up from a crawl, according to Hubicki, who is also known for being a past contestant on the CBS reality TV show "Survivor." "They wanted to break the record, and they're willing to break the robots to do it," Hubicki said. "You can see robots are sparking, limbs are flying off. It's incredibly kinetic. It's like these things are almost like missiles flying at this wall. All to break the record." The record broken was Bolt's 9.58 seconds in the 100-meter dash, but in a show of just how fast the robots can go and technology can advance, Saturday's 9.39 mark only lasted a few days. A Chinese humanoid robot – Tiangong Ultra, developed by the Beijing Humanoid Robot Innovation Centre – on the event's final day won the large-size robot 100-meter final at 8.64 seconds, almost a second faster than Bolt's human world-record time. Humanoid robots show they can beat the world's fastest man in the 100-meter dash, but they cannot stop without a blue wall.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Federal judge warns law is being left behind by AI child sex abuse images</h4>
+                <p>In his ruling, which applies to only certain images, a federal judge asked the Supreme Court to revisit legal precedents that predated advances in AI.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Over 1,000 AI agents worked together in OpenAI hack, report reveals</h4>
+                <p>The company released a final report examining how its tech went rogue and hacked its way onto the internet.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Humanoid robot outruns Usain Bolt record as China races ahead</h4>
+                <p>Kurt Knutsson, 'The CyberGuy', joins 'Fox & Friends' to showcase the World Humanoid Games in Beijing, China. Over 2,000 robots and 600 teams from 16 countries compete in athletic competitions including sprinting, boxing, and soccer. Knutsson discusses how the U.S.-China tech race is expanding into humanoid robotics as developers push the boundaries of artificial intelligence.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
