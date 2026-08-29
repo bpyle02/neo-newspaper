@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>FRIDAY, AUGUST 28, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://media.townhall.com/cdn/hodl/2026/201/97e0b92b-3229-41a8-9bac-e5181b854d3a.jpg" alt="Lead Story Image" class="news-photo">
+                <h3>David Crowley Just Demonstrated How Woke He Really Is</h3>
+                <p class="lead-summary"><strong class="drop-cap">W</strong>isconsin Democrats (WisDems) really wanted to run David Crowley as the moderate option to Democratic Socialist Francesca Hong, who has all but dropped off the map of Wisconsin politics since August 11. That's when Crowley narrowly — and we do mean narrowly — defeated her in the primary, squeaking by with 0.42 percent of the vote. But the reality is that David Crowley is not fundamentally different than Hong. Sure, he's pro-data center (which Hong was not), but as we told you about, the "Data Center David" attacks seem to be harming Crowley's campaign. Other than that, Crowley said his policies don't really differ from Hong's. That means defunding the police, ending school choice, and massive tax increases are all on the table. He also wants "climate resilience pay," whatever that is. Making sure we invest in Wisconsin and Wisconsinites, that’s the leadership we need, and it is what David Crowley will do for us.Read more: https://t.co/1krLKfjQtJ pic.twitter.com/BAdXWpuUqv And we know Crowley will certainly raise taxes. For five out of six years, he raised Milwaukee County property taxes and the one year he didn't, he raised the sales tax astronomically and celebrated by eating cake. He's also left the Milwaukee County Sheriff's office understaffed, making the county less safe. But his woke and far-left policies go beyond taxing, spending, and hating law enforcement aren't where it ends. Crowley also said that Milwaukee County is on "stolen land." 🚨 WATCH: David Crowley says that Milwaukee is on stolen land and that Wisconsinites are not the "rightful stewards" of our state's land.How can someone be our Governor if they don't even believe our state should exist in the first place? pic.twitter.com/QeRRpeTAbM "Where we reside here at the Milwaukee County Courthouse, on traditional Potawatomi, Ho-Chunk, and Menomonie homeland, right on the southwest shore of Michigami," he said. "For more than 500 years, Native Americans have demonstrated incredible resilience in the face of violent attempts to separate them from their land, culture, and history. We acknowledge that we stand on land taken from its rightful stewards." Crowley was also endorsed by the extreme Human Rights Campaign, where he vowed to enact a radical LGBTQ agenda if he wins. In Wisconsin, love is love is love.I’m proud to have the support of the Human Rights Campaign, and as your next governor, I’ll never stop fighting to make sure Wisconsin is grounded in equality, fairness, and safety for all. pic.twitter.</p>
+                <p class="source-credit">— Townhall</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Judge issues new block on Trump’s sweeping restrictions on mail-in voting</h4>
+                <p>The legal fight over the controversial measure is expected to continue.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Why TikTok's astrology defense for Lindsay Clancy is against God's design</h4>
+                <p>The Lindsay Clancy case has generated no shortage of online speculation, but a new theory gaining traction on TikTok may be among the strangest yet. Rather than examining evidence presented in court, some social media users are using astrology and birth-chart readings to argue that Clancy's husband, Patrick, was actually responsible for the deaths of the couple's children. “Women on TikTok are using astrology to argue that Patrick actually committed the killings. And they’re using divination. They’re using what they claim to be some connection with the divine and with the universe to try to prove their case,” BlazeTV host Allie Beth Stuckey explains.</p>
+                <p class="source-credit">— The Blaze</p>
+            </div>
+            <div class="story-minor">
+                <h4>Reagan-era official warns ‘red-green alliance’ has shared goal of ‘destroying’ America</h4>
+                <p>Frank Gaffney sat down with Fox News Digital to warn about what he calls a growing "red-green alliance" between far-left socialists and Islamist movements united by an Anti-American, anti-Western ideology. A former Reagan administration national security official is sounding the alarm over what he calls a growing "red-green alliance" between radical Islamists and far-left socialists, warning the unlikely ideological partners are joining forces around a shared anti-American agenda.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://static.foxnews.com/foxnews.com/content/uploads/2026/08/mud-drag-rescue-fox-news-001.gif" alt="Lead Story Image" class="news-photo">
+                <h3>Trapped Nepali workers pulled from hydropower tunnel after catastrophic flooding</h3>
+                <p class="lead-summary"><strong class="drop-cap">D</strong>ramatic video shows rescue workers in Nepal dragging a trapped person through the mud in a hydroplant tunnel after a deadly mudslide swept through the region. Credit: Reuters. Stunning video shows rescue workers in Nepal dragging trapped citizens out of the mud in a hydropower plant tunnel after the devastating mudslide that has left over 1,000 people missing. The video, released by Nepal’s Prime Minister’s Office on Friday, shows a series of rescue workers pulling trapped people through a tunnel that’s been saturated with mud. In a post on Facebook, the Prime Minister’s Office said it had rescued 350 people from the tunnel but that efforts continue to evacuate more than 100 people still trapped. The post also added that workers had moved another 533 residents to safety from flooded areas. The rescue operation is intended to save people after a disastrous mudslide struck the valley in the Rasuwa district in northern Nepal, also affecting neighboring Chinese province Tibet. Rescuers evacuate a person from a tunnel of a hydropower project, in the aftermath of flash floods and a mudslide, in Rasuwa, Nepal, in this still image from handout video released August 28, 2026.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>At least 540 killed in floods; search on for hundreds missing at Nepal-China border</h4>
+                <p>Fears of further flooding complicated recovery efforts, as authorities searched for people missing after floods struck the Himalayan border between Nepal and China.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Trump’s grab for Greenland rattles Iceland, which considers joining E.U.</h4>
+                <p>Iceland will decide whether to restart talks on joining the European Union in a referendum on Saturday, with President Donald Trump's threat to annex Greenland a motivating factor.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Norway's King Harald dies peacefully at 89, son Crown Prince Haakon to succeed him</h4>
+                <p>"It is with deep grief that we announce that His Majesty King Harald has passed away," the royal palace said in a statement. "King Harald died peacefully at Oslo University Hospital Rikshospitalet Friday 28 August at 6:35 AM," the statement continued. Harald, who was Europe's oldest living monarch, was hospitalized with a blood infection on Aug. 17.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/statics.foxsports.com/www.foxsports.com/content/uploads/2026/08/1200/675/ty-simpson-nfl-catchup.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>NFL Catchup: Simpson Stars, Mendoza Struggles, Seahawks Extend Star & Gabriel Shows Out</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>he final week of the NFL preseason is underway, and some quarterbacks are making some strong final impressions before the regular season gets started. Both Los Angeles Rams quarterback Ty Simpson and Cleveland Browns quarterback Dillon Gabriel had standout showings, while Las Vegas Raiders rookie Fernando Mendoza didn't have as great a night. Beyond the gridiron, there were multiple deals done on Thursday in the NFC West as the Rams and the Seattle Seahawks prepare for the year ahead. After plenty of speculation and criticism surrounding his selection at No. 13 overall, quarterback Ty Simpson continued his strong preseason on Thursday. Simpson led the Rams to three scoring drives against the Los Angeles Chargers, completing 18 of 23 passes for 119 yards and a touchdown while adding 11 yards on the ground. Head coach Sean McVay still hasn’t officially named a backup quarterback behind MVP Matthew Stafford. Stetson Bennett has been in the system for a few years, but with Simpson continuing to impress, he's certainly made a case for himself to be considered for the job.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Raiders rookie Mike Washington sends strong 2-word message after eye-opening preseason</h4>
+                <p>“I’m ready,” Washington told reporters following the Raiders’ 18-12 loss to the San Francisco 49ers on Thursday night. The Raiders rookie — as he’s done throughout the preseason — thrived against San Francisco, leading the team in rushing with 49 yards on eight carries, and also contributing in the passing game while having two receptions for 18 yards. “Staying where my feet are and taking advantage of the opportunity to be able to go out there and compete against their ones and run with our ones,” Washington told reporters. “It’s a good experience. “The confidence comes from my faith, Jesus, he’s the center of my everything, so that’s where my confidence comes from. I thank him every day.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Inter Miami Names Cristian 'Kily' González Head Coach To Replace Guillermo Hoyos</h4>
+                <p>Inter Miami CF announced Thursday that Cristian Alberto Kily González has been appointed as the club's new first team head coach, replacing Guillermo Hoyos. "González will officially assume his duties once he receives the corresponding work permits. Guillermo Hoyos will provisionally continue in charge of the team until the arrival of the new head coach and his coaching staff," the club said in a statement.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Puka Nacua spotted at unexpected LA celebration after offseason, antisemitism controversies</h4>
+                <p>Of all the places Puka Nacua might have been expected to surface during his off-day following the Los Angeles Rams 34-0 demolition of the Saints in the preseason last Saturday, dancing at a Bat Mitzvah probably wasn’t high on the list. And yet, there was Nacua on Sunday, Aug. 23, smiling and celebrating at the Jewish coming-of-age ceremony, according to videos shared on social media from guests who attended the event. The Rams star wide receiver was reportedly invited by the parents of the girl celebrating her Bat Mitzvah, the Jewish milestone traditionally marking a girl’s entrance into religious adulthood at age 12. In the videos, Nacua helps carry the guest of honor toward the stage before later being spotted dancing among the crowd.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F08%2FAriana-Madix.jpg?quality%3D90%26strip%3Dall" alt="Lead Story Image" class="news-photo">
+                <h3>How much are ‘Just In Time’ tickets to see Ariana Madix on Broadway?</h3>
+                <p class="lead-summary"><strong class="drop-cap">F</strong>rom Sept. 12 through Nov. 22, “Vanderpump Rules” star Ariana Madix — who made her Broadway debut as Roxie Hart in “Chicago” in 2024 — will portray the “Pretty Little Baby” hitmaker in the Bobby Darin musical “Just In Time” at the Circle In The Square Theatre. “It’s a pinch me moment to be able to come home to the Broadway stage and all I could have ever hoped for,” Madix said in a statement. “I am beyond excited to work with the legends behind Just In Time and to entertain audiences at one of my favorite theatres in the city!” If you’d like to see the reality TV icon turned thespian live on the Great White Way, tickets are available for all 82 of her “Just In Time” performances. At the time of publication, the lowest price we could find on seats for any one show was $117 including fees on SeatGeek. Make sure to use promo code NYPOST10 for $10 off purchases over $250 at checkout (Editor’s Note: this discount is only valid for users’ first purchase on SeatGeek). Madix, 41, will join Jeremy Jordan (Bobby Darin), Carrie St. Louis (Sandra Dee), Debbie Gravitte (Polly), Emily Bergl (Nina/Mary) and Joe Barbara (Steve Blauner) in the ensemble. Also, of note, The New York Post’s theater critic Johnny Oleksinski absolutely loved the rousing musical. “For a little over two hours, there’s nowhere you’d rather be than at this dazzling dream of a New York that truly never slept, presided over by a Harlem-born singer whose output was so rich and rapid-fire that the man must have been fueled by the dire prognosis he received as a child:  Darin wasn’t supposed to live past 16,” Oleksinski raved when the show opened in April 2025.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Demi Lovato celebrates 34th birthday in colorful string bikini during Bahamas getaway</h4>
+                <p>The 34-year-old singer kept the birthday fun going Thursday, sharing new shots of herself riding a jet ski in a colorful bikini against the bright blue Bahamas water. Lovato opened the Instagram carousel with a close-up selfie taken while sitting on a red jet ski.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>I saw Pitbull at Jones Beach. Here are five reasons you need to see Mr. Worldwide live</h4>
+                <p>I, admittedly, was never very good but one joke of mine always seemed to get laughs. It ended like this: “Shazam isn’t for finding music you like. Shazam is for finding out you’ve liked Pitbull for years.” Now, nearly a decade after using the Miami native as a punchline — in my defense, his catchy songs are ubiquitous at grocery stores — I have seen the light. Mr. Worldwide isn’t someone to be made fun of for liking his music, he’s a one-of-a-kind hitmaker worthy of celebration. To amend my error, I took the LIRR and a $25 Uber to witness the man, the myth, the bald icon live at the absolutely crawling Long Island’s Jones Beach Theater on Tuesday, Aug. 25 as part of his ongoing 2026 North American ‘I’m Back Tour’ with very special guest Lil Jon.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Former Disney Channel star alleges she was sexually abused at 14 after being told to ‘bond’ with employee</h4>
+                <p>A former Disney Channel star made disturbing allegations about her time on set in a new lawsuit. Raquel Lee Bolleau claimed an adult male employee sexually abused her when she was just 14 after Disney personnel allegedly encouraged her to "bond" with him. The alleged abuse began during production of the 2001 Disney Channel movie "The Poof Point," after personnel directed her to spend time with the adult employee.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/08/931/523/construction-workers-roof-american-flag.png?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Fox News AI Newsletter: The industry sparking blue-collar jobs boom</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>he AI boom is driving a massive infrastructure buildout across the U.S., creating new opportunities for skilled workers as demand for data centers and chip plants surges, according to Cole Renken, general manager of Merlo America. - OpenAI, 100+ companies warn of coming surge in AI-powered cyberattacks, call for global defense push The boom is creating demand for electricians, plumbers, heavy-equipment operators and other skilled tradespeople needed to build and maintain the infrastructure powering the technology. (Mark Wilson/Getty Images) HARD HAT HYPE: The race to build the infrastructure behind artificial intelligence is creating a new boom for America's blue-collar workforce, as construction firms scramble to fill jobs building data centers, power systems and the facilities that keep the technology running. HIDDEN HARDWARE: Data centers are the hidden infrastructure behind much of modern life, powering everything from the apps on your phone and the shows you stream to online shopping, banking and artificial intelligence. DIGITAL DEFENSE: OpenAI released a letter Thursday warning that within months, artifical intelligence (AI) models could become powerful enough to allow bad actors to launch increasingly sophisticated cyberattacks on hospitals, water treatment plants and other critical infrastructure. BEYOND THE GRID: NASA Administrator Jared Isaacman said Wednesday that solar-powered facilities in space could tap the sun’s energy without competing for the land, water and grid capacity required by sprawling data centers proposed across the country. BIG BROTHER: Automatic license plate reader (ALPR) companies have been brought under scrutiny by lawmakers in Washington as privacy hawks warn that the growing sophistication of artificial intelligence technology is testing the bounds of what ALPR devices can legally learn about drivers on the road. COST CRUNCH: Nvidia CEO Jensen Huang defended his decision to "rip the Band-Aid off" on the company’s gross margins as the chip giant continues to power some of the world’s most advanced artificial intelligence models.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Americans have turned against police cameras that track license plates, new survey shows</h4>
+                <p>Fearing the potential for invasive monitoring or abuse, more people now oppose law enforcement’s use of AI-powered cameras than support it, a new survey shows.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Chinese hackers target NASA and key US agencies, DOJ alleges</h4>
+                <p>Some cyberattacks start with a suspicious email. Others begin somewhere you would probably never think to look. It could be an old router in someone's home. Maybe it is a forgotten security camera that still connects to the internet. Hackers can compromise vulnerable connected devices and use them to disguise where an attack really comes from.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>AI firm Anthropic wins case challenging Pentagon blacklisting</h4>
+                <p>A federal judge in San Francisco ruled that the Trump administration's designation of AI firm Anthropic as a national security risk was "illegal and baseless."</p>
+                <p class="source-credit">— Washington Post</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
