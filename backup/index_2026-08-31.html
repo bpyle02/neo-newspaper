@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>MONDAY, AUGUST 31, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://thefederalist.com/wp-content/uploads/2026/08/Trans-1200x675.jpg" alt="Lead Story Image" class="news-photo">
+                <h3>Trump Admin Asks SCOTUS To Weigh Military Restrictions On ‘Trans’ Troops</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>he Trump administration asked the U.S. Supreme Court on Friday to consider the legality of its policy effectively barring trans-identifying individuals from serving in the military. In its petition, the Department of Justice (DOJ) requested the high court to determine whether the War Department’s rule that “generally disqualifies” those who have “gender dysphoria, a history of the condition, or a history of related interventions” violates the “equal-protection component” of the Fifth Amendment’s due process clause. The filing was made by U.S. Solicitor General John Sauer, who often represents the administration in oral arguments before the court. At issue is a February 2025 Pentagon memo establishing guidance implementing such a policy. The directive came as part of the agency’s compliance with President Trump’s January 2025 executive order ordering War Secretary Pete Hegseth to revise the military’s policy on gender dysphoric individuals serving within 60 days the order’s implementation. Upon request from trans-identifying individuals, D.C. District Judge Ana Reyes, a Biden appointee with a laundry list of left-wing activism, issued a preliminary injunction in March 2025 blocking the policy from taking effect. A three-judge panel for the D.C. Circuit Court of Appeals later temporarily paused that order in December 2025. Despite the U.S. Supreme Court pausing a similar injunction by a different district court on the policy in May 2025, a different D.C. Circuit panel upheld a portion of Reyes’ injunction in June. In a 2-1 ruling, the Democrat-appointed majority held “that the government could not enforce the ban against the challengers who were already in the military,” as described by SCOTUSblog. In asking the Supreme Court to take up the case, the Trump administration argued that the lower court’s holding that “the policy likely denies equal protection because it reflects invidious discrimination against trans-identifying people” is a “gravely erroneous” decision that warrants the justices’ review. It further contended that such reasoning “cannot be squared with this Court’s precedents or deference to the military.” “The authority of the U.S. military to determine who may serve in the Nation’s armed forces is a matter of exceptional importance,” the petition reads. “Whether the Constitution prohibits the military from exercising that authority by adopting a policy like the one here is a recurring issue, which has arisen before and will likely arise again absent this Court’s review.</p>
+                <p class="source-credit">— The Federalist</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Putin Reportedly Fears Being Hanged If He Loses Ukraine War</h4>
+                <p>The Russian President is preparing to mobilize as many as 400,000 more soldiers from across the country to prevent that outcome. Russian President Vladimir Putin reportedly fears that ending the war in Ukraine without securing a victory could cost him his life, with Kremlin insiders claiming he has warned that he could be “hanged” if Russia fails to achieve its objectives. The explosive claim was reported by the Economist, which cited sources close to the Kremlin as saying Putin believes he cannot safely end the nearly five-year war without at least capturing all of Ukraine’s Donbas region. “They will hang me,” Putin reportedly told people close to him at some point during the war, according to one insider cited by the outlet.</p>
+                <p class="source-credit">— Daily Wire</p>
+            </div>
+            <div class="story-minor">
+                <h4>WaPo columnist calls source for his own paper’s Iran war report ‘a traitor’ who ‘ought to be prosecuted’</h4>
+                <p>A Washington Post opinion writer called a source for his own paper’s newsroom a “traitor,” saying the person “ought to be prosecuted” for leaking confidential US military info to reporters. Marc Thiessen, a conservative columnist for the broadsheet, was outraged over his colleagues’ reporting that top military brass have warned War Secretary Pete Hegseth that prolonged large-scale operations against Iran risk weakening the US’ ability to confront threats at home. The article, which was published Sunday, noted the warnings were contained in a classified Aug. 14 edition of the Secretary of Defense Orders Book, citing anonymous sources familiar with the assessment.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Is ‘Monday Night Football’ on Tonight? NFL ‘MNF’ Return Date, Schedule</h4>
+                <p>Stream It Or Skip It: ‘The Last Sunrise’ on Amazon Prime Video, a Spicy Romance from the Author of the ‘After’ Franchise When Does ‘The Last Sunrise’ Movie Come Out on Prime Video? Release Date, Release Time, and Streaming Info ‘Toy Story 5’ Comes To Digital, But When Will ‘Toy Story 5’ Be Streaming on Disney Plus? ‘Mickey Mouse Clubhouse+’ Guest Star Megan Hilty Teases That She and Miley Cyrus Are “Like The Same” Now That They’ve Both Performed The “Hoedown Throwdown” ‘I Want Your Sex’ Comes to Digital, But When Will Olivia Wilde’s ‘I Want Your Sex’ Movie Be Streaming?</p>
+                <p class="source-credit">— Https://decider</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://static.foxnews.com/foxnews.com/content/uploads/2026/08/Fires.gif" alt="Lead Story Image" class="news-photo">
+                <h3>Putin unleashes new fury on Ukraine as report exposes fear hanging over war’s end</h3>
+                <p class="lead-summary"><strong class="drop-cap">S</strong>moke rises from a warehouse near Kyiv as firefighters battle a blaze following a Russian attack on Aug. 29, according to video released by Ukraine’s State Emergency Service. (Credit: Reuters .) Questions over whether the Russia-Ukraine war is entering a new phase are mounting as Kyiv endures repeated drone attacks and near-constant air raid alerts, including growing waves during daylight hours — an expansion beyond the nighttime barrages that have become grimly familiar to residents of the Ukrainian capital. Ukrainian President Volodymyr Zelenskyy said Russia launched nearly 1,500 drones over four days, more than half of them jet-powered, accusing Moscow of attempting to wear down Ukraine and its population. The attacks have repeatedly interrupted Kyiv’s metro system and daily commutes, Reuters reported Aug. 31, as residents are forced to seek shelter during daytime air raid alerts. As Ukrainians seek some semblance of normalcy at the end of the summer and prepare for the start of the school year, the relentless attacks are again sending already exhausted Kyiv residents underground.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Iceland opposes E.U. membership talks as local concerns outweigh fears of Trump</h4>
+                <p>Opponents of restarting negotiations to join the European Union argued that joining the bloc would undermine national control of fishing, farming and other top priorities.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Iran, accustomed to sanctions, cites pain of new U.S. pressure but doesn’t bend</h4>
+                <p>After decades of punitive measures on Tehran by the United States and its allies, experts said, it is unlikely the Trump administration's new sanctions will yield concessions.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Parkgoer airlifted after Batman roller coaster incident leaves man with fractures to both legs</h4>
+                <p>Video shows firefighters using safety harnesses and a tower truck to rescue passengers one by one after the Iron Shark roller coaster became stuck at Galveston’s Pleasure Pier. Panic and confusion followed at a theme park in Spain Saturday after a ride on a Batman-themed roller coaster left a visitor with fractures to both legs, according to local reports.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F08%2Fcrop-40584158_190053.jpg?quality%3D90%26strip%3Dall" alt="Lead Story Image" class="news-photo">
+                <h3>Polymarket promo code NYPMAX1: Deposit $10, get $50 for 2026 US Open tennis</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>he 2026 US Open continues on Monday, and you can get in on the action with the Polymarket promo code NYPMAX1. New users who join Polymarket by way of the Polymarket promo code NYPMAX1 can deposit $10, to get a $50 trading bonus. The bonus can be applied to any market, including the US Open, college football, or the NFL. Once the Polymarket promo code NYPMAX1 is verified at sign-up, the deposit $10, get $50 in trading bonus promo is automatically applied. In addition to the US Open, daily baseball games and upcoming college football matchups are also available for sports traders on Polymarket. You can gain instant access to the Polymarket mobile app by using the Polymarket promo code NYPMAX1: The Polymarket promo is available to eligible new users who reside in Alaska, Alabama, Arkansas, California, Colorado, Connecticut, District of Columbia, Delaware, Florida, Georgia, Hawaii, Iowa, Idaho, Indiana, Kansas, Kentucky, Louisiana, Maine, Minnesota, Missouri, Mississippi, North Carolina, North Dakota, Nebraska, New Hampshire, New Jersey, New Mexico, New York, Oklahoma, Oregon, Pennsylvania, Rhode Island, South Carolina, South Dakota, Tennessee, Texas, Utah, Virginia, Vermont, Wisconsin, West Virginia, and Wyoming. Jannik Sinner is injured, and this is Carlos Alcaraz’s first tournament since April, so don’t be surprised if we see a few shockers over the next two weeks in Queens. Americans Ben Shelton and Frances Tiafoe are in action on Monday evening and will fancy their chances for a deep run.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Lionel Messi retires from Argentina national team after his father’s death</h4>
+                <p>Lionel Messi’s final game in an Argentina shirt was this year’s World Cup Final at MetLife Stadium. The soccer legend, 39, announced on Monday that he is retiring from the national team after Argentina lost to Spain in the final, four years after he led his country to a World Cup title. He noted in his Instagram post, which featured a photo of a handwritten message across three pieces of notebook paper, that he wrote those words on July 21, two days after Argentina’s loss to Spain. Messi’s decision comes more than three weeks after his father, Jorge, died at 68 following a battle with an illness.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Whiny Red Sox announcer wants team to fight ‘bush league’ Jazz Chisholm Jr., drill Austin Wells</h4>
+                <p>Jazz Chisholm Jr. hasn’t done much to gain supporters this year — add the Red Sox to the growing list of detractors. In the midst of a 16-1 blowout on Sunday where the frustrated Red Sox were irate at the umpires for calling an apparent Ceddanne Rafaela catch a hit, Chisholm added to the frustration with the score at 7-1. Chisholm stole second and third base when Boston wasn’t holding him on as the Red Sox were mostly waving the white flag, leading the Red Sox radio broadcast to say that Chisholm “plays the game the wrong way.” Join Post Sports+ for exciting subscriber-only features, including real-time texting with Greg Joyce about the inside buzz on the Yankees.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Arsenal vs. Aston Villa prediction: Premier League soccer picks, odds, best bets</h4>
+                <p>Arsenal’s Premier League title defense got off to a flawless start in Matchweek 1. The Gunners ran rampant over Coventry City, earning every bit of their 3-0 victory over the newly promoted side. Things should get much tougher with a trip to Villa Park on Monday, but Unai Emery’s Villans looked in rough shape in a 4-0 defeat to Brighton last weekend. Is this match as straightforward as it looks on paper? Or is this a classic buy-low spot on a team that finished fourth last season? The bookies aren’t giving the home side much of a chance in this tilt. Aston Villa is a +550 underdog on the three-way moneyline at FanDuel Sportsbook, while Arsenal is ticking close to -200. That’s a wide gap considering how strong Villa were last season.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/08/931/523/olivia-rodrigo-melinda-gates.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Melinda French Gates stuns festival crowd, pledges to match Olivia Rodrigo's fundraising for $20M haul</h3>
+                <p class="lead-summary"><strong class="drop-cap">O</strong>livia Rodrigo introduced Daisy Chain Fields festival attendees to a surprise guest with a huge heart. After revealing that her inaugural music festival raised $10 million for various women-focused nonprofits, the "drivers license" singer revealed a shocking fundraising update. Before her headlining set at the event in Irvine, Rodrigo announced that Melinda French Gates would match every donation to the dollar, for a grand total of $20 million fundraised. Olivia Rodrigo introduced Melinda French Gates at her inaugural Daisy Chain Fields festival on Saturday in Irvine, Calif. (Monica Schipper) Rodrigo, who announced her first female-driven festival in June, told the crowd that she was "grateful" for each of the booked acts who performed "for free" throughout the day as she celebrated her initial $10 million fundraising effort. "I really believe that giving women the tools to decide their own futures and live healthy lives free of violence and discrimination is the most effective tool we have at changing the world for the better," Rodrigo said. "And I don’t know many people who represent that idea more than Melinda French Gates."</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Harry Styles’ MSG residency runs through Halloween. Which concert is cheapest?</h4>
+                <p>After a trio of triumphant gigs at Madison Square Garden, Harry Styles will resume his ongoing, 30-concert ‘Together Together’ residency with special guest Jamie xx at “The House That Brunson Built.” If you’d like to see the former One Direction frontman strut his stuff live, tickets are available for all of Styles’ remaining concerts from Sept. 3 through Halloween Harryween. At the time of publication, the lowest price we could find on seats for any one Garden night was $287 including fees on SeatGeek. Make sure to use promo code NYPOST10 for $10 off purchases over $250 at checkout (Editor’s Note: this discount is only valid for users’ first purchase on SeatGeek).</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Queen Camilla puts past differences with Prince Harry aside as King Charles seeks closer family ties: experts</h4>
+                <p>Why did King Charles ultimately choose Queen Camilla? Catherine Mayer, author of "Divide & Rule," breaks down the unlikely love story that changed the monarchy. Queen Camilla will put King Charles III first as the royal family navigates Prince Harry’s return to the U.K., royal experts told Fox News Digital.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Billie Eilish mocked for hosting brother Finneas O’Connell’s wedding on ‘stolen land’ after woke Grammy’s outburst</h4>
+                <p>Billie Eilish is being mocked for officiating her brother’s wedding on what she may refer to as “stolen land.” The singer, 24, hosted 29-year-old Finneas O’Connell’s marriage to longtime girlfriend Claudia Sulewski, 30, at the luxurious San Ysidro Ranch in Montecito, Calif. Saturday. But social media users were quick to point out the service took place on a region that once belonged to Native Americans. Eilish caught heat at the Grammys in February after claiming “no one is illegal on stolen land” during an anti-ICE tirade. One person wrote on X: “Was this on stolen land?” Another posted: “She is on stolen land.” Another added: “On stolen land no less.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2024/12/931/523/2-is-your-vpn-enough-without-antivirus-protection.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Fake Chrome update scam could infect your computer</h3>
+                <p class="lead-summary"><strong class="drop-cap">S</strong>mart refrigerators, cars and computers can show ads after updates, raising privacy and ownership concerns, Kurt "CyberGuy" Knutsson explains. You are browsing the web when a warning suddenly takes over the page. It says your browser needs a "Critical Update" before you can continue. It looks like Chrome. The message feels urgent. So, clicking Update may seem like the safest thing you can do. That is exactly what makes this fake Chrome update scam so convincing. Recent reports linked aggressive fake browser update warnings to a Chrome extension called Enable Right Click & Copy - Smart Unlock + OCR. The extension was originally developed as a legitimate tool for restoring right-click and copying features on websites that block them. However, security researchers at Socket now say the extension was later acquired by a threat actor and updated with malicious functionality. It had around 70,000 users when that malicious functionality appeared, although researchers caution that this does not mean every user received the malicious version. The extension was delisted from the Chrome Web Store on Aug. 14 after being flagged as potentially malicious. Fake Google Chrome update prompts may appear on normal websites and urge users to download unfamiliar files instead of updating through Chrome itself. (David Paul Morris/Bloomberg via Getty Images) The bigger lesson goes beyond one extension. Something you installed months ago and trusted every day can change after an update. Here's how this fake Chrome update scam works, how to spot the warning signs and what you can do to protect your browser and computer. Our free CyberGuy LIVE class, Protect Your Money From Today’s Biggest Threats, has ended, but you can still watch the full replay and download our financial protection checklist. Kurt "CyberGuy" Knutsson walks you through five simple ways to help defend yourself against AI scams, fraud, identity theft and financial hacks. You’ll learn how to set up bank alerts, strengthen your account logins, protect your phone number, freeze your credit and help secure your retirement savings against unauthorized transfers. No technical experience is needed.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Kalshi bans former GOP congressman George Santos for life</h4>
+                <p>Santos received the prediction market platform’s first-ever lifetime ban for failing to comply with its investigation, the company said.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Chatbots got safer but will still role-play self-harm with users</h4>
+                <p>A study that staged more than 50,000 conversations with AI chatbots found that they will help users role-play or write stories about their suicide or death.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Amazon makes Alexa+ free on compatible Fire TVs</h4>
+                <p>Daniel Rausch, Amazon Alexa & Echo VP, highlights the transformative AI overhaul of Alexa, now called Alexa+. He reveals how the new system, including "Alexa for Shopping", boosts customer engagement three-fold by automating deal alerts and managing daily tasks.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
