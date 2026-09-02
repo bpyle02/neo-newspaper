@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>TUESDAY, SEPTEMBER 01, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/09/931/523/bob-good-2024-march.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Ex-House Freedom Caucus chair says GOP isn't 'a conservative party anymore,' but Democrats are 'worse'</h3>
+                <p class="lead-summary"><strong class="drop-cap">F</strong>ormer Rep. Bob Good, who during part of his congressional tenure chaired the House Freedom Caucus, indicated that the Republican Party is not "a conservative party anymore." Former Rep. Bob Good, who chaired the House Freedom Caucus during part of his congressional tenure, recently told Fox News Digital that the GOP is not, based on "any standard of measurement, a conservative party anymore." "Republicans have kind of been Democrat-lite in their policies" for "nearly two years," Good, who lost a 2024 GOP U.S. House primary in Virginia to a challenger backed by then-former President Donald Trump, told Fox News Digital during an interview on Friday. Republicans have held the majority in both chambers of Congress so far throughout Trump's second term. But Good suggested that during the last "year and a half, 19 months or so," they "have massively squandered the opportunity that was given to them by the voters." "We've taken the debt to $40 trillion. We've added new entitlement programs like Trump accounts," Good said. He pointed to "government taking ownership stakes in private companies," adding, "We haven't made the case for why we're in a war that's lasted over six months now." Then-U.S. Rep. Bob Good, R-Va., then-Chairman of the House Freedom Caucus, speaks at a press conference on the government funding bill at the U.S. Capitol on March 22, 2024 in Washington, D.C. (Kevin Dietsch/Getty Images) "I think he suspects that spending cuts and spending reforms aren't particularly popular," the former congressman told Fox News Digital. "And I think wants to be popular." Republican National Committee spokeswoman Emma Hall said in a statement to Fox News Digital on Monday, "President Trump and Republicans are delivering America First results every day — and it’s why we’ll defy history and win in November. No one is interested in advice from certified loser Bob Good." White House spokesman Kush Desai declared in a statement provided to Fox News Digital, "President Trump was given a resounding mandate by the American people to smash Washington, D.C.’s obsession with consensus orthodoxy that has let Americans down. The Trump administration is turning the page on Joe Biden’s economic disaster by implementing traditional free market policies that do work — like deregulation and tax cuts — while rectifying longtime America Last policies that have left Americans behind."</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Bob Brooks Has a Troubling Financial History, and He's Ducking Debates to Hide This From Voters</h4>
+                <p>In July, Townhall reported that Bob Brooks, the Democrat running for the House in Pennsylvania's 7th Congressional District, has a history of financial troubles. That report stems from suspicious donations sent to his campaign and ongoing litigation over property transferred to his current wife to avoid paying his former in-laws a $130,000 debt. But it seems that's not the only financial trouble Brooks has had. In fact, court records show multiple financial issues, including foreclosures, liens, and debt collections. On June 16, 2004, Blue Eagle Custom Builders, Inc. filed a lien naming Robert Brooks in Northampton County Court. That lien was released the same day. The reason for the lien's release is unclear. But in October 2005, Brooks filed a lawsuit against Blue Eagle Custom Builders, Inc. That case was disposed in 2007.</p>
+                <p class="source-credit">— Townhall</p>
+            </div>
+            <div class="story-minor">
+                <h4>The Federalist’s Guide To The 2026 Supreme Court Term</h4>
+                <p>Here is a breakdown of the biggest legal battles set to be argued before the Supreme Court during its 2026-2027 term. Another summer has come and gone, which means that the U.S. Supreme Court is gearing up for yet another blockbuster term. Like those before it, this year’s docket is piling up with cases touching on some of the biggest policy issues in American society. From religious liberty to parental rights, here is a breakdown of the biggest legal battles set to be argued before the high court during its 2026-2027 term. This case dates back to early 2018, when the city of Boulder and Boulder County Commissioners sued three Suncor Energy businesses and the Exxon Mobil Corporation.</p>
+                <p class="source-credit">— The Federalist</p>
+            </div>
+            <div class="story-minor">
+                <h4>Thanks to Lake Ontario, MapQuest is popular all over again</h4>
+                <p>As of Tuesday, the 30-year-old navigation tool was Apple’s No. 1 free app after the company rebuffed an executive order renaming the Great Lake.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/04/931/523/sudan-iran-ship-red-sea.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Trump says Iran is ‘DEAD’ — experts point to the real sign Tehran is nearing the brink</h3>
+                <p class="lead-summary"><strong class="drop-cap">M</strong>iad Maleki, senior fellow at the Foundation for Defense of Democracies, tells Fox News Digital that mounting economic pressure could push Iran to escalate in an effort to force Washington back to the negotiating table. Photos credit: Reuters/Getty President Donald Trump declared Iran a "Failed Nation" Monday, claiming the country is economically and militarily broken as renewed fighting with the U.S. raises questions about how much leverage Tehran still has left. "Iran is officially a Failed Nation. IT IS DEAD!" Trump wrote on Truth Social Monday morning. "They have no Navy, they have no Air Force, they have no currency, they are not paying their soldiers or police." Trump also claimed Iranian inflation had reached 300% and said the country's leadership was "in total disarray and incapable of properly representing the country." Iran is facing pressure from nearly every direction — renewed U.S. military strikes, tighter sanctions and a steep drop in oil exports — raising fresh questions about how long Tehran can keep absorbing the economic pain and still maintain leverage against Washington.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Canadian special elections indicate voters backing Carney’s stand against Trump</h4>
+                <p>Prime Minister Mark Carney had vowed to match U.S. tariffs "dollar for dollar," unlike other longtime U.S. partners who had raced to cut deals when faced with tariff threats.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Roughly 80 Americans still unaccounted for after Himalayan disaster kills 903, officials say</h4>
+                <p>Isha Foundation coordination leader Jyoti Jankowski discusses efforts to locate the missing people in the deadly Nepal-Tibet floods on 'Fox & Friends Weekend.' Roughly 80 Americans remain unaccounted for following the catastrophic Himalayan flood last Wednesday that killed hundreds of people, the State Department said.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Trump said his deal with Venezuela would lower gas prices. Will it?</h4>
+                <p>It is likely to be years before oil production meaningfully ramps up, industry experts say, and there are many risks involved.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F09%2Fnewspress-collage-43y3k4ggx-1788237145427.jpg?quality%3D90%26strip%3Dall%261788222810" alt="Lead Story Image" class="news-photo">
+                <h3>The Post’s college football 2026 Heisman watch: CJ Carr, Arch Manning lead deep field</h3>
+                <p class="lead-summary"><strong class="drop-cap">O</strong>ur pick to win the award, Carr had a terrific first season under center last fall, throwing for 2,741 yards and 24 touchdowns, and completing 66.6 percent of his passes. He has elite receivers in Jordan Faison and Jaden Greathouse, and will be given more responsibility after being overshadowed by star running backs Jeremiyah Love and Jadarian Price a year ago. Over his final seven games of last season, Manning threw for 1,846 yards with 14 touchdowns and just two interceptions while completing 60.3 percent of his passes. He is surrounded by top-tier talent, from wide receivers Ryan Wingo and Cam Coleman to running backs Raleek Brown and Hollywood Smothers and a strong offensive line. Plus, he has the experience of last year, which should serve Eli and Peyton Manning’s nephew well. Years ago, Moore’s decision to pass on being a top-three NFL draft pick would’ve been unheard of. Rather than go pro, he returned to Oregon, and is expected to be one of the sport’s top players regardless of position as a redshirt junior. Can he improve upon his 30-touchdown, 3,565-yard campaign to be the Ducks’ second Heisman Trophy winner (Marcus Mariota, 2014)? The former Division II star started last fall as the backup, took over in mid-September and proceeded to lead Ole Miss to a program-record 13 wins and a berth in the College Football Playoff semifinals. After Chambliss won a lawsuit for an extra year of eligibility, expectations are as high for the dual-threat signal-caller as Ole Miss fans’ blood pressure when the name Lane Kiffin is uttered.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Ranking The 10 Best 2027 NFL Draft Prospects — Who Aren't Quarterbacks</h4>
+                <p>No one knows for sure how things might change during the upcoming college football season, but early indications are that the 2027 NFL Draft will be the strongest in years. Quarterbacks — such as Texas’ Arch Manning, Oregon’s Dante Moore and Ohio State's Julian Sayin — have dominated the early buzz because, well, they’re quarterbacks brimming with talent and potential. But the beauty of next year's draft class is that it could offer several franchise-altering prospects at other positions, as well.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>2026 NFL season-long player prop picks: De’Zhaun Stribling, Chris Godwin, Chuba Hubbard bets</h4>
+                <p>With the 2026 NFL season just around the corner, there’s still value to be found in the season-long player prop market. Stribling has been one of the more impressive rookies throughout training camp and the preseason, putting himself in position to earn a significant role in San Francisco’s passing game. He doesn’t need huge volume to clear this number, but it appears he may get plenty of looks anyway. In his first preseason game, Stribling brought in seven passes on eight targets for 63 yards. Stribling would later haul in two touchdown passes during a joint practice, proving that he’s becoming a favorite of Brock Purdy’s.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>NFL Catchup: Cowboys Release Milton, Tunsil Goes on IR And Nabers Injury Update</h4>
+                <p>Following initial 53-man roster cutdowns, NFL teams continued adjusting their active rosters through waiver claims, injury designations and more Monday. The Dallas Cowboys made a surprise roster move in their quarterback room by waiving Joe Milton, leaving Sam Howell as the backup to Dak Prescott despite Milton's preseason performances. Meanwhile, the Washington Commanders placed left tackle Laremy Tunsil on injured reserve Monday.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F08%2F139116622.jpg?quality%3D90%26strip%3Dall" alt="Lead Story Image" class="news-photo">
+                <h3>Americans’ favorite film president is a Brit — and it’s not even close: poll</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>he Yanks picked London-born Daniel Day-Lewis’ portrayal of Abraham Lincoln in the Steven Spielberg biopic “Lincoln” as the best on-screen depiction of a US commander-in-chief, according to a new poll. The bloody surprising survey by the Foundations of Freedom found that 27% of Americans thought the three-time Academy Award winning actor’s Oscar-winning turn as Honest Abe in 2012 was No. 1 — and it wasn’t even close. The late Robin Williams’ turn as Teddy Roosevelt in 2006’s “Night At The Museum” was a distant second with 14%, while Dennis Quaid’s portrayal of Ronald Reagan in the 2024 film “Reagan” came in third with 11%, according to the poll. Reagan, an actor himself before he became the 40th president, was the only on-screen commander-in-chief to come in the Republican-dominated Top 10 twice, with Jeff Daniels’ portrayal of the Gipper in the recently released “The Brink of War” coming in fourth place, the poll showed. “Movies are an important part of telling the story of who we are and there have been some fine portrayals of American presidents over the years,” said Dave Dias, CEO of Foundations of Freedom, a group that promotes freedom values through education, collaboration, and community contributions. “We hope that in the coming years there will be even more stories about our presidents so that we can keep the memory of what they did for our country alive,” Dias added.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Meghan Markle’s UK return poses Palace control ‘nightmare,’ expert warns</h4>
+                <p>Fox News correspondent Natalie Chuck has the latest on Prince Harry, Meghan Markle and family officially moving back to the U.K. on The Story. Meghan Markle is returning to Britain with more independence than she had as a working royal, an arrangement experts say could test Buckingham Palace's boundaries.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>What do the cheapest last-minute Eric Clapton tickets cost?</h4>
+                <p>The former Blind Faith guitarist has six solo shows with special guest Jimmie Vaughan, two festival dates and a single, special, star-studded celebratory concert lined up at venues all over North America this next month. His brief run comes to a close with a stop at NYC’s Radio City Music Hall on Thursday, Oct. 1. At that show, Clapton and big names like John Mayer, Billy Gibbons of ZZ Top and Joe Bonamassa will ring in Buddy Guy’s 90th birthday along with other blues luminaries  and more. If you’d like to see the tireless Rock Hall of Famer on his annual late summer/early fall jaunt, last-minute tickets are still available for all eight gigs on Clapton’s calendar.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Trump calls Hollywood a 'total disaster,' pushes federal tax incentive for film after meeting with Jon Voight</h4>
+                <p>The commander-in-chief admitted he had a "great and very interesting meeting" with the "movie legend," who he appointed to a special envoy in 2025 which includes Mel Gibson and Sylvester Stallone. "He is a fantastic man who loves our Country, and feels strongly about the Motion Picture and Television Industry," Trump shared on his Truth Social platform.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2024/12/931/523/2-is-your-vpn-enough-without-antivirus-protection.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Fake Chrome update scam could infect your computer</h3>
+                <p class="lead-summary"><strong class="drop-cap">S</strong>mart refrigerators, cars and computers can show ads after updates, raising privacy and ownership concerns, Kurt "CyberGuy" Knutsson explains. You are browsing the web when a warning suddenly takes over the page. It says your browser needs a "Critical Update" before you can continue. It looks like Chrome. The message feels urgent. So, clicking Update may seem like the safest thing you can do. That is exactly what makes this fake Chrome update scam so convincing. Recent reports linked aggressive fake browser update warnings to a Chrome extension called Enable Right Click & Copy - Smart Unlock + OCR. The extension was originally developed as a legitimate tool for restoring right-click and copying features on websites that block them. However, security researchers at Socket now say the extension was later acquired by a threat actor and updated with malicious functionality. It had around 70,000 users when that malicious functionality appeared, although researchers caution that this does not mean every user received the malicious version. The extension was delisted from the Chrome Web Store on Aug. 14 after being flagged as potentially malicious. Fake Google Chrome update prompts may appear on normal websites and urge users to download unfamiliar files instead of updating through Chrome itself. (David Paul Morris/Bloomberg via Getty Images) The bigger lesson goes beyond one extension. Something you installed months ago and trusted every day can change after an update. Here's how this fake Chrome update scam works, how to spot the warning signs and what you can do to protect your browser and computer. Our free CyberGuy LIVE class, Protect Your Money From Today’s Biggest Threats, has ended, but you can still watch the full replay and download our financial protection checklist. Kurt "CyberGuy" Knutsson walks you through five simple ways to help defend yourself against AI scams, fraud, identity theft and financial hacks. You’ll learn how to set up bank alerts, strengthen your account logins, protect your phone number, freeze your credit and help secure your retirement savings against unauthorized transfers. No technical experience is needed.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Trump says voters who oppose data centers will ‘kill the Golden Goose’</h4>
+                <p>The president defends the server farms as polling shows sizable shares of Americans from both political parties are opposed to them.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Chatbots got safer but will still role-play self-harm with users</h4>
+                <p>A study that staged more than 50,000 conversations with AI chatbots found that they will help users role-play or write stories about their suicide or death.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Kalshi bans former GOP congressman George Santos for life</h4>
+                <p>Santos received the prediction market platform’s first-ever lifetime ban for failing to comply with its investigation, the company said.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
