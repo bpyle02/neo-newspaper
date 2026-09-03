@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>WEDNESDAY, SEPTEMBER 02, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/09/931/523/Carney_Trump.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Canadian PM tells Trump to 'stop trying to be tough' in trade fight</h3>
+                <p class="lead-summary"><strong class="drop-cap">C</strong>anadian Prime Minister Mark Carney said that trade negotiations between the U.S. and Canada, which he suspended on Aug. 21, will only resume "when the Americans stop doing memes, stop throwing shade, stop trying to be tough, and start being serious." Credit: Reuters. Canadian Prime Minister Mark Carney said Monday that Americans need to "stop trying to be tough" during the countries' contentious trade negotiations. Speaking to reporters in Ottawa about U.S.-Canadian trade negotiations over automobile tariffs, Carney said, "when the Americans stop doing memes, stop throwing shade, stop trying to be tough, and start being serious about having those discussions, we can have those discussions." After Canada suspended trade talks on Aug. 21, Trump signed an executive order changing the name of Lake Ontario, which is bordered by New York and Canada's Ontario province, to Lake America. President Donald Trump signs an executive order to rename Lake Ontario as "Lake America" during an event in the Oval Office of the White House on Aug. 27, 2026, in Washington, D.C., amid an ongoing trade war between the U.S. and Canada. (Getty Images) Treasury Secretary Scott Bessent and War Secretary Pete Hegseth also mocked Canada in social media posts, with Bessent writing that Canada could not go "tit-for-tat" with America's economy and Hegseth posting a photo of two female Canadian military members with the caption "this is real." When asked to comment on U.S. Cabinet secretaries mocking the Canadian military, Carney responded, "It's beneath their office." Carney cited both the U.S. posture and its terms in negotiations and barriers to reaching a deal. TRUMP TRADE CHIEF WARNS CANADA WALKED AWAY FROM 'THE BEST DEAL' TO TRIGGER 50% U.S. TARIFFS "The issues with respect to language and culture — enough to not have to deal. The issues Mr. Gray just asked about, with respect to restrictions on future trade deals, restrictions on our sovereignty — enough not to have a deal. Issues with respect to locking in an uncompetitive, trade arrangement in our key industries, automobiles being one of them — enough to not have a trade deal," he continued.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>American Journalist Gets Prison Time After Working As Agent Of CCP</h4>
+                <p>An American journalist will spend two years in prison for his role in a scheme orchestrated by a Chinese intelligence officer to steal classified information from the United States government. Thomas Pauken II was convicted in June 2026 after he admitted to working as an unregistered agent for China from 2019 to 2026. Pauken, who wrote for Chinese state media outlet Xinhua News, worked closely with a person tied to China’s Ministry of State Security. “Pauken exploited his U.S. citizenship and corresponding ability to travel to the U.S. without restriction in order to support Chinese Ministry of State Security (MSS) operations, recruiting, and gathering of sensitive information from potential assets,” said Assistant Attorney General for National Security John Eisenberg. “Pauken betrayed his country for money.</p>
+                <p class="source-credit">— Daily Wire</p>
+            </div>
+            <div class="story-minor">
+                <h4>Taco Bell’s nostalgic new $4 dessert combines several popular sweets in one</h4>
+                <p>Taco Bell is catering to nostalgic Tex-Mex fans by introducing a brand new ice cream taco for a limited time. Created in collaboration with Oregon-based ice-cream company Salt & Straw, the Churro Ice Cream Taco ($3.99) features a taco-shaped waffle cone filled with churro ice, per a recent press release. This crispy carapace is finished with dark chocolate that’s studded with puffed rice for a crunchy finish. Taco Bell hopes this throwback treat will replicate the success of last year’s Tacolate, the cult-classic hybrid that entailed a waffle cone taco shell stuffed with cinnamon ancho chili ice cream, and baptized in chocolate and toasted brown rice.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>The Vindication of Tom Homan</h4>
+                <p>Trump’s border czar was never waving the white flag on enforcement, and now he has the numbers to prove it.</p>
+                <p class="source-credit">— National Review</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/09/931/523/Bali-fire-3.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Raging inferno erupts at Bali beachside restaurant party</h3>
+                <p class="lead-summary"><strong class="drop-cap">F</strong>lames consume the Chez Gado-Gado restaurant in Bali, Indonesia, during a fire that broke out on Sunday, Aug. 30, 2026. (Credit: Chrissy Lomas via Storyful) A beachside party in Bali, Indonesia, erupted into chaos after a balloon reportedly exploded inside a popular restaurant, sparking a raging inferno. Videos captured flames ripping through the Chez Gado-Gado restaurant in the Seminyak resort area during the incident Sunday, which left an Australian teenager hospitalized with burns, according to 7News. "There was a 70th birthday, and they had two balloons on their table and a waitress went to light the candle on the birthday cake, but she lit it a bit too close to the balloon," Tara Borelli, a witness from Sydney, told News.com.au. "It popped, then exploded. We felt the heat from the pop." "I just grabbed my daughter and little cousin and ran straight onto the beach towards the water," Borelli added, describing how the straw roof of the restaurant immediately caught fire and "within minutes" the entire restaurant was ablaze. Flames consume the Chez Gado-Gado restaurant in Bali, Indonesia, during a fire that broke out on Sunday, Aug. 30, 2026.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>USS Abraham Lincoln docks in Thailand after 9 months at sea</h4>
+                <p>The crew will get a chance to “rest and recharge” in the beach destination of Pattaya, after reports of deteriorating conditions aboard the aircraft carrier.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Explosion near German train station injures 2 Ukrainian citizens</h4>
+                <p>An explosion at a train station in Germany injured two people, both Ukrainian citizens, on Wednesday. An explosion at a train station in Germany injured two people, both Ukrainian citizens, on Wednesday. Police say they found a suspicious package following the explosion and ordered the Augsburg train station closed. The package was ultimately found to be harmless and trains began running again at 10 a.m. local time. The victims in the explosion were a 17-year-old girl and an 18-year-old man, neither of whom have been identified.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Russia’s jet-powered drones are overwhelming Ukraine’s air defenses</h4>
+                <p>Russia is pounding Ukraine with jet-propelled drones, forcing Kyiv to adapt once again in an arms race that is increasingly defining the war.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F09%2Fnewspress-collage-x494hxr4h-1788278757798.jpg?quality%3D90%26strip%3Dall%261788264424" alt="Lead Story Image" class="news-photo">
+                <h3>Fanatics Sportsbook promo code NYPOST26: Get up to $1,000 matched in FanCash for US Open 2026 Wednesday</h3>
+                <p class="lead-summary"><strong class="drop-cap">I</strong>f you’re new to tennis betting, sign up at Fanatics Sportsbook using the Fanatics Sportsbook promo code NYPOST26 to get up to $1,000 matched in FanCash! US Open action picks up on Wednesday, with a slew of matchups across both the men’s and women’s brackets of the annual Grand Slam event in Flushing, Queens. New users can enter the Fanatics Sportsbook promo code NYPOST26 to get up to $1,000 matched in FanCash upon registration for any of the featured betting markets on the sportsbook. For those interested in September’s sports schedule, including tennis, football, international soccer, and women’s basketball, this is an excellent way to kick off the month. Each day, you can place bets of up to $100 on any event. If your bet loses, Fanatics will reimburse you with FanCash. This offer is available in the following states: Arizona, Colorado, Connecticut, Iowa, Illinois, Indiana, Kansas, Kentucky, Louisiana, Massachusetts, Maryland, Michigan, Missouri, North Carolina, New Jersey, New York, Ohio, Pennsylvania, Tennessee, Virginia, Vermont, Washington D.C., West Virginia, and Wyoming. Defending champion Carlos Alcaraz highlights the men’s singles slate, as he’ll take on Jaime Faria while Aryna Sabalenka also gears up for her Round 2 match against Polina Iatcenko. Alcaraz enters Wednesday as the +175 betting favorite to repeat as the Men’s singles champion, and Sabalenka carries +325 odds to capture the Women’s singles crown.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Dodgers Activate Will Smith, Justin Wrobleski And Dalton Rushing From IL</h4>
+                <p>The Dodgers announced on Tuesday afternoon that they've activated catchers Will Smith and Dalton Rushing and left-hander Justin Wrobleski from the injured list. They also added infielder Alex Freeland to the MLB roster. To make room on the roster for the aforementioned returnees, the Dodgers sent outfielder Alek Thomas and catcher Ben Rortvedt — whom they acquired from the New York Mets before the MLB trade deadline — to Triple-A Oklahoma City.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Travis Kelce reveals ‘best f–king person’ at Taylor Swift wedding as he shares new details on big night</h4>
+                <p>Travis Kelce shared a special thank you to Adam Sandler for officiating his and Taylor Swift’s July 3 wedding at Madison Square Garden in New York City. During the Season 5 premiere of the “New Heights” podcast, the Chiefs’ tight end pulled back the curtain on the actor’s role in “the biggest night in both of our lives.” “I can’t say thank you to everyone without giving a special thank you to the Adam Sandler. He’s been just the best f–king person on this planet,” said Kelce, who made a cameo in Sandler’s “Happy Gilmore 2.” “For him to be up to getting ordained in the state of New York to marry me and Taylor. And the way he did it, in the very Sand man style and giving us more than we could have ever imaged in that moment knowing it was the biggest night of both of our lives.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Giants Reveal Odell Beckham Jr. Wearing No. 13 Again</h4>
+                <p>Beckham will wear No. 13, which he wore in his first stint with the franchise from 2014-18, for the Giants this season, the team announced on Tuesday afternoon. The 33-year-old wide receiver wore No. 3 over the summer, but he had to pick a different number for the regular season, as second-year linebacker Abdul Carter, whom New York selected with the No. 3 pick in the 2025 NFL Draft out of Penn State, changed his number to No. 3 prior to Beckham signing a one-year deal with the Giants in June. For Beckham to wear No. 13, fourth-year receiver Jalin Hyatt had to give up the number, which he had worn his entire NFL career (2023-25).</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F09%2F139200736.jpg?quality%3D90%26strip%3Dall" alt="Lead Story Image" class="news-photo">
+                <h3>I died during childbirth — doctors performed a postmortem C-section before bringing me back to life</h3>
+                <p class="lead-summary"><strong class="drop-cap">W</strong>hat should have been one of the happiest moments of a couple’s lives quickly turned into an unimaginable medical nightmare. Nicole and Anthony were thrilled to be welcoming their third baby when Nicole began documenting the moment for her unborn child. “Hey baby number three. We’re in the hospital,” said Nicole in a video she was recording. “Can’t wait to see you.” Not long after, Nicole began to feel nauseous and hot, she recalls in an exclusive clip from tonight’s new episode of TLC reality medical series “ER: Caught On Camera,” airing at 9 pm. “I felt an overwhelming sense of doom just come over my body,” she said. “I remember saying I can’t breathe. I can’t breathe. And, and that was the last thing I remember.” Just 10 minutes after recording the video, Nicole suddenly and mysteriously flatlined while in labor on the delivery table and was quickly pronounced her dead. “And I just said, ‘What the hell just happened to my wife,'” he said. “That’s when they said, ‘Your wife has coded. She’s technically expired.'” Determined to save their baby, doctors rushed Nicole to the operating room and performed a postmortem C-section. Anthony was left frozen in the delivery room, petrified at the possibility of becoming a single dad — a thought that had never crossed his mind before. But doctors weren’t just fighting to save the baby. They were also working to bring Nicole back to life.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Prince William, Kate Middleton face 'Sussex circus' as Prince George prepares for Eton: expert</h4>
+                <p>Fox News contributor Raymond Arroyo discusses Prince Harry and Meghan Markle returning to the United Kingdom on 'The Ingraham Angle.' While Prince William and Princess Kate's attention is focused on Prince George's approaching move to Eton, Prince Harry and Duchess Meghan's return to the U.K. could introduce a new source of family tension, according to royal experts.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Fury as Dolly Parton’s star on Hollywood Walk of Fame is vandalized a week after her death</h4>
+                <p>Dolly Parton’s star on the Hollywood Walk of Fame has been vandalized a week after her death. Fans of the country megastar swarmed Hollywood Boulevard last week, turning the site into a tear-soaked shrine after she died aged 80. Visitors paying their respects Monday noticed the flowers had been stolen and that deep scratches were gouged directly across her name on the brass inlay. “Dolly’s star already had cracks in it, and the chamber had scheduled it to be repaired Tuesday,” Ana Martinez, a spokesman for the Hollywood Chamber of Commerce told TMZ. Martinez added it was a fan who stole the flowers and left scratches on the star.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>‘Wheel of Fortune’ announcer Jim Thornton suspended as Sony investigates allegations</h4>
+                <p>As a former player himself, the host told Fox News Digital he has 'so much empathy' for the contestants. "We have recently been made aware of allegations concerning Jim Thornton. He has been suspended from Wheel of Fortune, and we are recasting while we conduct a thorough investigation," a spokesperson for Sony Pictures Television Studios told Fox News Digital.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/09/931/523/lax-uber-pickup.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Uber lets parents watch teen rides live</h3>
+                <p class="lead-summary"><strong class="drop-cap">S</strong>chool, soccer practice, a shift at work or a friend's house. Teens have places to go, and parents can't always be there for every ride. Uber is giving families a new way to check in. The company is adding live video streaming to Uber Teen Accounts, allowing a linked parent or guardian to see their teen inside the vehicle during an active ride. The feed comes from the front-facing camera on the driver's smartphone. Uber says the feature is live now in nine U.S. markets. Uber plans a nationwide rollout over the coming weeks. If you have a teen who uses Uber, the idea may sound reassuring. However, a live camera inside the car also raises privacy questions. Who can watch? Does Uber see the stream? What happens to the video after the ride? Uber gave CyberGuy more detail on exactly how the feature works. Our free CyberGuy LIVE class, Protect Your Money From Today's Biggest Threats, has ended, but you can still watch the full replay and download our financial protection checklist. Kurt "CyberGuy" Knutsson walks you through five simple ways to help defend yourself against AI scams, fraud, identity theft and financial hacks. You’ll learn how to set up bank alerts, strengthen your account logins, protect your phone number, freeze your credit and help secure your retirement savings against unauthorized transfers. No technical experience is needed. HOUSTON UBER DRIVER CAUGHT IN WILD POLICE CHASE AS OFFICERS SEEN ON DASHCAM VIDEO HITCHING A RIDE IN HIS CAR Uber is adding live video to Teen Accounts, allowing linked parents or guardians to check on teens during active rides. (Klaudia Radecka/NurPhoto via Getty Images) Uber launched Teen Accounts in 2023 to give teenagers more independence while keeping their rides connected to a parent or guardian. Now, live video adds another option for families who want more visibility during a trip. If a driver has live video enabled, Uber sends a push notification to the parent or guardian linked to the teen's account when the ride begins. The parent can tap the notification and watch the live feed through the driver's front-facing smartphone camera.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Palantir CEO sets sights on Ukraine as next target</h4>
+                <p>The venture intends to be a company that leverages the lessons Ukrainians have learned from their war with Russia, and turn it into technology available in Ukraine and other countries.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>What a smart firewall does and why it matters on home Wi-Fi</h4>
+                <p>Kurt "CyberGuy" Knutsson warned of worrying privacy clauses in smart devices in a recent episode of the "Beyond Connected" podcast. Most of us think of home Wi-Fi as the invisible connection that lets a laptop stream a movie, a phone display photos and a printer work from across the room. In practice, it is also the meeting point for many devices, accounts and types of information. A typical home network may include computers, phones, tablets, smart speakers, televisions, cameras, printers and connected appliances. These devices regularly send and receive data.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Who is John Ternus, Apple’s new CEO?</h4>
+                <p>The veteran hardware executive takes over as the $4.7 trillion company has struggled to compete with rivals in artificial intelligence.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
