@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>FRIDAY, SEPTEMBER 04, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://www.theblaze.com/media-library/flock-doesnt-care-if-youre-innocent.jpg?id=67724677&width=980" alt="Lead Story Image" class="news-photo">
+                <h3>Flock doesn’t care if you’re innocent</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>he cameras record everyone who passes. Police should need a warrant before turning that mass collection into a searchable history of your movements. Cities and states are moving quickly in response to concerns about governments’ expanding use of public surveillance cameras, automated license plate readers, audio detection devices, and similar tools. That is healthy. The country needs a serious debate over when crime prevention becomes pervasive surveillance. Flock Safety says its AI-assisted network includes more than 120,000 cameras in 49 states and processes some 20 billion license plates each month, along with other vehicle characteristics. Public resistance has grown just as quickly. The debate is overdue. Voters should decide how much surveillance they are willing to tolerate before the cameras decide for them. On Monday, the Douglas, Massachusetts, Police Department announced it was discontinuing Flock cameras and immediately deactivated its monitoring accounts, citing a “divisive atmosphere” around the technology, Boston 25 News reported. Other communities have restricted, suspended, or removed the cameras in Arizona, Florida, Kentucky, Massachusetts, and Wisconsin. Similar fights are under way in Louisiana, Michigan, Minnesota, and New York. Congress has joined the fight. “Flock cameras are emerging as a rare area of bipartisan agreement on Capitol Hill,” Axios reports. Rep. Tim Burchett (R-Tenn.) and two other House Republicans introduced a bill last month to bar the federal government from buying Flock cameras or similar technology. Flock emphasizes that its customers own the data, control access, and choose whom to share it with. Those customers are governments. That places responsibility where it belongs: on public officials who deploy the systems, and ultimately on voters who elect them. Critics are right to worry that mass license-plate collection can become a surveillance system for people who have not been accused of any crime. AI dramatically expands what authorities can infer from otherwise ordinary observations by making huge quantities of location data searchable, sortable, and easy to combine. Promises about retention limits deserve skepticism. Americans have already seen the National Security Agency spy on the American people under programs justified in the name of national security. The problem is not that every surveillance tool will be abused. It is that centralized databases make abuse much easier when safeguards fail.</p>
+                <p class="source-credit">— The Blaze</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Why Hollywood Has No Successors For Dolly, Curry, Or Cullen</h4>
+                <p>Thank God movies and records made Dolly, Curry, and Cullen immortal — because the odds are not in our favor that we will see the likes of their entertainment for a while. Last week was a harsh one for culture lovers. In less than 48 hours, we lost a trio of titans. Dolly Parton’s death was obviously the hardest blow. She wasn’t just a gifted country music singer. She wasn’t even a star. She was an icon, an embodiment of America, as much as John Wayne. For his part, Tim Curry was one of the last of the old-school character actors like Roddy McDowall and Joseph Calleia, a man who could play opposite Kermit the Frog or Sean Connery and fit perfectly, regardless of genre. Peter Cullen was probably the least known of the three, but multiple generations loved him as the life force of the heroic Optimus Prime in multiple incarnations of Transformers. His return to voice Optimus was a major reason why Michael Bay’s big-screen adaptations of Transformers succeeded.</p>
+                <p class="source-credit">— The Federalist</p>
+            </div>
+            <div class="story-minor">
+                <h4>Red State Supreme Court Deals Blow To House Republicans Ahead Of Midterms</h4>
+                <p>Republicans’ fight to retain control of Congress took a hit on Thursday after Missouri’s top court struck down the state’s GOP-friendly election map just weeks before Americans go to the polls. The Missouri Supreme Court struck down a map passed by the legislature last year that was expected to yield a 7-1 House seat advantage for Republicans. The court sided with a leftist group that argued the new maps need to be approved via referendum and said the GOP-favorable maps will not go into effect. “The referendum petition was legal, sufficient, and timely, and the secretary incorrectly concluded otherwise. HB 1 did not go into effect and will not go into effect unless and until approved by the voters. The congressional redistricting the General Assembly established in 2022 remains in full force and effect for the November 2026 general election,” Judge Ginger Gooch wrote in a unanimous decision.</p>
+                <p class="source-credit">— Daily Wire</p>
+            </div>
+            <div class="story-minor">
+                <h4>The Libertarian Case for the CLARITY Act</h4>
+                <p>A clean regulatory framework for digital assets is better than a messy one.</p>
+                <p class="source-credit">— National Review</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/05/931/523/trump-xi-handshake.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>US adversary turns up the heat on America’s AI lead with an underestimated edge</h3>
+                <p class="lead-summary"><strong class="drop-cap">C</strong>hina expert Gordon Chang discusses why he believes Beijing is looking to exploit US opposition to new data centers as China works to narrow America’s lead in AI infrastructure. China is racing to build the data centers and energy infrastructure needed to power artificial intelligence, raising concerns that Beijing’s ability to rapidly construct massive projects could help it get closer to America’s commanding lead in the physical infrastructure underpinning the AI race. The U.S. remains far ahead in sheer numbers. The Stanford Institute for Human-Centered Artificial Intelligence’s 2026 AI Index, using Cloudscene data, counted 5,427 U.S. data centers in 2025 compared with 449 in China. Stanford cautioned that the count does not account for differences in facility size, computing capacity or utilization. People visit the World Artificial Intelligence Conference (WAIC) in Shanghai, China, July 18, 2026. (Go Nakamura/Reuters) "We know that China is far behind, but we also know that they are moving at great speed," China expert Gordon Chang told Fox News Digital.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>After CIA director’s visit to Moscow, Putin escalates Ukraine strikes</h4>
+                <p>The rare trip by CIA chief John Ratcliff failed to persuade Putin to stop the war and may have hardened the Russian's leaders resolve to seek military victory.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>9 days after deadly Nepal floods, 2 men are rescued from tunnel</h4>
+                <p>Video shared by Nepal's authorities showed the moment a man was hauled from a tunnel. Nearly 1,300 people have died after flash floods swept through the region.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Iran prefers conflict with US over peace to suppress internal uprising, human rights activist warns</h4>
+                <p>The vulnerable regime is more afraid of widespread domestic unrest, says Dr. Majid Sadeghpour, a human rights activist and the political director of the Organization of Iranian-American Communities. Regime leaders in Iran are more content to see continued confrontation with the United States and its Gulf neighbors rather than pursuing peace in an effort to keep their disenchanted population at bay, one expert says.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/statics.foxsports.com/www.foxsports.com/content/uploads/2026/09/1200/675/sullivan1.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>After Watching World Cup, 16-Year-Old Cavan Sullivan Sets Sights On USA Call-Up</h3>
+                <p class="lead-summary"><strong class="drop-cap">1</strong>6-year-old Philadelphia Union midfielder Cavan Sullivan has his sights set on the United States men's national team, as he expressed confidence that he could make an impact in senior international matches, targeting a future call-up. Sullivan's rapid ascent up the United States soccer ladder has shaped how the teenager watches the senior national team, viewing senior team matches not just as a spectator, but as a stage he intends to reach sooner rather than later. Speaking on Alexi Lalas' State of the Union podcast, Sullivan reflected on the United States' round of 16 World Cup loss to Belgium, Sullivan expressed confidence in his ability to be an asset for the national team. "Thinking of that Belgium game, I think I could come into that game on the right side and make a difference, right? That’s just what, you have to believe in yourself, you have to think you can help your team win," Sullivan said. "It's not my team yet, but I'm obviously always dreaming and hoping call-ups." The Philadelphia Union midfielder made history at age 14, when he became not only the youngest player to appear in a Major League Soccer match, he also became the youngest player to debut in a major American or Canadian professional sports league.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Rutgers hosts sad fireworks show after embarrassing football loss to UMass</h4>
+                <p>The Scarlet Knights lost to UMass as 28.5-point favorites and apparently had a load of fireworks pre-planned to celebrate an easy season-opening victory. After the 37-21 loss, the Minutemen’s first win since October 2024 that ended a 16-game losing streak, an empty SHI Stadium was engulfed in a massive amount of fireworks. Adding insult to injury, the Scarlet Knights don’t mess around with pyrotechnics, as FOIAball reported they were the biggest spender on fireworks last season among FBS teams, totaling nearly $200,000. Teams spend big money on fireworks all the time, as FOIAball also reports that Virginia Tech also spent over $31,000 on pyrotechnics for one game last season.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Clemson Or LSU? Ole Miss Handles Louisville? Joel Klatt's Week 1 CFB Picks</h4>
+                <p>Week 1 of the 2026 college football season commences on Thursday night, kicking off a five-day slate where at least one game is played across the sport. FOX Sports' lead college football analyst, Joel Klatt, shared his picks for the biggest games of the week on the latest episode of "The Joel Klatt Podcast."</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Shilo Sanders accuser collapses in court during $11.9 million bankruptcy trial in shocking scene</h4>
+                <p>The former school security guard who sued Shilo Sanders for nearly $12 million collapsed Thursday in court in Denver during the bankruptcy trial and landed in the hospital, according to USA Today. John Darjean, who is owed $11.89 million from the son of NFL Hall of Famer and Colorado football coach Deion Sanders, reportedly testified for more than two hours and then collapsed in pain. An ambulance transported the 50-year-old Darjean to a hospital and he was discharged later in the day, per USA Today. Thursday marked the fourth day of bankruptcy trial stemming from Sanders allegedly assaulting Darjean at a Texas high school on Sept. 17, 2015.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/09/931/523/meghan-markle-prince-harry-school.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Prince Harry and Meghan Markle’s school warning letters reignite privacy battle they ‘cannot control’: experts</h3>
+                <p class="lead-summary"><strong class="drop-cap">F</strong>ox News senior foreign affairs correspondent Greg Palkot reports on Prince Harry and Meghan Markle relocating to the United Kingdom after residing in California for six years, noting that the couple plans to establish a residence outside London and enroll their children in a British school while King Charles undergoes cancer treatment. Prince Harry and Meghan Markle’s return to the United Kingdom could become their biggest privacy test yet as their children Prince Archie and Princess Lilibet begin school life in the English countryside. Last week, Markle, 45, and Harry, 41, along with their son Archie, 7, and daughter Princess Lilibet, 5, left their home in Montecito, California, for an extended stay in Britain. According to reports, the Duke and Duchess of Sussex plan to settle in the Cotswolds, an affluent countryside region in south-central England, located about two hours outside London. Archie and Lilibet are reportedly set to begin classes at a private school in the U.K., though the school has not been publicly named.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>TikTok-famous saxophonist hosts impromptu San Francisco concert before cops swoop in</h4>
+                <p>A saxophonist who’s gained a massive following on social media for playing to crowds in public spaces drew hundreds of fans to San Francisco’s iconic Palace of Fine Arts — only for officers to swoop in and shut it down. Nathanial Young, whose viral POV videos have gained him hundreds of thousands of followers on TikTok and Instagram, announced Monday that he’d be playing a one-hour performance at the location the following night. According to videos on social media, a huge crowd showed up at the pavilion to watch the performance, encircling him as he played. Some attendees reportedly climbed onto the side of buildings to watch.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Jennifer Aniston, boyfriend Jim Curtis’ chemistry shines as she reveals ‘deep fear’ during interview</h4>
+                <p>The Academy Award-winning actor shares the biggest lesson he's learned in his 13-year marriage to Camila Alves. Jennifer Aniston and boyfriend Jim Curtis’ chemistry was on full display Wednesday evening when the "Friends" star interviewed the wellness coach about his new book.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>‘Street Fighter’ star reveals intense diet and exercise regimen she used to bulk up her thighs by 2.5 inches</h4>
+                <p>The actress playing Chun-Li in the upcoming Street Fighter movie, Callina Liang, took the responsibility very seriously. “[I] strengthened my legs a lot and changed my diet drastically,” the Canadian actress told Empire magazine in August. “But it worked. By the end of the shoot, my thighs had grown six-and-a-half centimeters each.” That’s more than 2.5 inches, for the Americans keeping count. The character is regarded “the first lady of fighting games” by generations of fans, following her debut in the second Street Fighter game in 1991. Since then, she’s been a pop culture icon — take, for example, Nicki Minaj’s 2018 platinum single “Chun-Li.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/09/931/523/android-motion-sickness.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Android Motion Assist could ease car sickness on your phone</h3>
+                <p class="lead-summary"><strong class="drop-cap">I</strong>t’s Distracted Driver Awareness Month, and automakers like GM are putting a focus on high-tech solutions to keep drivers safe behind the wheel. Ever tried to answer a text from the passenger seat and felt your stomach turn before you reached the second line? For people prone to motion sickness, a phone can go from useful to unbearable fast. Google is now rolling out a great Android tool designed to make that screen easier to tolerate while the vehicle moves. It is called Motion Assist, and it places animated dots around the edges of your screen that react to the motion of the vehicle. Apple has offered a similar feature, Vehicle Motion Cues, since iOS 18 arrived in 2024. Google began working on its own version around the same time. It originally appeared under the name Motion Cues before Google renamed it Motion Assist. Now some Pixel owners are starting to see the finished feature on phones running Android 17. Our free CyberGuy LIVE class, Protect Your Money From Today’s Biggest Threats, has ended, but you can still watch the full replay and download our financial protection checklist. Kurt "CyberGuy" Knutsson walks you through five simple ways to help defend yourself against AI scams, fraud, identity theft and financial hacks. You’ll learn how to set up bank alerts, strengthen your account logins, protect your phone number, freeze your credit and help secure your retirement savings against unauthorized transfers. No technical experience is needed. Google is rolling out Motion Assist, a new Android feature that uses animated screen cues to help reduce motion sickness for passengers using their phones in moving vehicles. (NickyLloyd via Getty Images) Your eyes may tell your brain that you are sitting still and staring at a steady screen. Meanwhile, your inner ear can feel the car moving underneath you. Those mixed signals can trigger motion sickness. The CDC says it can happen when what you see does not match the movement your body feels, which can leave you nauseous or dizzy. Reading a text or scrolling through your phone can make things worse because your eyes stay focused on a screen that appears still while the car keeps moving.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Tesla’s Cybercab autonomous taxi hits the streets of Austin</h4>
+                <p>The gold-colored, driverless car features butterfly doors and a spare interior with seating for two — but no steering wheel or pedals.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>OpenAI’s president claims AI is as capable as humans now</h4>
+                <p>Greg Brockman made the claim as the company prepares to release a powerful new model to power ChatGPT.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>The privacy risk of moving to a retirement community</h4>
+                <p>Artificial intelligence is rapidly accelerating elder fraud schemes across the U.S., targeting older Americans who hold a significant share of household wealth. ScamSkeptic founder Matt Sanner joins 'America's Newsroom' to highlight how fraudsters utilize AI to mimic voices and create deepfakes. Sanner provides key strategies for families to identify these scams and protect their vulnerable loved ones.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
