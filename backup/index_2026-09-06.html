@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>SUNDAY, SEPTEMBER 06, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F09%2FGettyImages-2273334191.jpg?quality%3D90%26strip%3Dall" alt="Lead Story Image" class="news-photo">
+                <h3>Zooey Deschanel Says ‘New Girl’ Cast Was “Forced to Drive Home” After Brutal Hours on Set</h3>
+                <p class="lead-summary"><strong class="drop-cap">S</strong>tream It Or Skip It: ‘The Last Sunrise’ on Amazon Prime Video, a Spicy Romance from the Author of the ‘After’ Franchise When Does ‘The Last Sunrise’ Movie Come Out on Prime Video? Release Date, Release Time, and Streaming Info ‘Toy Story 5’ Comes To Digital, But When Will ‘Toy Story 5’ Be Streaming on Disney Plus? ‘Mickey Mouse Clubhouse+’ Guest Star Megan Hilty Teases That She and Miley Cyrus Are “Like The Same” Now That They’ve Both Performed The “Hoedown Throwdown” ‘Ted Lasso’ Season 4, Episode 5: 5 Things You May Have Missed, From A Delia Smith Reference To Chelsea Players And More The Silliest Spoof Movies Ever: Where to Stream ‘Scary Movie,’ ‘Spaceballs,’ ‘The Naked Gun,’ and More Stream It Or Skip It: ‘Jared Freid: The Family Plan’ On Netflix, On This Millennial’s Anxious Attachment To His Boomer Parents Where to Watch Julianne Moore’s Gloria Steinem Movie, ‘The Glorias,’ In Honor of the Late Feminist Icon Allison Janney On Double Emmy Nominations And Why She’s Having “The Best Time” Playing The President On ‘The Diplomat’ Stream It Or Skip It: ‘Turning Point: Generation 9/11’ on Netflix, a Gut-Wrenching Documentary About a Pivotal Moment in History Jaleel White Talks Hosting New Show ‘Totally ‘90s House,’ His Influences For Steve Urkel, and The “No-Brainer” of Taking Part in Ben Affleck’s “Good Will Dunkin'” Super Bowl Commercial Stream It Or Skip It: ‘Untold: The Testimony of Vince Young’ on Netflix, a Documentary Outlining the Trials and Tribulations of an Infamous NFL Flameout Stream It Or Skip It: ‘Mother Mary’ on VOD, a Nutty Anne Hathaway-Michaela Coel Two-Hander About Gods, Ghosts and Pop Stars Is ‘Billie Eilish – Hit Me Hard and Soft: The Tour Live in 3D’ Streaming on Netflix or Amazon Prime Video? ‘Dutton Ranch’ Season 2 Release Date Info: When Does The Second Season Of ‘Dutton Ranch’ Come Out? When Does The New Season of ‘Dutton Ranch’ Start?</p>
+                <p class="source-credit">— Https://decider</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Florida man allegedly challenges cop to fight inside hospital. Bloody mug shot tells the rest of the story.</h4>
+                <p>A newly released mug shot reveals the bloodied face of a Florida man who allegedly challenged a police officer to a fight inside a hospital. Ronald Jeffery Johnson, a 51-year-old man from Fort Lauderdale, reportedly was involved in an incident at the Broward Health Medical Center on Aug. 29. 'I physically subdued his intentional, aggressive, and violent behavior towards me, and he was taken into custody.' According to the arrest report obtained by the New York Post, Johnson allegedly was yelling at medical staff in the emergency department when an off-duty police officer in full uniform was notified of the alleged disturbance.</p>
+                <p class="source-credit">— The Blaze</p>
+            </div>
+            <div class="story-minor">
+                <h4>America’s Sailors Are Overworked — We Can Fix That</h4>
+                <p>A well-resourced Navy will lessen the burden on sailors, attract new recruits, and build the systems of tomorrow.</p>
+                <p class="source-credit">— National Review</p>
+            </div>
+            <div class="story-minor">
+                <h4>Trump is running out of time as he tries to restrict mail voting</h4>
+                <p>Two swing states are sending ballots, and other states plan to send theirs soon.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/09/931/523/saxony-anhalt-election-posters.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Anti-migrant AfD seeks to break Germany’s political ‘firewall’ in historic state election</h3>
+                <p class="lead-summary"><strong class="drop-cap">N</strong>ile Gardiner weighs in after European voters appeared to reject far-left progressive policies, leading to significant conservative gains across the continent. A political earthquake is brewing in Germany's east as working-class and young voters appear set to deliver an unprecedented victory for the far-right Alternative for Germany (AfD) party in Sunday’s state elections in Saxony-Anhalt. The AfD, which was famously backed by Elon Musk in last year’s national election, has been criticized for being pro-Russia and was accused of being a "right-wing extremist endeavor" by Germany’s domestic intelligence office, has the chance to become the first party outside the mainstream center-left Social Democratic Party (SPD) or center-right Christian Democratic Union and their Bavarian sister party, the Christian Social Union (CDU/CSU), to win an outright majority in a German state parliament, or Landtag, since World War II. "The reason Saxony-Anhalt matters," foreign policy expert and author Daniel Schatz, who holds a doctorate in political science from Berlin's Humboldt University, told Fox News Digital, "is that the AfD is no longer just knocking on the door of power. It may be close to kicking it open."</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>In rare flurry of trips, Xi pitches China as stable alternative to U.S. under Trump</h4>
+                <p>Ahead of a state dinner with President Donald Trump, China’s Xi Jinping is courting global influence.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Fighter jet crashes at air show, killing 2 pilots with thousands of spectators watching</h4>
+                <p>A Greek air force fighter jet crashed and burst into flames during an air show with thousands of spectators. (Credit: @sovva1_1 via Storyful and REUTERS). A day at an air show turned fatal Saturday when a Greek air force jet crashed north of Athens as thousands of spectators watched.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>U.S. military says it hit 3 Iranian tankers after Navy ships targeted</h4>
+                <p>U.S. Central Command said it struck an Iranian oil tanker off the coast of Kharg Island, as well as off Jask and the Gulf of Oman.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/statics.foxsports.com/www.foxsports.com/content/uploads/2026/09/1200/675/gettyimages-2293181219-e1788640923573.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Meet Josh Hoover: What To Know About New Indiana Star Quarterback</h3>
+                <p class="lead-summary"><strong class="drop-cap">"</strong>Efficient" is defined as being "productive of desired effects," especially "capable of producing desired results with little or no waste." A thesaurus says that Josh Hoover's debut for the Indiana Hoosiers suffices. Making his first start at quarterback for the defending-champion Hoosiers on Saturday afternoon against the North Texas Mean Green, Hoover threw for 231 yards and four touchdowns, posted a 285.0 passer rating and completed 81.2% of his passes (13 for 16). According to FOX Sports Research, it's the first time in the 21st century a quarterback threw for four-plus touchdowns in their first start for Indiana. "Our goal today was to come out, operate, just compete and play our game at a high level, not hurt ourselves and take advantage of the opportunities we got, and I thought we did that today," Hoover told FOX Sports Reporter Jenny Taft after the 52-16 Indiana win. "Obviously, there's going to be things to clean up, like there is every week, but I thought it was a good start for our guys. And I'm happy for everybody." Hoover, who grew up in Heath, Texas, was a consensus three-star recruit in the Class of 2022. He ranked 42nd among quarterbacks in his class, per 247Sports.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>LSU destroys Clemson in Lane Kiffin’s debut: ‘Imagine if we had pro players’</h4>
+                <p>Sam Leavitt complemented his 113 yards and two rushing touchdowns with 230 yards and a TD passing, edge rusher Jordan Ross returned an interception for a score, and No. 11 LSU rode the “Lane Train” to a resounding 51-10 victory over Clemson on Saturday night. “Imagine if we had pro players,” Kiffin said lightheartedly at the end of a brief TV interview at halftime, by which time LSU led 31-3, had outgained Clemson 336 yards to 54, and had 21 first downs to Clemson’s one. Kiffin has gotten commitments from two of his former Mississippi players — tight end Dae’Quan Wright and defensive tackle Zxavian Harris — who spent part of this offseason with NFL teams.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>What Is Targeting? College Football's Most Controversial Rule, Explained</h4>
+                <p>Despite some tweaks this year, college football's most controversial rule — targeting — is still in the rulebook, and that means it's surely going to create some confusion and frustration among teams and their fan bases this season. The rules around targeting are rooted in concern for players' safety — both the player making the tackle and on the receiving end. But that doesn't mean everyone fully understands the rules.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>UCLA shows resolve in beating Cal in coach Bob Chesney’s debut</h4>
+                <p>Just when it seemed like UCLA had lost its mojo in coach Bob Chesney’s debut, the Bruins stayed on brand by conjuring some late magic. But there was another twist to come Saturday night at Memorial Stadium, and a frightening one for UCLA. The Bruins briefly lost Nico Iamaleava before the veteran quarterback returned near the end of his team’s 45-24 victory over the Golden Bears, taking the final knee to make his new coach a winner and ease fans’ concerns about his status. With the score tied in the fourth quarter, the Bruins needed some help to reverse their fortunes. “The word is the resolve of the team,” Chesney said, “and you felt it shift a little bit on the sideline at one point and got it a tie game, so it’s not like we were in a tough spot, we just needed to make sure we maximized our next opportunity and these guys never wavered.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F09%2Fburning-man-diplo.jpg?quality%3D90%26strip%3Dall" alt="Lead Story Image" class="news-photo">
+                <h3>World-famous DJ Diplo treks 6 miles on foot to escape Burning Man: ‘F–ked up’</h3>
+                <p class="lead-summary"><strong class="drop-cap">W</strong>orld-renowned DJ Diplo hoofed it out of the Burning Man festival, trekking six miles in the muddy Nevada desert after rain lashed the annual gathering. The musician filmed himself walking along soaked terrain, after downpours forced the closure of the festival’s main entry and exit gate in the Black Rock Desert. “Here I am, walking out of Burning Man again,” he said in one clip posted to his Instagram account. “Six miles in, we’re almost to the road.” “It’s f–ked up, but I love it,” he added in another clip. “Life presents many challenges, you’ve just got to persevere.” He later showed himself inside a car talking with a friend, who noted an app on his phone said it was a 39-minute walk. In 2023, Diplo went viral when him and Chris Rock walked miles through the mud until they were saved by a fan driving a pickup truck. Roughly 73,000 people were stuck at the festival after rain turned the event into a muddy catastrophe. Diplo also shared that he had been performing at Burning Man from Wednesday night to Thursday night, stretching into early Friday morning. After his Thursday night performances, he was seen partying until 6:30 a.m. “These people are sick in the head, I love it,” he captioned one of his posts. Burning Man is a nine-day celebration of art, music, and anarchist hijinks in the Nevada desert where each year a city is built on bare sand and razed after a week of drug-fueled, clothing-optional partying.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Bunnie Xo reveals shocking physical toll of divorce from Jelly Roll</h4>
+                <p>Jelly Roll tells Fox News Digital what it means to him to celebrate the 60th Academy of Country Music Awards. Bunnie Xo revealed the physical toll heartbreak has taken on her as she navigates her divorce from Jelly Roll. "There were moments where my team had to pick me up off the floor and get me IVs because I wasn't eating," Bunnie said during an appearance on "Open Book with Jenna Bush Hager."</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Rob Lowe reveals A-lister ‘nemesis’ who beat him out for iconic movie roles in ’80s, ’90s</h4>
+                <p>Rob Lowe revealed to The Post the one A-lister who kept getting the roles he was up for back in the ’80s and ’90s: “That dastardly Tom Cruise was always a nemesis.” “I remember reading ‘Jerry Maguire’ . . . and they were like, ‘Tom Cruise.’ I also remember reading ‘Top Gun’ and going, ‘Oh, this movie is going to be f–king massive.’ They were like, ‘Tom Cruise.'” The Brat Pack actor, 62, also dispelled the rumor that he was in the running for the lead in “Ferris Bueller’s Day Off,” which ultimately went to Matthew Broderick. “No, that’s a big regret,” said Lowe, adding that the director of the 1986 hit comedy was never interested in casting him.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Christie Brinkley shares how she keeps her three adult children coming home</h4>
+                <p>Christie Brinkley, star of ‘American Summer,’ explains why losing both parents made family time more precious and shares how she keeps her children close. The actress and supermodel stars opposite Steve Guttenberg in "American Summer," a feel-good tribute to simpler times and family connections.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/02/931/523/person-on-computer.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Should you use a separate computer for online banking?</h3>
+                <p class="lead-summary"><strong class="drop-cap">W</strong>hen so much of your financial life lives online, protecting the device you use to access your money deserves some extra thought. Nancy from Baton Rouge, Louisiana, recently wrote to us asking whether keeping banking and investments on an entirely separate computer could provide another layer of protection. "I've had several clients tell me they have bought a computer that is only used for online banking, financial institutions and anything to do with their investment accounts. Is this a good strategy for protecting some of your assets? What are the upsides and what are the downsides?" Nancy, yes. Using a separate computer only for banking, investments and other financial accounts can add a meaningful layer of security. I especially like this approach for someone with substantial savings or retirement assets. It can also make sense if you simply want to keep your financial life separated from everything else you do online. However, buying another computer will not make your accounts untouchable. How you set it up and how you use it are what make the strategy worthwhile. Our free CyberGuy LIVE class, Protect Your Money From Today’s Biggest Threats , has ended, but you can still watch the full replay and download our financial protection checklist. Kurt "CyberGuy" Knutsson walks you through five simple ways to help defend yourself against AI scams, fraud, identity theft and financial hacks. You’ll learn how to set up bank alerts, strengthen your account logins, protect your phone number, freeze your credit and help secure your retirement savings against unauthorized transfers. No technical experience is needed. A dedicated computer used only for banking and investments can reduce exposure to many everyday online threats. (Kurt "CyberGuy" Knutsson) Think about what happens on the computer you use every day. You open email, click links and shop online. Maybe you also use social media, download documents or install browser extensions. All of that creates opportunities for malware, phishing attempts or malicious software to reach your device. A dedicated financial computer removes much of that exposure.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>She lost her sight. Her billionaire father bet on a daring new treatment.</h4>
+                <p>In a first, cell parts were transferred from the leg of Bill Ackman’s 26-year-old daughter to her eyes to help restore her vision.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>AI robot pet could know your family too well</h4>
+                <p>The 'Cyber Guy' Kurt Knutsson cautions parents about AI-powered chatbot teddy bears, highlighting privacy risks as toys might collect children's personal details. We've covered home robots that can fold laundry and others designed to become AI companions. Now there's one that wants to remember your family. The OlloNi SS1 is an AI robot pet that can recognize family members and pets as it moves around your home. OlloBot says it can learn your routines, respond to emotional cues and save memorable family moments along the way.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>These teachers are moving from AI policing to AI acceptance</h4>
+                <p>Instead of relying on AI detectors or going back to pen and paper assignments, educators said they redesigned classes to make students prove they are learning.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
