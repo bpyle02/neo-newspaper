@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>MONDAY, SEPTEMBER 07, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://pagesix.com/wp-content%2Fuploads%2Fsites%2F3%2F2026%2F09%2F140013635.jpg?quality%3D90%26strip%3Dall" alt="Lead Story Image" class="news-photo">
+                <h3>Bikini-clad Elizabeth Smart pens emotional message after placing at bottom of bodybuilding competition</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>he activist took to Instagram Saturday to share that she had “such a blast” competing in the North American Championships in Pittsburgh — despite losing. “Another show for the books! Had such a blast,” she wrote alongside a video of herself rocking a metallic blue bikini in the competition. “I’ve always said ‘just stepping on stage is a win for me!’ And I completely stand by that. I competed in two classes: ‘Masters 35+,’ which requires you to be 35 or older, and ‘Open Class D,’ which is height-based. I placed at the bottom of both classes,” Smart, 38, revealed. “Regardless of where I placed, I loved the whole experience, had an amazing coach (@slcrobynmaher), got to step onstage with my best friend (@mpholsombake), and had the best support squad in the audience I could ask for.” Smart said she “brought a better physique and stage presence than at my previous shows, and I’m so proud of myself for the hard work, discipline, and bravery it takes me to compete.” In April, Smart shocked fans when she revealed that she was a competitive bodybuilder by showing off her ultra-fit physique. That same month, she won first place in the Fit Model Novice category at the Wasatch Warrior competition in Salt Lake City. Smart also performed well in other sections, taking second place in the Fit Model category and third place in the Fit Model Masters 35+ category. Smart’s grueling bodybuilding routine consists of weight training five to six days a week and eating healthy meals. In 2002, the ABC News commentator was taken from her bedroom in Salt Lake City when she was 14 years old.Nine months later, she was rescued by police and became an advocate for survivors of sexual violence and a child safety activist. In 2011, Smart created the Elizabeth Smart Foundation, which seeks to bring hope, empowerment and change in the fight against sexual violence. If you or someone you know is affected by any of the issues raised in this story, call the Sexual Assault Hotline at 1-800-330-0226. Our community is about connecting people through open and thoughtful conversations. We want our readers to share their views and exchange ideas in a safe space. In order to do so, we've created a simple set of rules that will improve your experience. Thanks for reading our community guidelines. Don't forget, freedom of speech is not the freedom of reach!</p>
+                <p class="source-credit">— Https://pagesix</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Bobby Miller gets surprise hero moment for Dodgers after ‘very difficult road’</h4>
+                <p>Bobby Miller gave himself just one rule as he returned to the majors for the first time in more than a year on Sunday. “The mindset this year is just, don’t be afraid to go out there and fail,” the Dodgers pitcher said. “I’ve thrown really good games here. I’ve thrown some really bad games here. So at the end of the day … I’m just going to go out there and not be scared to fail, and see what happens.” Summoned with the score tied in the sixth on a night the Dodgers’ pitching depth was running precariously thin, Miller found himself on the mound for three of the game’s highest-leverage –– and most dramatic –– frames.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Sherrill anti-ICE policy hammered after fleeing migrant driver injures Dem mayor’s wife</h4>
+                <p>New Jersey State Sen. Mike Testa and Assemb. Paul Kanitra speak out to Fox News Digital over Gov. Mikie Sherrill's sanctuary policy and a Garden State Democrat's response calling for ICE to be abolished. EXCLUSIVE: Sanctuary policies are leading to dangerous situations by making it harder for ICE to do its job, Republican critics argued after an illegal immigrant fled agents and crashed on a major New Jersey highway, injuring the wife of a Democratic mayor.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Dems In Damage Control Mode Over ‘Thug-Hugging’ Police Bigwig Tied To Gang Shooting</h4>
+                <p>Democrats can’t run fast enough from the fallout surrounding a former Westchester police bigwig’s arrest in connection with a gang-related shooting. Former Mount Vernon Deputy Police Commissioner Jennifer Lackard has been charged with attempted murder after authorities say she and her ex-con husband James Lackard drove the getaway car for her son — known Slutty Gang member Chase Lackard — when he shot at a rival gang member in the Bronx last June. As The New York Post reported, local Democrats are not terribly interested in Lackard’s case — except in the most generic of terms — and the reason appears to be political. Westchester, after being known for decades as a Republican stronghold, has shifted dramatically leftward in recent years — and was even touted in 2022 as the “Sixth Borough.</p>
+                <p class="source-credit">— Daily Wire</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2025/08/931/523/unrwa-hq-gaza.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>UN agency accused of Hamas ties sees another European nation cut funding</h3>
+                <p class="lead-summary"><strong class="drop-cap">S</strong>peaking at the U.N. July 1, Ambassador Jeff Bartos said donors could continue supporting United Nations Relief and Works Agency for Palestine Refugee or choose a framework offering Gazans "peace, prosperity and real durable change." (Credit: UNTV) Another European nation has stopped funding the U.N. agency that aids the Palestinians. Finland has followed the U.S. and Sweden in halting donations to the terror-tainted agency. The United Nations Relief and Works Agency for Palestine Refugees in the Near East (UNRWA), is presently being investigated for ties to the terrorist rulers of Gaza. Recently, organizations including the USAID Office of Inspector General (OIG) and NGO UN Watch have uncovered further evidence of what they allege is Hamas infiltration of UNRWA and its members’ participation in the Oct. 7, 2023 terror attacks in southern Israel. Finland announced it would discontinue funding to the organization at the end of 2026. Finland’s Ministry for Foreign Affairs confirmed to Fox News Digital that the agreement with UNRWA would conclude at the end of 2026 but that "As of yet, no decision has been made on what are the international partners through which Finland’s support will be channeled next year to meet the acute needs in the region."</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>German nationalists’ big win sounds alarm for mainstream politicians in Europe</h4>
+                <p>“This has shaken us,” Chancellor Friedrich Merz said after Ulrich Siegmund led his Alternative for Germany party to victory in Saxony-Anhalt.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>US restricts government travel to Mexican border city over threat concerns</h4>
+                <p>Fox News correspondent Madison Scarpino reports on allegations that cartels are smuggling fuel from the United States into Mexico as the illicit trade becomes a major source of revenue for criminal organizations on ‘The Will Cain Show.’ Travel restrictions have been placed on U.S. government employees in the Mexican border city of Nogales, Sonora, according to officials.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>They formed to fight Haiti’s gangs. Now they’re an obstacle to peace.</h4>
+                <p>As a U.S.-backed, U.N.-authorized force attempts to restore security, “self-defense brigades” pose a unique challenge.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F09%2Fcrop-40692996_2037e4.jpg?quality%3D90%26strip%3Dall" alt="Lead Story Image" class="news-photo">
+                <h3>Kalshi promo code NYPMAX: Trade $25, get $25 on Labor Day ahead of NFL opener</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>he start of the NFL season is almost here, and new users can get in on the gridiron action with the Kalshi promo code NYPMAX. Readers of The Post can enter the Kalshi promo code NYPMAX when creating an account to trade $25 and receive a $25 bonus. The Kalshi promo code NYPMAX can be used on any upcoming game for Week 1 of the season, including the Super Bowl rematch between the Patriots and Seahawks. First-time traders on the elusive prediction market can forecast contracts on NFL games, international soccer matches, college football, tennis and daily baseball games with others and participate in the excitement happening throughout the sports world. Once users have signed up, they’ll enter the Kalshi promo code NYPMAX, verify their account information, and complete at least $25 in trades to qualify for a $25 bonus. Kalshi operates in the following states and territories: Alabama, Alaska, Arkansas, California, Colorado, Connecticut, Delaware, Florida, Georgia, Hawaii, Idaho, Indiana, Iowa, Kansas, Kentucky, Louisiana, Maine, Minnesota, Mississippi, Missouri, Nebraska, New Hampshire, New Mexico, New York, New Jersey, North Carolina, North Dakota, Oklahoma, Oregon, Pennsylvania, Rhode Island, South Carolina, South Dakota, Tennessee, Texas, Utah, Vermont, Virginia, Washington DC, West Virginia, Wisconsin and Wyoming. The Patriots should be the most motivated team in the league for their Week 1 matchup. They come right out of the gates against the Seahawks who embarrassed the Pats in the Super Bowl.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Joe Morgan, popular Red Sox manager, dead at 95</h4>
+                <p>BOSTON — Joe Morgan, the popular Boston Red Sox manager who guided his hometown team to a pair of AL East titles, has died. He was 95. In a statement Sunday, the Red Sox announced that Morgan died Saturday night. The club was informed by his daughter, Catherine, team spokesperson Abby Murphy said. No further information was provided. “Joe Morgan holds a special place in Red Sox history,” Principal Owner John Henry said in the statement. “When he took over in 1988, he changed the course of a season and created one of the most memorable chapters in the history of this club. The two division titles that followed only strengthened a bond with Red Sox fans that endured for the rest of his life. We extend our deepest condolences to his family and all who loved him.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>2026 NFL predictions: Jets must bank on big year from Garrett Wilson</h4>
+                <p>Now 15 years running without playoff football, anyone who has ever dared to back the Jets either emotionally or financially is rendered numb. The 2026 Jets enter with another set of low expectations, priced miles behind the Bills and Patriots at 19/1 to win the AFC East and a lottery ticket to accomplish anything else. Geno Smith’s return to the Jets, who drafted him in the second round in 2013, is symbolic of the stagnant direction of this franchise. It’s been 11 years since Smith was notoriously punched in the face over a $600 debt from his teammate IK Enemkpali, and although the faces and jersey designs have changed, it’s materially the same situation he left.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Serena Williams bolted US Open without Venus after doubles defeat: ‘Fled the scene’</h4>
+                <p>After coming back into the tennis spotlight, Serena Williams went out with an Irish goodbye at the US Open. After Williams lost a thrilling first-round women’s double match alongside sister Venus Williams to Hao-Ching Chan and Maya Joint on Friday night, she “fled the scene”, according to “Bounces” voice Ben Rothenberg. Serena walked off the Arthur Ashe court and out of the stadium into a car, leaving behind Venus, who stayed on the ground and went to the locker room as is the standard. In doing so, the sisters did not participate in a post-match press conference. Per the Grand Slam rulebook, a post-match press conference is required of all players if requested by media.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/09/931/523/royals_001.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Prince William and Kate Middleton 'playing it cool' as Prince Harry and Meghan Markle return to the UK: expert</h3>
+                <p class="lead-summary"><strong class="drop-cap">P</strong>resident Donald Trump shares his reaction to Prince Harry and Meghan Markle leaving the United States, stating they treated the royal family with great disrespect. A report circulated earlier this week claiming that Prince William and Kate Middleton are avoiding a "knee-jerk" reaction to Prince Harry and Meghan Markle’s return to the U.K. Experts say the Prince and Princess of Wales are sending a warning to the Duke and Duchess of Sussex. A source told People on Sept. 1 that William and Middleton are consciously not making a fuss about Harry and Markle's move. "They are watching this space. It’s private — they don’t feel the need to say anything or demonstrate anything outwardly," the source told the outlet. Kinsey Schofield, host of YouTube’s "Kinsey Schofield Unfiltered," told Fox News Digital that Harry and Markle's move will not magically reset their relationship with the senior royals. Meghan Markle, Prince Harry, Prince William and Kate Middleton at Buckingham Palace in 2018. (Max Mumby/Indigo/Getty Images) "Trust is earned through behavior over time, not by changing your zip code. Prince William and Catherine don’t appear to feel any urgency whatsoever," Schofield began. "Harry and Meghan made the dramatic decision to return to Britain. That doesn’t mean the Prince and Princess of Wales suddenly have to rearrange their lives around them. If Harry genuinely wants a relationship with his brother again, I suspect William is going to want to see consistency rather than another grand gesture."</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>25 hottest movies to see in fall 2026: ‘Dune,’ ‘Focker-in-Law,’ ‘Wild Horse Nine’</h4>
+                <p>This fall at the movies isn’t about making up for a rough summer — it’s about maintaining pace. The last three months have enjoyed Hollywood hit after hit, both critically and financially. With giants like “Spider-Man: Brand New Day” and “The Odyssey,” it could even top 2019. And while it’s somewhat slimmer in the blockbuster department, what the rest of the year has plenty of are talkers and smart movies for adults. Award season begins in earnest with flicks like “Wild Horse Nine,” “Digger” and “La Bola Negra.” There are indie gems, messed-up horror films and huge stars: Tom Cruise, Brad Pitt, Timothée Chalamet and the biggest of all — Steve Buscemi.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Barbara Eden, 95, says she’s ‘okay’ after last-minute cancelation of festival appearance</h4>
+                <p>Singer-songwriter Pat Boone reflects on his friendship with country music legend Dolly Parton, who died at 80, on ‘Fox News @ Night.’ Barbara Eden sparked concern among fans after abruptly dropping out of a Los Angeles film festival due to what was described as a "sudden illness," but the 95-year-old actress later shared a reassuring update on social media.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>A-Rod and Oprah’s ‘brain coach’ shares 5 tricks to improve your memory</h4>
+                <p>A personal trainer can help you get jacked, but who do you call for brain gains? That’s where Jim Kwik comes in. The brain coach has worked with Oprah Winfrey, Richard Branson, Alex Rodriguez, Novak Djokovic and Elon Musk’s team at SpaceX, helping them improve focus, memory and mental performance. Kwik, who has spent more than 25 years studying the brain and meta-learning — the science of how we learn — says there’s reason to be optimistic about our ability to improve our memory at any age. “Our brains maintain neuroplasticity — the ability to physically adapt, change, and forge brand new neural pathways — for our whole lives,” he told The Post. Here are his five steps for building a better memory.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/09/931/523/pilotless-cargo-aircraft.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Pilotless cargo aircraft could change how packages move</h3>
+                <p class="lead-summary"><strong class="drop-cap">A</strong> medical drone takes off during testing as part of a program aimed at speeding up the delivery of critical healthcare supplies. The effort is focused on transporting lab samples, blood and donor matching materials between smaller communities and larger hospital hubs, where timing can impact diagnoses and treatment. Developers say faster, on-demand flights could help reduce delays for rural patients, who often face longer travel times for care, with future plans to expand the technology to carry transplant-related materials. A broken pump on an offshore platform, or medical supplies needed after a hurricane can be tough to move quickly. The FAA just tested one possible solution: a hybrid-electric cargo aircraft that can take off vertically and fly without a crew onboard. The FAA announced that Elroy Air and the Louisiana Department of Transportation and Development conducted a cargo demonstration at Houma-Terrebonne Airport in Louisiana. The agency says it was the first remotely piloted aircraft test flight under its eVTOL (electric vertical takeoff and landing) Integration Pilot Program, known as eIPP. That may sound like a specialized aviation test, but the bigger story is what aircraft like this could eventually do. Elroy Air's Chaparral can carry more than 500 pounds, putting it in a very different league from the small delivery drones you may picture hovering over a driveway. So, could pilotless aircraft like this eventually change how everything from emergency supplies to everyday goods moves across the country? Here's what the FAA is testing and why it could be a big deal. The Chaparral can take off and land vertically, allowing it to operate in places without a traditional runway. (Elroy Air) Our free CyberGuy LIVE class, Protect Your Money From Today’s Biggest Threats, has ended, but you can still watch the full replay and download our financial protection checklist. Kurt "CyberGuy" Knutsson walks you through five simple ways to help defend yourself against AI scams, fraud, identity theft and financial hacks. You’ll learn how to set up bank alerts, strengthen your account logins, protect your phone number, freeze your credit and help secure your retirement savings against unauthorized transfers. No technical experience is needed.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Autonomous excavators are digging with empty cabs</h4>
+                <p>If you have ever driven past a construction site and watched an excavator moving huge piles of dirt, you probably figured there was an experienced operator sitting in the cab. On some job sites in Texas and Nevada, there is nobody in that seat. San Francisco-based Bedrock Robotics has autonomous excavators doing real commercial earthwork with no operator onboard. The company says the deployments follow a year of testing on active job sites with human supervision.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
