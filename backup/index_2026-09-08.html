@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>TUESDAY, SEPTEMBER 08, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://pagesix.com/wp-content%2Fuploads%2Fsites%2F3%2F2026%2F09%2FUntitled-2-copy-74.jpg?quality%3D90%26strip%3Dall" alt="Lead Story Image" class="news-photo">
+                <h3>Taylor Sheridan’s wild on-set demand revealed by ‘Lioness’ star Jill Wagner: ‘He forces you to run into fire’</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>aylor Sheridan demanded Jill Wagner relearn a “Lioness” scene with her non-dominant hand, mere minutes before filming. The actress, 47, opened up to People on Monday about the director, 56, forcing cast members “to run into fire.” The former “Wipeout” host recalled, “There was one day that [my co-star] Laysla [De Oliveira] and I were trying to get this entrance into the house. [Her character],Cruz, and [my character], Bobby, have to come in and clear the room, and we were having difficulties with some of the angles.” As a result, Sheridan requested Wagner “switch arms” and “transition [her] weapon to [her] left arm.” She remembered, “I was just like, ‘Hmm … OK. Help me.’ Ultimately, we worked it out, and it’s probably going to be one of my favorite moments.” De Oliveira, 34, chimed in to say this is one of “the coolest thing[s] about working with” the “Sons of Anarchy” alum. “He can change things on the spot,” she explained. “You have to have your head on a swivel and be able to do that. Once you go through that experience, you really leave the set thinking, ‘Wow, I can do anything.'” Clarifying that Sheridan changes his direction, not the script, De Oliveira added, “If you can pick that up, then you go onto another set and think, ‘Well, this one time I did everything with my left hand even though I’m right-handed.’ So it’s a great opportunity for us.” Wagner also chatted with TV Insider over the weekend about working with Sheridan, whom she praised for remembering everything and layering it into his scripts. “You’ll just have a conversation with him, and you’ll think it’s a bunch of meaningless stuff, or you’re having a whiskey with him, and you’re thinking, ‘Oh, nobody’s going to remember any of this,’” she noted on Sunday. “That’s not true.” She added, “He understands, as a person, bringing in parts of the actor naturally into the character, which I think is pretty cool, and not a lot of writers do that.” The show stars Nicole Kidman and Zoe Saldaña, with the latter recently describing the “challenge” of working with Sheridan. “He does raise the bar,” the Oscar winner, 48, told People in August. “And you have one of two choices. You either accept the challenge and make sure that you don’t f— up… or you quit.” Our community is about connecting people through open and thoughtful conversations. We want our readers to share their views and exchange ideas in a safe space.</p>
+                <p class="source-credit">— Https://pagesix</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Dolly Parton never had to leave her husband to find herself</h4>
+                <p>The late singer's nearly 60-year marriage to Carl Dean offers an antidote to our age of divorce-as-empowerment. When Dolly Parton came to Nashville in 1964, finding a husband was the last thing on her mind. She was 18 years old, newly arrived from the mountains of East Tennessee, and clear about what she had come to do: “I was here to become a star.” Reading about Parton and Dean makes you suspect we've forgotten how to disagree inside a marriage. Parton was outside waiting for her clothes when 21-year-old Carl Dean spotted her, called something out the window, circled the block, and came back. She talked to him because he was “drop-dead handsome,” but she was also surprised that he looked at her face while they talked — “a rare thing for me,” she joked in her 1994 autobiography, “Dolly: My Life and Other Unfinished Business.” More seriously, she remembered that Dean “seemed to be genuinely interested in finding out who I was and what I was about.</p>
+                <p class="source-credit">— The Blaze</p>
+            </div>
+            <div class="story-minor">
+                <h4>Liberal City Gives ‘Shooters’ A Softer New Name</h4>
+                <p>Seattle Interim Police Chief Andre Sayles’ delicate terminology sounds like it came straight from the playbook of the activist mayor. Seattle Interim Police Chief Andre Sayles raised eyebrows on Monday by using the term “trigger-pullers” instead of calling violent criminals “shooters.” Sayles’ sanitized choice of words smacks of his boss Mayor Katie Wilson’s own soft-on-crime, leftist attitudes. “Working with business owners, increasing patrols, bike patrols, working with our community response group and our gun violence reduction unit as well, looking at ways to where we can identify individuals that are known — we call them trigger pullers in our community,” Sayles said. “Identifying them, making sure that we’re putting cases on those individuals, working with King County Prosecutor’s Office to bring these individuals to justice because the families that lost loved ones throughout this year and years past deserve justice in this manner.</p>
+                <p class="source-credit">— Daily Wire</p>
+            </div>
+            <div class="story-minor">
+                <h4>‘Slow Horses’ Season 6 Review: Apple TV’s Consistently Stellar Spy Thriller Refuses To Let Us Down</h4>
+                <p>Stream It Or Skip It: ‘The Last Sunrise’ on Amazon Prime Video, a Spicy Romance from the Author of the ‘After’ Franchise When Does ‘The Last Sunrise’ Movie Come Out on Prime Video? Release Date, Release Time, and Streaming Info ‘Toy Story 5’ Comes To Digital, But When Will ‘Toy Story 5’ Be Streaming on Disney Plus? ‘Mickey Mouse Clubhouse+’ Guest Star Megan Hilty Teases That She and Miley Cyrus Are “Like The Same” Now That They’ve Both Performed The “Hoedown Throwdown” ‘One Night Only’ Comes to Digital, But When Will ‘One Night Only’ Be Streaming Free on Peacock?</p>
+                <p class="source-credit">— Https://decider</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/09/931/523/renoir-museum-heist-police.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Art heist thieves make off with Renoir paintings worth millions from museum on French Riviera</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>hieves made off with two valuable Renoir paintings after breaking into a small museum on the French Riviera early Tuesday, dropping two other stolen works in the garden as police raced to the scene, officials said. The two thieves cut through a garden fence and entered the Renoir Museum in Cagnes-sur-Mer shortly before 6 a.m., stealing four paintings, Mayor Bryan Masson said. The alarm sounded at 5:48 a.m. Police arrived five minutes later and chased the thieves, who dropped two of the paintings in the garden before escaping with the other two, according to Masson. NJ FATHER-DAUGHTER TEAM ACCUSED OF PEDDLING FAKE PICASSOS, WARHOLS AND MORE TO NYC ART HOUSES PLEAD GUILTY Police officers patrol in front of the entrance of the Musee Renoir after four paintings, together valued at 9 million euros, were stolen in an early-morning break-in, with two recovered in the museum's garden and two still missing, in Cagnes-sur-Mer on Sept. 8, 2026. (Valery HACHE / AFP via Getty Images) "Attacking the Renoir Museum is attacking a part of the history and heritage of Cagnes-sur-Mer," Masson said, further calling for tighter security at museums across France.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Gulf nations build defenses and aim to bypass Hormuz as Iran war drags on</h4>
+                <p>Remarks by at a regional conference underscored the challenge Washington faces in trying to impose economic pain on Iran while not harming its closest neighbors.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Is the Iran-backed terrorist movement Hezbollah on the ropes in Lebanon?</h4>
+                <p>Defense and intelligence expert Lt. Col. (Res.) Sarit Zehavi, founder and president of the Alma Research and Education Center, details how Israeli military strikes have left Hezbollah on the ropes. JERUSALEM — With Israel’s stunning capture of the strategically valuable Ali al-Taher ridge in south Lebanon on Sunday, a major Hezbollah and Iran stronghold, the campaign to degrade Tehran’s so-called "Axis of Resistance" suffered a severe blow.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>King sends letter to clarify Harry and Meghan’s status in U.K.</h4>
+                <p>Prince Harry and Meghan said they were “a little surprised” they had not been told about the letter in advance, British media reported.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F09%2FNFL26_fifty.jpg?quality%3D90%26strip%3Dall" alt="Lead Story Image" class="news-photo">
+                <h3>50 Most interesting people in the NFL 2026: Patrick Mahomes tops annual list</h3>
+                <p class="lead-summary"><strong class="drop-cap">I</strong>t is always a difficult task whittling down the NFL’s 50 Most Interesting. There are so many world-class stars, so many characters, coaches in the spotlight, so many under-the-radar fan favorites from which to choose. For so long he has been the face of the NFL, the one quarterback who would have a chance to chase down Tom Brady’s seven Super Bowl championships. Now he comes back nine months after tearing his ACL and LCL, and we wait and watch whether he can be Magic Mahomes again and revive the Chiefs dynasty. Jim Kelly got to four Super Bowls, only to lose all of them. This generation’s Kelly deserves to get to his first.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>UCLA football already making heck of run for it under Bob Chesney</h4>
+                <p>A run game that went nowhere last season covered nearly as much ground as Bruins fans who drove to Berkeley from Los Angeles. UCLA’s 277 rushing yards against Cal were its most against a Football Bowl Subdivision opponent since 2023. Its six rushing touchdowns were its most since 2015 — and only two fewer than the Bruins totaled on the ground in 2025. “We got a lot of guys in there that can make plays,” tailback Wayne Knight said of the running back room after his team’s 45-24 triumph. “There’s never a drop-off.” It’s probably safe to say that quarterback Nico Iamaleava won’t lead the team in rushing again this season based on the guys around him who actually hold the running back designation.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>The promising rewards and uncertain risks of the Mets’ late-season surge</h4>
+                <p>A couple weeks ago, Francisco Lindor sacrificed his body on a remarkable diving catch for which he should have earned a save — the grab essentially saved a game against the majors-best Brewers that the Mets would win in extra innings. Lindor, who plays with emotion but a throttled sort, picking his spots to play it cool or becoming expressive to breathe life into his teammates, jumped to his feet, began pounding his chest and screaming toward a Citi Field crowd that roared as if his catch had just clinched a playoff berth. Not dissimilar to the way Nolan McLean struck out San Francisco’s Christian Koss to end the top of the sixth Friday, then stomped and thundered his way back to the dugout. Not dissimilar to the way Bo Bichette admired his no-doubt, go-ahead, three-run home run in Sunday’s eighth inning and did not start rounding the bases until it had landed deep in the left field stands, staring into a Mets dugout that had exploded to feed the energy.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Jets 2026 season preview: Predicting Aaron Glenn’s second year</h4>
+                <p>The Drought is at 15 years and counting — and it does not feel like it is coming to end in the 2026 season. Instead, fan hopes are largely focused on 2027 and a draft when the Jets have three first-round picks. The next would-be franchise quarterback is scheduled to arrive for next season. Text with Brian Costello all season as he brings Sports+ subscribers the latest Jets intel from on the field and off. The 2026 Jets have 17 games to play with low expectations. They should be better than last year’s 3-14 disaster, but how could they be any worse? This season will be about finding out if Aaron Glenn can coach, whether the young players are keepers and if this franchise can start to see some daylight after years of darkness.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/04/931/523/Queen-Elizabeth-Meghan-Markle-Prince-Harry-Book.jpeg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Prince Harry finds way to live ‘half-in, half-out’ life Queen Elizabeth refused to endorse: experts</h3>
+                <p class="lead-summary"><strong class="drop-cap">H</strong>ugo Vickers, author of "Queen Elizabeth II: A Personal History," details how the Duke and Duchess of Sussex's exit and Oprah interview added strain during the late monarch's final years. Prince Harry may have finally found a way to live the life that his grandmother, Queen Elizabeth II, refused to endorse. On Sept. 8, 2022, Britain's longest-reigning monarch died after 70 years on the throne. She was 96. On Aug. 26 this year, Harry and his wife, Meghan Markle, returned to the U.K., where their children, Prince Archie and Princess Lilibet, will attend school. As the Sussexes settle into their new life in Britain, with details about their private home and their children's school closely guarded, royal experts told Fox News Digital that the arrangement recalls the "half-in, half-out" proposal the late queen rejected. PRINCE HARRY, MEGHAN MARKLE’S UK MOVE PUTS FRESH SPOTLIGHT ON THEIR EXPLOSIVE CLAIMS AGAINST ROYAL FAMILY From left: Queen Elizabeth II, Meghan, Duchess of Sussex and Prince Harry, Duke of Sussex watch a flypast to mark the centenary of the Royal Air Force from the balcony of Buckingham Palace on July 10, 2018, in London, England. The couple stepped back as senior royals in 2020. They returned to the United Kingdom before Prince Archie and Princess Lilibet started school in September 2026.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Pete Davidson was a kid when he lost his dad on 9/11 — now he wonders how to explain it to daughter he named after the FDNY hero</h4>
+                <p>For Pete Davidson, the 25th anniversary of 9/11 is wrapped in layers of grief and emotion — and even optimism. The “Saturday Night Live” alum was just 7 years old when he lost his father, Scott, a New York City firefighter with Ladder Company 118 in Brooklyn Heights. “I thought, ‘Oh, he was an old guy. He’s 33,’” Davidson told The Post. “But now I’m there, and I have a kid, and that would be like my kid not having her dad. “So this year is extra tough, but also extra beautiful because I get to spend the day with Scottie. It’ll be very healing and special.” Davidson, who turns 33 in November, welcomed Scottie, his daughter with model Elsie Hewitt, in December. Although the couple split shortly after her birth, Davidson said they were united over their daughter’s name.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Julia Louis-Dreyfus reveals ‘tons’ of friction behind the scenes of ‘Seinfeld’</h4>
+                <p>FOX Business contributor Katrina Campins, comedian Rich Vos and comedian Charles McBee joined 'Fox News Saturday Night' to discuss how comedy has evolved alongside society's affinity for political correctness. The actress, who starred as Elaine Benes, revealed there was "tons" of friction behind the scenes as the cast and creators worked to get the groundbreaking comedy just right.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Actor Denis Leary details chilling 9/11 experience that helped lead to TV hit ‘Rescue Me’</h4>
+                <p>Actor Denis Leary was unloading his hockey gear at Manhattan’s Chelsea Piers for a morning game when United Flt. 175 struck the South Tower of the World Trade Center 25 years ago. “They turned the rink into a morgue, and they lined up all the ambulances,” Leary, 69, told The Post. The heartbreaking scene was the beginning of a journey that led to Leary’s famous TV series “Rescue Me” – a defiantly politically incorrect dramedy around FDNY members ridden with Sept. 11 survivor’s guilt. The New Englander star and his pick-up-hockey teammates from his production company had a clear, firsthand view of the terrorism and destruction unfurling that day from the West Side Highway.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/06/931/523/Streaming-Devices-Photo-3.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>How to stream safely while traveling outside the US</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>ravel expert Lee Abbamonte discusses the risks posed by fraudulent wireless connections on commercial flights and what passengers should check before accessing the internet in the air. Traveling abroad used to mean leaving your normal entertainment routine at home. Now, your streaming subscriptions can come with you. However, hotels, airports and cafés often mean unfamiliar Wi-Fi networks and different streaming catalogs. If you want to stream safely while traveling outside the U.S., a VPN, or virtual private network, can help. It creates an encrypted connection between your device and the VPN server. That adds useful protection when you are on a network you do not control. A VPN can also let you choose a server in your home country. That can be useful when you sign in to streaming services you already use. Still, content availability depends on the service, your subscription and local licensing rules. Here's what to know before you travel so you can protect your connection, stream more smoothly and avoid surprises along the way. Our free CyberGuy LIVE class, Protect Your Money From Today’s Biggest Threats, has ended, but you can still watch the full replay and download our financial protection checklist. Kurt "CyberGuy" Knutsson walks you through five simple ways to help defend yourself against AI scams, fraud, identity theft and financial hacks. You’ll learn how to set up bank alerts, strengthen your account logins, protect your phone number, freeze your credit and help secure your retirement savings against unauthorized transfers. No technical experience is needed. Travelers can use a VPN on hotel, airport and café Wi-Fi while accessing streaming subscriptions they already use at home. (Photo by Alex Pantling/Getty Images) Free Wi-Fi makes travel easier. Yet you often do not know who runs the network, how it is configured or who else is connected. Most major websites and apps already use HTTPS encryption. Even so, a VPN adds another encrypted tunnel between your device and the VPN server. That can reduce what the local network can learn about your internet activity.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Gmail change may flood your inbox with political email</h4>
+                <p>Google General Counsel Halimah Delaine Prado joins 'Fox & Friends' to detail how Google is fighting AI-powered phishing scams. If your Gmail inbox already feels crowded, election season may add another layer of noise. Starting Sept. 8, 2026, Google's new Gmail Verified Sender Program will give qualifying U.S. political committees a more reliable path to personal Gmail accounts. That means qualifying political committees will have a new way to improve the reliability of their email delivery, provided they follow Google's security, authentication and spam requirements.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
