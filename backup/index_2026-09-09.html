@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>WEDNESDAY, SEPTEMBER 09, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/09/931/523/Trump_AfD.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Trump hails 'really big night' for populists in German election after historic victory</h3>
+                <p class="lead-summary"><strong class="drop-cap">L</strong>eaders of the right-wing Alternative for Germany (AfD) party celebrates the party's victory in the Saxony-Anhalt state elections on Sunday, in which the party captured 39 seats in the state's 83-seat parliament. Credit: The Associated Press. President Donald Trump heralded the Alternative for Germany (AfD) party's electoral success in regional elections on Sunday in a Tuesday night post on Truth Social. "Wow! The Populist Party in Germany just had a really big night," Trump wrote in the post. "They finally got tired of the absolutely horrible Immigration rules and regulations which have hurt Germany so badly. THEY ARE ON THE RISE, and not going to take it anymore! MGGA!!! President DJT," his post concluded. The German state of Saxony-Anhalt held elections Sunday and AfD outperformed expectations that predicted the party would secure 40-41% of the vote, according to The Guardian. AfD surpassed that, garnering 43.8% of the vote while securing 39 seats in the state's 83-member parliament, according to results from the state's election authority. Ulrich Siegmund, center, lead candidate and co-chair of the AfD state parliamentary group in Saxony-Anhalt, celebrates with Alice Weidel, federal chairwoman and co-chair of the AfD parliamentary group in the Bundestag, and Tino Chrupalla, federal chairman and co-chair of the AfD parliamentary group in the Bundestag, after the first results at an election party of the "Alternative for Germany" (AfD) after the Saxony-Anhalt state elections in Magdeburg, eastern Germany, Sunday, Sept. 6, 2026. (Michael Kappeler/dpa via AP) It's a marked improvement from the young party's last result in the state, as AfD secured only 20% of the vote in Saxony-Anhalt's 2021 elections. The anti-immigration party benefited in particular from the Christian Democratic Union of Germany's (CDU) losses, as Saxony-Anhalt's previous governing party dropped 25 seats, ending the election with only 15 seats in the state's parliament, per the results from the election authority. AfD's parliamentary co-chair in Saxony-Anhalt, Ulrich Siegmund, credited his party's victory to Germany's unpopular Chancellor Friedrich Merz, a member of the CDU party.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>‘Ted Lasso’ Season 4, Episode 6 Recap: Children by the Millions Scream for Alice Chilton When She Comes Around</h4>
+                <p>Stream It Or Skip It: ‘The Last Sunrise’ on Amazon Prime Video, a Spicy Romance from the Author of the ‘After’ Franchise When Does ‘The Last Sunrise’ Movie Come Out on Prime Video? Release Date, Release Time, and Streaming Info ‘Toy Story 5’ Comes To Digital, But When Will ‘Toy Story 5’ Be Streaming on Disney Plus?</p>
+                <p class="source-credit">— Https://decider</p>
+            </div>
+            <div class="story-minor">
+                <h4>Left-Wing Judge Let Man Out After Attempted Murder Charge. He Was Arrested In Another Shooting.</h4>
+                <p>Less than five weeks after his first attempted murder charge, Nayshawn Wilkinson was accused of attempted murder again. A 19-year-old Brooklyn man accused of attempted murder was released on $5,000 bail last month despite prosecutors asking that he be held in confinement. Now, police say he has been arrested again after shooting another man near New York City’s West Indian Day Parade. Nayshawn Wilkinson was arrested Tuesday and is facing a new attempted murder charge stemming from a Monday afternoon shooting near Nostrand Avenue and St. Johns Place in Brooklyn, along the route of the annual parade. Police say a 24-year-old man was shot in the buttocks. The victim was hospitalized and is expected to survive. Wilkinson was taken into custody, and a firearm was recovered, according to authorities.</p>
+                <p class="source-credit">— Daily Wire</p>
+            </div>
+            <div class="story-minor">
+                <h4>Homelessness Non-Profits Are Killing Los Angeles</h4>
+                <p>Of $264 million in annual revenue, about $260 million comes from government grants, or about 98.5 percent of this one non-profit corporation’s total funding. Massive sums of money, washing into an endless system of creeks and gullies, diffusing and disappearing. The Los Angeles Homeless Services Authority, a county-city joint powers authority that has been largely abandoned by county officials over serious concerns about effectiveness, financial transparency, and basic operational competence, proudly says that it funds “more than 100 nonprofit partner agencies” in a single county. To begin to understand what that giant system of non-profit corporations looks like in practice, look closely at a single example: Special Service for Groups (SSG). The Charity Navigator website describes SSG as an entity that performs a remarkably broad cluster of roles: “Provide behavioral health, support for older adults, social justice/anti hate, HIV/AIDS related, an extensive array of homeless, substance abuse and health access initiatives and services to vulnerable communities.</p>
+                <p class="source-credit">— The Federalist</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://static.foxnews.com/foxnews.com/content/uploads/2026/09/los-choneros-strike.gif" alt="Lead Story Image" class="news-photo">
+                <h3>US sinks another 'floating refueling station' linked to 'narco-terrorist' group</h3>
+                <p class="lead-summary"><strong class="drop-cap">U</strong>.S. Southern Command announced that on Sept. 8, 2026 the U.S. sank another "floating refueling station" vessel involved with the Los Choneros. (X/ @Southcom) U.S. Southern Command (SOUTHCOM) announced on Tuesday that the U.S. sank another vessel characterized as a "floating refueling station" linked to drug trafficking efforts. "On September 8, under the direction of #SOUTHCOM, Joint Task Force Western Hemisphere (JTF-WHEM) forces successfully interdicted a floating refueling station supporting illicit at-sea drug trafficking operations in the Eastern Pacific," SOUTHCOM noted in a post on X. "Intelligence confirmed the vessel's involvement with the Los Choneros violent narco-terrorist organization. Individuals removed from the vessel have been transferred to Ecuadorian authorities. After clearing the vessel and disembarking the crew, U.S. forces sank it," the post continued. U.S. Southern Command posted a video of the U.S. sinking a vessel on September 8, 2026. (U.S. Southern Command on X) "JTF-WHEM continues to conduct precise and professional operations to dismantle the logistical networks fueling narco-trafficking in the Western Hemisphere," SOUTHCOM added.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Europeans investigating Epstein say DOJ has not agreed to requests for help</h4>
+                <p>Some European law enforcement agencies chasing leads spurred by information in the so-called Epstein Files say the U.S. Justice Department has not responded to their requests.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>70 Americans still unaccounted for after catastrophic Nepal flooding</h4>
+                <p>Fox News correspondent Stephanie Bennett reports on rescue operations in Nepal following a glacier collapse that triggered flash flooding. The State Department said Tuesday it is aware of approximately 70 Americans who remain unaccounted for in the Nepal-China border region following last month's catastrophic flooding, while 18 Americans have now made it to safety.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Rubio enjoyed major support among Venezuelans. Then came Trump’s oil deal.</h4>
+                <p>Secretary of State Marco Rubio will visit friendly governments in Colombia, Ecuador and Peru. But his support for the Venezuela oil deal is rankling some in the region.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F09%2Fnewspress-collage-fynv512um-1788955345371.jpg?quality%3D90%26strip%3Dall%261788941067" alt="Lead Story Image" class="news-photo">
+                <h3>Ben Shelton’s late-night epic and a day of wild possibility at the U.S. Open</h3>
+                <p class="lead-summary"><strong class="drop-cap">W</strong>hen Ben Shelton fired a 146 mph ace past Carlos Alcaraz at 3:33 a.m. — the latest-ever finish in a history of U.S. Opens full of them — to end the thriller that needed four hours, 28 minutes, five sets and a grand finale of a tiebreak. When No. 11 seed Frances Tiafoe stunned unseeded 22-year-old Alex Michelsen after trailing by two sets, soaring back into the semifinals at Flushing Meadows for the third time in his career. This was all supposed to fall in favor of the Americans. This was supposed to be their chance, with Jannik Sinner out due to a lingering right knee injury and Alcaraz just returning from an absence of his own and so many other top names already eliminated from the U.S. Open draw. This, more succinctly, was supposed to be the year they ended the Grand Slam title drought that dates back to Andy Roddick in 2003.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Roll The Tape: 5 Potential Title-Tilting Developments To Watch In Week 1</h4>
+                <p>The 2026 NFL season is here, and I cannot wait to see how some of the trends that emerged in the spring and summer manifest on the field this fall and winter. Each week, I'll be diving into the All-22 coaches' film before offering five insights to watch. My first set of takeaways covers potential Super Bowl-shifting developments from the offseason.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Carlos Alcaraz shoos away camera before getting sick during US Open thriller</h4>
+                <p>Most people would agree with Carlos Alcaraz: You don’t need anyone around to see you vomit in the wee hours of the morning. Alcaraz shooed away one ESPN cameraman in an awkward scene moments before he appeared to vomit early Wednesday morning before the fifth and decisive set of his U.S. Open quarterfinals loss to Ben Shelton — only for another camera to capture him seemingly puking into a towel. “After the third set, physically I was really tired, but I found a way to push myself up and physically giving extra,” Alcaraz said after a four-hour-and-28-minute match. “In the fifth set I just started to feel better and better, but you know, I was playing against one of the — he is a beast.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>How to Watch Patriots vs. Seahawks: TV Channel, Live Stream, Time</h4>
+                <p>The New England Patriots visit the Seattle Seahawks on Wednesday, September 9, 2026 at 8:20 p.m. ET from Lumen Field, Seattle, WA to open the NFL regular season. Seattle is looking to build on a 10-game winning streak that closed out last season with a Super Bowl LX win over these same Patriots. New England counters with the NFL's most efficient passing attack from a season ago, as Drake Maye posted a league-best 72 percent completion rate in 2025.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/09/931/523/george-william.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Prince George follows Prince William's footsteps at Eton in a changing royal world: experts</h3>
+                <p class="lead-summary"><strong class="drop-cap">K</strong>atie Nicholl, Vanity Fair royal correspondent and co-host of "The Royals Uncensored," says Prince George passed Eton's admissions process like other applicants before accepting his place at the prestigious school. Prince George is following in his father's footsteps by attending Eton College and royal experts are calling it a very different royal world. On Monday, George was photographed arriving on his first day with his happy parents in tow. Prince William and Kate Middleton were seen beaming in photos with their oldest son. "A new successful chapter for the future heir to the throne. His great-grandmother would be tickled pink. It’s four years to the day, she passed. No doubt he’ll settle in well and master all the skills of kingship," Helena Chard, British broadcaster and photographer, told Fox News Digital. Chard added, "A buoyant Prince George arrived at Eton with the grounding presence of his chuffed supportive parents. He beamed to cameras fully aware of the drill. A brief photo-call, picture release and a hope that his education will take place away from public eyes. Simon Henderson welcomed Prince George to Eton, telling him, 'Welcome. Good Luck. Enjoy it.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>‘South Park’ to rebrand as ‘South America’ ahead of Season 29 premiere in cheeky jab at President Trump</h4>
+                <p>The creators of “South Park” plan to rebrand the popular animated series “South America” ahead of its season premiere — in a sarcastic swipe at President Trump’s recent name-changing frenzy. The hit comedy show joked that it would now be named after the United States’ southern neighbor, in line with Trump’s feverish adoption of the word America, ahead of its new season in an X post Tuesday. “Inspired by the bravery and patriotism of Apple and Google, we are changing the name of South Park to SOUTH AMERICA,” the show announced, referencing the two tech giants’ decision to rebrand the Gulf of Mexico and Lake Ontario in line with the president’s executive order.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Chris Rock exposes LA's dark ‘underbelly’ that people pretend doesn't exist</h4>
+                <p>Dennis Quaid reflects on leaving Los Angeles for Nashville, saying residents are frustrated with high taxes, poor services and the fallout from devastating wildfires. Chris Rock this week said that Hollywood exposes a dark "underbelly" in Los Angeles that people want to pretend doesn’t exist.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>‘Practical Magic 2’ review: Nicole Kidman and Sandra Bullock’s wretched sequel is cursed</h4>
+                <p>“As far as I was concerned, magic was in our past — and good riddance,” says Sandra Bullock’s Sally Owens in the foul “Practical Magic 2.” Agreed, Sally. I, too, thought ‘Magic’ was in my past. But no. In order to meet 2026’s nostalgia quota, here’s a 28-years-later followup to the cult flop about margarita-loving sister witches starring Bullock and Nicole Kidman. Truth be told, I’ve never understood the appeal of the 1998 original beyond its luminous star duo. It starts out the same way most ’80s and ’90s movies about magic (“The Witches,” “Hocus Pocus,” “Beetlejuice”) do — with aerial footage of a small town accompanied by loud orchestral music.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/09/931/523/flock-camera-wrongful-arrest-aplit.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Innocent woman says police use of Flock camera led to 13 days in jail</h3>
+                <p class="lead-summary"><strong class="drop-cap">L</strong>indsey Isaacs spent 13 days in jail after license plate reader data wrongfully linking her to a crash that killed 3 people. Prosecutors dropped all charges after investigators identified another suspect. (Kurt "CyberGuy" Knutsson) Lindsey Brooke Isaacs was asleep at home when police arrived and told the 23-year-old that her car had been involved in a crash that killed three people. She knew they had the wrong person. Her black Dodge Durango showed no obvious collision damage, and she had a receipt showing where she had been. Still, the investigation eventually led to her being arrested and 13 days in jail. "My heart was in my stomach," Lindsey told me on The CyberGuy Report Podcast at Cyberguy.com/podcast/. "I didn't know what was going on." Months later, prosecutors dropped all eight felony charges against her and investigators arrested another woman in connection with the crash. Her case now raises a bigger question about how much weight investigators should give license plate camera data when a person's freedom is on the line. Our free CyberGuy LIVE class, Protect Your Money From Today’s Biggest Threats, has ended, but you can still watch the full replay and download our financial protection checklist. Kurt "CyberGuy" Knutsson walks you through five simple ways to help defend yourself against AI scams, fraud, identity theft and financial hacks. You’ll learn how to set up bank alerts, strengthen your account logins, protect your phone number, freeze your credit and help secure your retirement savings against unauthorized transfers. No technical experience is needed. Lindsey Isaacs says the ordeal left her shaken after she was arrested in connection with a deadly I-4 crash and later cleared of all charges. (Volusia County Division Of Corrections; The Law Offices of Patrick J. McGeehan, P.A.) The deadly crash happened on Oct. 4, 2025, along eastbound Interstate 4 near DeBary, Florida. Motorcyclist Joaquin Deno died. Flagler County Deputy Administrator Jorge Salinas and his wife, Nancy Salinas, also died. Witnesses reported that a Dodge Durango was involved.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>OpenAI claims solution to one of math’s $1 million Millennium Prize problems</h4>
+                <p>OpenAI on Tuesday released a technical paper for its result that will now be closely read by mathematicians around the world.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>AI shopping carts could drive up your grocery bill</h4>
+                <p>Artificial intelligence is making its way into the grocery aisle, and it could have an unexpected effect on how much you spend. You grab a grocery cart, start working through your list and notice a screen on the handle offering directions, coupons and product suggestions. It can keep a running total and may even let you skip the checkout line. That sounds convenient. It also gives the store a new way to reach you while you are deciding what goes into your cart.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
