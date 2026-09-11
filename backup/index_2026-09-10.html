@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>THURSDAY, SEPTEMBER 10, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/09/931/523/charlie-kirk-turning-point-action-tucson.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Republican convention attendees share heartfelt tributes to late Charlie Kirk on assassination anniversary</h3>
+                <p class="lead-summary"><strong class="drop-cap">D</strong>ALLAS, Texas – A year after the shocking assassination of conservative titan and Turning Point USA founder Charlie Kirk, Republicans gathered at the GOP's midterm convention shared the profound ways in which the young leader and family man impacted their lives. "Charlie Kirk is a wonderful man, and he is very much missed," Marsha Landry of Texas told Fox News Digital during an interview at the American Airlines Center, where the Republican Party is rallying to try to keep control of the House and Senate in November. "He was making a lot of progress in this country, especially among the youth. I know personally some of our children have really started paying attention." Charlie Kirk throws hats to the crowd after arriving at Utah Valley University in Orem, Utah, on Sept. 10, 2025. Kirk, founder of Turning Point USA, was speaking at his "American Comeback Tour" when he was shot in the neck and killed. (Trent Nelson/The Salt Lake Tribune/Getty Images) "It's a daily reminder that we have to have courage to go out there and spread the message, not only of just conservatism, but our faith as well," he said. "And so on this anniversary, I look back at not only what Charlie Kirk was able to accomplish, but the things that even in his passing he's still able to do." On this day last year, Kirk, 31, was speaking at Turning Point's "American Comeback Tour" event at the Utah Valley University (UVU) in Orem, Utah, just after noon, when he was shot in the neck. He was pronounced dead at a local hospital shortly thereafter. The suspect in the killing, then-22-year-old Tyler Robinson, is accused of firing one shot from a rooftop overlooking the quad where Kirk was speaking. A shocked crowd scattered as Kirk was rushed away from the scene. Conservative activist Charlie Kirk is pictured with his wife Erika Kirk on stage at an event earlier this year in Phoenix. (Samuel Corum/Getty Images) "I think it's an extremely somber reminder of what we have in this country, that free speech is not free, that somebody died for that right, and Charlie Kirk [was] somebody who was brave enough to go out there on the college campuses and talk about conservatism and prove to the American people and the young generation that the conservative policies still work," Jones said.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>The Victims of 9/11 Deserved Better</h4>
+                <p>On this anniversary, we can choose anew.</p>
+                <p class="source-credit">— National Review</p>
+            </div>
+            <div class="story-minor">
+                <h4>Lindsay Clancy Jurors Are Reminiscent Of The Covid Cult</h4>
+                <p>The majority badgered and bullied the holdout juror who didn’t ‘trust the experts’ on the ‘science’ of postpartum psychosis. Sound familiar? Kellie Farina’s frustration was palpable, her disdain still fresh as she described her unyielding fellow juror. Farina said the man just didn’t get it. Despite all of the evidence (the toxicology report, the “expert” testimony, the “entertaining” defense attorney), he refused to join the 11 jury members who had long before agreed that Lindsay Clancy was not guilty of murdering her three young children. The 11 angry men and women on the jury agreed that Clancy was legally insane when she used exercise bands to strangle to death Cora, 5, Dawson, 3, and Callan, 8 months — one by one in the Clancy basement. She then attempted to take her own life. But after 40 hours of deliberations, the holdout wouldn’t budge.</p>
+                <p class="source-credit">— The Federalist</p>
+            </div>
+            <div class="story-minor">
+                <h4>U.S. Aircraft Hit In Iranian Strikes</h4>
+                <p>One A-10 Thunderbolt attack aircraft was hit and lost a wing, while roughly eight F-15s suffered minor damage but were reportedly returned to service. Your information could be the missing piece to an important story. Submit your tip today and make a difference.</p>
+                <p class="source-credit">— Daily Wire</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/04/931/523/synagogue-security-nypd.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>How 9/11 transformed synagogue security into a new reality for the Jewish community</h3>
+                <p class="lead-summary"><strong class="drop-cap">Y</strong>eshiva University President Rabbi Ari Berman joins 'America's Newsroom' to discuss the rise of antisemitism in New York City following a hate crime attack at a Manhattan synagogue. Berman outlines campus security preparations prior to the start of classes as data shows 860 incidents in the city and nearly 1,200 statewide. At sundown on Friday, Sept. 11, as America marks 25 years since the terrorist attacks that killed nearly 3,000 people, Jewish families across the country will welcome in Rosh Hashanah, the Jewish new year marking 5787. They will enter synagogues at the moment of peak annual attendance, walking past armed guards, security cameras, secured doors and bag checks. The convergence brings into focus how the Sept. 11 attacks transformed security in American synagogues and helped create the national infrastructure that now protects Jewish life. An NYPD Mobile Command Unit stands outside of Temple Emanu-El on 65th Street near Central Park in New York City, May 22, 2025. This is part of an increase in security at Jewish organizations nationwide after an Israeli couple was killed in Washington, D.C. (Kevin C.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Iranian-backed Houthis fight to block Red Sea passage for Saudi oil</h4>
+                <p>Houthi control of the Bab al-Mandab Strait would be a setback for the Trump administration in its war with Iran, which has already blocked the Strait of Hormuz.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>The ancient spirit who’s helping protect Rio from the effects of El Niño</h4>
+                <p>The city has announced a 25-year agreement for the services of Cacique Cobra Coral, a spirit channeled by a 71-year-old woman in Guarulhos, Brazil.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Drone nearly strikes Zelenskyy’s plane before takeoff for Norwegian king’s funeral, PM says</h4>
+                <p>Fox News foreign correspondent Jeff Paul discusses the latest on Russia's airspace, drone incursions and the response from NATO allies as regional tension continues on 'Special Report.' A plane carrying Ukrainian President Volodymyr Zelenskyy to Norway for the king’s state funeral was "almost hit" by a drone as it prepared to take off from Moldova on Tuesday, according to Reuters.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F09%2Fnewspress-collage-hvhnijlia-1789042978821.jpg?quality%3D90%26strip%3Dall%261789028740" alt="Lead Story Image" class="news-photo">
+                <h3>Cris Collinsworth stunned into silence by Drake Maye’s awful Patriots ending</h3>
+                <p class="lead-summary"><strong class="drop-cap">F</strong>ifty-six seconds went by between Drake Maye’s costly interception against the Seahawks on Wednesday night and the NBC analyst’s first comments on the game-losing moment in the 13-10 loss. “I can’t believe that throw … Wow,” Collinsworth said when he came to. “I mean, there are certain things you just can’t do or try when you have field goal range and overtime in your grasp. And that was the play — off his back foot and fading away and didn’t get it. Out of bounds. On 3rd-and-5 with 26 seconds left as the Patriots trailed 13-10, Maye, while under pressure, threw up a risky pass intended for Mack Hollins in the end zone that led to a toe-tapping interception by Josh Jobe. Mike Tirico: "A TERRIBLE DECISION!" Cris Collinsworth: "I can't believe that throw… Wow. I mean, there are certain things you just can't do or try when you have field goal range and overtime in your grasp. And that was the play… Ouch." pic.twitter.com/oZuIRuNN2n Maye’s only game with multiple interceptions last season came during the Patriots’ Super Bowl loss to the Seahawks in February when he threw two in the 29-13 defeat. Tirico and Collinsworth both covered Super Bowl 2026 at Levi’s Stadium on Feb. 8 as NBC had the broadcasting rights to the Big Game. Seven months later, they watched the same results play out in the in a Super Bowl rematch. New England led 10-0 in the second half and seemed to have all the momentum but even without injured Sam Darnold, Seattle scored 13 straight points, including a 45-yard touchdown from backup QB Drew Lock to wideout Jaxson Smith-Njigba, to stun the Patriots.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>How to Watch 49ers vs. Rams: TV Channel, Live Stream, Time</h4>
+                <p>The San Francisco 49ers and Los Angeles Rams meet Thursday, Sept. 10, 2026, in a first for the league: a regular-season game at Melbourne Cricket Ground in Melbourne, Australia, with kickoff set for 8:35 p.m. ET. The same team ended both of their 2025 seasons. Seattle routed the 49ers 41-6 in the divisional round, then beat the Rams 31-27 in the NFC Championship Game, one win short of Super Bowl LX. Los Angeles enters 2026 as the outright favorite to win Super Bowl LXI, at +500. Below, we'll give you all the details you need to know about how to watch this game. For Los Angeles, the clearest skill position name to watch is Puka Nacua because his availability changed the shape of this matchup. He was not listed on the Rams injury report released Tuesday after dealing with a core issue, and that points to him being expected to handle his usual role against San Francisco.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>The moment benches cleared in Pirates-White Sox game after elbow thrown: ‘What the f–k is the matter with you?’</h4>
+                <p>The benches cleared in Chicago on Wednesday night after White Sox infielder Sam Antonacci elbowed Pirates second baseman Brandon Lowe while trying to break up a double play. While Antonacci did not deliver an egregious blow by any means, Lowe and others took issue and the Pirates veteran seemingly told him during the ado: “What the f–k is the matter with you?” “I just didn’t like the slide. Said my piece and walked away,” Lowe said after the Pirates’ 4-2 win at Rate Field in the middle contest of this three-game set, per MLB.com. “I don’t really know what led to it clearing, but bad slide the first night, bad slide tonight, and just kind of tired of it … He said something back. I reiterated what I said, and then I thought that was the end of it, and just kind of walked and went about my business, and then saw our guys coming out, and next thing I know, they were clear.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Dodgers Reportedly Call Up Top Prospect Josue De Paula</h4>
+                <p>The Los Angeles Dodgers are calling up top prospect Josue De Paula straight from Double-A, according to multiple reports on Wednesday. The Athletic was the first to report. De Paula is expected to get at-bats at designated hitter after Dodgers manager Dave Roberts announced on Wednesday that Shohei Ohtani will be heading to the IL.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F09%2F140357455.jpg?quality%3D90%26strip%3Dall" alt="Lead Story Image" class="news-photo">
+                <h3>Elon Musk threatens to sue over Alex Gibney’s controversial documentary as lawyer says flick reeks of bias</h3>
+                <p class="lead-summary"><strong class="drop-cap">E</strong>lon Musk is threatening to sue over documentarian Alex Gibney’s new movie about him, saying the film’s insinuation that Musk influenced the 2024 election in President Trump’s favor reeks of defamation. Musk’s high-profile lawyer Alex Spiro blasted Gibney’s film in a new letter, addressing the head of the production company behind it. Spiro zeroed in on coverage of the movie, which premiered Tuesday at the Venice Film Festival, noting the flick suggests Musk used his Starlink satellites to tilt the 2024 contest in favor of his ally Trump. “You are … on notice, before release, that the insinuation is false, that the material refuting it is public, and that you chose not to be told the rest,” Spiro wrote Adam Mellion of Jigsaw Productions. He was referencing articles noting that Musk’s ex Ashley St. Clair says in the movie: “He had told me [before the election] he was going to unleash the ‘anomaly in the matrix.’” She goes on to say Musk told her, “I have ten thousand lasers in space.” Asked by Gibney if she believes Musk was referring to Starlink, she states, “I mean, I don’t know where else he has space lasers.” Spiro’s letter states those quotes and other statements in the movie superficially frame the idea of Musk committing election interference as a question – but really amount to an unfounded accusation of a serious crime. “Starlink was not connected to vote tabulation. Election officials in multiple states, independent cybersecurity researchers, and fact-checkers publicly refuted the Starlink vote-rigging claim in November 2024, and nothing since has revived it,” Spiro wrote in the letter dated Sept. 3 and obtained by the post on Wednesday.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Hollywood Marine veteran Rob Riggle doubts modern stars would make Jimmy Stewart's WWII sacrifice</h4>
+                <p>Actor and comedian Rob Riggle discusses fan outrage over sports games on streaming services, his new Fox Nation special on baseball’s impact on New Yorkers after the Sept. 11, 2001, terrorist attacks, and more on ‘Fox & Friends Weekend.’ Hollywood Marine veteran Rob Riggle has doubts about whether today's stars would be willing to step away from the spotlight to serve in uniform like WWII bomber pilot Jimmy Stewart.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>60 years on, Paramount has ruined ‘Star Trek’</h4>
+                <p>“Star Trek,” starring William Shatner as Captain James T. Kirk, premiered 60 years ago this week on NBC. Accompanying the U.S.S. Enterprise on its five-year mission to boldly go where no man has gone before, the groundbreaking show set the course for modern science-fiction storytelling as we know it and smashed societal barriers. Ahead of its time, Gene Roddenberry’s series was canceled in 1969. Call it the “original” sin. But those three seasons birthed a sprawling franchise of interconnected TV and movie properties decades before the concept of onscreen “universes” was widely embraced by Marvel, “Star Wars” and, oy, King Kong.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Prince Harry's rumored Diana film 'might feel like another betrayal' to Prince William as rift grows: expert</h4>
+                <p>King Charles confirms Prince Harry and Meghan Markle will not return to royal duties. A letter sent on behalf of the King explains their styles as His and Her Royal Highness remain in abeyance and they are now akin to private citizens. Prince Harry's rumored movie about his late mother, Princess Diana, "might feel like another betrayal" to Prince William as the royal rift between the brothers grows, according to experts.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/09/931/523/floating-solar-panels-1.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Floating solar panels could save cities millions. Is your town next?</h3>
+                <p class="lead-summary"><strong class="drop-cap">F</strong>ox News host Will Cain discusses Cowboy Space Corporation’s plans to launch solar-powered data centers into orbit by 2028 as demand for artificial intelligence infrastructure grows. Cain explains how the technology could use solar energy to power AI chips in space. What if your town could build a solar farm without giving up acres of valuable land? Lima, Ohio, is trying something different. The city has completed a 2-megawatt solar array that floats on the Twin Lakes Reservoir, its primary drinking water source. More than 3,000 solar panels now sit on the water and feed electricity to the nearby water treatment plant. The city projects the system will save nearly $10 million in electricity costs over its lifetime. That kind of savings could get the attention of cities far beyond Ohio. So, could floating solar panels eventually show up on a reservoir near you? Here's how the technology works, why cities are interested and what it could mean for your community. Our free CyberGuy LIVE class, Protect Your Money From Today’s Biggest Threats, has ended, but you can still watch the full replay and download our financial protection checklist. Kurt "CyberGuy" Knutsson walks you through five simple ways to help defend yourself against AI scams, fraud, identity theft and financial hacks. You’ll learn how to set up bank alerts, strengthen your account logins, protect your phone number, freeze your credit and help secure your retirement savings against unauthorized transfers. No technical experience is needed. WHO PAYS FOR US POWER BOOM? BLUE, RED STATES OFFER STARKLY DIFFERENT WAYS TO LOWER UTILITY BILLS AMID AI SURGE An Ohio city is using floating solar panels on its drinking water reservoir to power its water treatment plant and cut millions in projected energy costs. (D3Energy) Lima officially celebrated the completion of its Twin Lakes Floating Solar Project on Aug. 12. The final system includes 3,120 solar panels spread across about 3.6 acres of water, according to developer D3Energy. The 2-megawatt array sits on Lima's primary drinking water reservoir. That reservoir serves roughly 35,000 residents.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>For years, they warned AI could kill all humans. Now people are listening.</h4>
+                <p>A doomsaying community once on the periphery of the tech industry has gained influence, as AI “agents” perform amazing and alarming feats.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Apple’s first folding phone has three screens and costs $2,000</h4>
+                <p>The iPhone Duo is Apple’s most significant change to its flagship smartphone since its launch in 2007.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Amazon's Alexa can now verify suspicious messages</h4>
+                <p>Artificial intelligence is rapidly accelerating elder fraud schemes across the U.S., targeting older Americans who hold a significant share of household wealth. ScamSkeptic founder Matt Sanner joins 'America's Newsroom' to highlight how fraudsters utilize AI to mimic voices and create deepfakes. Sanner provides key strategies for families to identify these scams and protect their vulnerable loved ones.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
