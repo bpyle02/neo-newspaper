@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>SATURDAY, SEPTEMBER 12, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/09/931/523/ICE-agents-and-Higgs.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>White House unloads on violent ‘criminal alien’ nabbed after investigators uncover election offense</h3>
+                <p class="lead-summary"><strong class="drop-cap">F</strong>ederal prosecutors charge a Honduran national with voter fraud in California after he allegedly registered to vote under an alias and cast ballots in multiple elections. Fox News' Matt Finn reports on the federal indictment details, revealing the suspect received a voter registration card using a gym membership. The case highlights ongoing debates surrounding voter identification laws. A Bahamian national who arrived in the U.S. during President Gerald Ford’s administration and was living with a green card while racking up a violent rap sheet before investigators found he voted illegally in the 2020 election, sparking the deportation process, officials say. The case of Anthony Tyrone Higgs is only the latest in a slew of arrests connected to illegal votes cast in recent elections, as the Trump administration engages in a broader crackdown on election integrity-related crimes. "This alien was a guest in our country who forfeited his right to be in the U.S. when he committed these violent crimes and voted in the 2020 election," White House spokeswoman Lauren Bis exclusively told Fox News Digital on Friday. ICE ARRESTS PERUVIAN NATIONAL ACCUSED OF ILLEGALLY VOTING IN 2024 ELECTION AS DHS CITES SIMILAR CASES "Any non-citizens who vote illegally in our elections will be arrested and removed. American elections are only for Americans." Homeland Security Investigations (HSI), a division of DHS, confirmed in a statement that Higgs had illegally voted in the 2020 election. HSI’s Atlanta office arrested Higgs in Decatur, Georgia on September 3, and he is currently in the custody of ERO, the ICE subdivision that handles migrant removal operations. Higgs was admitted into the U.S. in October 1976 as a Lawful Permanent Resident – commonly dubbed a Green Card holder. The Trump DHS has since placed him in proceedings to revoke his immigration status due to his lengthy rap sheet. TRUMP DOJ UNLEASHES LARGEST DENATURALIZATION EFFORT IN DEPARTMENT HISTORY — AND SAYS IT’S ‘ONLY THE BEGINNING’ Sen. Markwayne Mullin, R-Okla., speaks to reporters at the Capitol in Washington, Thursday, March 5, 2026. (J.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Brutal beating: Man, 45, bumps into teen at state fair, then gang of a dozen 'kicked and stomped' on man's face, fiancée says</h4>
+                <p>'Once that that fracture heals enough for him to open his mouth, he then will have very extensive dental surgery as he has a whole lot of broken, knocked-out and loose teeth.' The fiancée of a 45-year-old man said he accidentally bumped into a teen at the Minnesota State Fair on Saturday — after which he was punched, and then a gang of as many as a dozen "kicked and stomped" on his face. As a result, the victim's jaw reportedly was fractured in multiple places, which required emergency reconstructive jaw surgery, according to the Pioneer Press. Heather Hoffman told the paper that her fiancé, Sammy Kimbrough, was walking with two friends when he accidentally bumped into another person, “which is inevitable when you’re in a crowd."</p>
+                <p class="source-credit">— The Blaze</p>
+            </div>
+            <div class="story-minor">
+                <h4>Houses of Worship Deserve Protection from Disruption</h4>
+                <p>At a time when religious values are under attack, it is more important than ever to safeguard the sanctuary.</p>
+                <p class="source-credit">— National Review</p>
+            </div>
+            <div class="story-minor">
+                <h4>‘Love Island USA’ star Jen Terry weighs in on Kayda Bosse shading Ariana Madix at Season 8 reunion</h4>
+                <p>“Love Island USA” star Jen Terry said Kayda Bosse’s shade toward Ariana Madix at the Season 8 reunion “wasn’t a big deal” in the moment. Terry, who rose to fame as a bombshell on “Love Island USA” Season 8 this summer, spoke exclusively to Page Six’s “Virtual Reali-Tea” about a viral moment between Bosse and Madix at the reunion. “I don’t know if that [shade] was towards [Madix],” Terry, 23, told us. “That wasn’t a big deal in person.” While Terry did not watch the reunion back, she said she did see the clip in question. The model said she “wouldn’t expect that” type of behavior from Bosse, believing the moment was “clipped” to look like she was shading Madix.</p>
+                <p class="source-credit">— Https://pagesix</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/09/931/523/Houtis-Yemen.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Saudi Arabia tells Trump now is the time for military action as Iran-backed Houthis advance</h3>
+                <p class="lead-summary"><strong class="drop-cap">F</strong>ox News contributor Marc Thiessen joins Brian Kilmeade to discuss reports of Yemen's Houthis seizing a strategic Red Sea port. Thiessen warns of the ongoing threat from a nuclear-armed Iran and analyzes President Trump's past decisions on airstrikes. The conversation focuses on national security concerns and the broader geopolitical conflict in the Middle East. Saudi Arabia is urging Washington to take direct military action against Iran-backed Houthis, Fox News Digital learned after the terrorist group seized key positions along Yemen’s Bab al-Mandab Strait on Friday. The dramatic strengthening of Houthi's positioning along the coastline of Yemen is in one of the world's most important shipping choke points — a narrow passage that links the Red Sea with the Gulf of Aden, which has been used as a bypass as the Iran war continues to severely disrupt shipping, especially of oil, through the Strait of Hormuz. The rapid advance on Friday triggered urgent discussions at the highest levels in Riyadh and Washington, and a source familiar with the matter tells Fox News Digital that Saudi Crown Prince Mohammed bin Salman urged President Donald Trump to take military action against the Houthis.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>U.S.-Canada trade war set to hit hard in midterm battleground states</h4>
+                <p>Republican candidates in some of the nation’s most competitive races are treading carefully as local industries brace for President Trump’s tariffs.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>America built a fortress after 9/11. Then the threat started hiding in plain sight</h4>
+                <p>Javed Ali, a former US counterterrorism official who served at DHS and FBI, says America is safer from a 9/11-style attack — but today’s threats are harder to detect. On the morning of Sept. 11, 2001, Javed Ali drove past the Pentagon on his way to work in northern Virginia.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Al-Qaeda regroups in Afghanistan, 25 years after 9/11</h4>
+                <p>The terror organization and its offshoots have set up at least eight training sites over the past three years, taking advantage of the Taliban’s return to power.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F09%2Fcrop-40692100_f0d955.jpg?quality%3D90%26strip%3Dall" alt="Lead Story Image" class="news-photo">
+                <h3>Kalshi promo code NYPMAX: Trade $25, get $25 for the Subway Series</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>he Yankees and Mets continue their final Subway Series of the season Saturday afternoon, and you can get in on the action with the Kalshi promo code NYPMAX. Readers of The Post can enter the Kalshi promo code NYPMAX when creating an account to trade $25 and receive a $25 bonus. The Kalshi promo code NYPMAX can be used on Yankees vs. Mets, Week 2 of college football, or Sunday’s Week 1 NFL contests. First-time traders on the prediction market can forecast contracts on the new NFL season, international soccer matches, college football, and MLB games with others and participate in the excitement happening throughout the sports world. Once users have signed up, they’ll enter the Kalshi promo code NYPMAX, verify their account information, and complete at least $25 in trades to qualify for a $25 bonus. Kalshi operates in the following states and territories: Alabama, Alaska, Arkansas, California, Colorado, Connecticut, Delaware, Florida, Georgia, Hawaii, Idaho, Indiana, Iowa, Kansas, Kentucky, Louisiana, Maine, Minnesota, Mississippi, Missouri, Nebraska, New Hampshire, New Mexico, New York, New Jersey, North Carolina, North Dakota, Oklahoma, Oregon, Pennsylvania, Rhode Island, South Carolina, South Dakota, Tennessee, Texas, Utah, Vermont, Virginia, Washington DC, West Virginia, Wisconsin and Wyoming. When the MLB schedule was released, this September Subway Series looked like it could be pivotal for both the Yankees and the Mets.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Bears Reportedly Extend Starting RB D'Andre Swift On 3-Year Deal</h4>
+                <p>The Chicago Bears have signed running back D'Andre Swift to a three-year, $33.75 million extension, ESPN reported on Friday afternoon. The deal includes $27.5 million guaranteed, with the $11.25 million average annual value putting Swift 14th among NFL running backs.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Yankees’ Clarke Schmidt, Ryan Weathers near returning from IL</h4>
+                <p>Two starters are getting closer to coming off the injured list to help the Yankees in the bullpen. Clarke Schmidt will make a fifth rehab appearance on Saturday, which could be his last if he gets through it without issue to finish off his comeback from Tommy John surgery, with the hope that he joins the Yankees on their upcoming road trip and gets activated. Join Post Sports+ for exciting subscriber-only features, including real-time texting with Greg Joyce about the inside buzz on the Yankees. “Let’s get through Saturday and we’ll see,” manager Aaron Boone said Friday before the Yankees’ 6-4 win over the Mets in the teams’ Subway Series opener. “But that’s in play.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>This Year's Breakout Star Will Be ... Tyler Shough? Why Scouts, Execs Like Saints QB</h4>
+                <p>When we surveyed people around the NFL on which player could be the next Drake Maye or Jaxon Smith-Njigba and make a sudden leap in 2026, one common answer emerged. New Orleans Saints quarterback Tyler Shough was routinely mentioned by scouts and executives we spoke with as a rising star to watch this season. In fact, one NFL executive told us that there's no young quarterback "better set up for success" than Shough, while a scout told us that he was the best rookie quarterback last season.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F09%2Fnewspress-collage-7xdiskdf2-1789163625275.jpg?quality%3D90%26strip%3Dall%261789149299" alt="Lead Story Image" class="news-photo">
+                <h3>‘Being Heumann’ review: ‘CODA’ director returns with warm but generic disability rights movie</h3>
+                <p class="lead-summary"><strong class="drop-cap">R</strong>unning time: 127 minutes. Rated R (language, some sexual material and drug use). In theaters Nov. 6. On Apple TV Nov. 13. When 2021’s “CODA” steamrolled toward the end of the award season all the way to a best picture Oscar win, the feat was surprising at the time. But in retrospect, not so much. Audiences back then were craving movies that made them feel good instead of pretentious and depressed. And comfort is “CODA” director Sian Heder’s comfort zone. She proves as much again with “Being Heumann,” a warm if generic disability rights story that had its world premiere Thursday at the Toronto International Film Festival. Based on a real 1977 protest, a group of scrappy underdog activists led by the indomitable Judy Heumann stage a 28-day sit-in — one of many across the USA — to demand the government finally enforce a 1973 law forbidding discrimination on the basis of disability. That would require the sign-off on the final regulations by the squirmy United States Department of Health, Education and Welfare Secretary Joseph Califano (Mark Ruffalo, fine). The head of HEW hems and haws because giving the go-ahead means costly ramps and elevators would need to be added to inaccessible buildings. And fast. But Heumann and Co. are so determined to get Section 504 signed, about 150 of them storm the Federal Building in San Francisco and make camp. At one point they go on a hunger strike.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Liam Neeson, 74, says he likely still has ‘a couple’ more action movies left in him</h4>
+                <p>"Maybe a couple left, you know," Neeson told Fox News Digital when asked if he’ll transition away from action films in the near future. "Maybe … I hope I have a couple left.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Andrea Bocelli adds ‘Romanza’ 30th anniversary tour dates. Get tickets</h4>
+                <p>He’ll now headline at arenas with conductor Steven Mercurio all over North America from late January through mid-February. That includes stops for the 67-year-old Tuscany native in Charlotte (Jan. 29), Baltimore (Jan. 31), Atlanta (Feb. 2), Houston (Feb. 7) and Orlando (Feb. 10). Based on our findings at Set List FM, Bocelli has played select tracks from his landmark 1997 album at past ‘Romanza’ shows. Just a few of the most notable include breakthrough smashes “Con te partirò,” “Vivo per lei,” “Vivere,” “Il mare calmo della sera” and the title track “Romanza.” “[He] entered to a standing ovation and was mesmerizing from the second his mouth opened,” Chicago Concert Reviews gushed in an enthusiastic recap of a February gig.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Fox News Entertainment newsletter: King Charles shuts down Harry and Meghan; Prince George starts at Eton</h4>
+                <p>Prince Harry and Meghan Markle will not resume royal duties; Prince George has his first day at Eton.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/09/931/523/siri-bank-call-scam.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Asked Siri to call your bank? A scam could cost thousands</h3>
+                <p class="lead-summary"><strong class="drop-cap">K</strong>urt ‘CyberGuy’ Knutsson explains how a reader named Rosette made a Google search and wound up handing her credit card number and birth date to a scammer. Asking Siri to call your credit card company sounds about as routine as asking for the weather. You say the company name, Siri finds a number and the call begins. For Virginia, an 82-year-old woman from Concord, Massachusetts, that simple request nearly turned into a financial nightmare. She says she asked Siri to call American Express. Instead, she reached a bogus number. From there, the conversation eventually moved to her Bank of America account and a supposed $1,000 credit that suddenly became $100,000. Virginia caught on before sending the money. Her story shows how a Siri bank scam can exploit something many of us barely think about: where a phone number came from before we dialed it. The Better Business Bureau has previously warned that fake customer service numbers can surface through voice searches. It has documented cases involving Siri and other voice assistants where people believed they had reached a legitimate company. Here's how the scam unfolded and what you can do before your next financial call to make sure you're reaching the real company. An 82-year-old woman says asking Siri to call American Express connected her to scammers who nearly convinced her to send away her retirement savings. (Kurt "CyberGuy" Knutsson) Our free CyberGuy LIVE class, Protect Your Money From Today’s Biggest Threats, has ended, but you can still watch the full replay and download our financial protection checklist. Kurt "CyberGuy" Knutsson walks you through five simple ways to help defend yourself against AI scams, fraud, identity theft and financial hacks. You’ll learn how to set up bank alerts, strengthen your account logins, protect your phone number, freeze your credit and help secure your retirement savings against unauthorized transfers. No technical experience is needed. Virginia wrote to CyberGuy after the experience because she wanted other people to know how quickly a seemingly safe phone call can go wrong.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>As AI fears grow, lawmakers are racing to turn alarm into action</h4>
+                <p>A former Anthropic researcher’s dire warning has awakened lawmakers to the risks of the technology, but translating urgency into law remains a long shot.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Fox News AI Newsletter: Researcher delivers extinction warning</h4>
+                <p>Former Anthropic researcher Jacob Coxon discusses his resignation from the company and concerns over artificial intelligence safety on ‘Special Report.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>8 biggest things we learned from Apple's 2026 event</h4>
+                <p>Apple's newly unveiled foldable iPhone Duo sparks significant consumer interest despite a hefty $1,999 starting price tag. On 'Varney & Co.', Taylor Riggs explains the premium device's unique dual-screen capability and ultra-thin design. Host Stuart Varney admits he plans to purchase the high-end smartphone, which can cost up to $3,000 for the two-terabyte storage model.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
