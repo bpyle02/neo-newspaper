@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>WEDNESDAY, SEPTEMBER 16, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://media.townhall.com/cdn/hodl/2026/248/a8a22777-863d-4dee-bc11-f1acbf22a523.jpg" alt="Lead Story Image" class="news-photo">
+                <h3>Roy Cooper Released Thousands of Violent Criminals and Claimed Doing So Was About 'Public Safety'</h3>
+                <p class="lead-summary"><strong class="drop-cap">D</strong>uring his tenure, North Carolina Gov. Roy Cooper freed thousands of violent criminals including murderers, rapists, and child predators. Many of those criminals went on to reoffend, including Tyrell Brace who killed 23-year-old Elante' Thompson and Brandy Kachelle Wilson, who stabbed 36-year-old Scott Stroup to death after her release. Cooper also vetoed legislation that would have required North Carolina Sheriffs to cooperate with ICE. Because of that, Fletcher Harris and Skylar Provenza are dead. They were killed by illegal alien Juan Alvarado Aguilar, who also had a lengthy criminal record when he hit the car in which Harris and Provenza were traveling. Harris was 20 years old; Provenza was 19. With the election nearing and polls showing Michael Watley gaining on Cooper, Cooper is now trying to frame his soft-on-crime record as a public-safety issue. That's what Cooper is saying now of his decision to release thousands of murderers. Roy Cooper says his release of 4,200 murderers, child predators and rapists was “something we wanted to do to protect the public.”Has he lost his mind?!?This was the worst decision made by a Governor in the history of NC. Cooper’s level of incompetence is stunning. pic.twitter.com/sN02PcLYZS "The centerpiece of the Republican campaign against you is this deal that you had, this settlement deal that you reached about the prisoner release," said CNN's Manu Raju. "Roughly 3,500 prisoners were released early. When you look back at the way that that was handled by you and your administration, do you have any regrets about the way you handled that?" "This is something that the state had to because the court ordered it," Cooper replied. "And I think a lot of people believed that, if you ask the plaintiffs, they were very frustrated that more weren't released. And this was something that we wanted to do to make sure we worked to protect the public." This is the dumbest thing I’ve ever heard in my entire life.The best way to keep the public safe is to keep the VIOLENT CRIMINALS in jail.Obviously.Roy Cooper is the worst. pic.twitter.com/HITWXuj30o He is the worst. He could have fought it. He could have said he wasn't going to release violent criminals. But he did, and he blamed a court order for the death and destruction of lives that followed. After Cooper's 2019 anti-ICE veto, convicted child sex offender Marvin Ramirez Torres, an illegal alien from El Salvador, was released back into the community despite his felony record.</p>
+                <p class="source-credit">— Townhall</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>The Democratic fundraising machine under GOP investigation is fighting back</h4>
+                <p>A law firm representing ActBlue reviewed its donation history and met with congressional investigators to present its evidence that the Democratic fundraising platform did not mislead Congress.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Dem House speaker torched for invoking 9/11 to attack key Trump policy: 'Totally wrong'</h4>
+                <p>Rep. Ryan Mackenzie, R-Pa., blasts Pennsylvania House Speaker Joanna McClinton for "totally wrong" view of immigration enforcement. Rep. Ryan Mackenzie, R-Pa., fired back at the Pennsylvania House speaker, a Democrat, after she suggested the Trump administration’s crackdown on illegal immigration could invite 9/11-like violence.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Feds smash multi-million dollar homeless scheme as charity worker with shady list of ‘ghost clients’ dragged from her home</h4>
+                <p>A charity worker who allegedly took massive bribes in exchange for pouring millions of taxpayer dollars into the pockets of a corrupt homeless service bigwig was busted by the feds in a sweeping operation that targeted infamous homeless services fraud in that’s crippling Los Angeles. FBI agents in a dramatic raid swarmed the South Los Angeles home of Lakiya Malone before dawn, pounding on her door and yelling for her to “come out!” As the SSG worker emerged, she was placed in handcuffs by men in Kevlar vests, while others trained rifles on her house. FBI agents collared Malone, 48, more than seven months after the federal government charged charity leader Alexander Soofer, 42,  with stealing $23 million in public funds meant for the needy.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/01/931/523/unrwa-hq-idf-gaza.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Trump brings new heat to controversial UN agency as alleged Hamas ties engulf scores of employees</h3>
+                <p class="lead-summary"><strong class="drop-cap">S</strong>téphane Dujarric tells Fox News Digital UNRWA is implementing the Colonna recommendations as a new report questions how many reforms were actually carried out. (Credit: UNTV) President Donald Trump recently amplified a report about a U.S. government investigation that referred more than 100 current or former UNRWA employees over alleged ties to Hamas — as a new watchdog report accuses the U.N. agency of overstating how much it has reformed. The scrutiny, which included Trump sharing the report on Truth Social in August, comes as Geneva-based UN Watch released a report Monday challenging UNRWA’s claim that it has completed 41 of the 50 reforms recommended by an independent review led by former French Foreign Minister Catherine Colonna. UN Watch says that when it compared UNRWA’s claims with what Colonna actually recommended, at most 13 of the 50 reforms had been completed as prescribed. The group argues that UNRWA repeatedly counted drafting policies, launching pilot programs or creating plans as completed reforms even when full implementation had not occurred.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Battle with Trump is sending Canada into the arms of the E.U.</h4>
+                <p>The head of the E.U.’s executive branch is proposing “associate membership” for Canada, as Ottawa also pursues new trade deals with China.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Turkey expands arrests after LGBTQ+ crackdown</h4>
+                <p>Turkey’s Justice Minister Akin Gurlek launched the crackdown, saying it was part of an initiative to protect children and family values.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Norway faces backlash over 'deeply racist' proposal to jail citizens for West Bank business</h4>
+                <p>US Amb. Mike Huckabee warns of negative impact over UK plan to ban Israeli West Bank settlement goods, speaking to 'BBC World Service Newsday.' (Credit:  'BBC World Service Newsday' via Reuters.) Critics are slamming Norway over new legislation that they say singles out Jews. The proposed law could send individuals to prison for up to three years for knowingly conducting certain forms of business with Israeli communities in the West Bank.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/statics.foxsports.com/www.foxsports.com/content/uploads/2026/09/1200/675/brewers-scaled.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Misiorowski Powers Brewers To A 4th Straight NL Central Title</h3>
+                <p class="lead-summary"><strong class="drop-cap">J</strong>acob Misiorowski struck out seven in five shutout innings and the Milwaukee Brewers won their their fourth straight National League Central title with a 5-1 win over the Pittsburgh Pirates on Tuesday night. About 50 minutes after the final out, the Brewers clinched the division when the second-place Chicago Cubs lost to Atlanta. Milwaukee players watched the end of that game on television, raising hands and cheering at the final out. The flamethrowing Misiorowski (15-5) dropped his ERA to major league-best 1.89 and boosted his season strikeout total to 243. Nine of the towering right-hander's first 10 pitches topped 100 mph and he worked around five hits — all singles — to win his fourth straight decision. Joey Ortiz and Luis Lara drove in two runs each for the Brewers, who have become postseason fixtures for the last decade but are still seeking the franchise's first World Series appearance since 1982. Swept by the Los Angeles Dodgers last season's NL Championship Series, Milwaukee has qualified for the postseason for the eighth time in nine years.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Former ESPN star Dan Le Batard slams Troy Aikman for bizarre ‘MNF’ commentary: ‘Am I hearing this right?’</h4>
+                <p>During the Chiefs’ 31-10 dismantling of the Denver Broncos at Arrowhead on Monday night, the former ESPN journalist-turned-podcast host and television star began noticing a strange pattern. After rewatching the first half, Le Batard ripped off a bunch of Troy Aikman one-liners, and a trend quickly develops. “The Denver roster is as deep as any in football,” Le Batard first quoted Aikman saying. Le Batard is keen to point out that ESPN is hosting the Super Bowl this year, and Aikman’s voice will be heard by many millions of ears this February. A few voices on Le Batard’s show added that they “don’t believe” that these things were actually said by Aikman during the game.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>NFL Catchup: Ben Johnson Explains Bears Scoring Outburst; Latest Injury Updates</h4>
+                <p>With Week 1 officially over and Week 2 around the corner, Tuesday saw a mix of injury updates across the NFL as teams digested their season openers. Kansas City Chiefs rookie cornerback Mansoor Delane appears to have avoided a long-term injury after making a big play against the Denver Broncos, while Baltimore Ravens wideout Ja'Kobi Lane could be facing a month-long absence.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>One ‘dogs–t’ play could end up deciding who wins AL Central</h4>
+                <p>The White Sox left fielder misplayed a fly ball at the worst moment on Tuesday night, aiding Brayan Rocchio’s walk-off double in a 7-6 Guardians win as the two rivals fight for the AL Central title. Rocchio came to the plate with two outs and runners on second and third with the Guardians trailing 6-5 in the ninth inning. Rocchio, who has seven career walk-off plate appearances, hit a fly ball toward the left-field corner off Grant Taylor that just eluded a diving try by Antonacci and easily plated the tying and game-winning run. “Pretty dogs–t, to be honest,” Antonacci said of how he tracked the fly ball. “Just have to clean it up. It’s the big leagues. You can’t make those types of routes in that position.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F09%2Fnewspress-collage-nqw2a3168-1789503900357.jpg?quality%3D90%26strip%3Dall%261789489526" alt="Lead Story Image" class="news-photo">
+                <h3>How to watch ‘Reacher’ spin-off ‘Neagley’ premiere for free: Time, cast</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>he new Prime Video spin-off “from the world of ‘Reacher'” premieres today, Sept. 16. All eight episodes of the first season will drop at once. Maria Sten, who portrayed Frances Neagley in the first three seasons of “Reacher” will reprise her role as the titular security professional who served in the Army with Jack Reacher. Per Prime Video, the first season of “Neagley” follows the private investigator and former military protege of Jack Reacher in the Army’s 110th Special Investigations Unit as she “learns that a beloved friend from her past has been killed in a suspicious accident,” and “becomes hell-bent on justice.” “Using everything she’s learned from Jack Reacher and her time as a member of the 110 Special Investigations, Neagley puts herself on a dangerous path to uncover a menacing evil.” If you aren’t a Prime Video subscriber yet, you can get started with a 30-day Amazon Prime free trial, including Prime perks like the Prime Video streaming service, free two-day shipping, exclusive deals, and more. After the free trial, Amazon Prime costs $14.99/month or $139/year. All 18- to 24-year-olds, regardless of student status, are eligible for a discounted Prime for Young Adults membership as well, with age verification. After a six-month free trial, you’ll pay 50% off the standard Prime monthly price of $14.99/month — just $7.49/month — for up to six years with all the perks.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Macklemore's long history of controversy from Grammy wins to 'Free Palestine' concert remarks</h4>
+                <p>The musician, who's full name is Ben Haggerty, was kicked off Sheeran's tour following backlash from his "Free Palestine" messaging during his opening act at MetLife Stadium over the weekend. While the fallout continues now that four supporting acts have withdrawn from the tour, Macklemore, 43, is no stranger to controversy and has often used his platform to amplify political issues.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>LA Angry Birds mogul and ’80s pop legend pump $8M into tiny soccer club in bid to create next Wrexham</h4>
+                <p>Tears for Fears star Curt Smith sang about ruling the world — and now he is backing a Hollywood-style bid to transform his hometown soccer club into the next Wrexham. Smith, 65, co-founder of the ’80s hitmakers, is among the investors in an LA-led consortium that has taken over Bath City Football Club, and will serve as the club’s celebrity ambassador. The group has pumped more than £6 million (about $8 million) into the club in southwest England. The investors hope to emulate the extraordinary success of Wrexham AFC, transformed into a global brand after its acquisition by Hollywood stars Ryan Reynolds and Rob McElhenney.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Prince Harry, Meghan Markle’s school-run problems shouldn’t 'come as a surprise,’ royal expert says</h4>
+                <p>Fox News senior foreign affairs correspondent Greg Palkot reports on Prince Harry and Meghan Markle relocating to the United Kingdom after residing in California for six years, noting that the couple plans to establish a residence outside London and enroll their children in a British school while King Charles undergoes cancer treatment.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/08/931/523/teen-using-iphone-stock.png?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>iOS 27 is here: 10 iPhone features you’ll want to try now</h3>
+                <p class="lead-summary"><strong class="drop-cap">A</strong>pple's newly unveiled foldable iPhone Duo sparks significant consumer interest despite a hefty $1,999 starting price tag. On 'Varney & Co.', Taylor Riggs explains the premium device's unique dual-screen capability and ultra-thin design. Host Stuart Varney admits he plans to purchase the high-end smartphone, which can cost up to $3,000 for the two-terabyte storage model. Your iPhone is getting a major update. Apple released iOS 27 to the public on Monday, Sept. 14, bringing a wave of new features along with the long-awaited Siri AI beta. However, there is much more happening under the hood. Safari can now watch websites for changes. The Photos app gets powerful new editing tools. Apple also says it has made iOS faster across compatible iPhones. Some of these changes could save you from digging through apps or hunting for information yourself. Others give you more control over how your iPhone looks and works. Here are the iOS 27 features I think are worth trying first, along with how to find them. In this free live online class, Kurt "CyberGuy" Knutsson will show you five practical ways AI can help you take a more active role in your healthcare. You’ll learn how to organize your health history, remember important appointment details, understand complicated medical information, research prescriptions and prepare questions for your next doctor’s visit. No technical experience is needed. Apple’s iOS 27 adds smarter Photos tools, Safari upgrades, stronger privacy controls and the long-awaited Siri AI beta for supported iPhones. (Anna Barclay/Getty Images) The good news is that Apple kept support fairly broad. iOS 27 works with the iPhone 11 family and newer models. It also supports the second-generation iPhone SE and later. That means plenty of people can upgrade without buying a new phone. However, the biggest AI features have tougher hardware requirements. Apple Intelligence and Siri AI require an iPhone 15 Pro or iPhone 15 Pro Max, or an iPhone 16 model or later. So, an iPhone 11 can run iOS 27, but it will miss Siri AI and other Apple Intelligence features.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>OpenAI’s Altman says world should ‘trust’ AI firms amid mounting fears</h4>
+                <p>Meta CEO Mark Zuckerberg also weighed in, with an apparent jab at competitor calls to slow down competition.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>DMV breach confirmed as hackers claim 200,000 records stolen</h4>
+                <p>Fox News national security correspondent Jennifer Griffin has the latest on the FBI's investigation into an alleged black market operation selling stolen driver's license records, examining the potential national security and identity theft risks, how millions of personal identification documents may have been compromised and what federal authorities are doing as the investigation unfolds on 'Special Report.'</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Fears of AI’s potential to destroy humanity spread from fringe to Washington</h4>
+                <p>Activists spent years cultivating allies on Capitol Hill. Now lawmakers in both major parties are discussing extinction.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
