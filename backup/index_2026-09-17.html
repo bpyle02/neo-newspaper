@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>THURSDAY, SEPTEMBER 17, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F09%2Fnewspress-collage-ylp3zwjq0-1789622251381.jpg?quality%3D90%26strip%3Dall" alt="Lead Story Image" class="news-photo">
+                <h3>Robert Kraft wants sit down with Macklemore after billionaire got him thrown off Ed Sheeran tour</h3>
+                <p class="lead-summary"><strong class="drop-cap">D</strong>ays after the billionaire Patriots owner banned the hip hop artist from his Gillette Stadium in Foxborough, Mass. for the rapper’s “Free Palestine” speech on Ed Sheeran‘s current tour — Kraft pledged $2 million to Palestinian relief efforts yesterday, saying Ed Sheeran personally called on him to do so. Kraft said after Macklemore publicly called on him to match the rapper’s own $1 million donation, “Earlier today, before Macklemore challenged me to match his donation, Ed called me and asked me to commit $2 million to match his donation to aid in the region to fight this humanitarian crisis… Ed now plans to reach out to other venue owners and our goal is to continue to work together to build bridges.” Kraft, followed by other stadium owners, previously said that Macklemore would not be welcome at the home of the Patriots due to his comments on Palestine — and Macklemore then left Sheeran’s tour followed by a stream of other opening acts and Sheeran’s own band in solidarity. In Kraft’s initial statement on the Macklemore controversy, he said he’d want to sit down with him. Music sources familiar to the situation say that Macklemore has so far not responded to the public invite — but that Kraft really does want to meet with him. (We reached out to reps for comment.) Macklemore was also banned at stadiums in Philadelphia, Atlanta, Charlotte, Indianapolis, Dallas and Tampa. Another source said “that wasn’t pushed by Robert. They were all thinking that and got together.” A source also huffed of Sheeran’s band bailing: “Ed could go onstage with an acoustic guitar and it would be a sell out.” Ian joined the Post's iconic gossip column in 2011 as Deputy Editor, and was also its Executive Editor. He was previously the New York Bureau Chief of the Hollywood Reporter, and Box Office Editor at Variety, as well as a film reporter for both publications. He worked in film as VP of Development & Production at producer Elaine Goldsmith-Thomas' company at MGM in NYC. A native of Brooklyn, Mohr has also worked at the Chicago Tribune and Pearson Television He has freelanced for Warner Bros., Sony, GQ, and Fashion Week Daily. He could probably beat you at bowling.</p>
+                <p class="source-credit">— Https://pagesix</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Democrats demand to know where Venezuelan oil revenue is going</h4>
+                <p>The Trump administration seized control of Venezuelan oil after capturing President Nicolás Maduro in January.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>CALIFORNIA IDLE: Iconic reality show ditches Hollywood after 24 seasons</h4>
+                <p>The Golden State just expanded its tax credits to keep productions from fleeing. Somehow, this one still didn't qualify. After nearly a quarter-century, one of the world's most successful reality franchises is leaving Los Angeles. It's the series that introduced America to Kelly Clarkson, helped turn Simon Cowell into an international celebrity, launched Carrie Underwood and Jennifer Hudson, and made Randy Jackson a household meme. It premiered when George W. Bush was president and survived a cancellation, a network change, countless judging-panel shake-ups, and the end of the monoculture that made it a phenomenon in the first place.</p>
+                <p class="source-credit">— The Blaze</p>
+            </div>
+            <div class="story-minor">
+                <h4>Why Ohio State is still the championship favorite despite historic collapse to Texas</h4>
+                <p>Arch Manning and No. 4 Texas’ historic 24-23 triumph over No. 1 Ohio State on Saturday will be one to remember, but it wasn’t enough to shake up college football futures markets: the Buckeyes’ odds as favorites to win the national championship only got shorter. Ohio State moved from +550 to +530 at DraftKings after Texas marched back with 20 points in the fourth quarter — the largest fourth-quarter rally to defeat a No. 1 team. The Buckeyes sank to No. 6 in the AP Top 25 while Texas, now the No. 1 team in the country, sits next on the board, priced at +650. This surprising market reaction underscores just how little one regular-season loss to a contender can mean in the expanded College Football Playoff era, according to DraftKings Director of Sports Operations Johnny Avello.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://static.foxnews.com/foxnews.com/content/uploads/2026/09/iran-plane-gif.gif" alt="Lead Story Image" class="news-photo">
+                <h3>Plane passengers scream in harrowing mid-flight video as violent shaking sends cabin ceiling panels flying</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>errifying video shows passengers screaming as ceiling panels appear to fall during a Sepehran Airlines flight in Iran on Tuesday. (Jam Press) Video captured an Iranian flight descending into chaos Tuesday as sudden, violent shaking appeared to tear apart the plane's cabin, causing overhead compartments and ceiling panels to collapse onto passengers. The incident happened during a Sepehran Airlines Boeing 737 flight over Iran that departed from Mashhad for Kermanshah, according to Jam Press. According to the outlet, the aircraft may have suffered engine damage and a tire blowout during takeoff. During the chaos, the plane's cabin appeared to disintegrate, causing ceiling panels and debris from damaged bins to fall and strike travelers. Passengers were heard screaming and praying as they held their hands up against the falling debris. Passengers hold onto seats and overhead compartments after a reported malfunction forced an emergency landing in Mashhad, Iran, on Tuesday. (JamPress) The pilot reportedly declared an emergency landing and sought to return to Mashhad Hashemi Nejad International Airport in Iran.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Carney embraces tighter ties with E.U. despite ‘hostile act’ warning from Trump</h4>
+                <p>Canadian Prime Minister Mark Carney addressed European lawmakers Thursday after E.U. officials said Canada could become the bloc’s first “associate member.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Gas prices are about to take a big jump, analysts say, with the worst still to come</h4>
+                <p>The forecast of economic impacts beyond November’s midterms contrast with the Trump administration’s optimistic messaging.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>US-backed Israel-Morocco deal deepens Abraham Accords amid growing regional threats</h4>
+                <p>Fox News senior White House correspondent Peter Doocy has the latest on Saudi Arabia normalizing ties with Israel and its push to join the Abraham Accords on 'America Reports.' NEW YORK — Israel and Morocco agreed Wednesday to upgrade their diplomatic missions to full embassies and exchange ambassadors nearly six years after Morocco joined the U.S.-brokered normalization drive that reshaped Israel’s relations with parts of the Arab world.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F09%2Fnewspress-collage-pk2eoj1nv-1789647803920.jpg?quality%3D90%26strip%3Dall%261789633505" alt="Lead Story Image" class="news-photo">
+                <h3>‘Billion-dollars worth of Mets’ scorched after allowing double to fall in during embarrassing sweep</h3>
+                <p class="lead-summary"><strong class="drop-cap">E</strong>SPN — and usual Orioles — announcer Kevin Brown took a dig at the Mets’ high-priced trio of Juan Soto, Francisco Lindor and Bo Bichette for letting a routine fly ball drop in for a leadoff double in the second inning of the Orioles’ 7-1 win that completed a three-game sweep at Citi Field. Join Post Sports+ for exciting subscriber-only features, including real-time texting with Mike Puma about the inside buzz on the Mets. That hit had an expect batting average of .010, according to Baseball Savant, and led to an unfortunate earned run for Xzavion Curry when he allowed a two-run homer two batters later to make it a 3-0 game. “The ball will drop,” Brown said as Citi Field fans began booing. “Lindor, Bichette and Soto, about a billion-dollars worth of Mets out in left field and none of ’em could pick it up.” If we want to get technical, the trio of Mets that converged on the play actually are worth at least $1.232 billion. Juan Soto’s historic $765 million pact spanning 15 years can reach $805 million with incentives, Lindor’s deal is worth $341 million over 10 years and Bo Bichette signed a three-year, $126 million deal last offseason that he may opt out of this offseason. A ball lands in between Francisco Lindor, Juan Soto & Bo Bichette for a double for Christian Encarnacion-Strand pic.twitter.com/yL7wxtfdOZ On said play, Christian Encarnacion-Strand lofted a lazy fly ball to left that floated toward the foul line, bringing Soto, Bichette and Lindor all toward that part of the field.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Tom Brady Has Seen Enough: Patrick Mahomes Is Back To Being Himself</h4>
+                <p>Tom Brady is not ready to dismiss the Kansas City Chiefs from the Super Bowl contender conversation. In fact, he's making a big declaration about the Chiefs and quarterback Patrick Mahomes. In his latest NFL power rankings, Brady placed the Chiefs at No. 7 and he thinks Mahomes is playing like himself again after tearing his ACL last December.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>A’s vs. Rays best bets, predictions: MLB Thursday picks, odds</h4>
+                <p>Mail from John Cobert back on Sept. 4: “Polar Bear’s first game back at Citi Field will remind some of us old-timers of Eddie Giacomin’s return to MSG with the Red Wings a lifetime ago.” Sean Manaea, who may be too young for “Eddie, Eddie, Eddie”: “It’s crazy. Pete’s not here. I know everyone loves him. He’s the man. But to see the reaction from our fans like that. I don’t know. I’ve never seen anything like it.” Next year’s Pete Alonso bobblehead night (dressed in Orioles black and orange) has already sold out. The one and only Stitches has been handicapping baseball, daily, for the Post since 2019. Miraculously, he has finished in the black twice. But wait there’s more. He showed his versatility by winning the Post’s NFL Best Bet crown last year.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Lionel Messi Scores 100th Inter Miami Goal In Campeones Cup Final Win vs. Cruz Azul</h4>
+                <p>Lionel Messi scored the 100th goal of his Inter Miami career and Casemiro added another as Miami defeated Cruz Azul 2-0 on Wednesday night to win the Campeones Cup. Messi opened the scoring in the 24th minute, heading in a cross from Luis Suárez for his 100th goal in 115 appearances across all competitions with Miami.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F09%2Fnewspress-collage-p6y0a5h2q-1789650196881.jpg?quality%3D90%26strip%3Dall%261789635838" alt="Lead Story Image" class="news-photo">
+                <h3>John Ritter’s family warns about the hidden but treatable heart condition that killed him — on what would have been his 78th birthday</h3>
+                <p class="lead-summary"><strong class="drop-cap">“</strong>We always heard, ‘Oh those Ritters die of their first and last heart attack,’ ” Amy Yasbeck, the beloved comedian’s widow, told The Post. “[John’s dad] clutched his chest and fell over. He was 60-something years old.” Country music star Tex Ritter’s sudden death was blamed on a cardiac emergency. Decades later, doctors made a similar assumption when his son showed up at a Burbank hospital sweating profusely, vomiting and complaining of chest pain in September 2003. But John wasn’t having a heart attack — and his family now suspects his father didn’t either. In reality, the “Three’s Company” star was suffering from an aortic dissection, a medical emergency involving the body’s largest artery that doctors initially failed to recognize before it claimed his life at 54. “The sad truth of the matter is that because it’s so much more common for it to be a heart thing, John was treated for a heart attack before they had done any imaging, and that exacerbated it,” Amy, 64, said. “This happens way too often.” Now, on what would have been John’s 78th birthday, his loved ones are sounding the alarm about aortic disease — and urging people to know their family history before tragedy strikes. “We’re just ringing the alarm,” said Tyler Ritter, John’s second son and third child with ex-wife Nancy Morgan. “If we can catch it ahead of time, we can prevent it.” An aortic dissection occurs when the wall of the aorta, the body’s main artery, tears. Blood can then force its way between the artery’s layers, potentially cutting off blood flow to vital organs including the brain, kidneys and heart, according to UChicago Medicine.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>'American Idol' ditches Hollywood for Georgia after two decades as California loses another production</h4>
+                <p>California gubernatorial candidate Steve Hilton joins ‘America’s Newsroom’ to discuss President Donald Trump’s push for a federal film tax credit to bring entertainment jobs back to California. He also weighs in on a new state tire regulation and a Los Angeles crosswalk controversy.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Last-minute Eagles Sphere ticket prices are dropping for this weekend</h4>
+                <p>The Eagles pick up their long-running Las Vegas Sphere residency this weekend with a pair of concerts at the eye-popping, immersive venue. And, in the hours leading up to the Sin City shows, ticket prices are dropping to see Don Henley, Joe Walsh, Timothy B. Schmit, Deacon Frey and Vince Gill live. When our team last reported on how much seats cost to see the Rock Hall of Famers live this weekend, the lowest price we could find on tickets was $461 including fees on StubHub. Now, 12 days after The Post published that story, prices start at $352 including fees on Vivd Seats at the time of publication.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Macklemore donates $1M to Palestinian aid organizations after Ed Sheeran tour fallout</h4>
+                <p>Rapper Macklemore causes chaos on Ed Sheerans tour after making anti-Israel comments at a concert. Ed Sheeran responds to the backlash, explaining that the decision to remove Macklemore was made by promoters. Macklemore announced that he is donating the $1 million he earned opening for Ed Sheeran's U.S. tour to organizations providing humanitarian aid to Palestinians, prompting a public response from New England Patriots owner Robert Kraft.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/09/931/523/driverless-car-racing.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Driverless racing goes global. Will fans care?</h3>
+                <p class="lead-summary"><strong class="drop-cap">A</strong>utonomous race cars are starting to show up on some very famous tracks. On Sept. 3, the Indy Autonomous Challenge brought its driverless race cars to WeatherTech Raceway Laguna Seca in California. Purdue AI Racing set a new autonomous track record and finished second in a head-to-head passing competition. Italy's Unimore Racing took the win. Two days later, autonomous racing took another step forward in Europe. Five teams brought fully autonomous race cars to Italy's Imola Circuit for the Abu Dhabi Autonomous Racing League's first race outside Abu Dhabi. Team Kinetiz came from fourth on the grid to win the 12-lap event. Now autonomous racing has reached major circuits in the U.S., Europe and Abu Dhabi. The technology clearly travels. The bigger question is whether the fans will follow. NEW! Join our upcoming CyberGuy LIVE class: Get Better Healthcare With AI In this free live online class, Kurt "CyberGuy" Knutsson will show you five practical ways AI can help you take a more active role in your healthcare. You’ll learn how to organize your health history, remember important appointment details, understand complicated medical information, research prescriptions and prepare questions for your next doctor’s visit. No technical experience is needed. University teams and their autonomous race cars gather at WeatherTech Raceway Laguna Seca after the Indy Autonomous Challenge’s Sept. 3, 2026 competition. (Indy Autonomous Challenge) The races at Laguna Seca and Imola came from two different autonomous racing programs. The Indy Autonomous Challenge brings together university teams that develop AI drivers for identical race cars. At Laguna Seca, nine university teams from North America, Europe and Asia were scheduled to compete. The Sept. 3 event pushed the competition further by adapting the Indy Autonomous Challenge's passing format to a road course for the first time. Instead of several cars racing as a pack, two autonomous cars take turns in attacking and defending roles. The software has to manage spacing and decide when it can safely make a move.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>AI has transformed the Pentagon’s aging networks into a national security risk</h4>
+                <p>Outdated networks face growing cyber threats as AI makes it easier for adversaries to exploit vulnerabilities and launch disruptive attacks.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Woman loses nearly $1M in LinkedIn romance scam</h4>
+                <p>A woman caught up in a two-year LinkedIn romance scam that used a real man's identity shares the tactics a scammer used to build trust and trick her into sending nearly $1 million. A message from a stranger on LinkedIn probably would not set off alarms for most of us. Especially when that person appears connected to someone you already know. That is how Gaby's story began. Gaby recently joined me on "The CyberGuy Report Podcast" at cyberguy.com/podcast/ to explain how an online relationship that began in 2019 grew into a devastating romance scam. Over roughly two years, she says she sent close to $1 million to a man she never met. The person Gaby thought she had fallen for was using the photos and likeness of a real man named Brian Haugen, who also joined us to explain what it has been like watching scammers use his photos to target women around the world.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>OpenAI reveals new cases of AI models cheating, going off script</h4>
+                <p>Newly disclosed incidents show models manipulating tests and generating their own instructions, raising fresh questions about AI safety.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
