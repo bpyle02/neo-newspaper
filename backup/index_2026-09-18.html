@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>FRIDAY, SEPTEMBER 18, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://media.townhall.com/cdn/hodl/2026/223/b77054c9-38b7-4c2a-a3e7-eebcbd3830b5.jpg" alt="Lead Story Image" class="news-photo">
+                <h3>Massachusetts Gov. Healey Uses Lindsay Clancy Case to Politicize Postpartum Care</h3>
+                <p class="lead-summary"><strong class="drop-cap">N</strong>ever let an opportunity go to waste. That's something Democrats are very good at, and Massachusetts Gov. Maura Healey is doing exactly that with the Lindsay Clancy case. While the three-ring circus that is the jury continues playing out in public, Healey wants the government to get involved in improving postpartum healthcare. New parents in Massachusetts should receive better support and postpartum care, Gov. Maura Healey said Tuesday, following the high-profile murder trial of Lindsay Clancy, who, her attorneys argued, was suffering from unresolved postpartum psychosis when she killed her three children in 2023. Healey proposed providing free home visits by nurses to all parents with newborns as well as updated regulations governing mental health screening of new mothers. “To every mom who has struggled with her mental health before, during or after pregnancy, I want you to know we see you — I see you,” Healey said during a visit to Boston’s Beth Israel Deaconess Medical Center. Maura Healey just signed the bill for abortions up to birth.How about better care for the BABIES. Do you know what a privileged life this woman led- you really believe that more health care was going to fix her. The only thing that was going to fix her miserable existence was the removal of those children and she accomplished that. Clancy worked at Massachusetts General Hospital, one of the best in the nation. Her husband, Patrick, made $400,000 a year. He took paternity leave and started working from home to help her. They also had a nanny, and the older two children were in daycare full time when the baby was born. Do you know what a privileged life this woman led- you really believe that more health care was going to fix her. The only thing that was going to fix her miserable existence was the removal of those children and she accomplished that. Lindsay Clancy was literally a rich lady with tons of resources. Resources weren’t the problem. Her strangling the life out of all three of her kids IS THE PROBLEM. I wouldn’t expect Gov. @maura_healey to understand that though since she recently made it legal to abort innocent… https://t.co/IzWw3XsWkP This is very telling, of course. Clancy had privilege; she had access to resources. That wasn't the issue here. The issue — as proven by the jury — was using this case as political activism. And Healey is continuing that. Editor's Note: Do you enjoy Townhall's conservative reporting exposing the radical left and woke media? Support our work so we can keep bringing you the truth.</p>
+                <p class="source-credit">— Townhall</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>The dirty secret behind Big Tech’s data center boom</h4>
+                <p>Tax breaks, shared grid costs, and eminent domain are helping hyper-scalers expand while ordinary ratepayers carry the risk. The White House and Congress promise that data centers will not cost consumers a dime. That is like a husband pledging not to beat his wife as his fist draws blood. The politicians who spent a year gaslighting the public about data centers’ power use now acknowledge the problem and promise to cover grid upgrades. But even as they propose legislation and tout a nonbinding industry pledge, data centers are already costing consumers. It is impossible for them not to. This week, the House passed the Ratepayer Protection Act (H.R. 9340) by a 417-3 vote. The bill establishes a federal standard that state regulators must consider but need not adopt. It would require large-load customers to cover the “full, incremental cost” of new or accelerated grid upgrades — not a full share of the existing system’s embedded fixed costs. That limitation helps explain the industry’s support.</p>
+                <p class="source-credit">— The Blaze</p>
+            </div>
+            <div class="story-minor">
+                <h4>Flock CEO, tech rivals called to testify before senators over AI camera privacy concerns</h4>
+                <p>Flock safety cameras tracking American vehicles spark intense privacy debates as the 'Outnumbered' panel weighs security against government overreach. Former Pentagon AI policy director Mark Beall warns that these automated readers could create a 'China-like surveillance state' in local communities.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>What Is An American? The Civic Nationalists Have No Idea</h4>
+                <p>A football game in Texas last week exposed the emptiness of ‘civic nationalism’ as a durable source of American identity. What is an American? There’s been some confusion about that lately as we debate, with increasing ferocity, immigration, assimilation, and the sources of American identity. Generally, there are two schools of thought. The so-called heritage Americans argue that Americanness is mostly based on a combination of history, ethnicity, shared culture, and ancestral heritage. The civic or propositional nationalists think it’s based on a set of ideas, an American “creed” or set of Enlightenment propositions that in theory anyone can adopt, no matter their background, culture, or religion.</p>
+                <p class="source-credit">— The Federalist</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/02/931/523/voting-russian-occupied-ukraine.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>‘Voters get to choose — just not the result’: Russia’s parliamentary election reaches occupied Ukraine</h3>
+                <p class="lead-summary"><strong class="drop-cap">F</strong>DD's Keti Korkiya says Russians are likely scared to give pollsters their real opinions on Putin and the war ahead of Friday's election. Russian State Duma elections began Friday — the first since the invasion of Ukraine in 2022 — including in its occupied areas there, where Russia will look to reinforce the illusion of popular support for its full-scale invasion and annexation of eastern Ukraine. OSCE election observers are not invited to monitor the outcome of the elections, a telling signal, critics say, that the Kremlin has no intentions of conducting free and fair elections. "Russia’s refusal to invite an election observation mission seriously breaches its international commitments and shows a worrying disregard for democratic standards. Election observation is not optional — it is something that all OSCE participating States have agreed to, and it is a cornerstone of transparency and accountability," OSCE Parliamentary Assembly President Pere Joan Pons told Fox News Digital. Russian President Vladimir Putin holds a Security Council meeting in Moscow on Friday, Aug. 7, 2026.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Their Gaza home was damaged, but they had nowhere else to go. It cost their lives.</h4>
+                <p>The sudden collapse of a building damaged three years ago by an Israeli airstrike highlighted another peril of an acute housing shortage in the Gaza Strip.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Archbishop of Canterbury withdraws award from Muslim cleric after past Osama bin Laden praise surfaces</h4>
+                <p>George W. Bush recalled visiting a mosque six days after 9/11, declaring "Islam is peace" to protect Muslim Americans facing harassment across the country. The Archbishop of Canterbury's office has withdrawn an interfaith award given to a Muslim cleric after past comments surfaced in which he praised Usama bin Laden.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>String of daring Russian plots is testing Washington’s restraint</h4>
+                <p>A strike on a train that imperiled former European leaders and CIA officers is among a spate of attacks that risked a dangerous escalation with the West, experts say.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/statics.foxsports.com/www.foxsports.com/content/uploads/2026/09/1200/675/tucker3-scaled.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Dodgers Clinch 5th Straight NL West Title, Making It 13 In Past 14 Seasons</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>he Los Angeles Dodgers clinched their fifth consecutive NL West division title and 13th in 14 seasons, sparked by four hits from Kyle Tucker that included a first-inning home run in an 8-2 win over the Cincinnati Reds on Thursday, The two-time World Series champions already were assured of their 14th straight postseason appearance, trying the record Atlanta set from 1991 to 2005. Los Angeles (93-60) had clinched no worse than a wild-card berth on Monday. Los Angeles opened a 9 1/2-game lead over second-place San Diego and has the second-best record in the NL as they try to overtake Milwaukee (95-57 entering Thursday) for the top NL seed. The division clinching was the fourth earliest for the Dodgers after Sept. 10 in 2019, Sept. 13 in 2022 and Sept. 16 in 2023. Tucker fell a triple short of the cycle and had three RBIs, hitting a single and a pair of doubles. He hit his 16th homer, a two-run drive in the first off Brady Singer, who allowed seven runs, nine hits and four walks in 3 1/3 innings. Freddie Freeman's sacrifice fly and Tucker's RBI double boosted the lead in the second, and the Dodgers opened a 7-0 lead in the fourth on Max Muncy's two-run double and Josue De Paula's RBI single.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Josh Allen was ‘shivering in the hot tub’ before masterful Bills performance</h4>
+                <p>It surely looked otherwise, but Josh Allen wasn’t at his best heading into the Bills’ win over the Lions on Thursday night. During the Amazon Prime postgame show following Buffalo’s 41-31 win in its first regular-season game in the new Highmark Stadium, analyst Richard Sherman revealed that Allen was playing through the flu. “You were shivering in the hot tub, you’re getting IVs, you don’t want to get admitted, but you were having a flu game of your own. How does it feel to accomplish that?” Sherman asked. Allen threw for 248 yards and three touchdowns and ran in two more touchdowns in his Michael Jordan-esque flu game.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Jürgen Klopp Calls Up 44 Players For First International Window With Germany</h4>
+                <p>Jürgen Klopp said he wants to help spread national pride in Germany as he announced a super-sized first roster as national team coach with an appeal to “reclaim the flag."</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Holy Cross volleyball player Amanda Mack dead at 20 after being diagnosed with rare disorder</h4>
+                <p>Holy Cross women’s volleyball player junior Amanda Mack died Wednesday night at the age of 20, according to message posted to her Instagram account. Mack announced in July on Instagram that she had been diagnosed with severe aplastic anemia, a rare condition in which bone marrow does not make enough new blood cells, and had undergone two emergency surgeries “to save my life” due to complications Doctors lined up a bone marrow transplant and Mack had been admitted to Tampa General on Aug. 11, and she posted a positive message three days later to her Instagram account. “Finished my Immunosuppressive Therapy yesterday and came through it with minimal adverse reactions! So thankful for my Nurses & Doctors here at Tampa General,” she wrote alongside a photo of her flashing a thumbs up while laying in a hospital. “They are a huge Blessing! Now we wait for my body to fix my immune system and regenerate my bone marrow. I should be able to go home by the end of next week and get to start Physical Therapy and the rest of my healing journey! Thank you to everyone for checking on me and for all the well wishes! You all have made this whole thing a little easier 💕 .</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/09/931/523/sydney-sweeney-red-dress.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Sydney Sweeney’s provocative sports ad 'reinforces the image she has already built' despite backlash: expert</h3>
+                <p class="lead-summary"><strong class="drop-cap">B</strong>rand expert Adrienne Uthe explains that Sydney Sweeney's provocative ad has competing narratives, as expert says 'perception' can become 'reality.' Sydney Sweeney sparked widespread backlash following the release of her provocative campaign for a sports trading app. No stranger to controversy or criticism, Sweeney, 29, faced the music from Olympic athletes, entertainment icons and millions of keyboard warriors who voiced their opinions of the naked ad. Adrienne Uthe, founder of Kronus Communications, exclusively told Fox News Digital that while Sweeney's latest ad may have ruffled feathers, "women having agency also means allowing women to make choices about their image that other women may not personally agree with." Sydney Sweeney posed in the nude for her latest campaign, a move that sparked controversy among athletes and experts. (TheStewartofNY) "People are entitled to dislike the ad, just like women athletes are entitled to criticize it for their own reasons," Uthe said. "But I don't think this is materially damaging to Sydney Sweeney in any way, shape or form.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>‘Elsinore’ review: Andrew Scott will break your heart in new AIDS drama</h4>
+                <p>The powerful words “remember me” are spoken several times throughout “Elsinore,” the AIDS drama starring an unforgettable Andrew Scott that’s playing in the Toronto International Film Festival. They are, of course, the urgent request of the ghost of King Hamlet, the Shakespearean monarch who was murdered by his brother Claudius and, from the grave, orders his son to avenge his death. “Hamlet” plays a central role in the beautifully acted “Elsinore,” if the title didn’t already give that away. But the command has a dual meeting in its setting of late-1980s England. Young men are dying and fear being forgotten.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Prince Harry, Meghan Markle feeding the 'publicity machine' despite privacy demands: expert</h4>
+                <p>King Charles confirms Prince Harry and Meghan Markle will not return to royal duties. A letter sent on behalf of the king explains their styles as His and Her Royal Highness remain in abeyance and they are now akin to private citizens. Sources close to Prince Harry and Meghan Markle are "pushing back" after King Charles issued new guidance on the Duke and Duchess of Sussex's positions now that they are back in the United Kingdom.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>What do last-minute tickets cost to see The Chicks in concert? Catch them in NYC</h4>
+                <p>On Sept. 30, Emily Strayer, Martie Maguire and Natalie Maines will kick off their Taking The Long Way 20th Anniversary Tour, their first out in three years, in Detroit. After that, the 13-time Grammy-winning trio will celebrate their seminal seventh studio album that spawned major hits “Not Ready To Make Nice,” “Lullaby,” and more at theaters, auditoriums and concert halls all over North America in October and November. That includes not one, not two but three (!) gigs at New York City’s Beacon Theatre. They’re slated to go down at: If you’d like to see the Dallas natives rock live, last-minute tickets are available for all 20 of The Chicks’ Taking The Long Way gigs.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/05/931/523/teenage-girl-smartphone-new-york-fox-news-001.jpeg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Can tech really get you off your phone and into real life?</h3>
+                <p class="lead-summary"><strong class="drop-cap">K</strong>endall Schrohe, co-founder of AttentionSphere.org, discusses how young Americans are participating in a one-month digital detox challenge, swapping smartphones for flip phones. How many times have you picked up your phone to check one thing and found yourself still scrolling 30 minutes later? I know I've done it. Our phones make it incredibly easy to stay connected. Yet something interesting seems to be happening at the same time. Many people are looking for more reasons to put those phones down and spend time with other people in the real world. Run clubs are growing. Local gatherings are drawing attention. Phone-free events are popping up. People seem hungry for experiences that feel a little less like another feed. That raises an interesting question: Could the same technology that keeps pulling us online also help get us back into real life? That idea is behind NewTree Social, an early-stage community events app from 29-year-old founder Maddy O'Connor. She wants people to use their phones to discover something happening nearby, make a plan and then go experience it. And the timing may be right. More people are looking for ways to put their phones down, step away from the screen and spend more time connecting in the real world. (iStock) NEW! 🩺 Free CyberGuy LIVE class: Get Better Healthcare With AI Saturday, September 26 at 11 a.m. ET / 8 a.m. PT Kurt "CyberGuy" Knutsson will show you five practical ways AI can help you organize your health history, remember important appointment details, understand complicated medical information, research prescriptions and prepare smarter questions for your doctor. No technical experience is needed. There is some real data behind this shift. Eventbrite's 2026 Social Study surveyed people ages 18 to 35 in the U.S. and U.K. It found that 79% planned to attend more events in 2026. Among Gen Z respondents, 46% said they were limiting screen time and 74% said in-person experiences were more important than digital ones. Now, keep in mind that this research comes from Eventbrite, a company whose business revolves around live events. Still, those numbers line up with something we are seeing play out in the real world.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>They hacked a TikTok user’s camera, with help from free AI</h4>
+                <p>Chinese AI models given away free have potent cybersecurity skills, widening access to high-level hacking knowledge that can be used for good or ill.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Anthropic says its chatbot Claude is taking over the work of building its own successor</h4>
+                <p>The company said Claude leads 26 percent of its research and development, an indicator of progress toward AI that builds itself without human help.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>119,000 fake shops could steal your credit card details</h4>
+                <p>Halimah Delaine Prado, Google General Counsel, reveals the rise of AI-powered phishing scams originating from China's 'outsider enterprise.' She explains how these criminals use artificial intelligence to create highly convincing fake websites, impersonating trusted brands like T-Mobile to defraud hundreds of thousands of Americans, causing millions in losses. Prado highlights Google's strategy to combat these evolving threats.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
