@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>SUNDAY, SEPTEMBER 20, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://pagesix.com/wp-content%2Fuploads%2Fsites%2F3%2F2026%2F09%2F141835188.jpg?quality%3D90%26strip%3Dall" alt="Lead Story Image" class="news-photo">
+                <h3>Kate Beckinsale posts alarming messages on social media weeks after sharing PTSD struggles</h3>
+                <p class="lead-summary"><strong class="drop-cap">K</strong>ate Beckinsale posted alarming messages on social media weeks after sharing a heartbreaking message about navigating post-traumatic stress disorder (PTSD). “congratulations you won i give up,” she wrote on her Instagram Stories Sunday atop a photo of a street and a rainbow. The “Underworld” actress, 53, also posted the word “bye” on Instagram. The comments were turned off on the post. Page Six has reached out to Beckinsale’s rep for comment but did not immediately hear back. Earlier this month, the “Pearl Harbor” star opened up about her struggles with PTSD, a mental health condition that can develop after someone experiences or witnesses a terrifying or life-threatening event. In a now-deleted Instagram video, Beckinsale shared that people who “have seen or experienced levels of horror, terror, violence” cannot escape their traumas, but they should be recognized as “heroes.” “A lot of those people become incredibly good at masking it,” she said in the clip. “And it’s sad because they become so good that they get no grace whatsoever.” The award-winning actress explained that though people with PTSD go about their everyday lives, they barely sleep because their dreams are “full of nightmares.” “Anything — smells, sounds, thoughts, feelings — can trigger them into a place that is actually like hell,” she shared, noting that since battling PTSD is “invisible,” people should be “kinder and gentler” to others. “It really is true that when you haven’t walked a mile in someone’s shoes — however fancy you think the shoes are — you have absolutely no idea what they might be carrying, masking, dealing with day and night,” she stated. Beckinsale concluded her video by reiterating that PTSD victims “are the loneliest people” who “continue to try and put one foot in front of the other.” The “Serendipity” star has been candid about her struggles since her mother, Judy Loe, died in her arms last July. Beckinsale also lost her stepfather, Roy Battersby, in January 2024. While navigating a “really hard year,” fans made negative comments about Beckinsale’s apparent weight loss, prompting her to scrub all of her Instagram photos. If you or someone you care about is affected by any of the issues raised in this story, call SAMHSA’s National Helpline at 1-800-662-HELP (4357). Our community is about connecting people through open and thoughtful conversations. We want our readers to share their views and exchange ideas in a safe space.</p>
+                <p class="source-credit">— Https://pagesix</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Trump says planned arch will be ‘military complex’ for drones, snipers</h4>
+                <p>The president's post about the arch planned near Arlington National Cemetery comes as veterans groups, historic preservationists and others attempt to stop the project.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Americans Are Still ‘Bowling Alone’</h4>
+                <p>Robert Putnam’s book pinpointed our isolation. We haven’t been able to fix the problem.</p>
+                <p class="source-credit">— National Review</p>
+            </div>
+            <div class="story-minor">
+                <h4>The Endless ‘Genocide’ Lie: How The World Has Smeared Israel Since 1948</h4>
+                <p>The latest barrage after the October 7 Hamas massacre of more than 1200 Israelis is the ugliest chapter yet Israel has been hit with false genocide charges nonstop since virtually the day the Jewish state was reborn, and the latest barrage after the October 7 Hamas massacre of more than 1,200 Israelis is the ugliest chapter yet. In a detailed essay, Norman J.W. Goda, professor of Holocaust studies at the University of Florida, traced how the world’s oldest and most relentless smear against the Jewish state got started and why it keeps coming back stronger. Goda notes that accusing a country of genocide is supposed to be the ultimate stain. Plenty of countries have faced the charge over the decades, from the U.S. in Vietnam to China, Cambodia, and others.</p>
+                <p class="source-credit">— Daily Wire</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://static.foxnews.com/foxnews.com/content/uploads/2026/09/moscow-drone-attacks.gif" alt="Lead Story Image" class="news-photo">
+                <h3>Ukraine targets Russia with over 1,000 drones, killing 2 as Moscow holds last day of elections</h3>
+                <p class="lead-summary"><strong class="drop-cap">A</strong> massive wave of unmanned aircraft estimated to be more than 1,000 targeted the Russian capital and its surroundings early Sunday, setting a local oil refinery ablaze and killing at least two. (AP; Music courtesy of Universal Production Music) Ukraine delivered a barrage of missiles and more than 1,000 drones on Russia, which Moscow is calling the "largest ever" of the war and an attack on its parliamentary elections. Ukrainian President Volodymyr Zelenskyy hailed the strike at the "dollars that support the war machine" as a push for Russia to "end its brutal war and choose peace." "Tonight in the Moscow region, our long-range responses were felt very acutely," Zelenskyy wrote early Sunday morning on X. "One of the key enterprises of the Russian Federation's oil industry and an aggressor's logistics facility have been struck. These are billions of dollars that support the war machine." Flames and smoke rise from Moscow's oil refinery in southeast Moscow following a large-scale Ukrainian drone attack Sept. 20, 2026. (AP) Zelenskyy added that the Ukraine attack was a stern response to Russian aggression, making a future call for the U.S., Europe and the G7 to deliver "new sanctions."</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Russia recruited Ukrainian kids to carry out attacks. They got caught.</h4>
+                <p>Across Ukraine, at least 13 minors are imprisoned after being paid by Russia to attack their own country.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Houthis claim attacks on ‘sensitive sites’ in Saudi Arabian capital</h4>
+                <p>Video footage showed a large plume of black smoke rising from an area near Riyadh’s international airport.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>EXCLUSIVE: Russian document reveals sweeping Iran plan spanning nuclear, finance and aviation</h4>
+                <p>Keti Korkiya says the roadmap’s significance lies not in any single project, but in the state-backed architecture tying Moscow and Tehran closer together. EXCLUSIVE: A nonpublic Russian government document obtained and reviewed by Fox News Digital reveals how Moscow sought to deepen its relationship with Iran far beyond conventional trade — laying out plans for alternative financial channels, nuclear cooperation, Iranian production of Russian aircraft components, major energy projects and new transportation routes stretching toward the Persian Gulf.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F09%2Fvinraicol.jpg?quality%3D90%26strip%3Dall%261789857843" alt="Lead Story Image" class="news-photo">
+                <h3>Raiders aim to put Chargers in hole on familiar turf, fresh opportunity</h3>
+                <p class="lead-summary"><strong class="drop-cap">N</strong>ow comes the intriguing part: figuring out whether opening Sunday offered an honest introduction to both teams or another reminder of how convincingly the NFL can lie to us in September. Because if the Raiders leave their second home with a victory, they will take a 2-0 record back to Vegas while leaving the Chargers buried in an 0-2 hole. And a division matchup that looked like a measuring-stick game for the Silver-and-Black would suddenly become the source of some uncomfortable questions for the Bolts. But life moves fast in the NFL. Sometimes, the team everyone expects to spend the season chasing gets a head start. Sometimes, the supposed contender discovers its reputation cannot block anybody. The season-opening victory over the Dolphins offered evidence of an actual plan under new coach Klint Kubiak. Ashton Jeanty gave the offense someone to lean on. The short passing game helped move possessions along. A defense that too often needed Maxx Crosby to supply the disruption produced five sacks with plenty of help from others. For a franchise that has spent too many seasons trying to assemble an identity, that qualified as a meaningful development. Can Kirk Cousins complete enough passes downfield to keep a defense from suffocating everything underneath? Can the offensive line keep opening running lanes when the opponent makes stopping Jeanty its first priority? Can the defense pressure Justin Herbert without allowing him to turn its aggression into an explosive play?</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Steelers vs. Patriots prediction: Hunter Henry will find the end zone in Foxborough in Week 2</h4>
+                <p>Two AFC teams with playoff aspirations meet in the early window of Week 2 as Mike Vrabel and the Patriots host the Steelers in their home opener. Oddsmakers have pitted New England as 5.5-point home favorites, with the Over/Under settling in at 41.5 on DraftKings Sportsbook. These squads last squared off in Week 3 of last season, when Aaron Rodgers and Pittsburgh snapped a three-game skid against New England by securing a win. The Super Bowl hangover was evident for Drake Maye and the Patriots in their sloppy 13-10 Week 1 loss to the Seahawks. Maye threw three costly interceptions, and the reigning AFC champions lost newly acquired wideout AJ Brown to a high-ankle sprain, to add insult to injury.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>UCLA AD Tim Harris sees major opportunity to ‘wake up the giant’</h4>
+                <p>Note: This is Part 2 in a series on new UCLA CEO and athletics director Tim Harris. You can read Part 1 here. The former Lakers business boss had agreed to teach a sports marketing class at his alma mater when he received an email calling him in to visit with Chancellor Julio Frenk. “I thought, oh my gosh,” Harris told the California Post, “I haven’t even taught a class and I’m in trouble.” Mounting debt and an outdated way of doing things were inescapable problems that threatened to compound themselves if nothing changed. Frenk wanted to meet Harris, who had helped build the Lakers into one of the world’s most successful sports franchises, to get a read on the way he viewed college athletics. The first meeting went so well, several others followed.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Raiders look to turn SoFi Stadium into home-field edge, 2-0 start to season</h4>
+                <p>And Sunday at SoFi Stadium, both will find out how much a week of preparation can change the picture. For the Raiders, their season-opening victory over the Dolphins offered an encouraging look at what new coach Klint Kubiak is building: An offense that can lean on Ashton Jeanty, a passing game designed to keep the chains moving and a defense capable of making quarterbacks uncomfortable without asking Maxx Crosby to do all the heavy lifting. Doing it against a better roster. Doing it against Justin Herbert. And doing it against a division opponent that understands how quickly an opening loss can become an early-season problem.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/09/931/523/alix-earle-ashley-earle.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Alix Earle’s stepmom owns ‘reckless’ past, from Spitzer escort scandal to affair with influencer’s dad</h3>
+                <p class="lead-summary"><strong class="drop-cap">A</strong>lix Earle talks Super Bowl LX and also gives insight on her upcoming reality show with her sister. Alix Earle’s stepmother opened up about the choices that once made her tabloid fodder, including her connection to the Eliot Spitzer prostitution scandal and her affair with the influencer’s married father. Alix, 25, shot to fame on TikTok and has built a massive following by sharing her life online – including, at times, the complicated family history that played out in the tabloids when she was a child. Ashley was thrust into the national spotlight in 2008 when she was identified as an escort connected to then-New York Gov. Eliot Spitzer in the prostitution scandal that preceded his resignation. "At 19, while working as a cocktail waitress, a man approached me and told me I could make $1,000 an hour going on dates with high-profile men," she wrote in an essay for Elle. "My first answer was no, but I kept his card. Eventually, I made the call. I could spend paragraphs explaining why. I was young. I wanted money and independence. I’d spent years operating in survival mode and had become very good at compartmentalizing. But ultimately, I made the call. It was my decision."</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Captain America, R2-D2 fly above Lucas Museum of Narrative Art on opening night in dazzling drone light show: Photos</h4>
+                <p>The Lucas Museum of Narrative Art Opening Night gala celebrated with an incredible drone light show flying high above its spaceship-like structure on Saturday. Captain America and R2-D2 took center stage, followed by the Millennium Falcon and the dragon from the hit Shrek movies. The Lucas Museum, founded by legendary filmmaker George Lucas and his wife, Mellody Hobson, is dedicated entirely to the art of visual storytelling and will open its doors to the public on Tuesday in Los Angeles’ historic Exposition Park.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Prince Harry’s push to give Archie, Lilibet royal upbringing exposes ‘contradiction’ after palace exit: expert</h4>
+                <p>British royals expert Hillary Fordwich says Prince Harry is showing signs he wants his children to embrace their English heritage and family roots. Prince Harry wants his children to embrace their British roots and royal heritage, but one expert says there's a glaring "contradiction."</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Ed Sheeran weeps on stage, says Israel’s actions in Gaza ‘unjustifiable’ in emotional first speech since Macklemore fiasco</h4>
+                <p>Crooner Ed Sheeran called Israel’s actions in Gaza “unjustifiable” as he wept and broke his silence during his first concert since booting rapper Macklemore from his tour for tirades against the Jewish state. “I’ve never wanted to be an activist musician, but this put me in the middle of an important and passionate argument about freedom of speech and the most complex political issue on the planet,” Sheeran told the Philly crowd of concertgoers Saturday night. Sheeran spoke multiple times about the controversy during Saturday night’s show at Lincoln Financial Field, growing progressively more upset as the night wore on and eventually telling fans it had been one of the “worst weeks of his life” and that “I really didn’t know whether I’d be even get on stage again, whether I wanted to be an artist at all.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
