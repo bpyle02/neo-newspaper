@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>TUESDAY, SEPTEMBER 22, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://thefederalist.com/wp-content/uploads/2026/09/NHJ-1200x675.jpg" alt="Lead Story Image" class="news-photo">
+                <h3>Nikole Hannah-Jones’ Racism Is Why Her Daughter Can’t Do Math</h3>
+                <p class="lead-summary"><strong class="drop-cap">N</strong>ikole Hannah-Jones has curated herself an extremely lucrative, notoriety-winning career by blaming white people for black people’s problems. In her latest article for The New York Times Magazine, she does it again. It’s titled, “In Fighting for Every Black Child, Did I Betray My Own?” In it, the creator of the scholarly abomination known as the 1619 Project admits that her warped educational ideas have harmed her daughter’s future and their relationship. When her daughter finally convinced her parents to let her attend a more challenging high school, she went from getting straight As in math to “barely keeping up”: “After an assessment, the center’s director called me in and told me that Najya knew very little algebra and had huge gaps in many of the building blocks of math that she should have learned in elementary school, like mastery of long division and fractions.” This was after Najya had gotten As in a previous algebra class and been on her middle school’s honor roll. For elementary, Hannah-Jones and her husband had deliberately enrolled their daughter in one of New York City’s worst public schools, which Hannah-Jones calls “a poor Black one.” In 2016, Hannah-Jones’ daughter was literally on the cover of NYT Magazine to flaunt her mother’s decision. “In the outside world, my choice had earned me valor,” Hannah-Jones writes in her latest essay for NYT Magazine. But it earned her daughter unnecessary suffering and academic delays. As early as first grade, Hannah-Jones writes, her daughter endured unsupervised, violent lunch periods: “Children were running wild, chasing, hitting and pushing each other while the teacher’s aides and cafeteria workers stood by looking bored.” The staff ignored the chaos. The same continued in Najya Hannah-Jones’ middle school, with teachers assigning no homework, violence regularly taking over instruction time, and “fights in the hallway.” Federal statistics show the public schools with the most black students also have the highest percentages of black teachers and staff. The likelihood that many of the staff allowing children to attack each other during lunch were black is high, especially since state racial bean-counting shows that more than half of Najya’s elementary staff are black. Yet Hannah-Jones blames the staff’s laziness and cowardice not on bad leadership, bad training, bad character, bad parenting, or any other proxy for personal responsibility, but on the only culprit she apparently believes in — racism.</p>
+                <p class="source-credit">— The Federalist</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Stanford busted using AI to race swap white male student for black female in ad: ‘Silenced and erased’</h4>
+                <p>Stanford Residential & Dining Enterprises used AI to race- and gender-swap students who had been photographed for its advertisements — and even alter their appearances by slimming down their faces. Student-run newspaper The Stanford Review obtained before and after photos, one showing an original, untouched image of students holding up plates of food in the cafeteria. A student featured in the unaltered photo said he was surprised to see he had been replaced with a black woman in the finished version. “I was driving to school from my hometown when my friend sent me the images comparing the banner to the original photos, and I was immediately baffled,” Billy Ramirez, a junior, told the outlet.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Why distraught Bonta ‘caved across the board’ on Paramount, ‘he was close to tears’</h4>
+                <p>Rob Bonta “caved across the board” yesterday when he settled with Paramount — sources close to the California AG are saying — and Bonta even seemed close to tears when he announced the deal, an insider told Page Six Hollywood. Sources close to the talks between Paramount and Bonta were caught off guard yesterday when the sudden Monday morning settlement was announced. And players on Bonta’s side were shocked that he handed such a clear win to David Ellison and Paramount. “There’s almost nothing in here with all the filings, statements, and law on their side that reflects they got anything,” said an astonished insider of the AG. “They caved across the board and I don’t know why. Clearly someone pressured him to do this.</p>
+                <p class="source-credit">— Https://pagesix</p>
+            </div>
+            <div class="story-minor">
+                <h4>HAPPENING NOW: Trump To Zero In On Iran’s Nuclear Threat As Global Powers Gather</h4>
+                <p>Wire report details currently unavailable.</p>
+                <p class="source-credit">— Daily Wire</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://static.foxnews.com/foxnews.com/content/uploads/2026/09/china-philippenes-ship-collision.gif" alt="Lead Story Image" class="news-photo">
+                <h3>Chinese Coast Guard rams Philippine boat in South China Sea, sparking diplomatic clash</h3>
+                <p class="lead-summary"><strong class="drop-cap">F</strong>ootage captures the tense moment of impact between a Chinese Coast Guard ship and a Philippine fisheries vessel in the South China Sea. (Video one credit: Chinese Coast Guard) Tensions in the South China Sea escalated again Friday after a Chinese Coast Guard vessel collided with a Philippine government ship, an encounter captured on video that prompted competing accounts from Manila and Beijing. The Philippine Bureau of Fisheries and Aquatic Resources vessel BRP Datu Magat Salamat was distributing fuel to Filipino fishermen when the collision occurred at 11:13 a.m., roughly 54 nautical miles off the coast of Palawan province — an area Manila says is well within the Philippines' exclusive economic zone. Footage released by the Philippine Coast Guard showed crew members shouting, "Brace for impact!" moments before the collision. Photographs taken afterward showed bent and detached railings, damaged metal supports and debris scattered across the Philippine ship's deck. No injuries were reported. A Philippine Bureau of Fisheries and Aquatic Resources vessel, labeled DA-BFAR MMOV 3015, navigates in proximity to another ship during a maritime encounter.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>France blocks E.U. sanctions on Russia in push to spare oligarch Usmanov</h4>
+                <p>The French request would lift E.U. sanctions on Alisher Usmanov, whom the E.U referred to as “one of Vladimir Putin’s favorite oligarchs,” in a bid to free French citizens held in Azerbaijan.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Middle East takes center stage at UN as regional leaders confront Iran war, Gaza and Houthi threat</h4>
+                <p>FDD's Richard Goldberg discusses new opportunities for regional cooperation, the Houthi threat to global shipping and what Arab leaders want from Trump. UNITED NATIONS — The Middle East will take center stage when world leaders open the U.N. General Assembly's annual debate Tuesday, with some of Washington's most important regional partners arriving in New York facing a question: What will the region look like after months of war with Iran, renewed Houthi attacks and an uncertain future for Gaza?</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Saudi Arabia cancels star-studded film fest amid Middle East war</h4>
+                <p>The Red Sea International Film Festival has drawn such Hollywood A-listers as Emily Blunt, Adrien Brody, Gwyneth Paltrow and Michael Caine.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/statics.foxsports.com/www.foxsports.com/content/uploads/2026/09/931/523/f73f4bd1-nfl-16x9-1.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Davante Adams Dominates The Giants: 3 Takeaways From The Rams' Win</h3>
+                <p class="lead-summary"><strong class="drop-cap">S</strong>OFI STADIUM (Los Angeles) – The Los Angeles Rams rebounded from an embarrassing loss in Australia to start the year by cruising to a 28-6 victory over the visiting New York Giants on Monday Night Football in the team’s home opener. Dubbed the "Dream Team" to start the year because of the team’s blockbuster moves to secure defensive game changers like defensive end Myles Garrett, cornerback Trent McDuffie and the return of defensive tackle Aaron Donald, the Rams finally looked like a team that could possibly live up to that billing in front of the team’s home fans at SoFi Stadium. However, Los Angeles was buoyed by New York losing quarterback Jaxson Dart (knee) for the game in the first quarter. Ultimately, the Rams improved to 1-1 with the win, while the Giants dropped to 1-1. The Rams almost traded Adams to the Philadelphia Eagles this past offseason in a deal that would have brought wide receiver A.J. Brown to them in return. However, head coach Sean McVay decided to hold onto Adams in part because of his great chemistry with quarterback Matthew Stafford.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Eli Manning had stunned reaction to Jaxson Dart injury live on ESPN</h4>
+                <p>The worrisome knee injury for the Giants quarterback during the “Monday Night Football” matchup against the Rams unfolded live on ESPN’s “ManningCast” and the Big Blue legend was left stunned. Peyton Manning and Eli Manning react to Giants QB Jaxson Dart suffering an apparent knee injury vs. the Rams. pic.twitter.com/IuFw18JnWh “Oh no. Oh no. No, no, no, no, no,” older brother and co-host Peyton Maning said. “That is not what we want to see. Gosh!” Both brothers grimaced during the replay as Dart appeared to take a hit both on his upper body and lower body during the play as his offensive line collapsed.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Curt Cignetti Defends QB Josh Hoover As No. 5 Indiana Opens Big Ten Play</h4>
+                <p>He's been efficient and tough through his first three games with the fifth-ranked and still unbeaten Hoosiers. He's completed more than 72% of his passes, thrown 10 touchdown passes and no interceptions while posting the second-best passing efficiency rating in the Football Bowl Subdivision.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Commanders searching for answers after crushing Jayden Daniels injury update</h4>
+                <p>The Washington Commanders quarterback was diagnosed with a dislocation in his left elbow, the same injury that took him out for three games last season. The team is awaiting imaging results after Daniels was carted off the field with the gruesome-looking injury during Sunday’s 37-20 road loss to the Cowboys. NFL Network reported that Daniels will consult with a variety of experts in the coming days, following team protocol. In Daniels’ stead, Marcus Mariota will start for the Commanders in Week 3 when they host the Seahawks. Last season’s dislocation did not require surgery but was a part of an otherwise injury-riddled campaign.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F09%2FRingo-Starr.jpg?quality%3D90%26strip%3Dall" alt="Lead Story Image" class="news-photo">
+                <h3>We found shockingly cheap tickets to see Ringo Starr live on his 2026 tour</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>he indefatigable Beatle is about to kick off his fall 2026 tour with his All-Starr Band and tickets are shockingly affordable. At the time of publication, our team found some inventory going for as low as $27 including fees on Vivid Seats to see the Rock Hall of Famer live at Bethel, NY’s Bethel Woods Center For The Arts on Friday, Sept. 25. Outside of the Bethel gig, Starr has three other New York and New Jersey shows scheduled on his short run. They’re slated to take place at: Should you make the trek to see the Liverpool lad, Set List FM reports that you’ll be treated to a smorgasbord of select Beatles favorites (“Yellow Submarine,” “With A Little Help From My Friends,” “Octopus’ Garden”), classics from Ringo’s solo career (“Photograph” and, of course, “It’ Don’t Come Easy”) and cuts from his starr-studded All-Starr Band, which include members of Toto, Men At Work and The Average White Band. In June 2025, The Post sent a reporter to see Ringo live at Radio City and after hearing him perform “Octopus’ Garden,” they wrote “if you’re a Beatles fan, this song must be witnessed live. My hair is standing on end days later typing this review thinking about how powerful the band sounded in person.” For more information, our team has everything you need to know and more about Ringo Starr’s fall 2026 tour below.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>‘Charlie’s Angels’ star Jaclyn Smith lived apart from her husband for 17 years during their 35-year love story</h4>
+                <p>Jaclyn Smith tells Fox News Digital the one powerful force behind her ageless appearance at the Paley Honors Spring Gala in New York. For Jaclyn Smith, love wasn't waiting in Hollywood — it walked into her father's hospital room. The actress, who starred as Kelly Garrett on the TV series "Charlie's Angels" from 1976 to 1981, recently penned a memoir, "I Once Knew a Guy Named Charlie." In it, the 80-year-old revealed that she and her fourth husband, Dr. Brad Allen, lived apart for 17 of their 35 years together.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Tom Jones’ 2026 tour is underway. How much are last-minute tickets?</h4>
+                <p>Tom Jones kicked off his fall 2026 Come Gather Round Tour on Sept. 18 in Highland Park, IL and he may be headed to a venue near you soon. From now until early November, the inimitable 86-year-old crooner is hitting theaters, halls, performing arts centers, parks, resorts and auditoriums all over North America. While out and about, the gifted vocalist is scheduled to make three stops in the Big Apple and Garden State. They’re slated to take place at: If you’d like to see Jones live, last-minute tickets are still available for all upcoming concerts. At the time of publication, the lowest price we could find on seats for any one show was $65 including fees on Vivid Seats.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Sylvester Stallone reveals what he said to Trump after surprise Hollywood ambassador appointment</h4>
+                <p>Fox News contributor Raymond Arroyo brings ‘The Ingraham Angle’ to the red carpet at the Kennedy Center Honors and interviews stars in music and Hollywood. Sylvester Stallone revealed that he was blindsided when President Donald Trump announced his appointment as a special ambassador to Hollywood.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/09/931/523/software-engineers-coding.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>AI malware can rewrite itself to evade detection</h3>
+                <p class="lead-summary"><strong class="drop-cap">'</strong>The Five' co-hosts discuss AI safety warnings from former President Barack Obama, and governors Gavin Newsom and Kathy Hochul. Google's Threat Intelligence Group found experimental malware called PROMPTFLUX that could ask Gemini to rewrite its own code. One version was designed to do that every hour. Why would malware keep rewriting itself? To make it harder to recognize. Security software can look for known patterns in malicious code. If that code keeps changing, the malware becomes a moving target. That does not automatically make it invisible to current security tools, but it can make some types of detection more difficult. There is an important reality check here. PROMPTFLUX was still being developed when Google found it. Researchers had yet to see it successfully compromise a victim's device or network, and Google disabled assets connected to the activity. What caught my attention is what came next. Google has since documented AI being used by malware during live attacks. It has also uncovered an Android backdoor that can use AI to understand what is happening on a phone and help decide what to do next. That tells us where this could be heading. So let’s break down how AI-powered malware works and what you can do to protect yourself. AI-powered malware such as PROMPTFLUX shows how attackers could use AI to keep changing malicious code and make detection harder. (Silas Stein/picture alliance via Getty Images) NEW! 🩺 Free CyberGuy LIVE class: Get Better Healthcare With AI Saturday, September 26 at 11 a.m. ET / 8 a.m. PT Kurt "CyberGuy" Knutsson will show you five practical ways AI can help you organize your health history, remember important appointment details, understand complicated medical information, research prescriptions and prepare smarter questions for your doctor. No technical experience is needed. PROMPTFLUX was a VBScript-based malware project that Google discovered in June 2025. Its most interesting component was called the "Thinking Robot." The malware could contact Gemini and request new obfuscation techniques designed to make its code harder for security software to recognize.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>The unexpected toll of searching endlessly for a new job</h4>
+                <p>“Ghost job” postings, AI interviewers and a lack of in-person connection can take a toll on your mental health.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>You’ll do anything for your baby. Algorithms know how to exploit that.</h4>
+                <p>In the mega-consumption era of parenthood, the internet tells new moms that products can solve the hardest parts of having a newborn. All they have to do is add to cart.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>3 VPN settings to check before your next trip</h4>
+                <p>Travel expert Lee Abbamonte discusses the risks posed by fraudulent wireless connections on commercial flights and what passengers should check before accessing the internet in the air. Has this happened to you? You're at the airport, connected to the terminal Wi-Fi, VPN running and feeling good about your security. You board, put your phone in airplane mode, land a few hours later and switch airplane mode off. Your phone finds the hotel Wi-Fi. You open your email and start scrolling.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
