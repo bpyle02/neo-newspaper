@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>THURSDAY, SEPTEMBER 24, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/05/931/523/db122f7c-senate-majority-leader-john-thune-fox-news.jpeg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Reporter's Notebook: A guide to the college sports vote and Senate’s Ohio showdown</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>he Senate Commerce Committee holds a high-stakes hearing on fairness in women's sports as lawmakers examine the participation of biological men in female athletics. Senators Tommy Tuberville and Ted Cruz voice strong concerns about the future of women's sports, warning that female athletes face unequal competition. Former NBA player Enes Kanter Freedom also highlights his advocacy for protecting female sports categories. The Senate is poised to possibly pass by the end of this week a bill fundamentally altering money and eligibility rules in college sports. The Senate will take a test vote on the measure on Thursday. More than 70 senators support the bill that establishes a ceiling for how much money schools can allocate to pay students for their name, image and likeness. The legislation also limits transfers and sets eligibility standards. But does the Senate really want to make college sports the punctuation point before it leaves for the midterms? Majority Leader John Thune, R-S.D., and Senate GOP leaders are pushing forward with budget reconciliation to fund the final piece of government that had been shut down by Senate Democrats' opposition to President Donald Trump's Immigration and Customs Enforcement actions. (Nathan Posner/Anadolu) Senate Majority Leader John Thune, R-S.D., wants to do a bipartisan permitting reform bill. The legislation would deal with data centers, drilling and environmental concerns — but that bill is aspirational and not yet ready for a vote. Thune said last night that the odds favored the Senate staying in session next week, which they were scheduled to do anyway. What has emerged is a dispute over the Ratepayer Protection Act. That bill passed the House last week 417-3. It would defray the cost of utilities consumers must pay if they reside near data centers. Sen. Jon Husted, R-Ohio, is one of the most vulnerable Republicans on the ballot this fall. He’s faced criticism back home for his support for data centers. So Husted asked the Senate last week to pass the House bill on the spot. Senator Jon Husted, a Republican from Ohio, during a Senate Health, Education, Labor, and Pensions Committee confirmation hearing in Washington, DC, US, on Thursday, Feb. 13, 2025.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Trump courts Xi with pomp as China seeks greater global influence</h4>
+                <p>Chinese President Xi Jinping is expected to press Washington on Taiwan, while President Donald Trump wants help on manufacturing and restraint on Iran.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Lindsey Vonn, 41, debuts romance with french skier Matthieu Bailet, 30</h4>
+                <p>The four-time Olympic medalist shared several photos of the two via Instagram Wednesday — including one snap of them sharing a steamy kiss. The bathing suit-clad duo were all smiles as they snuggled up for several photos. Other snaps showed the two going for a swim and lounging by the sea. “Can’t wait to see the summer recap part 2 😉😘,” Bailet sweetly commented on Vonn’s Instagram post. Bailet also reshared Vonn’s post to his own Instagram Stories, fittingly adding Olivia Dean’s hit song “So Easy (To Fall in Love)” to the upload. The pair first sparked romance rumors in May when they were spotted out and about in New York City’s Soho neighborhood.</p>
+                <p class="source-credit">— Https://pagesix</p>
+            </div>
+            <div class="story-minor">
+                <h4>Dem Senate Candidate Wished Planned Parenthood Leader Would Die From ‘Botched Abortion’</h4>
+                <p>Mary Peltola, the Alaska Democratic Senate nominee, called members of her own staff “f*ggots” and wished that a female Planned Parenthood leader would die from a “botched abortion,” according to an explosive report shaking up a key midterm battleground. When Planned Parenthood lobbied hard for Peltola to vote against a 2024 defense bill that included anti-abortion measures, the then-House Democrat unloaded on one of the organization’s regional leaders. “I hope Planned Parenthood knows that if we don’t win it’s more their loss than ours. F*CK THOSE B*TCHES,” she wrote in a text message to her staff, according to The New York Times.</p>
+                <p class="source-credit">— Daily Wire</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://static.foxnews.com/foxnews.com/content/uploads/2026/09/trump-melania-slovenia-pm.gif" alt="Lead Story Image" class="news-photo">
+                <h3>Melania Trump’s home-country leader rips UN ‘double standards’ as Trump promise is revealed</h3>
+                <p class="lead-summary"><strong class="drop-cap">P</strong>M Janez Janša says the UN's focus on Gaza has overshadowed other global crises, criticizes Europe's approach to Iran and discusses Slovenia's special relationship with the US through First Lady Melania Trump. UNITED NATIONS - Slovenian Prime Minister Janez Janša accused the United Nations of applying double standards to global conflicts, arguing that the international community's focus on Gaza has overshadowed Russia's war in Ukraine and other humanitarian crises, while revealing that President Donald Trump has promised to visit Slovenia, the homeland of first lady Melania Trump. Speaking exclusively to Fox News Digital on the sidelines of the U.N. General Assembly in New York on Wednesday, Janša said the international body must give greater attention to conflicts beyond the Middle East rather than concentrating its diplomatic efforts on a single crisis. "We have to get rid of double standards," Janša said, calling for the U.N. to apply its available diplomatic and security tools equally instead of putting its attention, money and energy into one conflict while neglecting others.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Americans’ views of China have warmed, survey finds ahead of Trump-Xi summit</h4>
+                <p>The share of U.S. adults with a positive view of China rose to 19 percent this year, a Pew survey found.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Trump likely ‘smirked’ as 'crass' Iranian president lashed out at US in UN speech: expert</h4>
+                <p>Iranian President Masoud Pezeshkian claimed to the United Nations General Assembly that he and his country ‘have been the victims of terrorism.’ Iranian President Masoud Pezeshkian’s sharp rebuke of Washington at the United Nations would have drawn little more than a "smirk" from President Donald Trump, who knows he "holds the cards," a foreign policy expert told Fox News Digital Wednesday.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Netanyahu faces new depths of isolation ahead of address to U.N. — and Israeli voters</h4>
+                <p>Israel’s prime minister arrives in New York on Thursday at a critical moment for his country and his political future.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/statics.foxsports.com/www.foxsports.com/content/uploads/2026/09/931/523/chambliss-3.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Trinidad Chambliss Is The Best QB In College Football. What's His NFL Draft Ceiling?</h3>
+                <p class="lead-summary"><strong class="drop-cap">W</strong>ith all due respect to Arch Manning, Dante Moore and so many other celebrated quarterbacks throughout the college football landscape, the most impressive player at the position through the first month of the season has been Ole Miss' Trinidad Chambliss. In guiding the Rebels to a 3-0 start while completing 70% of his passes for 924 yards and seven touchdowns (as well as rushing for 64 yards and two more scores), Chambliss has catapulted ahead of his peers to emerge as the current favorite to win the Heisman Trophy. While some of the other QBs of the 2027 class have fizzled under the brightest lights, Chambliss has consistently excelled, turning skeptics of his pro prospects into believers. There are five categories I’ve long used to scout quarterbacks: accuracy, anticipation, arm talent, athleticism and attitude. I call them the five A’s of quarterback evaluation. Whether it be analysts, NFL scouts, coaches or fans, it never ceases to amaze me how often folks fall for a quarterback with brilliant athletic tools but subpar accuracy. Plain and simple, accuracy is the single most important element when evaluating a QB. The ball needs to hit receivers in stride to help them create after the catch. Spin rate, velocity and touch are also important, but not as critical as being able to thread the needle from various distances and trajectories.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Kalshi promo code NYPMAX: Trade $25, get $25 for ‘Thursday Night Football’</h4>
+                <p>The Packers and Falcons clash on “Thursday Night Football” and the Kalshi promo code NYPMAX can be used to trade $25 and receive a $25 bonus. A Green Bay victory would break the NFL record for consecutive wins in home openers to tally its 14th straight. Kalshi traders are projecting the Packers a 70 percent chance to win despite the Falcons replacing the disaster that is Cooper Rush with Michael Penix Jr. New traders can sign up for the flagship prediction market to forecast contracts on any NFL Week 3 event contract in addition to international soccer matches, tennis, and daily baseball games.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>NFL Catchup: Giants Keeping QB Options Open; Bears Still Unsure On Week 3 Starter</h4>
+                <p>Wednesday brought some clarity at quarterback in one building and plenty of uncertainty in others, as teams across the league finalized their injury reports ahead of Week 3. The Atlanta Falcons got good news heading into their Thursday night matchup against the Green Bay Packers, while two other franchises are still sorting out who'll actually take the snaps this weekend.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>The bizarre breaking point that pushed caddie to abandon ‘angry’ PGA Tour player in middle of round</h4>
+                <p>A week ago Cliff Ellis, the caddie for erratic PGA Tour player Alejandro Tosti, stormed off the course in the middle of the opening round of the Biltmore Championship in Asheville, N.C. Now, the sordid details have emerged — courtesy of The Morning Q golf blog — in a he-said he-said feud that spilled over after several troubled months on the course together. The pair first started working together in May and through eight events, Tosti only made one cut. Ellis and Tosti had disagreements over money and an unusual agreement where the caddie would get paid 6% of the golfer’s winnings without a weekly salary.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F09%2FJohn-Summit.jpg?quality%3D90%26strip%3Dall" alt="Lead Story Image" class="news-photo">
+                <h3>John Summit just proved partying isn’t dead at his NYC Experts Only Festival</h3>
+                <p class="lead-summary"><strong class="drop-cap">A</strong> week after a slew of to-see-and-be-seen Fashion Week parties, the main event, the Experts Only Festival, landed in New York City and plopped onto Randall’s Island where 30,000 rabid dance music fans braved the rain to get down. The city’s one-and-only EDM festival is put on by John Summit, the 32-year-old CPA-turned-DJ who has completely overtaken the dance music scene. Summit’s label, Experts Only, which shares a name with his self-curated two-day fest, made sure he went all out too, stacking his 2026 lineup with big names Adam Ten, Max Styler and dubstep legend Subtronics. This weekend extravaganza was Summit’s second run at bringing EO to the island (he’s also coming back to the Big Apple as part of his CTRL Escape Tour on Nov. 28 at Brooklyn’s Barclays Center), and, after last year’s smashing success, expectations were sky high. Not just for the music, but for a smoother experience from delivering food and drinks to security, staging and everything in between. And John, with his natural business savvy, he made plenty sure he didn’t skimp on the marketing side either. In the week leading up to the show, he sent fans on a scavenger hunt through Wall Street, where they were led to a fake newsstand selling a mock newspaper, “The Summit Street Journal.” And, on the eve of the fest, he threw a pre-party at the New York Stock Exchange, where a menagerie of finance bros dressed as themselves and some 200 lucky attendees fled work early for a rave my friend expertly described as “completely insane” that came with an open bar and sushi rolls.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>‘Rocky IV’ star Dolph Lundgren says he planned his own funeral during brutal cancer battle</h4>
+                <p>Actor Dolph Lundgren joins Fox & Friends to discuss his new memoir ‘Fights Worth Fighting,’ his journey to Hollywood and his battle with cancer. This story discusses suicide. If you or someone you know is having thoughts of suicide, please contact the Suicide & Crisis Lifeline at 988 or 1-800-273-TALK (8255).</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Hilary Duff extends tour into 2027, adds Buffalo show. Get tickets now</h4>
+                <p>Originally set to wrap in February, the “Lizzie McGuire” star will now perform at arenas all over the globe from May through November ’27 with special guests Tegan and Sara, Dashboard Confessional and Rebecca Black joining her on select dates. On Friday, Oct. 8, the 38-year-old pop icon is slated to headline at Uncasville, CT’s Mohegan Sun Arena. “This tour has been one of the most joyful, healing, and inspiring experiences of my life,” Duff shared via Instagram. “I can’t believe I get to share it with even more of you.” Set List FM reports that includes chart-topping anthems “Come Clean,” “So Yesterday,” “Why Not,” What Dreams Are Made Of” and, of course, “Wake Up.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>George Clooney rushes to Rande Gerber and Cindy Crawford's side after son Presley's death</h4>
+                <p>Fox News senior medical analyst Dr. Marc Siegel discusses the Presley Gerber death investigation, college drug fatalities and his book 'The Angels Among Us' on 'America's Newsroom.' George Clooney rushed to Rande Gerber and Cindy Crawford's side days after their only son, Presley Gerber, died of a "suspected overdose."</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2025/08/931/523/selective-hearing-married-couple.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>The secret list that tells scammers you're an easy target</h3>
+                <p class="lead-summary"><strong class="drop-cap">S</strong>camSkeptic founder Matt Sanner explains how his app helps protect older Americans from fraud and scams on ‘America’s Newsroom.’ Somewhere in a marketing database, something you did years ago could still be helping a company decide what you might respond to next. Maybe you entered a sweepstakes or signed up for a business seminar. That kind of response can become valuable data. Federal court records show just how far that can go. In a case involving data broker Epsilon Data Management, employees had a name for people targeted by certain solicitations: "opportunity seekers." Those opportunity seeker lists became especially valuable when they reached people running fraud schemes. And as you'll see, the idea of sorting people based on what they are likely to respond to has not disappeared. NEW! 🩺 Free CyberGuy LIVE class: Get Better Healthcare With AI, Saturday, September 26 at 11 a.m. ET / 8 a.m. PT Kurt "CyberGuy" Knutsson will show you five practical ways AI can help you organize your health history, remember important appointment details, understand complicated medical information, research prescriptions and prepare smarter questions for your doctor. No technical experience is needed. Marketing data can reveal who has responded to certain offers before, giving scammers another clue about who may be more likely to engage. (Kurt "CyberGuy" Knutsson) "Opportunity seeker" sounds like harmless marketing jargon. But in the Epsilon case, the Department of Justice (DOJ) showed how that label was being used inside a business unit that worked with fraudulent clients. According to Epsilon's deferred prosecution agreement, the company's clients included businesses sending deceptive solicitations involving sweepstakes, astrology, auto warranties, dietary supplements and government grants. Epsilon employees called the people targeted by those offers "opportunity seekers" and referred to the clients sending them as "opportunistic." The court filing also says those opportunity seekers frequently came from the same group: older and vulnerable Americans.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Iced coffee, tattoos, thank-you notes: The shifting do’s and don’ts of job interviews</h4>
+                <p>An explosive debate over iced coffee highlights how tricky it can be to navigate interview etiquette.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Hackers hijack verified streaming account to spread malware, researchers find</h4>
+                <p>Clicking links in a fake party invitation email can install malware that gives criminals remote access to your computer and personal information, Kurt "CyberGuy" Knutsson explains. You probably know to be suspicious of a strange pop-up or a random website asking you to download something. But what happens when the ad comes from a verified account belonging to a company you recognize? That is what made a recent malware campaign involving HBO Max so concerning.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Five Indianapolis officers charged following The Post’s reporting on Flock misuse</h4>
+                <p>The officers are among at least 100 police department employees accused of abusing their access to license-plate readers, prompting calls for greater oversight.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
