@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>SUNDAY, SEPTEMBER 27, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F09%2Fwnba-playoff-predictions.jpg?quality%3D90%26strip%3Dall%261790503552" alt="Lead Story Image" class="news-photo">
+                <h3>WNBA playoffs 2026 predictions for every first-round series</h3>
+                <p class="lead-summary"><strong class="drop-cap">E</strong>leven games separated the first and eighth seeds in the 2025 WNBA playoffs. This season, the gap is much smaller. The league’s parity has arguably never been greater. The chance for an upset or three is there, and the title is up for grabs. Will the league’s best team for the entire season win it all? Or will a franchise capture its first title? Game 1: at Minnesota, Sunday, 2 p.m. ET, ABC Game 2: at New York, Tuesday, 8:30 p.m. ET, USA/CNBCGame 3*: at Minnesota, Thursday, TBD Matchup to watch: The Liberty had success slowing Olivia Miles in their last meeting by throwing the kitchen sink at the rookie. But did New York show its hand too soon? Game 1: at Golden State, Sunday, 9 p.m. ET, USA/CNBCGame 2: at Dallas, Wednesday, 9 p.m. ET, ESPNGame 3*: at Golden State, Friday, TBD Matchup to watch: The Valkyries have the league’s best defense, which is designed to stifle the league’s biggest stars, including Paige Bueckers. The injury-plagued Wings might not have the juice to survive this series. Game 1: at Las Vegas, Sunday, 4 p.m. ET, ABCGame 2: at Indiana, Tuesday, 6:30 p.m. ET, Amazon Prime VideoGame 3*: at Las Vegas, Thursday, TBD Matchup to watch: The Fever’s historically potent offense is going up against the Aces’ top-five defense. Another fun storyline: A’ja Wilson versus Aliyah Boston, two South Carolina alums contending to be Dawn Staley’s favorite. Game 1: at Atlanta, Sunday, 7 p.m. ET, Amazon Prime VideoGame 2: at Washington, Wednesday, 7 p.m. ET, ESPNGame 3*: at Atlanta, Friday, TBD Matchup to watch: This series will be the battle of the bigs: the Mystics’ Shakira Austin and Kiki Iriafen versus the Dream’s Angel Reese and Naz Hillmon. Win the war inside to advance.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Review Finds Serious Security Flaws On The Utah Campus Where Charlie Kirk Was Murdered</h4>
+                <p>‘UVU security was woefully understaffed and unprepared,’ an attorney for the slain conservative icon’s family said. Utah Valley University failed on a number of fronts to protect Charlie Kirk from the assassin who took his life at an outdoor event a little over a year ago, according to an independent review released on Friday. While the 157-page report from the Illinois-based Lake Forest Group found no evidence UVU employees or agents acted in “bad faith or in willing and wanton disregard for the safety of others,” it does reveal serious security “gaps” and a failure of UVU officials to follow their own policies.</p>
+                <p class="source-credit">— The Federalist</p>
+            </div>
+            <div class="story-minor">
+                <h4>A Tale of Two Jurors</h4>
+                <p>12 Angry Men and the Lindsay Clancy case each had a lone holdout juror. There’s only one worthy of our respect.</p>
+                <p class="source-credit">— National Review</p>
+            </div>
+            <div class="story-minor">
+                <h4>Powerful Northeast Storm Kills At Least One, Knocks Out Power For 100,000</h4>
+                <p>A powerful storm swept across the Northeast on Saturday, killing at least one person and knocking out power to about 100,000 customers. Leighton Brown, a 56-year-old New York City Housing Authority (NYCHA) employee, was killed in Brooklyn when a tree fell on him during the storm, NYCHA said. “My thoughts are with his entire family as they deal with this unimaginable loss,” New York City Mayor Zohran Mamdani said. “May he rest in peace, and may his service to our city never be forgotten.” In a separate incident, fire officials said four people were hospitalized with minor injuries after a tree fell on them near a Sheepshead Bay playground. The city’s Parks Department said it had received more than 900 reports of damaged or fallen trees since Friday afternoon, though it cautioned that some may be duplicates.</p>
+                <p class="source-credit">— Daily Wire</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/09/931/523/athens-explosion-plaka-district.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Four American tourists among 6 killed after explosion levels building near Athens’ Acropolis</h3>
+                <p class="lead-summary"><strong class="drop-cap">F</strong>our American tourists were among six people killed in Greece when a devastating explosion leveled a residential building near Athens’ famed Acropolis, according to officials. The four Americans — two men and two women believed to be two couples — were staying in the two-story building in the historic Plaka district, the historic neighborhood at the foot of the Acropolis and close to some of Athens’ most heavily visited landmarks, when the blast struck Friday. The two couples had been expected to catch a flight from Athens airport at 3 p.m. Friday but never showed up, a police source told Reuters. Documents and belongings recovered with the four victims indicated they were U.S. citizens, according to Greek state broadcaster ERT and other local media. Firefighters work at the scene following Friday's powerful blast in Athens' Plaka district, Saturday, Sept. 26, 2026. (AP Photo/Yorgos Karahalis) "I am deeply saddened to learn of the death of four American citizens in yesterday’s explosion in central Athens," Guilfoyle wrote. Emergency crews searching through the rubble recovered six bodies from the collapsed building Saturday, authorities said.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Rise in young Catholic converts points to spiritual longing in U.S. and Europe</h4>
+                <p>As Pope Leo XIV visits France, the number of converts is growing in secular Western countries, and some in Gen Z are rediscovering the faith of their grandparents.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>UK police arrest 'explosive' suspects near US airbase, key to Iran war</h4>
+                <p>Fox News' Lucas Tomlinson reports the latest on the threat from Iranian hackers targeting U.S. infrastructure. U.K. police say they arrested multiple suspects for offenses under the "Explosives Act" near a U.S. airbase in southwest England on Sunday. Gloucestershire Police say the arrests took place just two miles from RAF Fairford, which hosts U.S. Air Force assets. The U.S. has recently used the base in operations relating to the war in IRan.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Ukrainian boarding schools train teens to replace fallen fathers in war</h4>
+                <p>The Washington Post was granted rare access to one of five boarding schools the government has opened. They are part grief counseling and part boot camp.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F09%2Fnewspress-collage-6xku55s49-1790206903965.jpg?quality%3D90%26strip%3Dall%261790192560" alt="Lead Story Image" class="news-photo">
+                <h3>BetMGM bonus code POSTBET: Get up to $1,500 back in bonus bets for Jets vs. Lions</h3>
+                <p class="lead-summary"><strong class="drop-cap">N</strong>ew users can bet on Week 3 of NFL Sunday with the BetMGM bonus code POSTBET to get up to $1,500 in bonus bets if your first bet doesn’t win. Gang Green hits the road against the 1-1 Lions after suffering a 20-17 overtime loss to the Packers in their home opener, while Detroit’s defense failed to put up an effort in a 41-31 defeat to Buffalo. BetMGM is offering up to $1,500 in bonus bets back to your account for NFL wagers. Just place a first bet between $10 and $1,500 and receive a full reimbursement of that initial wager amount if your bet fails. This offer is live in Arizona, Colorado, Iowa, Illinois, Indiana, Louisiana, Kansas, Kentucky, Maryland, Massachusetts, North Carolina, Ohio, Tennessee, Virginia, Washington DC and Wyoming. The Jets had Week 2 won for about four and a half quarters, but that’s in the past and now they face a tougher task against Detroit’s offense, which features Jahmyr Gibbs and Amon-Ra St. Brown. Breece Hall enters the matchup featuring the top anytime touchdown odds for Gang Green at +100 prior to kickoff. 21+. Gambling problem? Call 1-800-GAMBLER or 1-800-MY-RESET. AZ, CO, DC, IA, IL, IN, LA, KS, KY, MA, MD, NC, OH, TN, VA, WY. Call 877-8-HOPENY or text HOPENY (467369) (NY). Call 1-800-327-5050 (MA), 1-800-BETS-OFF (IA), 1-800-981-0023 (PR). Please Gamble Responsibly. Call 1-800-NEXT-STEP (AZ), 1-800-522-470 (KS, NV), 1-800-BETS-OFF (IA). First Bet Offer for new customers only (if applicable). Subject to eligibility requirements. Bonus bets are non-withdrawable. In partnership with Kansas Crossing Casino and Hotel. This promotional offer is not available in MS, NY, NV, ON, PR, MI, NJ, PA, or WV. Visit BetMGM.com for Terms & Conditions.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>How to Watch Vikings vs. Buccaneers: TV Channel, Live Stream, Time</h4>
+                <p>The Minnesota Vikings visit the Tampa Bay Buccaneers on Sunday, September 27, 2026 at 4:05 p.m. ET from Raymond James Stadium, Tampa, FL. Minnesota is 2-0 after a 9-3 win over Chicago and Tampa Bay is 0-2 after a loss to Cleveland amid a quarterback change in Minnesota. Minnesota allows 12.5 points per game with a league-high 8 sacks and 25 quarterback hits. Tampa Bay allows 28 points per game with 3 sacks and 1 interception. Tampa Bay averages 113 rushing yards and 184.5 passing yards per game. Tampa Bay has allowed 7 sacks and carries a minus-4 turnover margin. Below, we'll give you all the details you need to know about how to watch this game.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Here’s where to watch Chargers vs. Bills NFL Week 3: Time, livestream</h4>
+                <p>Los Angeles, still searching for their first win, will face off with one of the few undefeated teams left after two weeks of the regular season, the Buffalo Bills, this afternoon. After a frustrating 26-14 home loss to the Las Vegas Raiders last weekend, Jim Harbaugh and the Chargers are desperate to right the ship. They’ll lean on their ground game and disciplined defense to silence the home crowd and avoid a steep 0-3 hole. The Bills, at a perfect 2-0, are coming off a gritty 31–21 victory over the Detroit Lions in Week 2 and look to keep their early-season momentum rolling in Orchard Park. Behind Josh Allen’s dual-threat playmaking, they’ll try to control the tempo of the game early, relying on a loud Highmark Stadium crowd and an aggressive front seven to put pressure on the visiting backfield.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>How to Watch Cardinals vs. 49ers: TV Channel, Live Stream, Time</h4>
+                <p>The Arizona Cardinals visit the San Francisco 49ers on Sunday, September 27, 2026 at 4:05 p.m. ET from Levi's Stadium, Santa Clara, CA. Arizona is 1-1 after a 31-7 loss to Seattle and San Francisco is 2-0 after a Week 2 win over Miami. San Francisco averages 31 points and 380.5 yards per game and ranks among the league leaders on third down. Arizona averages 16.5 points per game with 179 passing yards and 93 rushing yards per game. San Francisco allows 10 points per game with 4 sacks. Arizona allows 22.5 points per game and carries a plus-2 turnover margin. Below, we'll give you all the details you need to know about how to watch this game.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/09/931/523/Ella-Langley-Tucker-Wetmore.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Country stars Ella Langley and Tucker Wetmore fuel romance buzz with covert awards show exit</h3>
+                <p class="lead-summary"><strong class="drop-cap">E</strong>lla Langley and Tucker Wetmore sparked fresh attention after departing a Nashville awards ceremony together, adding to months of sightings and social media moments that had fans questioning their relationship status. (Backgrid) Langley and fellow country music star Tucker Wetmore tried to keep their reported romance under wraps, but a low-key side-door exit appeared to blow their cover. Langley and Wetmore were spotted leaving the Nashville Songwriter Awards together on Tuesday. "Tucker was hiding out backstage waiting for Ella to finish at the award presentation," an insider told The Sun. "They snuck out of the venue together." Ella Langley and Tucker Wetmore are reportedly dating, nearly a year after sparking romance rumors. (Getty Images) Multiple sources later confirmed to People magazine that the two are dating, nearly a year after they first sparked romance rumors. Langley and Wetmore first raised eyebrows after they were photographed spending time together in the British Virgin Islands in December 2025, giving fans an early reason to wonder whether their connection extended beyond their shared country music circles.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Four years after an extremist stabbed him, Salman Rushdie mulls visiting his attacker</h4>
+                <p>Beginning on Valentine’s Day of 1989, the Booker Prize winning author Salman Rushdie had a sword hanging over his head. For a period of time, threats of death followed him everywhere. The bloody culmination of his life spent alternately on the run and in public — with near-lethal consequences — is captured in “Knife: The Attempted Murder of Salman Rushdie,” a new documentary about Rushdie, his marriage and the dangers of fanaticism. Plagued by threats, Rushdie lived in hiding for some nine years, operated under the pseudonym Joseph Anton (cribbing the first and last names of two favorite writers: Joseph Conrad and Anton Chekov) and traveled by armored Jaguar.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>'Knots Landing' star Ted Shackelford spotted with walker during rare Los Angeles outing at 80</h4>
+                <p>In the photos, the actor, 80, is seen sporting a blue collared shirt layered with a blue knit cardigan, which he paired with black trousers, sunglasses and sneakers. Shackelford first rose to fame starring as Raymond Gordon on "Another World" for 110 episodes, before landing the role of Gary Ewing in the hit show "Dallas," and later its spinoff, "Knots Landing."</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>‘Godzilla Minus Zero’ review: Badass monster sequel is sensational</h4>
+                <p>Running time: 135 minutes. Rated R (some violent content and bloody images). In Japanese with subtitles. In theaters Nov. 6. The awesome “Godzilla Minus Zero,” which had its world premiere Saturday night at the New York Film Festival, embraces the principle that has guided this franchise for seven decades: The ‘zilla you know beats the Ghidora you don’t. In the latest thrilling addition to the “Minus” saga, as has long been the case, Godzilla goes from deadly destroyer to humanity’s last best hope to defeat an even worse foe — King Ghidora. Yet “Zero” is not the typical “vs.” venture we’ve seen so many, many times before. The Japanese film delves into places both familiar and previously unexplored in this series. Instead of one long, CGI-heavy death match, the plotting is twisty, smart and unpredictable. And, as in “Godzilla Minus One,” the human beings are somehow as engaging as the skyscraper-sized angry dinosaurs. What a thought!</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/09/931/523/Fake-ChatGPT-billing-emails-002.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Fake ChatGPT billing emails can steal your login</h3>
+                <p class="lead-summary"><strong class="drop-cap">I</strong>f you pay for ChatGPT, an email saying there is a problem with your subscription could easily get your attention. Maybe your card expired. Maybe the payment failed. Either way, you probably want to fix it before anything happens to your account. Cybercriminals are counting on that reaction. Security researchers at Cofense uncovered a phishing campaign that impersonates OpenAI and ChatGPT. The fake email looks like a routine subscription notice. However, the button inside can lead to a convincing copy of the ChatGPT login page. Cofense says the campaign targets account credentials and payment information. Our free CyberGuy LIVE class, Get Better Healthcare With AI , has ended, but you can still watch the full replay. Kurt "CyberGuy" Knutsson walks you through five practical ways AI can help you organize your health history, remember important appointment details, understand complicated medical information, research prescriptions and prepare smarter questions for your doctor. No technical experience is needed. A fake ChatGPT billing email claims a subscription payment was declined and urges the recipient to update payment information. (Cofense) The scam starts with an email that looks polished enough to make you pause. According to the Cofense Phishing Defense Center, it uses the real ChatGPT logo and claims your subscription payment needs attention. Then comes the pressure. The message prominently displays "Subscription Payment Required." It also warns that you have 48 hours to act. A large "Update Payment Information" button gives you an obvious way to supposedly fix the problem. Finally, the message signs off as "The OpenAI Team." If you are checking email between meetings or quickly scrolling on your phone, all of that can feel believable. Cofense says the attackers combine familiar images, bold wording and urgency to push people into acting quickly. The sender's email address is one of the biggest red flags. Cofense found that the phishing message came from support@9527db6e1a[.]nxcli[.]io. That domain has nothing to do with OpenAI. OpenAI currently lists several domains that it uses for legitimate customer emails. They include @openai.com, @mail.openai.com and @email.openai.com, along with other official OpenAI domains used for specific communications. That makes the full sender address worth checking. Do not rely on the name that appears in your inbox. A scammer can make the display name look reassuring while using a completely unrelated address behind it.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Startups bring innovation to defense industrial base</h4>
+                <p>'Special Report' examines the acceleration of defense manufacturing as the Department of War awards major multi-year contracts with companies. New tools, longstanding partnerships and additional resources could be the keys to bolster the defense industrial base.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Someone could have opened an account in your name; check now</h4>
+                <p>Cybercrime losses reached nearly $21 billion last year, prompting Kurt Knutsson to warn of increasingly sophisticated AI scams. He joins 'Fox & Friends Weekend' to break down the FBI data, highlighting that investment fraud alone cost victims $8.65 billion. Knutsson hosts a free live class to teach families how to protect their money and secure accounts.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
