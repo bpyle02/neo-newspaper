@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>TUESDAY, SEPTEMBER 29, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://www.theblaze.com/media-library/vance-talarico-wears-christianity-as-a-skin-suit-and-it-reveals-more-than-just-contempt.jpg?id=67884851&width=980" alt="Lead Story Image" class="news-photo">
+                <h3>Vance: Talarico wears Christianity as a 'skin suit' — and it reveals more than just contempt</h3>
+                <p class="lead-summary"><strong class="drop-cap">D</strong>espite the attempts underway by 'crazy communists' to seize power, the vice president is optimistic about the future since 'woke is dead.' Vice President JD Vance believes "woke is dead," and he thinks recent conduct from Texas Democratic Senate candidate James Talarico demonstrates the point. In an episode of conservative Vince Coglianese's podcast that aired on Tuesday, Vance sorted through white and black pills pertaining to the midterm election, which is now only five weeks away. Vance acknowledged the recent rightist doom-saying about the election, boosted in part by recent polls indicating that the Democrats have a serious edge in multiple races. However, the vice president emphasized that the country "is not going to be saved by what Thomas Paine would have called sunshine patriots." "You have got to get in there and win these races and make it possible for Republicans to deny a bunch of crazy communists from having positions of power in the United States of America," said Vance. "It's just that simple." Vance further suggested that the situation may not be as bleak for Republicans as some think, recalling polls from fall of 2024 that indicated that then-Vice President Kamala Harris was going to trounce President Donald Trump and that the Democrats were going to maintain control of the U.S. Senate. In a Reuters/Ipsos poll published in late September 2024, Harris led Trump 47% to 40%, while an NBC News national poll showed Harris leading Trump 49% to 44%. Trump ultimately defeated Harris in a landslide, securing the popular vote and 86 more Electoral College votes than the Democrat. RELATED: Exclusive: ‘We all got in by lying’: Hidden camera shows Talarico’s pastor rejecting Christ’s virgin birth, other foundational Christian beliefs While optimistic that the pollsters may be wrong again, Vance noted there are nevertheless "headwinds" and that seldom does a party that controls the House, the Senate, and the White House maintain its trifecta through the midterm election. "It almost never happens, but this is very different," said Vance. "Number one, we have a very unique president. Number two, we have a bunch of crazy people running on the other side — yes, people who are promising not to lower your prices or to make your life better. They're promising to trans your kids and steal all your property. Like, that is not what the American people want out of their government."</p>
+                <p class="source-credit">— The Blaze</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Jack Smith clashes with senators over Trump probes, says he will not be silenced</h4>
+                <p>Jack Smith returned to Capitol Hill on Tuesday to defend his derailed efforts to prosecute President Donald Trump, telling lawmakers he would not “be silenced by continued threats of prosecution” from the president.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>China’s German Roadkill</h4>
+                <p>The Week of September 21, 2026: Germany’s China shock, fiscal policy, healthcare, regulation, and much more.</p>
+                <p class="source-credit">— National Review</p>
+            </div>
+            <div class="story-minor">
+                <h4>Nikole Hannah-Jones’s Daughter Delivers a Devastating Verdict on Her Mother’s School Experiment</h4>
+                <p>Nikole Hannah-Jones, a leading author behind the infamous 1619 Project and a prominent face of DEI and progressive education politics, has found herself under fire after enrolling her own daughter in a struggling public school, a decision critics say put ideology ahead of her child’s education. Hannah-Jones said she hoped the move would draw attention to the school’s problems and help spur improvement. Instead, the experiment reportedly backfired when her daughter’s education began to suffer, the sort of sacrifice that is much easier to romanticize when it is someone else’s child making it. Now, the story has become even more damning. Newly surfaced audio reportedly captures Hannah-Jones’s daughter blasting her mother for putting ideology ahead of her education.</p>
+                <p class="source-credit">— Townhall</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/09/931/523/bellville-synagogue-shooting-canada.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Hero cop stopped synagogue massacre in Canada as Jewish group calls for armed guards</h3>
+                <p class="lead-summary"><strong class="drop-cap">A</strong> spokesperson for Ontario's Special Investigations Unit provides details on the Yom Kippur shooting outside Sons of Jacob Synagogue that seriously injured an officer. (CTV via Reuters.) When a gunman approached a police cruiser outside the Sons of Jacob Synagogue in Belleville, Ontario, during Yom Kippur, approximately two dozen people were praying inside. The armed officer sitting outside was not part of a permanent security system available to every synagogue in Canada. Police had dispatched him after receiving a report about a suspicious vehicle. That decision may have prevented a massacre. "The only thing that stood in the way of every congregant of that shul being murdered was the presence of an armed police officer," Simon Wolle, CEO of B’nai Brith Canada, told Fox News Digital. A forensics officer points towards a police vehicle (out of frame) at the scene of a shooting at the Sons of Jacob Synagogue, where a man armed with a shotgun exchanged gunfire with a police officer stationed outside the Synagogue late Sunday evening as people were arriving for Yom Kippur. The suspect's shotgun can be seen lying on the ground adjacent to the officer.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Reports that Netanyahu ignored Oct. 7 warnings dominate Israeli election</h4>
+                <p>The Israeli prime minister has denied any advance knowledge of the Hamas attack in 2023, but as a national election nears his role is under new scrutiny.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>At least 40 rescued, 2 dead as boat capsizes after machete fight near Puerto Rico</h4>
+                <p>U.S. Customs and Border Protection Air and Marine Operations detected a vessel carrying 40 migrants near Desecheo Island, leading to a U.S. Coast Guard interception and apprehensions. At least 40 people were rescued in open waters by the U.S. Coast Guard, and two people died after their boat capsized several miles from a tiny, uninhabited island west of Puerto Rico following a fight that involved a machete, officials said on Monday.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Trump’s proposed diesel export ban spurs fear of energy crunch in Europe</h4>
+                <p>The European Union's energy commissioner sent a letter to the bloc's 27 member states recommending that they all cut gas and electricity consumption “for as long as necessary.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/statics.foxsports.com/www.foxsports.com/content/uploads/2026/09/931/523/pochh1.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Mauricio Pochettino: No 'Sporting Justice' For Tottenham In Man City Verdict</h3>
+                <p class="lead-summary"><strong class="drop-cap">U</strong>nited States coach Mauricio Pochettino expressed sadness at an apparent failure of "sporting justice" in his response to reports that Manchester City has been found guilty of almost all of the 115 charges leveled against the club for alleged financial breaches. The alleged rule-breaking by City took place between 2009-18, during which period Pochettino was manager of Tottenham and turned the London team into a challenger for titles in English soccer despite operating on a relatively small budget. The Premier League has yet to officially confirm the verdict that, according to several media outlets, has been passed down by an independent commission following a long-running case. Mauricio Pochettino was Tottenham's manager from 2014 through 2019, while the alleged Manchester City violations occurred between 2009 and 2018.  (Photo by Ian KINGTON / AFP via Getty Images) "If it’s true that the 114 rules were broken, then we lived through a period of deception," said Pochettino, speaking Monday — a day before the U.S. men’s team plays Chile in a friendly match.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Knicks players ‘very surprised’ by Mitchell Robinson’s departure: ‘Heartbroken’</h4>
+                <p>For most people outside the Knicks, Mitchell Robinson leaving in free agency was an expected outcome. “That hurt,” Karl-Anthony Towns said during the team’s Media Day on Monday. “I was very surprised. I was very surprised that Mitch wasn’t gonna be back here with us. I think all of us were, so it was a surprise to everybody. I thought something would get done there.” The Knicks, operating under owner James Dolan’s edict to remain below the second apron and avoid its financial penalties, were not able to make a competitive offer to Robinson, the only significant departure from their championship-winning team.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>The Case Keenum Game: 3 Takeaways From Bears' Culture-Defining Win vs. Eagles</h4>
+                <p>With Caleb Williams out, the Chicago Bears needed Case Keenum to provide a steady presence in their Monday matchup against the Philadelphia Eagles. Keenum delivered, and then some. Keenum, who entered the season as the Bears' third-string quarterback and hadn't started a game since 2023, played nearly flawless football. He completed 24 of 34 passes for 247 yards and two touchdowns to go with a rushing score, leading the Bears to a decisive 27-7 victory.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Jalen Hurts’ NSFW question revealed after being sent to blue tent in heated ‘MNF’ moment</h4>
+                <p>A pivotal stretch of “Monday Night Football” in the Bears’ 27-7 win over the Eagles saw star quarterback Jalen Hurts watching from the sideline. From the look of it on the ESPN broadcast, Hurts disliked getting removed from the field and wanted back in at Soldier Field. Down by seven, Philadelphia had second-and-4 in the red zone at the halfway point of the second quarter. With no open targets due to a scrappy Bears secondary, Hurts scrambled for the first down and took a hard hit out of bounds by linebacker D’Marco Jackson. The hit sent Hurts flying backward and the back of his helmet ricocheted off the turf.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F09%2F143009889.jpg?quality%3D90%26strip%3Dall" alt="Lead Story Image" class="news-photo">
+                <h3>ABC News’ Will Reeve reveals testicular cancer diagnosis: what to know about the rare disease</h3>
+                <p class="lead-summary"><strong class="drop-cap">A</strong>BC News correspondent Will Reeve, the son of Superman actor Christopher Reeve, has revealed that he was diagnosed with testicular cancer. “I was raised to share one’s struggles if, in doing so, that might help others,” Reeve, 34, told People. Not long after getting married, Reeves discovered a lump in his left testicle, and an ultrasound confirmed it was testicular cancer. Reeves shared that he had his affected testicle removed in a surgery called an orchiectomy, which led to a diagnosis of embryonal carcinoma — an aggressive testicular cancer common in younger to middle-aged adults. To stop the cancer from spreading, he had a second surgery to clear out dozens of lymph nodes through a retroperitoneal lymph node dissection. He also recounted his month of chemotherapy at Memorial Sloan Kettering Cancer Center in Manhattan, detailing rough recovery side effects like bone pain, ringing ears, night sweats, blood clots and headaches. “I want folks to know that this is a thing that can happen,” Reeves told ABC News. “It’s shocking. It’s weird It’s slightly awkward to talk about just because of what we’re really discussing here, but that you end up okay, almost always.” To diagnose testicular cancer, doctors perform a physical exam, imaging scans, blood tests and a biopsy. After confirming the cancer, they test the cells to identify the specific type, which guides the treatment plan.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>‘Saved by the Bell’ star Dennis Haskins dead at 75</h4>
+                <p>Dennis Haskins, the actor best known for playing Bayside High School Principal Richard Belding on the hit sitcom "Saved by the Bell," has died. He was 75. Haskins' representative confirmed his death to Fox News Digital, saying, "It’s a tragic loss. Everyone loved Mr. Belding and those of us who got to know Dennis loved him even more. He was a great person, and he loved, I mean absolutely LOVED his fans. He always had time for them, no matter what. He was my client and dear friend for over 20 years, and I will miss him terribly. I’m heartbroken."</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>‘Coyote vs. Acme’ comes to streaming — Where to watch the new movie at home</h4>
+                <p>A movie that was almost never seen by anyone is now available to watch from home. “Coyote vs. Acme,” the new hybrid live action/animation “Looney Tunes” flick, is streaming on video-on-demand (VOD) platforms including Prime Video now. “Coyote vs. Acme,” the new hybrid live action/animation “Looney Tunes” flick, is streaming on video-on-demand (VOD) platforms including Prime Video now. In late 2023, the fully finished “Coyote vs. Acme” film was shelved as a tax write-off by Warner Bros. Discovery CEO David Zaslav; the company later reversed its decision after public backlash. Ketchup Entertainment ultimately acquired the rights to “Coyote vs. Acme” and on Aug. 28 of this year, it finally hit theaters.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Judge Judy passed the torch to son Adam Levy with one blunt piece of advice</h4>
+                <p>Judge Judy Sheindlin's son Adam Levy recalled how his famous mother displayed her trademark bluntness while encouraging him before he took the bench for his new syndicated reality court series "Adam's Law." Levy, 58, is the presiding judge on the show, which was created by Sheindlin, 83, who also serves as an executive producer through her company Queen Bee Productions. "Adam's Law" is also produced and distributed in national syndication by CBS Media Ventures.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/09/931/523/apple-iphone-siri-settlement.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Apple's $250M Siri settlement: How to claim up to $95</h3>
+                <p class="lead-summary"><strong class="drop-cap">B</strong>ernstein managing editor and senior analyst Mark Newman speaks on the future of Apple intelligence after the release of their new Siri AI on 'The Claman Countdown.' If you bought one of Apple's AI-ready iPhones because you expected the smarter Siri Apple had been talking about, check when you purchased it. You could have some money coming your way. A proposed $250 million Apple Siri settlement now has an open claims process for qualifying iPhone owners. The case centers on allegations that consumers bought certain iPhones expecting Siri features powered by Apple Intelligence that they did not receive during the period covered by the lawsuit. Apple denies the allegations and says it did nothing improper or unlawful. The amount may sound small next to the price of a new iPhone, but filing a claim could put as much as $95 per eligible device back in your pocket. There are a few important catches, though, including exactly which iPhone you bought and when you bought it. Missed CyberGuy LIVE? Watch the replay and discover 5 ways AI can help you get better healthcare. Our free CyberGuy LIVE class, Get Better Healthcare With AI, has ended, but you can still watch the full replay. Kurt "CyberGuy" Knutsson walks you through five practical ways AI can help you organize your health history, remember important appointment details, understand complicated medical information, research prescriptions and prepare smarter questions for your doctor. No technical experience is needed. Apple’s proposed Siri settlement covers eligible purchases of the iPhone 15 Pro and iPhone 15 Pro Max made during the settlement period. (Anna Barclay/Getty Images) The lawsuit is called Landsheft, et al. v. Apple Inc. and is pending in federal court in Northern California. The plaintiffs alleged that Apple promoted certain Siri features powered by Apple Intelligence, leading buyers to expect capabilities that were not delivered during the class period. Apple denies those allegations. The company agreed to put $250 million into a settlement fund rather than continue litigating the case. The agreement received preliminary court approval on July 17, 2026. The court has scheduled a final approval hearing for Feb. 24, 2027. That timing is especially interesting because Apple finally began rolling out its long-awaited Siri AI beta with iOS 27 in September 2026.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Trump will pitch an AI ‘golden age’ to a wary nation, flanked by industry leaders</h4>
+                <p>After rogue AI agents probed agency websites, Washington’s concerns are at a peak, but the White House has focused on the technology’s promise.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Job scams have gotten more sophisticated. Here’s how to spot and avoid them.</h4>
+                <p>Job seekers should watch out for “ghost” AI job postings and data phishing disguised as listings.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>OpenAI cancels new AI launch, citing safety issues</h4>
+                <p>The cancellation of the new release comes days after OpenAI said it stopped training powerful new AI after safety incidents.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
