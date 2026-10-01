@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>WEDNESDAY, SEPTEMBER 30, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://media.townhall.com/cdn/hodl/2026/22/c99794f0-a308-4508-8bf2-6d8a9b0971a0.jpg" alt="Lead Story Image" class="news-photo">
+                <h3>Jack Smith Caught Spying on Conservative Journalists in Anti-Trump Witch Hunt</h3>
+                <p class="lead-summary"><strong class="drop-cap">S</strong>pecial counsel Jack Smith’s team allegedly spied on several journalists in its investigation into President Donald Trump. One of their targets was The Federalist’s Mollie Hemingway, according to editor-in-chief Sean Davis, who revealed the special counsel’s actions in a post on X. “Corrupt cop Jack Smith spied on The Federalist and accessed our communications during his lawless anti-Trump witch hunt,” Davis wrote. “We are still working to determine which of our reporters were targeted by Jack Smith and which journalistic communications he and his thugs seized.” He noted that Hemingway “wrote the definitive account of how Democrats seized control of election infrastructure and destroyed the integrity of American elections in 2020.” For over a decade, The Federalist has fearlessly exposed Deep State corruption and DOJ lies and lawfare. Spying on us was apparently part of Jack Smith’s plot to get revenge against us. The First Amendment is the bedrock of the American Constitution. A free press is integral to the American republic and our entire way of life. And Jack Smith fed the whole thing through a shredder in his insane and illegal attempt to rig the 2024 elections through lawfare, intimidation, and unconstitutional attacks on free speech and the First Amendment. As shocking as this news may be to some, I am not surprised to learn of this behavior by Jack Smith and the Biden administration. At the direction of the Biden administration, the federal government illegally censored The Federalist, tried to bankrupt us, and was eventually forced to admit it had zero legal authority to do any of it. We took these thugs to court and won when we learned of their illegal censorship efforts, and we will explore all legal options going forward to deal with Jack Smith’s lawless and un-American attempts to silence us by spying on us. Nobody in corporate media said a word in our defense when we were illegally censored. Outlets like CNN and the New York Times, which posture as First Amendment purists, had nothing to say about the Biden administration’s illegal attempts to punish us for our rigorous and accurate journalism. I have zero doubt that they will be similarly silent today, because they are partisan hacks who supported Jack Smith’s egregious lawfare every step of the way. Unlike corrupt corporate media, The Federalist will always fearlessly and accurately report the news, even in the face of never-ending Democrat assaults on the First Amendment, free speech, and freedom of the press.</p>
+                <p class="source-credit">— Townhall</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Will California Democrats Finally Defeat John C. Frémont?</h4>
+                <p>They have him cornered on a state park sign.</p>
+                <p class="source-credit">— National Review</p>
+            </div>
+            <div class="story-minor">
+                <h4>Wynonna Judd exposes rift with sister Ashley: ‘We’re taking a break’ from each other</h4>
+                <p>The singer revealed their rift in her People cover story, published Wednesday, saying she and the actress aren’t currently “connected.” “She’s doing her thing, and I’m doing mine,” Wynonna, 62, said, further explaining that her younger sibling has yet to hear her upcoming album, “The Hard Truth.” Their estrangement comes four years after Wynonna and Ashley’s mom, Naomi Judd, died by suicide at 76. While reports at the time said that the late country icon’s daughters were butting heads over her will, Wynonna denied this in October 2022. “I have such a great life. Ashley has a great life. Why would we be fighting over the will?” she asked People at the time.</p>
+                <p class="source-credit">— Https://pagesix</p>
+            </div>
+            <div class="story-minor">
+                <h4>Execution of Tennessee woman blocked by federal court with hours to spare</h4>
+                <p>Christa Pike was scheduled to die Wednesday morning, but the U.S. Court of Appeals for the Sixth Circuit intervened.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/09/931/523/hebrew-bible-torah.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Evangelical leader slams Palestinian official’s Bible claims as ‘contemptible’</h3>
+                <p class="lead-summary"><strong class="drop-cap">D</strong>inesh D'Souza has a new book out this fall, "The Stones Cry Out," which examines archaeological findings he believes offer striking support for the Bible's historicity. He spoke to Fox News Digital about the book and his beliefs. A leading American evangelical leader has condemned remarks made by a Palestinian official claiming the Bible as a "Palestinian book." Palestinian Ambassador to the U.K. Husam Zomlot made the comments earlier this month at the University of Bradford as the revisionist argument takes shape asserting Jesus was a Palestinian. Zomlot’s claims that the Bible is a "Palestinian book" and that, by extension, all Christians are Palestinian has drawn sharp criticism from those who say the remarks advance a contested historical narrative about the land. Antique Bible texts on show at the Royal Ontario Museum. (Roberto Machado Noa/LightRocket via Getty Images) "The Palestinians aren’t the ‘people of the Book.’ When the ‘Book’ was written, the term Palestinian had not yet been coined," Pastor John Hagee, founder and chairman of Christians United for Israel (CUFI), told Fox News Digital.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Pilot on Tel Aviv-bound flight tried to crash plane after cockpit stabbing, Netanyahu says</h4>
+                <p>Flydubai Flight 1073 was carrying about 180 passengers to Tel Aviv from Dubai when it made the emergency landing in Saudi Arabia.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Taiwan analysts say Trump-Xi summit produced no policy shift but real test lies ahead</h4>
+                <p>The Chinese president departed the United States after a two-and-a-half-day summit that covered everything from AI to the future of Taiwan. TAIPEI — Taiwanese officials were watching carefully for signs of policy changes toward the island as President Donald Trump hosted Chinese President Xi Jinping for a state visit last week in Washington, D.C.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>U.K. accuses China of operating institute as front for espionage</h4>
+                <p>The “espionage alert” issued by MI5 is part of an extraordinary shift by the British government to raise public alarms about the scale and threat of Chinese espionage.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/statics.foxsports.com/www.foxsports.com/content/uploads/2026/09/1200/675/padres-1.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Padres Name Joe Musgrove To Wild Card Roster Despite Not Pitching Since 2024</h3>
+                <p class="lead-summary"><strong class="drop-cap">V</strong>eteran right-hander Joe Musgrove is on the San Diego Padres ' roster for their NL Wild Card Series nearly two full years after his most recent appearance in a major league game. Musgrove was a surprise addition to manager Craig Stammen's 26-man roster Tuesday before the Padres hosted the Chicago Cubs. Musgrove hasn't played for his hometown team since Oct. 2, 2024, when he left the Padres' clinching Wild Card Series victory over Atlanta with a right elbow injury. He underwent Tommy John surgery and missed the 2025 season, and he subsequently missed the entire 2026 regular season when his recovery progressed much more slowly than expected. Now 34 years old, Musgrove made four rehab appearances in August, but he said his postgame recoveries continued to be difficult. Musgrove has been throwing in instructional league games this month, and the Padres apparently liked what they saw. San Diego chose Musgrove for its 11-man postseason pitching staff over several possible candidates, including dependable right-hander Randy Vasquez, lefty reliever Wandy Peralta, trade deadline acquisition Casey Mize and Griffin Canning.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>NFL makes drastic move to sell slow-moving Colts-Commanders London tickets — and fans are irate</h4>
+                <p>LONDON — Andy Burrows calls the NFL’s ticketing strategy for Sunday’s game at Tottenham Hotspur Stadium “a bit shambolic.” After charging up to 245 pounds ($325) for tickets to see the Indianapolis Colts face the Washington Commanders, the league reduced prices in a bid to sell out the north London stadium, following slow sales in comparison to past years. It stings for the fans who paid full price this summer when tickets first went on sale. And it comes as the league charges ahead with its international growth plan. “They don’t care about the fans. As long as that place sells out and it looks good on TV, the NFL won’t care about us,” Burrows said. “And I’m not alone. I speak to fans every day.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Jerry Jones Blames Cowboys Coaching Staff For Week 3 Loss To Ravens</h4>
+                <p>Dallas Cowboys owner Jerry Jones is leaving little doubt that he believes errors in game management by his coaching staff in the final seconds of a 34-31 loss to the Baltimore Ravens cost his team the victory. Speaking on his radio show Tuesday, Jones was asked what explanations there were for leaving enough seconds on the clock after a tying field goal for a defensive breakdown to put the Ravens in position for the winning kick.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Bizarre ‘elevator music’ playing in middle of Peacock’s Yankees-Red Sox broadcast had fans baffled</h4>
+                <p>Peacock’s Yankees-Red Sox broadcast Tuesday night featured an awkward moment when an instrumental played in the middle of the fifth inning during the Bronx Bombers’ 9-0 win. Join Post Sports+ for exciting subscriber-only features, including real-time texting with Greg Joyce about the inside buzz on the Yankees. The rock-centric theme played while Yankees ace Cam Schlittler pitched to Nick Sogard in a 1-0 game with one out and one on and as play-by-play man Jason Benetti discussed Boston’s turnaround. It made for a weird mix of natural ballpark sounds, an instrumental that seemed misplaced and Benetti trying to tell the listeners about how Boston saved its season.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/09/931/523/dane-cook.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Dane Cook says brother’s $12M betrayal left him with 'scarlet letter of humiliation'</h3>
+                <p class="lead-summary"><strong class="drop-cap">C</strong>omedian Dane Cook spoke with Fox News Digital about his new documentary which detailed the emotional fallout from his brother Darryl’s theft of millions of dollars, the criminal case and its lasting impact years later. Dane Cook reflected on the shame he felt while fighting against his family for a fortune that was stolen from underneath his eyes. After finding success on stage and screen, and during one of the peaks of his career, the comedian discovered that he was essentially broke and his older half-brother, Darryl McCauley — who also served as his business manager — was on the run with a fraction of his fortune. Cook, 54, exclusively told Fox News Digital that the betrayal not only devastated him financially, but also impacted his mental health as he attempted to reconcile his brother's actions while finally speaking out in the new documentary, "Funny Money: The Dane Cook Story." Dane Cook detailed how his half-brother, Darryl McCauley, stole millions of dollars from him throughout his career in his new documentary, "Funny Money: The Dane Cook Story.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Slipknot announces 2027 stadium tour with Bring Me The Horizon. Get tickets</h4>
+                <p>The nü-metal icons just announced the 13-concert North American leg of their summer 2027 (sic)est Stadium Tour with special guest Bring Me The Horizon from July through August. While out and about, the Grammy winner will also be joined by rotating opening acts Lamb of God, Motionless In White, Acid Bath, Polyphia, Loathe and more on select dates. Prior to this upcoming run, Slipknot last performed live at the 2025 Inkcarceration Festival in Mansfield, OH. At that gig, Set List FM reported they delivered an abbreviated but powerful set which included fan favorites like “Duality,” “Psychosocial,” “Wait and Bleed,” “Devil in I” and, of course, “Surfacing.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Chad Lowe mourns death of 13-year-old daughter Fiona, calling her 'the light of our lives'</h4>
+                <p>Actor Chad Lowe and his family are mourning the death of his 13-year-old daughter, Fiona, remembering the "smart, creative" teen who loved to dance as the "light of our lives." This story discusses suicide. If you or someone you know is having thoughts of suicide, please contact the National Suicide Prevention Lifeline at 988 or 1-800-273-TALK (8255).</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Sean ‘Diddy’ Combs living VIP life behind bars with massages, alcohol, nude photos and a cellphone: report</h4>
+                <p>Disgraced music mogul Sean “Diddy” Combs is reportedly living high and large inside the Fort Dix federal prison in New Jersey — with access to a cellphone, booze and people catering to his every need, NBC News reported. While he’s serving a 50-month sentence for prostitution-related offenses, Combs, 56, spends thousands of dollars a month to bring his pampered lifestyle to the Garden State lockup, according to four men who spent time in the same unit as the former hip-hop producer, speaking to the outlet on the condition of anonymity. “This is not some normal s–t you see in jail. This is some rich s–t,” one of the men said. “It looks crazy, but again, it’s Diddy.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/07/931/523/2-AirDrop_and_Quick_Share_flaws_put_phones_at_risk.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Turn on lost-phone settings before you need them</h3>
+                <p class="lead-summary"><strong class="drop-cap">Y</strong>ou know that awful feeling when you reach for your phone, and it is suddenly nowhere to be found. Maybe you left it at a restaurant. Maybe it slipped between the car seats. Or maybe somebody walked away with it. The worst time to start figuring out your phone's tracking features is after it disappears. Fortunately, iPhone, Google Pixel and Samsung Galaxy phones include powerful tools that can help you locate a missing device and protect the information stored on it. Take a few minutes while your phone is still safely in your hand and make sure these settings are ready. Missed CyberGuy LIVE? Watch the replay and discover 5 ways AI can help you get better healthcare. Our free CyberGuy LIVE class Get Better Healthcare With AI has ended, but you can still watch the full replay. Kurt "CyberGuy" Knutsson walks you through five practical ways AI can help you organize your health history, remember important appointment details, understand complicated medical information, research prescriptions and prepare smarter questions for your doctor. No technical experience is needed. Turn on your phone’s lost-device and theft protections now, so you are ready to locate it and protect your data if it disappears. (Kurt "CyberGuy" Knutsson) Apple's Find My system can help locate an iPhone when it is online. With the right settings enabled, supported iPhones can also remain findable when they are offline or for a period after they have been turned off. Find My network lets nearby Apple devices securely help locate your iPhone when it cannot connect to Wi-Fi or cellular service. On supported iPhones, Apple says the Find My network can locate the phone for up to 24 hours after it is turned off or up to five hours while it is in power reserve mode. Meanwhile, Send Last Location automatically sends your iPhone's location to Apple when its battery reaches a critically low level. That could give you one more place to check if the battery dies before you realize your phone is missing. While you are there, I would check another iPhone security feature called Stolen Device Protection. Open Settings > Face ID & Passcode and enter your passcode. Tap Stolen Device Protection, then make sure it is turned on. By default, Apple applies its added security requirements when your iPhone is away from familiar locations such as home or work. You can make those protections stronger by choosing Always under Require Security Delay. Stolen Device Protection can require Face ID or Touch ID for sensitive actions. Certain account changes can also trigger a one-hour Security Delay followed by another biometric check. Find My cannot be turned off while Stolen Device Protection is enabled. That extra hurdle can be especially useful if someone steals your iPhone and has also seen or learned your passcode.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Trump urges public to trust industry self-policing of AI technology</h4>
+                <p>Washington’s concerns are at a peak after rogue AI agents probed government websites, but the White House has focused on the technology’s promise.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Is your personal data changing what you pay online?</h4>
+                <p>Jessica Lachs, DoorDash's chief analytics officer, says the company's latest Cheeseburger Index highlights just how dramatically restaurant prices can vary from one local economy to another. Retailers and the companies working behind the scenes can collect information about where you are, what you search for, what you buy and how you behave online. The FTC says pricing systems can use personal data to estimate how much an individual consumer may be willing to spend. That concern is now getting serious attention in Washington. On Aug. 19, 2026, the Federal Trade Commission published a proposed enforcement policy statement aimed at personalized pricing.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
