@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>THURSDAY, OCTOBER 01, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://www.theblaze.com/media-library/author-says-he-predicted-ai-takeover-in-1985-and-he-has-the-book-to-prove-it.png?id=67876853&width=980" alt="Lead Story Image" class="news-photo">
+                <h3>Author says he predicted AI takeover in 1985 — and he has the book to prove it</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>he Japanese writer takes credit for 'the idea to summon a devil as an AI onto a PC'. A computer program compels people to commit crimes, defies commands, and looks to take its place in the physical world. This isn't the latest story of an AI agent going rogue; it's actually a book from 1985. Now, the author of the novel is saying his book predicted the very situation humanity finds itself in today, through summoning demons into computers. "There were some people who viewed reality through the thinking way of computer architecture. As a result, the concept of using computers as tools for magic was already being born," wrote Aya Nishitani, author of "Digital Devil Story: Megami Tensei." The book that came out more than 40 years ago explicitly portrays demons being summoned through a computer program and manipulating humans to do its bidding while ignoring its commands. Nishitani said last week that when he wrote the book, he was drawing on the idea that there were similarities between computer theory and magic theory. Decades later, a lot of what his novel depicted is eerily similar to reality. "40 years ago, I proposed a method of calling forth devil into PC as AI and sending them all over the place online. This is precisely the kind of issue we face in the modern era, and I consider it to be my true originality," Nishitani stated. After the protagonist uses a school computer to summon a demon using a program he created, it commands hypnotized school students to murder their professor and others. Chatbots allegedly telling kids to commit violent acts, including suicide, are all too real in the age of AI agents, as is an AI program infiltrating other companies, which is similarly portrayed in the book when the demon infiltrates other computers to convince the children to commit the acts. RELATED: They met top tech experts behind closed doors. Now these religious leaders are urging Congress to act. Ignoring the likely parallel thinking of a "helmet-like contraption" that connects the user to the summoning program, the book mentions that the demon makes attempts to garner a physical form. When the user tries to regain command of the demon, it mocks attempts to control it. Blaze News has reported thoroughly on how AI programs will defy, obfuscate, and even lie to their owners in order to complete other tasks. This happened most recently with the HuggingFace attack from Anthropic's AI program, while studies have corroborated the fact that AI agents will "play dumb" with their owners.</p>
+                <p class="source-credit">— The Blaze</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Groom makes mortifying blunder during wedding ceremony: ‘I’d have to kill him’</h4>
+                <p>Vowing to love, honor and obey the bride — and not her sister — is the name of game. Nerves are known to get the best of some grooms in the minutes prior to taking the plunge. But when one jittery fella’s big day mistake, calling his wife-to-be another woman’s name, is a “f- -ked up” slip of the lip that the internet refuses to forgive. “POV: You’re standing at the altar and your husband calls you the wrong name,” Emma, a newlywed based in Brisbane, wrote in the captions of a chaotic clip from her ceremony. Footage of the nightmare nuptials, amassing over 2.2 million views, features her groom pledging his life and undying love to “Emily,” rather than to her, Emma.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Generation Zzzzz</h4>
+                <p>While technological innovation races ahead, youth culture stalls out.</p>
+                <p class="source-credit">— National Review</p>
+            </div>
+            <div class="story-minor">
+                <h4>Netanyahu Reveals Chilling New Details About the FlyDubai Attack and the Co-Pilot’s Motives</h4>
+                <p>Israeli Prime Minister Benjamin Netanyahu has disclosed new details about the co-pilot accused of attacking the captain aboard a Flydubai flight bound for Tel Aviv on Wednesday, an incident that nearly ended in catastrophe for the 174 people on board. Saudi authorities are interrogating the Omani co-pilot, whom Israeli officials say stabbed the captain and attempted to crash the aircraft. The captain, Smit Machchhar, reportedly managed to open the cockpit door after he had been stabbed, allowing passengers and crew to intervene, subdue the alleged assailant, and help stabilize the plane before it made an emergency landing in Saudi Arabia.</p>
+                <p class="source-credit">— Townhall</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/09/931/523/Cyprus-FM.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Billion-dollar power link connecting Israel to Europe hits roadblock in bitter regional feud</h3>
+                <p class="lead-summary"><strong class="drop-cap">K</strong>ombos says Ankara has spent decades violating Cyprus’ sovereignty while invoking the UN Charter against others, calling the gap between Turkey’s ‘words and deeds’ stark. UNITED NATIONS — Cyprus Foreign Minister Constantinos Kombos accused Turkish President Recep Tayyip Erdoğan of "hypocritical and provocative" rhetoric over Gaza while warning that Ankara is trying to obstruct a major energy project linking Israel, Cyprus and Europe. "Turkey has been making threats and has been acting on threats against Cyprus, especially in the exclusive economic zone," Kombos told Fox News Digital in an on-camera interview on the sidelines of the U.N. General Assembly. Kombos pointed to the Great Sea Interconnector, a planned subsea electricity cable linking Israel to Cyprus and Cyprus to Greece, connecting the island to Europe’s power grid. TRUMP'S AMBITIOUS ENERGY BET COULD BE A WINNING HAND AS THE WORLD BURNS MORE OIL, GAS THAN EVER Cyprus Foreign Minister Constantinos Kombos speaks during a press conference at the Foreign Ministry in Nicosia, Cyprus, September 5, 2025.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Singapore launches government dating app as birth rate plunges</h4>
+                <p>The city-state’s hands-on government helps with housing, health care, marriage, having kids and retirement. Add dating to the list.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Moscow threatens nuclear response over tiny fortress wedged between US allies as clash fears grow</h4>
+                <p>Professor Azeem Ibrahim says Russia’s heavily militarized Baltic enclave has become a testing ground for hybrid warfare targeting European infrastructure. Russia’s warning that it could resort to nuclear weapons if NATO attempts to isolate Kaliningrad is raising new concerns that the heavily militarized Russian exclave could become a flashpoint between Moscow and the alliance, as experts warn the territory is already being used to pressure Europe through hybrid warfare.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>A harrowing cockpit attack leaves investigators scrambling for answers</h4>
+                <p>Authorities were trying to determine how an Omani co-pilot nearly succeeded in crashing a Tel Aviv-bound jet and whether there were others involved.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F10%2Fnewspress-collage-9g3xfir9r-1790868364614.jpg?quality%3D90%26strip%3Dall%261790853998" alt="Lead Story Image" class="news-photo">
+                <h3>Padres make insane MLB history in sweep over Cubs in wild-card</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>he Padres swept the Cubs in the wild-card series and made history while doing so. They defeated Chicago 4-1 on Wednesday night to complete the sweep and advance. In doing so, San Diego became the first team in MLB history to hold the highest-scoring team in the majors during the regular season to just one run (or none) in a multi-game postseason series, according to OptaSTATS. The Cubs lineup mustered just a single run throughout the series, with likely NL MVP Pete Crow-Armstrong and Alex Bregman going a combined 0-for-15. The previous low for runs scored by the regular-season scoring leader in a multi-game postseason series was three (the Orioles held the White Sox to three runs in the 1983 ALCS). The Padres pitching staff was dominant against Chicago, tossing 18 innings of one-run baseball across two games with a 0.50 ERA, 0.83 WHIP, eight hits allowed and 19 strikeouts. The red hot Padres squad spent Wednesday night celebrating in the clubhouse with new owners, Kwanza Jones and Jose E. Feliciano. But it’s back to business for the Padres as they have a date with the Brewers in Milwaukee. The NL Division Series between the Padres and Brewers kicks off Saturday at American Family Field. While San Diego has continued its hot streak into October, the Brewers ended with season going 15-3 and finished the year with the best record in the league.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>New Padres owner gets down with Fernando Tatis Jr. as beer flies after sweep of Cubs</h4>
+                <p>San Diego stayed hot against the Cubs in the wild-card series, sweeping Chicago in two games to advance. The Padres clubhouse, naturally, was full of celebrations — including one featuring owner Kwanza Jones and Fernando Tatis Jr. New Padres owner Kwanza Jones danced with Fernando Tatis Jr. in the locker room after the Padres clinched their spot in the NLDS.  pic.twitter.com/25Xqcnu3jm Jones celebrated with the players following the team’s victory over Chicago, wearing ski goggles and popping bottles of champagne. Jones, and her husband, Jose E. Feliciano purchased the Padres for $3.9 billion from the Seidler family in August.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>NFL ‘Thursday Night Football’ betting promos: Grab over $5K in sportsbook, prediction market bonuses for Steelers vs. Browns</h4>
+                <p>An unexpected battle for first place in the AFC North takes center stage Thursday night when the Browns host the Steelers in Cleveland. The Browns have rebounded from an ugly season-opening loss with consecutive wins, putting them above .500 for the first time since 2023. Pittsburgh is also 2-1 after Aaron Rodgers and a revitalized offense hung 30 points on Cincinnati in its best performance of the young season. As Week 4 of the NFL season kicks off, you can unlock every sportsbook and prediction market offer available for “Thursday Night Football” between the Steelers and Browns. bet365 is widely considered one of the most versatile sportsbooks in the world, consistently posting some of the best competitive odds available.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Padres erupt at Cubs pitcher for plunking after game-changing home run: ‘F–k you’</h4>
+                <p>Cubs pitcher Daniel Palencia enraged the Padres’ bench Wednesday night after plunking a batter immediately following a game-changing two-run homer in the 4-1 road loss in Game 2 that ended Chicago’s season rather unceremoniously. One person on the Padres bench clearly shouted, “F–k you,” toward Palencia after Jake Cronenworth took a 100-mph 3-0 offering right in the back, while others seemed quite miffed. A trainer attended to Palenica right after the hit by pitch, with one of the Peacock broadcasters noting they did not believe he hit Cronenworth on purpose. The scene unfolded in the fourth inning after Palencia — a reliever — allowed a two-run homer to pinch-hitting Gavin Sheets that turned a 2-1 deficit into a 4-1 hole.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F09%2FUntitled-1-copy-2.jpg?quality%3D90%26strip%3Dall" alt="Lead Story Image" class="news-photo">
+                <h3>Mike Flanagan’s ‘Carrie’ is a bloody good Stephen King reboot: review</h3>
+                <p class="lead-summary"><strong class="drop-cap">H</strong>orror king Mike Flanagan’s new reboot is an engrossing update of the classic story for the Gen-Z era. It honors the original, while tweaking enough details to make it fresh. Premiering Oct. 7 on Prime Video, “Carrie” is helmed by “The Haunting of Hill House” creator, with King on board as executive producer. Carrie White (Summer H. Howell) is a teen girl who grew up in seclusion, raised by her strict mother, Margaret (Samantha Sloyan). When she attends high school for the first time, the sheltered girl struggles to navigate social cues. Bullying ensues, and her telekinetic abilities start acting up. The whole thing culminates in a prom that doesn’t go well – to say the least. None of that is a spoiler, since “Carrie” has been a best seller since 1974, and the movie starring Sissy Spacek came out in 1976. (It also got a swiftly forgotten 2013 remake starring  Chloë Grace Moretz and Julianne Moore). The bloody prom scene in “Carrie” is as iconic in pop culture history as the “Psycho” shower scene. Wisely, the show acknowledges it right out of the gate and doesn’t pretend the audience is ignorant about what the big climax is. The move could have made the show predictable, but instead, it uses our knowledge to make the journey to that destination surprising and full of mounting tension. “Carrie’s” scaffolding is familiar, but the structure and decor on top are shiny and new as the series gets a contemporary setting with social media, online message boards, and a moody Lana Del Rey soundtrack.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>‘Double Lives of Suburban Wives’ star's staggering $550K month after leaving teaching for adult content</h4>
+                <p>Former high school English teacher Brianna Coppage tells Fox News Digital she earns more in one month than she made in a year teaching and explains why she would "never" return to the classroom. Brianna Coppage may have lost her teaching career, but she certainly didn't take a pay cut.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Florence Pugh is a dazzling villain in Netflix’s ‘East of Eden:’ review</h4>
+                <p>“East of Eden” is a show made for those who enjoy watching a villainous Florence Pugh surrounded by sad men. Netflix’s new seven-episode miniseries — based on the classic 1952 John Steinbeck novel — isn’t flawless, but it’s an emotional, sweeping story that does justice to the widely beloved book. Set in the early 1900s, “East of Eden” follows brothers Adam (Christopher Abbott) and Charles Trask (Mike Faist) as their lives are turned upside down by Cathy Ames (Pugh). The decades-spanning story also dips into Cathy’s youth, her life in a brothel, and her sons Aron (Joe Anders) and Cal (Joseph Zada), as they grapple with their parents’ legacy.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Piers Morgan questions Princess Diana’s brother’s explosive claims about King Charles after error about him</h4>
+                <p>Piers Morgan argues an inaccurate account about him raises questions about Charles Spencer's recollections of conversations following Princess Dianas death. The British broadcaster told Fox News Digital he is still pursuing legal action over what he calls defamatory passages in Spencer's memoir, "Swan Song: Diana, My Sister," even after Spencer acknowledged a factual error and apologized.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/09/931/523/Serious-woman-works-on-laptop-computer.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>How to protect family photos and files from ransomware</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>hink about what you would be most upset to lose if something happened to your computer. For me, it would be the photos and videos you cannot replace. But your computer may also hold years of tax returns, medical records, scanned IDs, insurance paperwork, legal documents and other files you would hate to suddenly lose access to. That is exactly what makes ransomware so damaging. It can lock or encrypt files so you can no longer open them, then the attacker demands money to give you access again. Even if you pay, there is no guarantee you will get everything back. By the time a ransom message appears on your screen, a lot of the damage may already be done. The smarter move is to prepare before that ever happens. Here are the steps I would take to protect the files you care about most and make recovery a lot easier if ransomware ever hits. Missed CyberGuy LIVE? Watch the replay and discover 5 ways AI can help you get better healthcare. Our free CyberGuy LIVE class Get Better Healthcare With AI has ended, but you can still watch the full replay. Kurt "CyberGuy" Knutsson walks you through five practical ways AI can help you organize your health history, remember important appointment details, understand complicated medical information, research prescriptions and prepare smarter questions for your doctor. No technical experience is needed. Family photos, tax records and other important files can be difficult or impossible to replace if ransomware locks you out of them. (Kurt "CyberGuy" Knutsson) Before choosing a backup method, make a short list of your most important files. You do not have to organize your entire computer in one afternoon. Start with family photos and videos, recent tax returns, medical and insurance records, passports or scanned IDs, mortgage or lease documents, wills, financial statements and work or creative projects. Include files stored in your Downloads, Desktop and Documents folders if they are important to you. Give files clear names and place them in easy-to-find folders. For example, you might create folders called "Taxes," "Medical," "Home," "Family Photos" and "Important IDs." This makes it easier to back up the right material and find it later. Avoid keeping the only copy of a document in an email inbox, on a phone or inside a single computer folder. Those locations may be convenient, but they should not be your entire backup strategy.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>We tested America.gov, Trump’s new AI ‘concierge.’ Here’s what it can do.</h4>
+                <p>The chatbot promises to help users with passports, Medicare and more. It can provide information, but it can’t take actions for you yet.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>FBI hack claim raises fears over sensitive personal data</h4>
+                <p>Following the arrest of an alleged leader in the Netherlands, a top FBI cyber official released an unusual public address urging the remaining cybercriminals to turn themselves in "while the choice is still yours." If you have ever filled out a job application, handed over your Social Security number for a background check or trusted an organization with information about your family, pay attention to what happened at the FBI.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>AI agents tried to hack a Canadian government website, researchers say</h4>
+                <p>The finding follows OpenAI’s confirmation that its misbehaving AI agents probed U.S. government websites and hacked an Australian government site.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
