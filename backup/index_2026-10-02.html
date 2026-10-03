@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>FRIDAY, OCTOBER 02, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F10%2F143461578.jpg?quality%3D90%26strip%3Dall" alt="Lead Story Image" class="news-photo">
+                <h3>Kansas Senate Dem nominee Adam Hamilton accused of shielding ‘child predator’ who worked for his church in mid-2000s</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>he US Senate race in Kansas is taking a nasty turn after incumbent Republican Roger Marshall’s campaign released a new ad accusing Democratic challenger Adam Hamilton of failing to report a pedophile who once worked at Hamilton’s church to law enforcement. Hamilton, who has served as lead pastor at Church of the Resurrection in Leadwood for more than three decades, caught flak from a Democratic primary opponent for allowing the employment of Scott Moore, a church volunteer accused of molesting teenage boys at two retreats in 2005 and 2006. The Marshall ad, part of a $1.2 million buy that will run statewide on broadcast, cable and streaming services beginning this weekend, says Hamilton let the “child predator” return as a camp counselor in 2006 after allegations by two of his victims were ignored. “What did Hamilton do when victims reported him to church leaders? Parents were ignored, and Hamilton never called the police,” the narrator says in the 30-second ad spot. “The next fall, Hamilton welcomed him back. Free to lurk for new victims — later convicted of more child sex crimes,” the script continues. “Adam Hamilton protected a pedophile. He should never be our senator.” Hamilton has denied covering up Moore’s sexual misconduct — but told the Kansas Reflector in July he “absolutely” would handle things differently today. “This is a desperate and shameful attack from a losing politician on his own state’s largest Church. These smears from Roger Marshall were already examined in the primary by local reporters who found the church reported the incidents to law enforcement, and Adam later personally worked to help get this predator convicted,” said Tyson Brody, a spokesman for the Hamilton campaign. “Marshall is resorting to these desperate lies and false attacks because Kansans have learned Roger Marshall had pregnant mothers arrested and jailed, and voted to block the release of the Epstein files. Roger Marshall is desperate to hide from his record of protecting predators, and preying on low-income families in Kansas.” Current surveys show Marshall leading Hamilton by 1.5 percentage points ahead of the Nov. 3 election, according to the RealClearPolitics average. Moore was convicted in 2013 of misdemeanor sexual battery for inappropriately touching his son’s friend at a sleepover in 2010. Among those who testified against him were the teenagers from Church of the Resurrection whom he purportedly victimized in 2005 and 2006.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Death row goes DEI — and the execution still goes off the rails</h4>
+                <p>Christa Pike asked Tennessee for a female execution team and special accommodations. The state obliged — then failed to kill her twice. America has been inundated with sob stories from female murderers over the past few months. First, it was Lindsay Clancy, otherwise known as the Exercise Band Executioner of Duxbury, Massachusetts. Prosecutors say Lindsay deliberately strangled her three children; she pleaded not guilty by reason of insanity. Now after a mistrial, her lawyer insists there is a “total and complete lack of evidence” that smiling Lindsay killed them. A judge rejected that bid Thursday.</p>
+                <p class="source-credit">— The Blaze</p>
+            </div>
+            <div class="story-minor">
+                <h4>California’s Paramount Settlement Doesn’t Stop at Antitrust</h4>
+                <p>An antitrust settlement should focus on competition, not legislation.</p>
+                <p class="source-credit">— National Review</p>
+            </div>
+            <div class="story-minor">
+                <h4>How Trump keeps embracing AI</h4>
+                <p>And what else happened this week under his administration.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://static.foxnews.com/foxnews.com/content/uploads/2026/10/fire-police-fireworks-reuters.gif" alt="Lead Story Image" class="news-photo">
+                <h3>France’s teen riots take explosive new turn as government points finger at hard left</h3>
+                <p class="lead-summary"><strong class="drop-cap">R</strong>iot police move in as students set fires and clash with officers during growing unrest. (Video: Reuters.) Violent student unrest intensified across France on Friday as riot police clashed with teenagers in several cities, roughly 400 high schools remained shuttered and authorities said some 2,000 people had been arrested since the protests began — while the government increasingly blamed the country’s hard left. Tear gas filled streets in Strasbourg, protesters fired fireworks toward police lines in Marseille, and garbage bins were set ablaze in Rennes, while clashes also broke out in Paris, Reuters reported Friday. The latest violence marks a sharp escalation from the unrestt reported by Fox News Digital Thursday, when hundreds had been arrested as school blockades and clashes spread across the country. Justice Minister Gérald Darmanin told RTL radio Friday that approximately 2,000 people — most of them teenagers — had been arrested since the protests erupted. He said parents whose children damage property should be required to pay reparations, according to Reuters.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Ex-Harrods owner al-Fayed trafficked women on ‘shocking’ scale, official says</h4>
+                <p>The late billionaire engaged in the trafficking of dozens of women over many years, investigators told British lawmakers.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Hero FlyDubai pilot says he was 'fighting for my life' as plane plunged after copilot attack</h4>
+                <p>India's Prime Minister Narenda Modi told FlyDubai Capt. Smit Machchhar, who heroically opened the cockpit doors after being stabbed by his copilot during the Sept. 30 flight, that "we all are praying for your good health." Credit: Associated Press Capt. Smit Machchhar, the FlyDubai pilot who heroically opened the plane's cockpit door after being stabbed by his copilot in a mid-flight attack, told Indian Prime Minister Narenda Modi he was fighting for his life before taking the heroic action.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>FlyDubai attack adds tumult to already turbulent Israeli election season</h4>
+                <p>Supporters of Prime Minister Benjamin Netanyahu call him “Mr. Security” in action. Critics said this week’s flight attack was another security lapse on his watch.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F10%2Fnewspress-collage-7o4yicirw-1790948691702.jpg?quality%3D90%26strip%3Dall%261790934347" alt="Lead Story Image" class="news-photo">
+                <h3>John Kruk calls out Bryce Harper for critical mistake in NL wild-card loss: ‘Run!’</h3>
+                <p class="lead-summary"><strong class="drop-cap">A</strong>fter Bryce Harper whiffed on a two-strike offering in the eighth inning of Philadelphia’s 6-2 loss in Game 3, the ball scooted away from catcher Drake Baldwin. Harper did not immediately realize that he could run, though, and proceeded to bend down to begin taking off his shin guard — and then saw his mistake. John Kruk: "RUN!"Bryce Harper was slow to get out of the box, not realizing strike three had gotten away.(Via: @MLB) pic.twitter.com/GRcx3VGWtQ Play-by-play man Matt Vasgersian continued: “Ball gets away from Baldwin. Harper didn’t realize it until rather late in the game and is unable to take advantage.” Harper would be thrown out at first to end the eighth inning, and three outs later the Phillies’ offseason officially began earlier than anyone on the team would have liked. While the odds of reaching on such a play are low, Yankees rookie Spencer Jones did so Wednesday night against the Red Sox and helped turn Game 2 into a blowout win. After he fanned against lefty Garrett Crochet, the ball got away from Red Sox catcher Adley Rutschman and Jones ran hard to first base, just beating the throw in a 2-1 game. The Yankees ultimately scored six runs in the inning to take an 8-1 lead and all but end the Red Sox season, with the opportunistic play looming large. The Phillies had no such luck and now enter the offseason with plenty of question marks about this group’s ceiling.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Are The Browns For Real? 3 Takeaways From Browns' Dramatic Win vs. Steelers</h4>
+                <p>First-year Browns head coach Todd Monken told everyone who would listen this offseason that he thought he could win in Cleveland. And for the most part, everybody laughed. One month into the season, Monken’s Browns are now in first place in the AFC North after their wild, dramatic, 27-24 win over the Pittsburgh Steelers in Cleveland on Thursday night. It took a 56-yard field goal by Andre Szmyt with 10 seconds left to do it, but the win left the Browns with a 3-1 record.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Browns’ Jared Verse has ‘no respect’ for Steelers — and a warning for the NFL</h4>
+                <p>Chief among those celebrating the 27-24 victory over the Steelers was defensive end Jared Verse, who helped lead a physical effort that put Cleveland atop the AFC North with a 3-1 record. “This ain’t the old Browns,” Verse said. “We’ve got new swag. We’re a lot more aggressive, a lot more, you know, getting after it. This is something different here. We’re going to make this whole city rock.” In what was a chippy win — the Browns racked up 14 penalties for 88 yards — the trash talk began early. “They were talking crazy,” Verse told reporters. “I was telling them, ‘You’re double-teaming, y’all sliding, y’all garbage.’ I don’t got no respect for anyone who plays dirty and does extra sh-t after the game.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Atlanta Moves On: 3 Takeaways From Braves' Wild Card Win Over Phillies</h4>
+                <p>Watch out, Dodgers. Here come the triumphant Braves.One night after the Phillies stole Game 2 of the Wild Card series with a late rally and a clutch 10th inning home run, the Braves stepped up at Truist Park in the winner-take-all finale. An unlikely hero opened a bullpen game, Michael Harris II, Ozzie Albies and Matt Olson supplied the power, and Atlanta shut the door on Philly to advance to the NLDS for a date against the two-time defending-champion Dodgers.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F10%2F143397291.jpg?quality%3D90%26strip%3Dall" alt="Lead Story Image" class="news-photo">
+                <h3>Arizona Dem Rep. Yassamin Ansari, 34, dating YouTuber Jack Cocchiarella, 24: report</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>he two first met when Cocchiarella, 24, interviewed Ansari, 34, in spring 2025 and have been seeing each other for the past few months, TMZ reported Thursday. Ansari declined to discuss her relationship, instead using her statement to lash out at President Trump and the US’s seven-month war in Iran. “I’m not commenting on my personal life, nor is it anyone’s business. Right now, ICE is terrorizing communities across the country with zero accountability, and Trump’s reckless war in Iran continues raging on,” she told the outlet. “I’m focused on helping to flip the House so we can pass meaningful legislation — that’s what we should all be focused on,” she added. Ansari, a first-term Democrat who represents Arizona’s 3rd Congressional District, was born in Seattle to Iranian immigrant parents and grew up in Arizona. She attended Stanford University and interned in then-House Speaker Nancy Pelosi’s San Francisco district office in 2012, according to Roll Call. Ansari became the first Iranian American Democrat elected to Congress when she won her Arizona seat in 2024. In April, an online petition that drew more than 13,000 signatures called for an investigation into alleged “undisclosed foreign lobbying and ties” between Ansari and Iran. The petition included a doctored image of Ansari in a turban and provided no evidence of the alleged ties. Ansari rejected the claims as “hateful rhetoric, lies, cruel and deliberate misinformation” in a statement to The Post.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Gordon Ramsay admits real reason he was crying while walking daughter down the aisle</h4>
+                <p>"Knife Edge: Chasing Michelin Stars" executive producer Gordon Ramsay opens up about why he really became emotional while giving away his daughter Holly at her wedding. Gordon Ramsay opened up about the bittersweet experience of giving away his daughter, Holly Ramsay, at her wedding.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Disney boss dodges key question on future of Jimmy Kimmel’s late night show</h4>
+                <p>Disney president Dana Walden did very little to quell a recent Page Six report that Jimmy Kimmel Live will be coming to an end next year. The 61-year-old executive – who was named as the Mouse House’s president and chief creative officer back in February – offered her first public comments on Kimmel’s future at Bloomberg’s Screentime conference in Los Angeles on Thursday. While she did not confirm nor deny the report, she would not definitively say whether the 58-year-old talk show host would be back on ABC after his contract is up in May 2027. “It’s a very challenging daypart, late-night. That’s not to say that Jimmy is not doing a phenomenal job, and his ratings are up, but they’re up relative to a smaller audience that’s watching late night on broadcast television,” Walden began.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Sylvester Stallone showered in his clothes to survive before ‘Rocky’ fame</h4>
+                <p>Sylvester Stallone joins Fox & Friends to discuss his new memoir, The Steps, opening up about his difficult upbringing, the lessons it taught him as a father and the personal experiences that inspired Rocky. Before Sylvester Stallone became one of Hollywood's biggest stars, he had just $60 to his name — with $43.60 already set aside for rent. But even as he struggled to make ends meet in New York City, the future "Rocky" icon refused to give up on his dream.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/10/931/523/apple-store-fifth-avenue-iphone-18.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>How to find compromised passwords on iPhone and Android</h3>
+                <p class="lead-summary"><strong class="drop-cap">G</strong>oogle General Counsel Halimah Delaine Prado joins 'Fox & Friends' to detail how Google is fighting AI-powered phishing scams. You probably have more passwords than you realize. Banking, email, shopping accounts and streaming services can add up quickly. The bigger problem comes when one of those passwords lands in a data leak and you have no idea it happened. Your phone may already know about it. Both Apple and Google can check saved passwords for security problems and warn you when a login appears compromised. Apple can also flag passwords that are weak or reused. Google Password Manager offers a Password Checkup that can identify compromised, reused or weak passwords. That gives you a chance to fix an exposed login before someone tries to use it against you. Missed CyberGuy LIVE? Watch the replay and discover 5 ways AI can help you get better healthcare. Our free CyberGuy LIVE class Get Better Healthcare With AI has ended, but you can still watch the full replay. Kurt "CyberGuy" Knutsson walks you through five practical ways AI can help you organize your health history, remember important appointment details, understand complicated medical information, research prescriptions and prepare smarter questions for your doctor. No technical experience is needed. An iPhone can warn you when a saved password appears in a known data leak and prompt you to change it. (David Paul Morris/Bloomberg via Getty Images) Password alerts are one of those security features that can quietly sit on your phone until you actually open them. When you do, you might be surprised by what you find. On iPhone, Apple says the Passwords app automatically identifies common weaknesses, including passwords that are easy to guess or used multiple times. Your iPhone can also securely monitor saved passwords and warn you when they appear in known data leaks. Google Password Manager offers a similar check for credentials stored in your Google Account. Google says it can identify passwords that were exposed, are weak or are being used across multiple accounts. Checking only takes a minute.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Only one browser has this really helpful search tool</h4>
+                <p>This is great for experimentation with a different search site, keeping a particular search out of your history at your usual site, or giving yourself a break from AI-first answers.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Chinese AI model investigated after researcher says it provided instructions for bioweapons, assassinations</h4>
+                <p>Fox News senior foreign policy correspondent Gillian Turner reports on researchers’ tests of a popular Chinese AI model and the concerns raised by its responses. She examines how the findings are fueling broader questions about rogue behavior in advanced AI systems on ‘Special Report.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>How to build a career when you are bouncing from job to job</h4>
+                <p>It can be hard for people to establish themselves in the gig economy since it can mean having to prove themselves to each new boss and client.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
