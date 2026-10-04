@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>SATURDAY, OCTOBER 03, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://pagesix.com/wp-content%2Fuploads%2Fsites%2F3%2F2026%2F10%2F143505487.jpg?quality%3D90%26strip%3Dall" alt="Lead Story Image" class="news-photo">
+                <h3>Stars’ favorite LED mask hardly ever goes on sale, but it’s $50 off ahead of October Prime Day</h3>
+                <p class="lead-summary"><strong class="drop-cap">W</strong>hile there’s plenty of buzzy beauty tech out there, Shark’s CryoGlow LED Face Mask has been name-dropped by a particularly staggering number of stars. And while it hardly ever goes on sale, it just reached its lowest price of the year on Amazon ahead of October Prime Day. Given Amazon says the deal is selling fast, it’s the prime time to add it to cart. After all, it may be another year before it reaches a price this low again. In addition to red light to target fine lines and wrinkles, it also offers infrared and blue light therapy, which help boost collagen and reduce acne, respectively. It’s also billed as the only mask on the market with a built-in, cryo-inspired under-eye cooling feature, which the brand says helps visibly tighten the under-eye area. While it’s undeniably an investment, plenty of stars agree it’s worth the splurge. Kyle Richards wore hers on “RHOBH,” while Sofia Richie said in a Vogue “Beauty Secrets” video that she uses it for anti-aging. Alix Earle echoed her praise, calling it “worth the hype” and “like an ice bath for your face” in a sponsored TikTok. (She even showed fans before and after photos, saying her skin looked less irritated after a month of use.) Plenty of stars think it makes a perfect present, too; Khloé Kardashian gave custom Khloud-themed versions out to friends and family, while Paige DeSorbo declared it “one of the best gifts” on Amazon Live last year. And the mask gets glowing reviews from shoppers, with a 4.4-star average out of 1,000 reviews right now. While Prime Big Deal Days don’t officially start until Tuesday, the site already has plenty of Prime Day-level prices to peruse. Below, shop a few more highlights before they disappear. This article was written by Hannah Southwick, Commerce Associate Editor for Page Six. Hannah spies deals on actually affordable celebrity-worn styles, puts celebrities’ brands to the test and finds the beauty products that keep stars red carpet-ready. She consults stylists and industry pros — including celebs themselves — for firsthand product recommendations, trend predictions and more. In addition to writing for Page Six since 2020, her work has been featured in USA Today and Parade. Our community is about connecting people through open and thoughtful conversations. We want our readers to share their views and exchange ideas in a safe space. In order to do so, we've created a simple set of rules that will improve your experience.</p>
+                <p class="source-credit">— Https://pagesix</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Poll: 6 In 10 Americans Oppose Democrats’ Plan To Pack The Supreme Court</h4>
+                <p>Voters overwhelmingly want to keep the Supreme Court bench capped at nine justices, a new poll found, despite Democrats’ push to pack the court. A new McLaughlin Associates poll found that voters overwhelmingly support keeping the Supreme Court at nine justices and back the “Keep Nine Amendment.” The amendment sought to require that the Supreme Court be comprised of nine justices. Notably, nearly every single House Republican and one Democrat, Don Davis of North Carolina, supported the amendment during a Sept. 2 vote that came to 212-206. Fifteen members did not vote. The measure failed to get the two-thirds majority needed to pass it.</p>
+                <p class="source-credit">— The Federalist</p>
+            </div>
+            <div class="story-minor">
+                <h4>A record number of Native Americans are running in the 2026 midterms</h4>
+                <p>At least 355 Native American and Indigenous candidates ran or are running in local, state and federal primary and general elections this year — a record number.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Six Missing After Medical Jet Vanishes Off Massachusetts Coast</h4>
+                <p>The Gulfstream G100 left Bermuda late Friday, and the FAA lost contact with it around 2 a.m. Saturday. The U.S. Coast Guard is combing the Atlantic off Nantucket for a medical transport jet with six people aboard after air traffic controllers lost contact with the plane early Saturday during a flight from Bermuda to Boston. The Federal Aviation Administration alerted the Coast Guard at roughly 2 a.m. that it could no longer reach the aircraft, a Gulfstream G100 with the tail number C-GRJP, according to the Coast Guard’s Northeast District. FlightAware data shows the jet left Bermuda International Airport at 11:41 p.m. Eastern on Friday.</p>
+                <p class="source-credit">— Daily Wire</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/09/931/523/flydubai-plane.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>FlyDubai co-pilot accused of stabbing captain identified as 29-year-old Omani national</h3>
+                <p class="lead-summary"><strong class="drop-cap">C</strong>apt. Smit Machchhar, the FlyDubai pilot who heroically opened the plane's cockpit door after being stabbed by his co-pilot in a mid-flight attack, said he couldn’t let anyone die. The FlyDubai co-pilot accused of attacking a captain on a Tel Aviv-bound flight earlier this week allegedly used the cockpit's "crash axe" in the attack and has been identified as a 29-year-old Omani national. The co-pilot has been identified as Hamam al-Hammami, a Middle Eastern source told Fox News, adding that he was barred from flying with Oman Air — his country's airline — in 2024 due to concerns about extremist views. The United Arab Emirates, which is leading the investigation into the attack on FlyDubai Flight 1073, said the co-pilot attacked Capt. Smit Machchhar with the cockpit's crash axe, incapacitating him and causing the aircraft to plummet before passengers on board seized control of the plane. A FlyDubai aircraft carrying Israelis who experienced an emergency landing in Saudi Arabia is seen parked at Ben Gurion International Airport, near Tel Aviv, Israel, Wednesday, Sept. 30, 2026.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>FlyDubai co-pilot used crash ax to attempt ‘terrorist act,’ UAE says</h4>
+                <p>The co-pilot of FlyDubai Flight 1073 used a crash ax in his attack, UAE officials said. An Israeli official identified him as Hammam al-Hamami, an Omani national.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>FlyDubai co-pilot accused of cockpit attack was grounded by Oman Air before joining airline: report</h4>
+                <p>Former Israeli National Security Council chief Eyal Hulata analyzes an alleged in-flight attack on a FlyDubai flight traveling from Dubai to Israel after an Omani co-pilot stabbed the captain. Hulata details how the captain unlocked the cockpit door, enabling passengers to restrain the suspect before an emergency landing in Saudi Arabia.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Russia is hitting Kyiv’s bridges, hoping to make the capital unlivable by winter</h4>
+                <p>The Ukrainian capital’s left and right banks are connected by eight bridges — and Russia has been targeting both its North and South bridges in recent days.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F10%2Fufc-332-predictions.jpg?quality%3D90%26strip%3Dall" alt="Lead Story Image" class="news-photo">
+                <h3>UFC 332 predictions: Full card picks, best bets for Salt Lake City</h3>
+                <p class="lead-summary"><strong class="drop-cap">I</strong>t’s a highly controversial card, said to be one of the most underwhelming events in the promotion’s history in terms of fight quality, though that doesn’t mean anything for the card’s betting value. We have 13 fights, perhaps the least interesting being the main event in which Cong Wang fights Natalia Silva for the flyweight championship. A whopping 10 of them are projected to end inside the distance with a finish. The entire card begins at 5 p.m. ET on Paramount+. This might be the lowest-level UFC title fight in history, as Silva is the No. 1 contender for the vacant title but will fight Cong, who is rated No. 6. Naturally, Cong comes in as a solid-sized underdog, as high as +194 on Novig. Both of these fighters are efficient strikers, beating their significant strikes landed rated vs. absorbed by more than two to one. Silva is undefeated in the UFC, defeating all eight opponents with ease, including six by unanimous decision. Cong has a little bit of a size advantage. She’s listed 2 inches taller and has a 1-inch reach advantage. If Cong could get takedowns, it would really make me more bullish on her to win, but Silva, a former kickboxer who has transitioned to MMA, probably won’t lose a pure striking battle. It makes a path to victory for Cong very hard to see. Silva has six unanimous decision wins in eight fights, and I’ll take her to do the same here in what could look like an easier sparring match.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Texas Tech QB Thomas Castellanos Among NCAA Athletes Ruled Ineligible</h4>
+                <p>A summer of NCAA football and basketball players gaining a fifth year of eligibility has given way to a fall of seeing those decisions reversed. On Friday, court rulings in Ohio and Kentucky left multiple players without eligibility for the 2026-27 season — at least for now.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Novig promo code NYPOST: Deposit $10, get $50 in trade credits for Florida vs. Missouri</h4>
+                <p>Readers of The Post can sign up with one of the rising prediction markets with Novig promo code NYPOST to deposit $10 and get $50 in trade credits to use for Florida vs. Missouri on Saturday. The Gators are the talk of the town after a flying start that just saw them defeat Ole Miss, while Missouri is 3-1 and coming off a loss to Mississippi State. New traders will unlock $50 in trade credits by entering the Novig promo code NYPOST during sign-up. Novig has been in the headlines of late and new users only need an initial deposit of $10 to join the emerging prediction market platform. This trading value is eligible for any CFB Saturday game, NFL Week 3, the upcoming MLB playoffs, international soccer and whatever else is happening in the sports world.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Seahawks RB Jadarian Price 'Re-Aggravated' Injury, Ruled Out Week 4</h4>
+                <p>On Friday, the Seahawks ruled out rookie Jadarian Price ahead of their Week 4 matchup with the Los Angeles Chargers. Price, according to head coach Mike Macdonald, "re-aggravated" a chest injury that he originally sustained when the Seahawks played the Arizona Cardinals in Week 2. Coming off a 33-31 loss in Week 3 against the Washington Commanders, Price's absence puts the Seahawks in a further bind at a position they were already struggling at.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F10%2Fcrop-41082255.jpg?quality%3D90%26strip%3Dall" alt="Lead Story Image" class="news-photo">
+                <h3>I watched Ben Affleck and Matt Damon make a movie at my high school that could never be made today</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>railers filled with cameras and costumes arrived at the end of the summer before my sophomore year to shoot a movie about a prep school set in the 1950s. Apparently, our gym and pool, unrenovated for decades, were perfect for the vibe. A few of my classmates even got to be extras. When I saw “School Ties” in theaters the following year, the setting seemed recognizable, but the scenes of rampant antisemitism could not have felt more foreign. Watching the movie again with my daughter a few weeks ago, however, they were sickeningly familiar. “School Ties” — which starred Brendan Fraser, Matt Damon, Ben Affleck and Chris O’Donnell — is the story of a Jewish high-school quarterback, David Greene, from a working-class Scranton family. He’s recruited to save an elite prep school’s failing football team from defeat at the hands of its rival. David, who’s played by Fraser, decides with the implicit encouragement of the coach that he should keep his Jewish identity to himself. Early in the film, he takes off his Star of David necklace and hides it in his top drawer — subtlety is not one of the movie’s strengths. Within hours of his arrival, David hears one of his classmates use the phrase “Jew him down” to mean getting a better price for something. Some boys wonder how another one could choose Harvard instead of a different Ivy League school given the large number of Jews there. When there is a football game on Rosh Hashanah, David doesn’t tell anyone despite the fact that his father instructs him over the phone to go to synagogue. He dons his tallis and yarmulke and goes to pray by himself in the chapel late that night; the headmaster finds him and lectures him about “you people.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Michael Douglas confirms secret affair with Kathleen Turner on 'Romancing the Stone' set</h4>
+                <p>In an excerpt from his upcoming memoir, "One Helluva Ride," the 82-year-old actor revealed that he and Kathleen Turner had an affair while filming "Romancing the Stone," a rumor they denied for over 40 years. "Kathleen was smart, funny, and sexy with a deep, sultry voice that became her signature," he wrote in an excerpt obtained by People. "I instantly liked her, and we were immediately attracted to each other."</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Amanda Peet, Shannen Doherty and more celebs on their earliest breast cancer red flags</h4>
+                <p>One in 8 women in the US will be diagnosed with breast cancer in their lifetime. The good news is that early detection and treatment are only getting better. When breast cancer is caught in its earliest stages the 5-year survival rate is over 99%. While most women know to self-check and be on the lookout for unusual lumps and bumps, this disease doesn’t always look the same — as is demonstrated by celebrities who’ve spoken out about their own diagnoses. As Breast Cancer Awareness Month begins, here’s how six stars say they figured out something was wrong. The “Something’s Gotta Give” actress revealed this week that she had found something “weird” months before she was diagnosed with breast cancer last fall.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Prince William, Kate Middleton’s secret nicknames exposed as former staffer reveals palace WhatsApp habits</h4>
+                <p>Royal broadcaster Ian Pelham Turner shares the private nicknames reportedly used by Kate Middleton, Prince William, King Charles and other royals. A former royal staffer is pulling back the curtain on Prince William and Kate Middleton's reported WhatsApp nicknames. Jack Stooks, who worked for King Charles for 21 years as a gardener at Highgrove, shared a rare glimpse into how members of the royal family reportedly identified one another on the messaging app.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/05/931/523/carpenter-phone-call-workshop-fox-news-001.jpeg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>AI agents can now make phone calls for you</h3>
+                <p class="lead-summary"><strong class="drop-cap">W</strong>ith over 3 million downloads for canceling unwanted subscriptions, Meta's Muse AI assistant is raising security alarms. Liz Peek warns that users must grant the AI access to personal bank accounts, credit cards, emails, and texts to make it effective. The anchor agrees that these financial security fears are well-grounded, stressing the need for robust cybersecurity. There are certain phone calls I would happily hand off to almost anyone. Calling my wireless carrier to fix a billing problem comes to mind. So does chasing a restaurant reservation that I cannot book online. Now, AI wants the job. A new generation of personal artificial intelligence agents can handle tasks across apps, websites and connected accounts. Instinct and Meta's newly launched Muse are pushing that idea further. Instinct can now place phone calls to businesses for some early-access users, while Meta is testing a similar capability with Muse. Instead of asking AI what number to call, the idea is that I can tell the agent what I need and let it handle the conversation. I know that sounds incredibly convenient, but it also raises a bigger question. How comfortable are you letting software speak and make decisions in your name? Missed CyberGuy LIVE? Watch the replay and discover 5 ways AI can help you get better healthcare. Our free CyberGuy LIVE class Get Better Healthcare with AI has ended, but you can still watch the full replay. Kurt "CyberGuy" Knutsson walks you through five practical ways AI can help you prepare for appointments, remember important details, understand complicated medical information, research prescription questions and organize your next steps. No technical experience is needed. Plus, recordings of all our past classes are available, including How to Stop Spam, Phone Security and Financial Protection, each with a free downloadable checklist. AI agents from Instinct and Meta are beginning to make phone calls for users, handling tasks such as reservations and account issues. (Photo by Philip Dulian/picture alliance via Getty Images) Instinct founder Noah Shinn announced Instinct Concierge on Sept. 16. The feature lets the company's AI personal assistant handle phone calls and other service tasks for users. Shinn gave examples that will sound familiar to anyone who has wasted part of an afternoon on hold. Instinct could call a restaurant that does not take online reservations. It might get you onto your dentist's cancellation list. The AI could also try to sort out a problem with your cable bill. The company is rolling Concierge out in early access to some users, with plans to expand availability over time.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>A police search using Flock was a form of ‘mass surveillance,’ judge rules</h4>
+                <p>A federal judge said that police conducted an “unconstitutional warrantless search” by using Flock cameras to reconstruct a woman’s travels without probable cause.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>An AI-generated influencer entered Alabama 'RushTok' — Some fans didn't care that she was fake</h4>
+                <p>"Okay, hi everyone. I’m Janie," says a curly-haired, bespectacled redhead, clasping her hands in front of her as she shyly addresses a camera from her dorm room. "It’s day one of rush at the University of Alabama," Janie continues. Then, she lists off where she got each item of clothing she’s wearing: a pleated skirt from Abercrombie, a knit top from J. Crew, socks from Target and sneakers from Nike.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Elon Musk splits with longtime business confidante, co-parent ‘with no warning’</h4>
+                <p>Shivon Zilis, the mother of four children with Musk, said their breakup was sudden but wished him the best.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
