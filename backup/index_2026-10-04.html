@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>SUNDAY, OCTOBER 04, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F10%2Fjustin-hartley.jpg?quality%3D90%26strip%3Dall" alt="Lead Story Image" class="news-photo">
+                <h3>‘Tracker’ Season 4 Release Date: What Time Is ‘Tracker’ On Tonight? When Does ‘Tracker’ Return In 2026?</h3>
+                <p class="lead-summary"><strong class="drop-cap">S</strong>tream It Or Skip It: ‘The Love Hypothesis’ on Prime Video, In Which An Awkward PhD Student And Imposing Professor’s Fake Dating Experiment Yields Real Results Where Was ‘The Love Hypothesis’ Movie Filmed? Discover ‘The Love Hypothesis’ Filming Locations for Lili Reinhart’s Romance When Does ‘The Love Hypothesis’ Movie Come Out on Amazon Prime Video? Release Date, Release Time, and Streaming Info Stream It Or Skip It: ‘Toy Story 5′ on Disney+, the Continually Endearing Saga of Sentient Toys’ Tearjerking Existential Crises Is ‘Toy Story 5’ — Now Streaming on Disney+ — the Best Pixar Sequel Movie Ever Made? Julianne Moore Screaming Obscenities at Paul Giamatti in Brilliant Scene From ‘The Debut’ Earns NYFF Applause Break ‘Behemoth!’ Review: Tony Gilroy’s Love Letter to Film Score Musicians Delivers on Music, But Fails Its Women Pedro Pascal Says It Was “Hell” Learning Cello for ‘Behemoth!’: “Hardest Thing I’ve Ever Done Creatively For a Part” ‘The Only Living Pickpocket in New York’ at NYFF Should Finally Get John Turturro and Steve Buscemi Their Oscar Noms Stream It or Skip It: ‘East of Eden’ on Netflix, An Ambitious Adaptation of John Steinbeck’s American Epic Stream It Or Skip It: ‘The Last First: Winter K2’ on Apple TV, a Documentary About a Mountaineering Milestone Turned Tragic Netflix’s ‘The Widower: ‘Til Death Do Us Part’ Ending Explained: Is Thomas Randolph, the Man With Four Dead Ex-wives, in Prison? Stream It Or Skip It: ‘The Widower: ‘Til Death Do Us Part’ on Netflix, the Crazy True Crime Saga of a Man With Six Ex-Wives, Four of Whom Are Dead Stream It Or Skip It: ‘Mother Mary’ on VOD, a Nutty Anne Hathaway-Michaela Coel Two-Hander About Gods, Ghosts and Pop Stars Is ‘Billie Eilish – Hit Me Hard and Soft: The Tour Live in 3D’ Streaming on Netflix or Amazon Prime Video? When Does Marshals Return With New Episodes? ‘Marshals’ Season 2 Release Date, Jefferson White Cast Updates, And More ‘Dutton Ranch’ Season 2 Release Date Info: When Does The Second Season Of ‘Dutton Ranch’ Come Out?</p>
+                <p class="source-credit">— Https://decider</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Trump launches ‘Super Intelligence Force’ after calls for AI slowdown</h4>
+                <p>Leaders from the intelligence community, the Pentagon, the Federal Trade Commission and the Office of Personnel Management will serve on the task force.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Social Security Check Hits $2K Milestone With Proposed 2027 COLA Bump</h4>
+                <p>Next year, approximately 70 million Social Security and Supplemental Security Income beneficiaries will receive boosted monthly payments. The Social Security Administration will reveal the 2027 cost-of-living adjustment on Oct. 14, following the Bureau of Labor Statistics’ release of September’s Consumer Price Index (CPI)—the data used to measure average price shifts for urban wage earners and clerical workers. The annual Cost-of-Living Adjustment (COLA) raises Social Security benefits, wages, or retirement payouts to keep pace with inflation and rising expenses. To determine this percentage, the Social Security Administration evaluates official consumer price statistics.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>How A Cockpit Safety Tool Became The Terrorist’s Weapon In Israel’s Near-9/11</h4>
+                <p>The co-pilot accused of attacking his captain aboard an Israel-bound FlyDubai flight last week used the cockpit’s own emergency crash axe and was attempting a terrorist attack, United Arab Emirates authorities said Saturday. UAE Attorney General Hamad Saif Al Shamsi told the country’s state news agency that investigators had determined the co-pilot set out to commit a “terrorist act” aboard Flight FZ1073 from Dubai to Tel Aviv on September 30. It was the first time officials had identified the weapon. Initial passenger accounts had reportedly pointed to a knife. Large commercial aircraft generally carry a crash axe that crews can use to cut their way out of the cockpit during an emergency.</p>
+                <p class="source-credit">— Daily Wire</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/10/931/523/us-marine-corps-air-station-futenma-kakazutakadai-park.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>US Marine arrested in Japan over suspected killing of woman as Tokyo lodges 'strong protest'</h3>
+                <p class="lead-summary"><strong class="drop-cap">A</strong> U.S. Marine stationed in Japan has been arrested on suspicion of robbing and killing a 39-year-old woman at a hotel in Okinawa, prompting Japanese officials to lodge a formal protest with the United States. Lance Cpl. Devin Jacob Ballard, 20, is suspected of killing Anna Yagi at a hotel in Naha, the capital of Okinawa Prefecture, early Saturday and taking her wallet and backpack, according to Japanese police. SERVICE MEMBER AMONG 2 ARRESTED AFTER MISSING MAN PROBE LEADS COPS TO BODY DUMP SITE ON ARMY BASE In this aerial image shows a landfill work preparing the area for the relocation of the U.S. Marine Corps Futenma Air Station in Henoko district of Nago, Okinawa Prefecture, Japan on January 15, 2019. (Richard Atrero de Guzman/NurPhoto via Getty Images) Ballard is assigned to the III Marine Expeditionary Force and based at Marine Corps Air Station Futenma in Okinawa, according to the Marine Corps. Surveillance footage showed Yagi entering the hotel with Ballard before he later left alone, Stars and Stripes reported, citing Okinawa police. A hotel employee later found Yagi unresponsive after she failed to check out.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>U.S. Marine accused of killing woman in Japan, drawing official protest from Tokyo</h4>
+                <p>Devin Jacob Ballard was arrested in the killing and robbing of Anna Yagi, police told Japan’s public broadcaster. He denied the allegations, a spokesman said.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>U.S. shipwreck, laden with World War II munitions, is a time bomb near London</h4>
+                <p>A salvage crew has been working to stabilize the SS Richard Montgomery, which sank a few months after D-Day in 1944 with 1,500 tons of explosives in her holds.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Exclusive: Trump envoy blasts South Africa over hateful ‘kill' chant, says country is drifting toward US foes</h4>
+                <p>U.S. Ambassador to South Africa L. Brent Bozell III speaks out in an exclusive interview with Fox News Digital Africa-based reporter Paul Tilsley. JOHANNESBURG: The U.S. ambassador to South Africa has hit out at the country’s President, Cyril Ramaphosa, telling Fox News Digital, "You've got a president of South Africa who refuses to condemn an incitement to kill."</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F09%2Fcrop-41065732.jpg?quality%3D90%26strip%3Dall" alt="Lead Story Image" class="news-photo">
+                <h3>BetMGM bonus code POSTBET: Get up to $1,500 back in bonus bets for Jets vs. Bears</h3>
+                <p class="lead-summary"><strong class="drop-cap">N</strong>FL bettors can sign up at BetMGM using the BetMGM bonus code POSTBET to get up to $1,500 in bonus bets if their first bet doesn’t win. The Chicago Bears host the Jets at Soldier Field on a short week after an impressive in Monday night. BetMGM is offering up to $1,500 in bonus bets back to your account for use on anything from college football to NFL, MLB and WNBA playoff games, or Premier League matches. First-time users can place an initial bet between $10 and $1,500 and receive a full reimbursement of that initial wager amount if their bet is unsuccessful. This offer is available in Arizona, Colorado, Iowa, Illinois, Indiana, Louisiana, Kansas, Kentucky, Maryland, North Carolina, Ohio, Tennessee, Virginia, Washington D.C., and Wyoming. The Bears had an impressive showing on “Monday Night Football” with backup quarterback Case Keenum adequately stepping in for an injured Caleb Williams. Now, on a short rest week, they face a Jets team that has been playing above its head so far this season. The Jets are 1-2 on the season, but were a few fourth-quarter plays from being 3-0. They lost a competitive game in overtime against the Packers at home in Week 2, and in Week 3, Geno Smith nearly completed a comeback on the Jets’ final drive. Gang Green clearly has the talent to compete with teams and might be close to winning these 50/50 games. 21+. Gambling problem? Call 1-800-GAMBLER or 1-800-MY-RESET. AZ, CO, DC, IA, IL, IN, LA, KS, KY, MA, MD, NC, OH, TN, VA, WY. Call 877-8-HOPENY or text HOPENY (467369) (NY). Call 1-800-327-5050 (MA), 1-800-BETS-OFF (IA), 1-800-981-0023 (PR). Please Gamble Responsibly. Call 1-800-NEXT-STEP (AZ), 1-800-522-470 (KS, NV), 1-800-BETS-OFF (IA). First Bet Offer for new customers only (if applicable). Subject to eligibility requirements. Bonus bets are non-withdrawable. In partnership with Kansas Crossing Casino and Hotel. This promotional offer is not available in MS, NY, NV, ON, PR, MI, NJ, PA, or WV. Visit BetMGM.com for Terms & Conditions.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>England Puts 7 Goals Past Croatia As Kane, Saka, Bellingham All Shine</h4>
+                <p>Harry Kane and Bukayo Saka scored two each as ruthless England crushed Croatia 7-0 away in the Nations League on Saturday. Ballon d’Or contender Kane extended his national record to 89 international goals. Left winger Anthony Gordon set up Jude Bellingham and grabbed one for himself. Substitute Morgan Rogers completed the rout in Rijeka.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>bet365 bonus code: Bet $10, get $200 in bonus bets for Patriots vs. Bills</h4>
+                <p>The NFL Week 4 slate is packed with exciting games, and the bet365 bonus code allows you to bet $10 and get $200 in bonus bets for Patriots vs. Bills. The Patriots have stumbled out of the gates this season, and this game has much higher stakes than a typical Week 4 matchup. The Bills look like Super Bowl contenders through three weeks and can widen their gap in the division with a win. The bet365 bonus code is used when signing up for bet365 for NFL Week 4, or any other market on the sportsbook. After making a qualifying deposit and placing a $10 wager, users will receive $365 in bonus bets, regardless of whether their first bet wins or loses.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Lamine Yamal Scores Golazo And Spain's Unbeaten Streak Continues</h4>
+                <p>Lamine Yamal kept up his run of early goals in the Nations League when he put Spain ahead with a superb sixth-minute goal against Czechia on Saturday. Spain coach Luis de la Fuente shook his head in admiration and disbelief as Yamal cut inside down the right and unleashed a powerful curling shot with his left foot into the top left corner.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F10%2F143647262.jpg?quality%3D90%26strip%3Dall" alt="Lead Story Image" class="news-photo">
+                <h3>‘Monty Python’ legend John Cleese doubles down after incendiary posts about Islam spark UK complaint</h3>
+                <p class="lead-summary"><strong class="drop-cap">“</strong>Monty Python” legend John Cleese is doubling down on his months-long string of incendiary posts about Islam after activists filed a complaint that asked Britain’s counter-radicalization program to scrutinize him over the missives. “How exciting,” the 86-year-old comedian wrote after learning that a member of the public had referred him to Prevent, a British government program designed to intervene when authorities believe someone may be vulnerable to radicalization or becoming involved in terrorism. The September 22 referral, first reported by Muslim-focused British news outlet 5Pillars, accused Cleese of a “sustained pattern” of online activity that “demonizes, dehumanizes, and collectively attributes violence and criminality to Muslims and Islam.” It claimed his posts met “several indicators used in PREVENT risk assessments for anti-Muslim hate and counter-extremism concerns” and warned that his rhetoric could contribute to “radicalization, communal tension, and hate incidents.” Among the material cited was a July 18 repost describing Islam as “the religion of pedophiles,” according to 5Pillars. The complaint also cited a March 31 post in which Cleese referred to “a culture whose holy book advocates the killing of all the people they disagree with,” as well as an April post describing a religious practice as “a barbaric custom” across “about 60 Muslim countries.” “These statements go beyond criticism of ideas and attach intrinsic criminality, violence, and moral depravity to a religious group,” the complainant alleged.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Matthew McConaughey says Woody Harrelson’s wild antics include 2 a.m. visits, inviting strangers on vacations</h4>
+                <p>McConaughey said his "hands couldn't keep up with my mouth" as he tried to sing and play music at the same time in his new film, "The Rivals of Amziah King." While promoting their new show, "Brothers," the two actors, and close friends, have shared many anecdotes from their years-long friendship, which have sent the internet buzzing.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Chef Eric Ripert dishes on celebs who dined at famed Le Bernardin — and reveals the A-lister he most wants at his table</h4>
+                <p>Although countless celebrities have wined and dined at Le Bernardin, there’s one A-lister who hasn’t sampled the French seafood the three Michelin-starred restaurant is known for — Taylor Swift. The famed restaurateur revealed the notable names that have graced the star-studded reservation book at the Midtown mainstay on West 51st Street — and the star of “An Officer and a Gentleman” was the first to come to mind. “Richard Gere likes to eat a lot at Le Bernardin and when he’s in town, always visiting us and it’s always a pleasure to feed him and speak to him a little bit,” Ripert, 61, said. Ripert, who started at Le Bernardin in 1991 as chef de cuisine and is now its executive chef and co-owner, has also cooked for Jay-Z and Beyoncé as well as John Legend — and another superstar singer.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Robert Blake’s son returns to restaurant tied to family tragedy for new murder mystery</h4>
+                <p>Actor Noah Blake returns to Vitello’s with a new murder mystery show. The "Teen Witch" alum says it marks a personal step toward healing and forging an identity beyond his family’s past. Twenty-five years after Vitello's became part of a painful chapter in his family's history, Noah Blake has returned to the restaurant to direct and star in a fictional murder mystery, describing the production as part of his healing journey.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/10/931/523/samsung-galaxy-watch-afib.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Smartwatch AFib alert sends dad to ER before heart surgery</h3>
+                <p class="lead-summary"><strong class="drop-cap">W</strong>hen Joseph Holycross came home from work feeling off, he had plenty of reasons to brush it aside. He was a busy father of four, worked long hours and had grown accustomed to blaming a racing heart on caffeine and exhaustion. His wife, Jamie, saw something that worried her. She urged Joseph to use the ECG feature on his Samsung Galaxy Watch4 Classic. Seconds later, the result gave him a reason to stop making excuses and head to the emergency room. What doctors discovered would lead to a week in the hospital, open-heart surgery and new health concerns for Joseph's family. It also completely changed the way he looks at the smartwatch on his wrist. Missed CyberGuy LIVE? Watch the replay and discover 5 ways AI can help you get better healthcare. Our free CyberGuy LIVE class Get Better Healthcare With AI has ended, but you can still watch the full replay. Kurt "CyberGuy" Knutsson walks you through five practical ways AI can help you prepare for appointments, remember important details, understand complicated medical information, research prescription questions and organize your next steps. No technical experience is needed. Plus, recordings of all our past classes are available, including How to Stop Spam, Phone Security and Financial Protection, each with a free downloadable checklist. Joseph Holycross and his wife, Jamie, say a Galaxy Watch ECG reading helped convince him to seek emergency care after she noticed he was short of breath. (Kurt "CyberGuy" Knutsson) Joseph says the elevated heart rate had been happening on and off for roughly a year and a half to two years. At the time, just weeks before his 40th birthday, he did not see it as a warning sign. "I tend to fuel with caffeine. I'm a father of four, so, you know, we tend to drink coffee and things like that when we're tired to kind of push through the day," Joseph told CyberGuy. That made the symptoms easier to explain away. If his heart was racing, Joseph could point to coffee, exercise or a long day and keep going. Then Jamie noticed something different. "She had made the comment that I looked like I was short of breath, like I was breathing strangely," Joseph recalled. Jamie works as a respiratory therapist, so her concern carried weight. This time, Joseph agreed to check his heart with the ECG feature on his Samsung Galaxy Watch4 Classic.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>How to check your home title for fraud</h4>
+                <p>Former LAPD Lt. Moses Castillo and investigator Michael Youssef discuss alleged squatter schemes, fake leases, forged deeds and why they say Los Angeles needs a specialized task force to combat unlawful home takeovers. Your home may be your largest asset, so seeing an ad warning that someone can "steal" it online can get your attention fast. But home title fraud does not work like someone hacking into an online account and changing the password. The real risk is that a criminal could forge your signature on a deed or trick you into signing paperwork that transfers ownership, then file that document with the local office that maintains property records.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Former Anthropic security leader warns AI agents are becoming too autonomous for humans to keep them in check</h4>
+                <p>Jeffrey Ladish, an AI researcher, has spent nearly a decade warning that artificial intelligence isn't like other technologies and poses a unique threat to humanity. Artificial intelligence researcher Jeffrey Ladish told Fox News Digital that humanity does not have any real strategies to keep increasingly autonomous AI models and agents under control as they become more capable of hacking, cheating and ignoring instructions.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
