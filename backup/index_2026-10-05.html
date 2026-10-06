@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>MONDAY, OCTOBER 05, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://i0.wp.com/www.nationalreview.com/wp-content/uploads/2026/10/jd-vance.jpg?fit=617%2C360&ssl=1" alt="Lead Story Image" class="news-photo">
+                <h3>The End of MAGA — and What Comes Next</h3>
+                <p class="lead-summary"><strong class="drop-cap">W</strong>hat is post-liberalism really all about?</p>
+                <p class="source-credit">— National Review</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>When Does The New Season of ‘FBI’ Start? How To Watch New Episodes of ‘FBI’ on CBS and Paramount+</h4>
+                <p>Stream It Or Skip It: ‘The Love Hypothesis’ on Prime Video, In Which An Awkward PhD Student And Imposing Professor’s Fake Dating Experiment Yields Real Results Where Was ‘The Love Hypothesis’ Movie Filmed? Discover ‘The Love Hypothesis’ Filming Locations for Lili Reinhart’s Romance When Does ‘The Love Hypothesis’ Movie Come Out on Amazon Prime Video? Release Date, Release Time, and Streaming Info Stream It Or Skip It: ‘Toy Story 5′ on Disney+, the Continually Endearing Saga of Sentient Toys’ Tearjerking Existential Crises Is ‘Toy Story 5’ — Now Streaming on Disney+ — the Best Pixar Sequel Movie Ever Made?</p>
+                <p class="source-credit">— Https://decider</p>
+            </div>
+            <div class="story-minor">
+                <h4>Nick Freitas: Are US immigration laws fueling child trafficking?</h4>
+                <p>Laws are often passed under the guise of protecting the vulnerable, but sometimes they hurt the very people they’re intended to protect. And immigration policy expert Lora Ries is no stranger to this, telling BlazeTV host Nick Freitas that this has been going on for decades when it comes to child trafficking and immigration policy. “In 2000, the Trafficking Victims Protection Act became law and it created a T visa for victims of trafficking even though we already had something called an S visa, which was nicknamed, you know, the snitch visa,” she explains. The “snitch visa” allowed immigrants to "temporarily come into the U.S., help this prosecution testify in a criminal case, … and then depart.</p>
+                <p class="source-credit">— The Blaze</p>
+            </div>
+            <div class="story-minor">
+                <h4>The seven things we learned from Giants’ Week 4 win: The delicate Jameis Winston conundrum</h4>
+                <p>The Giants had not trailed in either of their previous home games, a victory over the Cowboys (28-20) and a victory over the Titans (12-7). Playing from behind represents a different challenge. The Giants were hit with that challenge right away on Sunday, as the Cardinals took the opening kickoff and easily marched 58 yards for a touchdown. Then they did it again on their second series and the Giants were down 14-3. They were down, again, when the Cardinals on their first possession of the second half took advantage of great field position (the Giants’ 37-yard line) via an interception thrown by Jameis Winston to pull ahead 24-19.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/10/931/523/Plague-mystery-Russia-11-east2west-news.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Mystery death at Russian plague lab triggers sweeping precautions as US watches closely</h3>
+                <p class="lead-summary"><strong class="drop-cap">S</strong>ecretary of State Marco Rubio, who is traveling to Iceland, Greece and Portugal this week, said the U.S. is closely monitoring reports of a lab worker infected with plague in Russia. Russian authorities have quarantined a hospital and placed scores of people under medical observation after a 28-year-old employee at a Siberian plague research institute died from a mysterious case of pneumonia, fueling fears — still unconfirmed — that she may have contracted pneumonic plague. Darya Shipilova worked at the Irkutsk Anti-Plague Research Institute of Siberia and the Far East. Russian health authorities say extensive testing found no evidence that her illness was caused by pathogens linked to her work, but officials have yet to publicly identify what killed her. The extraordinary precautions surrounding the case have fueled speculation inside and outside Russia. Reuters reported Oct. 5 that all known contacts had been traced and placed under medical supervision and that authorities said no new cases had been identified among employees of the institute.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Nobel for medicine awarded to 3 scientists for work that helps map the brain</h4>
+                <p>A method that controls nerve signals with light, developed by an American and two Germans, has provided greater understanding of Alzheimer’s and is used in efforts to restore sight.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>U.S. officials seeking details of reported Russian plague death, quarantines</h4>
+                <p>Officials said they need to learn more about the evolving situation before determining the potential threat to the United States.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Israeli medical workers who treated Oct 7 wounded relive day terror hit home</h4>
+                <p>Israeli President Isaac Herzog leads the commemorations for the National Memorial Day for the Events of the Hamas terrorist attacks on Israel on October 7, 2023. (Spokesperson for the office of the President of Israel via AP.) As Israel marks three years since the Oct. 7, 2023 terrorist attacks, stories of bravery and self-sacrifice continue to emerge from within a nation grappling with recovery and rehabilitation.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F10%2Fnewspress-collage-van52iing-1791218568166.jpg?quality%3D90%26strip%3Dall%261791204187" alt="Lead Story Image" class="news-photo">
+                <h3>Broncos coach speaks out after wild ‘get the f–k off my field’ confrontation</h3>
+                <p class="lead-summary"><strong class="drop-cap">G</strong>reenlaw signed a three-year, $31.5 million deal with Denver, but was released after the 2025 season (his first and only season with the Broncos). The 49ers linebacker didn’t hold feelings back as he was spotted jawing at Broncos head coach Sean Payton during Sunday’s 24-14 win over Denver. "Hey! You get the f-ck off my field!"A close look at Dre Greenlaw yelling at Sean Payton after the Broncos-49ers game. pic.twitter.com/TxQy5dbR5u “I said this to Kyle [Shanahan] afterwards, I think the world of him. I love everything about him. He plays with that emotion,” Payton said. Greenlaw’s motivation to play well against the Denver was reportedly rooted in the disrespect he received when the Broncos cut him. The 29-year-old was upset with how Payton handled the situation. “He couldn’t be man to man and call my phone and say, ‘We’re going to cut you,'” Greenlaw said to Eric Branch of the San Francisco Chronicle. Instead of hearing the news from Payton, Greenlaw’s agent informed him that the Broncos were parting ways with him. Payton recruited Greenlaw to Denver ahead of the 2025 season after spending the first six seasons of his NFL career with the 49ers. But their relationship dwindled as Greenlaw sustained an injury and played only eight games throughout the season. Following San Francisco’s fourth consecutive win of the year, Greenlaw yelled at Payton: “Hey! You get the f-ck off my field!</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>White Sox vs. Guardians prediction: Smash the underdogs in Game 2 of ALDS</h4>
+                <p>The White Sox have become a fan-favorite team so far in the playoffs and they look to keep rolling in Game 2. Gavin Williams gets the ball for the Guardians on Monday, while Chicago goes with an opener for this must-win Game 2. The oddsmakers and bettors hate openers from a betting perspective, with Chicago coming in as big +141 underdogs on FanDuel. It’s the second biggest underdog we’ve seen this round of the playoffs, with the Braves representing the biggest underdogs at +217 in Game 2 against the Dodgers, a game Atlanta won. The high-variance sport of baseball is intriguing to wager on when you’re getting underdog prices, especially with a team that’s as uninspiring as the Guardians.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Travis Kelce rocked $94,350 outfit to Raiders showdown</h4>
+                <p>Travis Kelce put his best foot forward in the tunnel before even stepping onto the field on Sunday. The Chiefs’ star tight end showed up to Allegiant Stadium decked out in a Tom Ford suit and accessorized to complete an outfit worth up to $94,350, per People. Kelce sported a striped jacquard blazer ($5,270) paired with matching pants ($1,720) with a black collared shirt underneath and black Chelsea boots ($2,850) for a classy look ahead of the Week 4 matchup against the Raiders. The three-time Super Bowl champ didn’t skip out on accessories, as he wore orange aviator sunglasses by Jacques Marie Mage Leonard ($1,010) and a Cartier Santos de Cartier Skeleton watch, which is valued at $77,000.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Holly Rowe has awkward moment with Miami’s Malachi Toney over ‘mid-interview’ hug</h4>
+                <p>College football fans were not thrilled with a comment by ESPN sideline reporter Holly Rowe following Miami’s 41-13 defeat of Clemson on Saturday. Rowe was wrapping up an on-field interview with Miami quarterback Darian Mensah when she turned to Miami receiver Malachi Toney, who was in the midst of hugging Clemson coach Dabo Swinney while Rowe was speaking with Mensah. “Oh, he’s talking to Dabo, mid-interview,” Rowe quipped with a smile. Toney then turned toward the cameras to start the interview. “She literally is complaining about Toney hugging Dabo ‘mid-interview,’” one Miami fan shared on X. “Every week she makes it about herself.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/10/931/523/William-Harry-Feud.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Prince William ‘incandescent with anger’ at Prince Harry as Diana anniversary deepens royal rift: Piers Morgan</h3>
+                <p class="lead-summary"><strong class="drop-cap">P</strong>iers Morgan explains why he sympathizes with Prince William amid his ongoing estrangement from younger brother Prince Harry. Prince William isn't expected to reunite with his brother, Prince Harry, for a potential new documentary about their late mother. Asked about the reports, Piers Morgan argued the brothers' long-running rift makes any reunion unlikely. "Well, they don't speak to each other and haven't done so for years," the host of "Piers Morgan Uncensored" told Fox News Digital. Morgan went on to say that William is "absolutely incandescent with anger about what his little brother did in trashing the royal family," including "writing books, doing Netflix documentary shows, doing podcasts, always dumping on the family and attacking his wife, Catherine, attacking Camilla, attacking King Charles." PRINCE WILLIAM'S DOOR IS 'BOLTED SHUT' AS PRINCE HARRY PLANS UK RETURN WITH MEGHAN MARKLE, CHILDREN: EXPERT Several royal experts previously told Fox News Digital Prince William (left) and Prince Harry (right) haven't been on speaking terms since 2022 following the death of Queen Elizabeth II.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Alan Alda reveals the strange sleep habit that led to his Parkinson’s diagnosis — it ‘was not that well-known’</h4>
+                <p>“I had a symptom, which at the time was not that well-known: Acting out your dreams,” the 90-year-old Emmy winner told CBS Sunday Morning. The “M*A*S*H” star recently revealed his early indicator of the neurodegenerative disease was an uncommon one — REM Sleep Behavior Disorder (RBD). RBD occurs during rapid eye movement (REM) sleep, which is the stage where our most vivid dreams happen. While the body is typically paralyzed during REM sleep, certain conditions — like Parkinson’s — turn off the switch that controls muscles, resulting in involuntary actions. “I had a dream that somebody was attacking me,” he explained. “And I picked up a sack of potatoes and threw it at ’em. What I was really doing was throwing a pillow at Arlene, my wife.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Teresa Giudice's daughter Milania writes birthday tribute to sister Gabriella months after 911 call and arrest</h4>
+                <p>Teresa Giudice claimed her daughter Milania had fentanyl in her system as bodycam video showed the 20-year-olds tense encounter with police at Tampa International Airport. (This video contains AI-assisted content.) "The Real Housewives of New Jersey" star Teresa Giudice's daughter Milania Giudice reflected on her bond with her sister Gabriella in a heartfelt birthday tribute months after her older sibling reportedly called 911 on her during a family dispute.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>How much are last-minute NY Comic Con tickets? See Nicolas Cage, ‘GoT’ cast</h4>
+                <p>Starting Thursday, Oct. 8, the New York Comic Con returns to the Jacob Javits Center for four huge days of star-studded panels, creative cosplay and a sense of fan community. Just a few of those huge stars dropping into this year’s festivities include Oscar winner Nicolas Cage, Mr. Anakin Skywalker Hayden Christensen, “Josie and the Pussycats” icon Rosario Dawson, “Winter Soldier” star Sebastian Stan and “Game of Thrones”/”House of the Dragon” cast members Lena Headey, Nikolaj Coster-Waldau, and Matt Smith. Other big names on the bill include Ian McDiarmid, Carrie-Anne Moss, Kyle McLachlan, Matthew Lillard and the legendary auteur Frank Miller.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/10/931/523/humanoid-human-boxing-match.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Human vs humanoid robot cage fight goes viral</h3>
+                <p class="lead-summary"><strong class="drop-cap">K</strong>urt Knutsson, 'The CyberGuy', joins 'Fox & Friends' to showcase the World Humanoid Games in Beijing, China. Over 2,000 robots and 600 teams from 16 countries compete in athletic competitions including sprinting, boxing, and soccer. Knutsson discusses how the U.S.-China tech race is expanding into humanoid robotics as developers push the boundaries of artificial intelligence. We've watched humanoid robots play soccer, run races and even fight other robots. Now, content creator Frankie LaPenna has taken things in a much wilder direction by stepping into a cage to fight them himself. The event was staged by REK, a robotics entertainment company that puts remotely controlled humanoids into live combat events. In San Francisco, LaPenna faced three robots in a series of bouts, including two full-size EngineAI T800s, as part of what REK billed as the first human-versus-humanoid robot cage fight. The viral footage getting most of the attention comes from one of those T800 fights. LaPenna moves toward the robot and throws several punches. The machine fires back with punches and kicks before one shot sends him flying across the cage. And if the robot looks like it walked straight out of "The Terminator," that was clearly the point. But the bigger story here is what these machines can actually do, who was controlling them and how much of the fighting was really driven by AI. Content creator Frankie LaPenna faced a modified humanoid robot in a cage fight in San Francisco. (janiecbros via Getty Images; REK) Missed CyberGuy LIVE? Watch the replay and discover 5 ways AI can help you get better healthcare. Our free CyberGuy LIVE class Get Better Healthcare with AI has ended, but you can still watch the full replay. Kurt "CyberGuy" Knutsson walks you through five practical ways AI can help you prepare for appointments, remember important details, understand complicated medical information, research prescription questions and organize your next steps. No technical experience is needed. Plus, recordings of all our past classes are available, including How to Stop Spam, Phone Security and Financial Protection, each with a free downloadable checklist.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Mac malware can hide commands in your iCloud calendar</h4>
+                <p>You probably use your calendar to keep track of appointments, birthdays and the occasional reminder you immediately snooze. Hackers apparently see another possibility. Security researchers have uncovered a new version of MacSync malware that can use a public iCloud calendar event as part of its infection chain. Hidden inside the calendar data are commands that help download more malware onto a Mac.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
