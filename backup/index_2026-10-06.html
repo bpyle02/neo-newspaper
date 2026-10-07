@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>TUESDAY, OCTOBER 06, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://media.townhall.com/cdn/hodl/2015/29/dfa7600f-97b4-4164-a33d-b7930b323e31.jpg" alt="Lead Story Image" class="news-photo">
+                <h3>Fort Hood Terrorist Nidal Hasan Will Be Executed. Here's What We Know.</h3>
+                <p class="lead-summary"><strong class="drop-cap">O</strong>n November 5, 2009, U.S. Army Major and psychiatrist Nidal Hasan opened fire at Fort Hood, Texas. It was a terrorist attack; Hasan yelled "Allahu Akbar" before opening fire. He1`q killed 13 people while wounding more than 30 others. Hasan was shot by police and left paralyzed from the waist down. In 2013, a military court convicted him of 13 counts of premeditated murder and 32 counts of attempted premeditated murder. Nidal Hasan was sentenced to death. Secretary of War Pete Hegseth has now recommended that Hasan be executed by firing squad, and President Trump has approved. A date for that execution has yet to be set. Secretary of War Pete Hegseth has recommended — and President Donald J. Trump has approved — death by U.S. Army firing squad for convicted terrorist Nidal Malik Hasan, the jihadist who opened fire on unarmed American soldiers at Fort Hood in 2009. He killed 13 people and wounded… "The Secretary of the Army will set the time and place of the execution," Parnell wrote on X. "Judgment day for Hasan has finally come." Pvt. John Bennett was last executed by hanging on April 13, 1961, after he attempted to murder an 11-year-old girl in Austria. President George W. Bush also approved of a military execution but was stopped by a federal court in 2008. In Hasan's case, he took a pistol and a 0.357 revolver with him to a mosque where he attended noon prayers. He then drove to a soldier readiness processing facility, an administrative building, full of what Hasan knew were going to be unarmed soldiers. After shouting "Allahu Akbar," Hasan unloaded into "the greatest density of soldiers," according to witness statements. Hasan was eventually detained after engaging in a firefight with law enforcement, sustaining multiple gunshot wounds. He was apprehended and rushed to intensive care. According to the sanity report, he denied experiencing depressive, manic, psychotic, anxiety or cognitive symptoms during the attack. Hasan has exhausted all of his military appeals. In 2020, the Army Court of Criminal Appeals upheld the death sentence. The sentence was affirmed by the Court of Appeals for the Armed Forces in 2023 and the U.S. Supreme Court declined to hear the case in March of last year. The Uniform Code of Military Justice says a court-martial death sentence cannot be carried out until a president approves it, and then the Army rules call for the execution to be scheduled no sooner than 60 days and no later than 150 days after that approval.</p>
+                <p class="source-credit">— Townhall</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Skip the Black Friday chaos: Apple Prime Day deals are up to 64% off now</h4>
+                <p>The 48-hour event starts on Oct. 6 and goes through Oct. 7, and the tech deals are plentiful. Brands like Apple have discounted everything from earbuds to laptops, making this a perfect time to shop before Black Friday and still save big on all the best deals. From the quintessential fan favorite, the Apple AirPods Pro 3, to an iPad built for 2-in-1 functionality, find the best Prime Big Deal Days Apple deals below. Here at The Post, we don’t just diligently fact-check to call out fake news — we also relentlessly price-check to get you inflation-beating bargains you can trust.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>It's official: CNN has a new boss as Paramount and Warner Bros. complete blockbuster merger</h4>
+                <p>The banners were already changed on Tuesday morning when Skydance's Paramount completed its massive merger with Warner Bros. Skydance proudly lists on its website that its newly acquired brands include CBS News, HBO, and, of course, CNN. CNN's crew seemingly fears that Bari Weiss — whom Paramount appointed as CBS News editor in chief in 2025 — will be given similar powers to oversee CNN. The massive $110 billion takeover seemed like it might never happen, even amid claims that Skydance and CEO David Ellison were open to moving their $30 billion in operations out of state if California blocked the deal.</p>
+                <p class="source-credit">— The Blaze</p>
+            </div>
+            <div class="story-minor">
+                <h4>Jack Smith’s Twisting Of Justice Makes The Case For Anti-Weaponization Fund</h4>
+                <p>Documents obtained by Senate Judiciary Chair Chuck Grassley shows Smith and his cronies spying on journalists as well as lawmakers. The latest bombshell documents on former Special Counsel Jack Smith’s abusive Arctic Frost investigation further show the Biden administration twisted justice in the name of politics. And the damage done demands an anti-weaponization fund to compensate victims of a far-reaching Department of Justice, one victim of Smith’s witch hunt says. Last week, Senate Judiciary Committee Chair Chuck Grassley, R-Iowa, released a new tranche of documents showing Smith — the unconstitutionally-named former special counsel — and his team grabbed up communications from 17 news outlets, including The Federalist, in the corrupt investigation to take out then-former President Donald Trump. Smith’s henchmen tapped into communications from nearly 50 journalists, including those of Federalist Editor-In-Chief Mollie Hemingway, Grassley said.</p>
+                <p class="source-credit">— The Federalist</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/10/931/523/Jonathan_Samerano_UNRWA.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>'UNRWA is Hamas,' Israeli attorney warns as explosive Oct 7 lawsuit rocks UN agency</h3>
+                <p class="lead-summary"><strong class="drop-cap">S</strong>peaking at the U.N. July 1, Ambassador Jeff Bartos said donors could continue supporting United Nations Relief and Works Agency for Palestine Refugee or choose a framework offering Gazans "peace, prosperity and real durable change." (Credit: UNTV) A legal battle between the family of an Oct. 7, 2023 attack victim and the United Nations Relief and Works Agency for Palestine Refugees in the Near East (UNRWA) has become a lightning rod for ongoing uncertainty about the agency’s future in the Gaza Strip. Israeli civil rights attorney and president of the Shurat HaDin Law Center, Nitsana Darshan-Leitner, told Fox News Digital that she filed a lawsuit in the District Court of Jerusalem on behalf of the family of 21-year-old Yonatan Samerano, who was murdered outside of Kibbutz Be’eri after fleeing the Nova music festival on Oct. 7, 2023. Samerano’s body was returned to his family after 625 days in captivity, during the final stage of hostage releases, Darshan-Leitner said. According to Darshan-Leitner, after Samerano was shot to death by terrorists, his body was picked up by UNRWA workers, placed in a UNRWA vehicle and kidnapped to Gaza. "Although the kidnapping was by UNRWA’s workers, UNRWA never revealed the place of the body, never cooperated with Israeli authorities to tell them where Yonatan Samerano was held and never admitted that it was done by its workers. And therefore we decided to sue UNRWA on behalf of the family."</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Protests sweep France, closing schools as student walkouts escalate</h4>
+                <p>A nationwide day of protest follows more than two weeks of demonstrations and blockades over school conditions. More than 5,000 people have been detained, many of them minors.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Intelligence on potential Iranian drone attack led U.S. to move bombers</h4>
+                <p>Multiple streams of intelligence warned of possible attacks on the U.K. base hosting the aircraft, according to people familiar with the decision, with concerns rising after police arrested five men in white vans.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Iran turns citizens into informants as chilling crackdown spreads beyond its borders</h4>
+                <p>Lisa Daftari says years of hacking, surveillance and threats have changed how she lives, warning that Iran’s intimidation tactics are designed to silence critics abroad. Iran has promoted a new system encouraging citizens to report information about Iranians living abroad, effectively crowdsourcing surveillance of the diaspora through a website and messaging platforms including Telegram, according to Iranian media reports and an Iranian official source who confirmed the program to Fox News Digital.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/statics.foxsports.com/www.foxsports.com/content/uploads/2026/10/931/523/falcons-saints-takeaways.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Hello, Atlanta, Michael Penix & Bijan Robinson: 3 Takeaways From Falcons Win vs. Saints</h3>
+                <p class="lead-summary"><strong class="drop-cap">S</strong>uperdome (New Orleans) — After a very ugly opening two weeks of the season, the Atlanta Falcons are quickly back at .500, while the New Orleans Saints keep digging themselves into holes they can't climb out of. The Falcons improved to 2-2 on the season with their decisive 45-24 win over the Saints in New Orleans on Monday night, but what's more noteworthy is that Atlanta is now 2-0 with Michael Penix Jr. at quarterback this season. For the second straight week, Penix quarterbacked the Falcons to a dominant win in primetime as Atlanta has firmly placed itself in the race to win the NFC South. In the previous six seasons, the Falcons didn’t have a single road win by 20 points or more. First with a 34-10 win over the Packers at Lambeau Field, and on Monday night with an equally impressive win over the Saints, the Falcons have shown an ability to separate from opponents that they’ve lacked for a long time. The two routs coincide with the healthy return of quarterback Michael Penix. Obviously, the star of the offense is running back Bijan Robinson, but that wasn’t enough in two ugly losses with backup Cooper Rush at quarterback. But in two starts, Penix has taken advantage of defenses trying to contain Robinson — an efficient 18 of 25 for 256 yards against the Packers, and 15 of 20 for 223 yards and a touchdown in beating the Saints. His passer rating of 127.7 is a career-best, too, as the Saints' 45 points were the most they've put up in a game in 10 years.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Ex-ESPNer Steve Berthiaume dumped as Diamondbacks TV voice after 14 years</h4>
+                <p>Steve Berthiaume, the former “SportsCenter” and “Baseball Tonight” host, is out as the Diamondbacks’ television voice after 14 years. “His contract is up and we felt it was a good time to take a step back and re-evaluate our broadcasts,” Diamondbacks president Derrick Hall told the Arizona Republic. “He was here 14 years and was a great DBack.” “As I told the Diamondbacks, I’m very appreciative to have had the opportunity to connect with our fan base these past 14 years. I’ve always tried to put the club first. I enjoyed my Arizona experience and I’m grateful to all my friends and colleagues in our broadcast group,” Berthiaume told the Republic.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Eagles RB Saquon Barkley Reportedly Considered Week-To-Week With Hamstring Injury</h4>
+                <p>Philadelphia Eagles running back Saquon Barkley is considered week-to-week with a hamstring injury, but it is not considered to be long-term, according to NFL Network. Barkley was hurt during Sunday's 24-20 loss to the Los Angeles Rams and did not return. Head coach Nick Sirianni did not say Monday whether Barkley will be available Sunday against the Jacksonville Jaguars in London. "I know he'll do everything he can do to get himself back," Sirianni said.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Former Yankees pitcher ‘Sudden’ Sam McDowell dead at 84</h4>
+                <p>Sam McDowell, a former Yankees pitcher and six-time All-Star with Cleveland, died on Monday, per KDKA in Pittsburgh. McDowell, who had to end his career due to substance abuse, debuted on the mound at 18 years old in 1961 for the then Cleveland Indians, now Guardians. Four years later, the lefty hurler led the AL in ERA (2.18) and earned his first All-Star nod while recording a career-high 325 batters. He went on to lead the American League in strikeouts five times. The Pittsburgh native played for Cleveland for 11 years before having stints with the Giants (1972 and ’73), Yankees (1973 and ’74) and Pirates (1975).</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F10%2F30-Rock-cast.jpg?quality%3D90%26strip%3Dall" alt="Lead Story Image" class="news-photo">
+                <h3>Last-minute ticket prices are dropping for ‘30 Rock’ Radio City show</h3>
+                <p class="lead-summary"><strong class="drop-cap">O</strong>n Sunday, Oct.11, the beloved, postmodern sitcom will celebrate the 20th anniversary of its pilot airing on NBC with a one-night-only, never-to-be-televised show at NYC’s Radio City Music Hall. Stars Tina Fey, Alec Baldwin, Tracy Morgan, Jane Krakowski, Jack McBrayer and a few other key cast members are confirmed to appear. And, best of all, ticket prices are dropping — just like “my single “My single is dropping” is dropping — to catch the all-star cast live in the Big Apple. When our team last reported on how much the cheapest seats cost for the exclusive Midtown affair, they started at $441 including fees on SeatGeek. A little over a month later, tickets can be found for as low as $334 including fees on Vivid Seats. “Listen up tens, a five is speaking!” Fey said in a press release when the event was announced. “Please join us to celebrate the 20th anniversary of the show Tom Shales once said ‘needs a better premise and funnier dialogue … and most of all a more commanding performer in the starring role.’” As of now, no special guests outside of the regular cast has been announced but the show’s Instagram teased potential appearances from Steve “how do you do fellow kids” Buscemi, Jon Hamm, Will Forte, Matt Damon, Tom Hanks and many more. Don’t miss out (or keep an eye on prices in case they keep going down) because as we all know “regrets are for horseshoes and handbags.” For more information, our team has everything you need to know and more about the “30 Rock” 20th anniversary show at Radio City live below.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Pete Davidson takes fresh aim at Zohran Mamdani with biting critique</h4>
+                <p>Davidson – a loud and proud local – wondered if the mayor had any connection to the borough during a recent sit-down with Variety. "Zohran Mamdani ... is he Staten Island? I don't know," Davidson said. "I don't think he's from Staten Island." Pete Davidson called out New York City mayor Zohran Mamdani over long-delayed construction on a major highway. (Todd Owyoung/NBC via Getty Images; Michael M.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Harry Styles ticket prices for remaining MSG shows are dropping. Get them now</h4>
+                <p>After doing a bit of digging, our team found that ticket prices have dropped over $100 to see Harry Styles at NYC’s Madison Square Garden as part of his ongoing 30-show Together Together residency with special guest Jamie XX. Based on our findings, when we last wrote about how much it cost to see Styles on Aug. 31, prices started at $287 including fees on SeatGeek. Now, a little more than a month later, prices have plummeted down to $173 including fees on Vivid Seats. In the off chance you don’t have a calculator on hand, that’s a cool $114 in savings. “He went from playing guitar to singing and dancing across the stage, then moved to the synths, contorting his music in ways only he knew how. My favorite song of the evening was ‘Sign of the Times.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Richard Gere confronts Hollywood fame, ego and greed as 'dark clouds' that threaten inner peace</h4>
+                <p>Richard Gere reflects on the values that shaped his life and explains why kindness, compassion and being of service to others can lead to greater happiness. The actor serves as executive producer of the documentary "Wisdom of Happiness." Richard Gere has spent decades in Hollywood, but he hasn’t let fame go to his head — at least not without a fight.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/09/931/523/switch-to-t-mobile-and-get-the-iphone-18-pro-on-them-plus-more-perks.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>How to search anything on iPhone, Galaxy and Pixel</h3>
+                <p class="lead-summary"><strong class="drop-cap">F</strong>ox News senior national correspondent Rich Edson reports on media consumption changes and screen usage among American families over 30 years. Have you ever spotted a great pair of shoes in a video and wondered where to buy them? Maybe someone sent you a photo of a restaurant, plant or gadget, and you wanted to know more without typing a description into Google. Apple's newly released iOS 27 gives iPhone owners an easier way to do that. Visual Intelligence can now understand what's already displayed on your screen, so you can search an object, ask a question about it or take action based on what your iPhone sees. Apple says you can even turn information from a flyer or invitation into a calendar event. Samsung Galaxy and Google Pixel owners have a similar tool through Google's Circle to Search. Instead of switching apps, you can select something directly on your screen and immediately search for more information. On a Samsung Galaxy, press and hold the Home button or navigation handle to open Circle to Search and select what you want to identify. (Angel Garcia/Bloomberg via Getty Images) Missed CyberGuy LIVE? Watch the replay and discover 5 ways AI can help you get better healthcare. Our free CyberGuy LIVE class Get Better Healthcare with AI has ended, but you can still watch the full replay. Kurt "CyberGuy" Knutsson walks you through five practical ways AI can help you prepare for appointments, remember important details, understand complicated medical information, research prescription questions and organize your next steps. No technical experience is needed. Plus, recordings of all our past classes are available, including How to Stop Spam, Phone Security and Financial Protection, each with a free downloadable checklist. Visual Intelligence previously focused heavily on things around you. You could point your iPhone camera at something and use Apple Intelligence to identify it or search for more information. iOS 27 expands that experience to content already displayed on your iPhone. Take a screenshot and Visual Intelligence can offer tools based on what it recognizes. Apple says those options can include visual search, questions about the screen, text summaries, Read Aloud and actions such as adding an event to Calendar.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>More women are becoming breadwinners. But something else is lagging.</h4>
+                <p>The share of women who make as much or more than their husbands has nearly tripled over the past five decades.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Windows malware uses Grok AI to help stay hidden, researchers say</h4>
+                <p>CSIS cybersecurity expert Jim Lewis explains how AI is accelerating cyberattacks while cautioning that worst-case predictions about the technology may never materialize. A new piece of Windows malware is giving cybercriminals a lot of ways to cause trouble from one infected PC. It can steal passwords, grab browser cookies, route internet traffic through your computer and even burn through paid AI credits. Then there is the part that caught my attention. The malware, called x47.c, can reportedly use xAI's Grok to help decide how to keep itself running on an infected Windows computer.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>They told the world AI was dangerous. Now Trump’s allies are coming for them.</h4>
+                <p>The Trump administration and its allies are embracing some ideas championed by AI safety advocates, while also working to marginalize the movement in Washington.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
