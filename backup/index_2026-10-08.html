@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>THURSDAY, OCTOBER 08, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://media.townhall.com/cdn/hodl/images/up/2026/281/8f47e46f-fa80-40bd-b123-772330de7ff2-650x0.png" alt="Lead Story Image" class="news-photo">
+                <h3>'Fat Chicks' and 'Big, Black C**k': Leaked Audio Rocks Dan Osborn’s Cratering Campaign</h3>
+                <p class="lead-summary"><strong class="drop-cap">D</strong>an Osborn, the fake independent running for the U.S. Senate in Nebraska has been hiding his true beliefs from voters for a while now. Unfortunately for Osborn, a series of leaked videos and audio have exposed not only his radical beliefs, but how he really feels about Nebraska voters and how he plans to hoodwink them into voting for him before enacting his far-left agenda in Congress. Osborn admitted he's aligned with the Democrat Party, too. Now there's even more damning audio coming out about Osborn, as well as a major lawsuit that named Osborn personally, and sex scandals that should sink his Senate campaign. He also said, "The brown people are coming up here to kill us and rape us." That's not the only controversy hounding Osborn's campaign. In 2021, Kellogg's won a restraining in a lawsuit that named Osborn personally. The suit came at the height of strikes Osborn led, and named three defendants: the union, its Omaha local chapter, and Dan Osborn, who was president of the local union. In the suit, Kellogg's alleged that union members — under Osborn's leadership — threatened workers' lives, threatened that a worker's wife and young children would be assaulted "including sexually," followed workers home, and used racial slurs. A judge granted Kellogg's a temporary restraining order, which was dropped in December 2021 when the union ratified a new contract and the strike ended. Osborn, who has been married since 2002, was also part of the 2015 breach of Ashley Madison, the website built for married people who are seeking affairs. An email tied to Osborn's birthdate and home address turned up in the breach. Osborn's campaign denied he ever used the site and that the email was a "shared corporate account" used by "multiple people." The campaign never explained why Osborn's birthdate and home address were tied to an account used by "multiple people." The public didn't learn about Osborn's inclusion in the breach until 2024. Inside married Nebraska Senate candidate Dan Osborn's wild backstory, involving 'gay porn,' Ashley Madison, and a 'gothic exotic dancer daughter' https://t.co/lVlCXvolYw pic.twitter.com/yKuv7VWnTi That same year, reporters found an X account labeled "Dan Osborn President BCTGM 50G" had liked hardcore gay pornography and images of naked women. The likes came between 2020 and 2021. Among the posts liked by the Osborn-linked account was an explicit video of Black men performing sex acts. Once again, the Osborn campaign said the account was used by "multiple people." The National Republican Senatorial Committee (NRSC) later turned those likes into a digital ad, "Dirty Dan."</p>
+                <p class="source-credit">— Townhall</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Buccaneers vs. Cowboys prediction, best bet: Dallas’ red-hot attack will drown out Tampa Bay</h4>
+                <p>The popular belief is that the short rest forces stagnant offense and games devolve into defensive slugfests: words that could have nothing to do with the 2026 Dallas Cowboys. “America’s Team” has hung 30 points in three straight games heading into the Week 5 opener against the Buccaneers at AT&T Stadium. Since Dallas opened as 9.5-point favorites, the line has steamed toward Tampa after the market noted heavy public and sharp action on the Buccaneers. The original 9.5 overweighted Mayfield injury and the 0-4 start. The fact is that all four of those losses have been one-possession scores, and the undrafted rookie Jalon Daniels showed enough dual-threat ability in his debut to give a shaky Dallas run defense some challenges.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Democrat called slur by Trump airs ad urging ‘No men in women’s sports’</h4>
+                <p>Senate candidate Annie Andrews, a Senate candidate in South Carolina, released a transgender issues ad days after the president called her an anti-transgender slur.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>El-Sayed Asked If Iran Or Israel Is The Bigger Threat, Then Comes The ‘Dumb’ Remark</h4>
+                <p>U.S. Senate candidate Abdul El-Sayed (D-MI) appeared to struggle to decide whether Israel or the Iranian regime posed a greater threat to the United States. Leland Vittert, host of “On Balance,” posed the question in reference to a claim made by one of El-Sayed’s supporters — who had openly declared Israel to be the greater threat. “One of your supporters we interviewed seemed to think that Iran was a bigger threat — Israel — seemed to think Israel was a bigger threat than Iran to the United States. Do you agree?” Vittert asked. El-Sayed, rather than answer the question directly, attempted to reframe the conversation by suggesting that Iran was only a threat because Israel had made it so.</p>
+                <p class="source-credit">— Daily Wire</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/10/931/523/summit-oct7-jerusalem-hostages.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>'The world is standing with you': Christian leaders from 122 countries unite in Jerusalem for Oct 7</h3>
+                <p class="lead-summary"><strong class="drop-cap">B</strong>uzolic, a devout Christian, was in Israel, where he hosted the Oct. 7 event of the Friends of Zion Ambassador's Summit in Jerusalem. Christian community leaders and influencers from around the world gathered in Jerusalem Wednesday for an international memorial marking Oct. 7 as part of the Friends of Zion Ambassador Summit. The event also included Jewish leaders, released hostages, bereaved families, wounded Israelis, ambassadors and diplomatic representatives to commemorate the anniversary of the Hamas-led Oct. 7, 2023, massacre. "Oct. 7 is the worst day in Israel’s history, a day of hopelessness," Dr. Mike Evans, founder of the Friends of Zion Heritage Center in Jerusalem, told Fox News Digital. Christian community leaders and influencers gathered in Jerusalem to commemorate the anniversary of the Hamas-led Oct. 7, 2023, massacre. (Hooman Khalili) "People talk a lot about the more than 1,200 people killed that day, but not enough about the more than 70,000 who lost their homes and loved ones. You have a nation going through unspeakable pain, not only because of Oct. 7, but also because of the feeling that they are alone and that the world has turned against them," Evans added.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>At least 30 dead in Russian bus strike as Moscow closes in on Ukraine’s ‘fortress belt’</h4>
+                <p>Russia has increasingly hit civilian targets, but the Thursday strike, which ripped through two buses, was reminiscent of larger strikes earlier in the war.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Search warrants against former prince Andrew were unlawful, court finds</h4>
+                <p>British police acknowledged applying for the warrants under the wrong statutory provision, the judge said while stipulating that the misconduct investigation against the king's brother could continue.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Mike Waltz fights back tears revealing what Hamas hostage refused to do before release</h4>
+                <p>Eliya Cohen and Nova survivor Ziv Abud recount the Hamas attack and captivity as U.S. Ambassador Mike Waltz vows America will continue to stand with Israel. UNITED NATIONS — Three years after the worst massacre in Israel’s history, Eliya Cohen — who survived 505 days in Hamas captivity — took the stage at the United Nations alongside his newlywed wife, Ziv Abud, a survivor of the Nova music festival massacre, and tried to explain to some of the world’s top diplomats what he had endured.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/statics.foxsports.com/www.foxsports.com/content/uploads/2026/10/1200/675/neb-vs-ind-centerline-1920x1080-1.png?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>How to Watch Nebraska vs. Indiana Volleyball: TV Channel, Streaming, Time</h3>
+                <p class="lead-summary"><strong class="drop-cap">N</strong>o. 1 Nebraska visits No. 15 Indiana on Thursday night at Wilkinson Hall, a Big Ten matchup between two ranked teams. The Cornhuskers enter at 15-0 overall and 4-0 in conference play. Indiana is 10-3 overall and 3-1 in the Big Ten. Nebraska's most recent result was a 3-0 sweep of Maryland at XFINITY Center in College Park on Oct. 3, taking sets 25-13, 25-20 and 25-15. Indiana's most recent result was a 3-1 win at Rutgers on Oct. 4, with set scores of 25-20, 17-25, 25-21 and 26-24. Nebraska is unbeaten this season and holds the No. 1 ranking in the latest AVCA Coaches Poll, released Oct. 5. Indiana sits at No. 15 in that same poll. The teams met once last season. Nebraska won 25-19, 25-16 and 25-22 at Wilkinson Hall on Nov. 22, 2025, a result that clinched the Huskers the outright Big Ten title. Here is every Nebraska match left this season that airs on FOX, FS1 or BTN, current as of Oct. 8. All times are Eastern and subject to change. Nebraska's schedule also includes matches on B1G+ and other outlets outside FOX's family of networks. Stream every FOX, FS1 and BTN broadcast with FOX One, which brings all of FOX's Nebraska volleyball coverage into one subscription. The Big Ten Volleyball Tournament runs Nov. 20-25 at Fishers Event Center in Fishers, Indiana, and FOX will air the championship match at 8 p.m. ET on Nov. 25 if the Huskers advance that far.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Aaron Judge wants Yankees to go ‘all in’ after another crushing playoff exit</h4>
+                <p>After the Yankees were eliminated in the ALDS by a division rival for the second straight season, Aaron Judge delivered a message to Hal Steinbrenner and Brian Cashman. “We’re the Yankees. I feel like they should go all in and do what they need to do,” Judge, who did not play in the playoffs due to a calf strain, said after the Yankees’ 4-3 Game 3 loss to the Rays in The Bronx Wednesday night. “If we’ve got holes, if it’s finding certain players or personnel, whatever we need, you got to go out there and get it. That’s why I signed back here to play with the Yankees is to fight for a championship every single year and to go all in. That’s what I do every offseason is get ready to give this team and this city everything I’ve got, so I expect them to do the same.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Dodgers And Brewers Advance, Yankees Are Out: 4 Takeaways From Division Series Slate</h4>
+                <p>We're down to five teams left with World Series hopes. In the National League, we'll have a rematch of last year's NLCS. And in the American League, the Rays swept the Yankees and now await the winner of the White Sox-Guardians series for a chance at the World Series.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Julie Stewart-Binks reveals scary reason behind TV absence</h4>
+                <p>Sports broadcaster Julie Stewart-Binks was emotionally candid about her two-week absence from work after she underwent surgery to remove skin cancer from her nose. Stewart-Binks — who hosts Honda SportsNite on SNY and is a rink-side reporter for women’s and men’s professional hockey — explained she had Mohs surgery, which included grafting part of her ear onto her nose, and that doctors removed all the cancerous cells. “Personal note: I haven’t been on TV or working the past two weeks because I had Moh’s surgery to remove squamous cell carcinoma from my nose,” she wrote in an X post on Wednesday. “I thought it was a pimple that wouldn’t go away, turns out it was cancer. I share this so that hopefully it inspires others to get checked is something feels/looks off.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/10/931/523/Natalie-Wood-Natasha-Gregson-Wagner.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Natalie Wood's daughter confronts very painful way she learned Hollywood icon had died at 11</h3>
+                <p class="lead-summary"><strong class="drop-cap">W</strong>hen Robert Wagner turned 90 years old, we took a look back at the acclaimed actor's iconic career. The star turned 96 on Feb. 10, 2026. Natasha Gregson Wagner was just 11 years old when an ordinary childhood sleepover turned into a moment that shattered her world. While staying at a friend's house, she heard the devastating news on the radio: her mother, Hollywood actress Natalie Wood, was dead. "As a child, I always knew my mom was home because her Jungle Gardenia scent arrived before she did," Gregson Wagner, now 56, wrote on the website for her fragrance brand, L'Amour Mere. "After she died, I spent hours lying in her bed or sitting in her closet among her clothes. If I could somehow keep her fragrance alive, perhaps she would not be entirely gone." CHARLIZE THERON RECOUNTS THE NIGHT HER MOTHER FATALLY SHOT HER FATHER WHEN SHE WAS 15 YEARS OLD Natalie Wood’s (left) daughter, Natasha Gregson Wagner (right), recently opened up about losing the Hollywood icon at just 11 years old and carrying on her mother’s legacy. Gregson Wagner celebrated her birthday on Sept. 29, 2026.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>‘Misty Green’ review: Chris Rock viciously criticizes Hollywood</h4>
+                <p>Running time: 103 minutes. Rated R (language, drug use and sexual references). In theaters Oct. 9 After last year’s ego bath that was George Clooney’s “Jay Kelly,” directed by Noah Baumbach, I went into Chris Rock’s “Misty Green” with some trepidation. And more than a little fatigue. Right away, here comes another movie about the difficulties of showbiz with a fictional actor as the title character. At this point, saying, “Fame has its drawbacks,” is much like declaring, “Taco has its tortilla.” But this Hollywood vivisection, written, directed and co-starring Rock, is far more interesting than “Jay Kelly,” in which an A-lister tediously lost his inner life to his global persona while in pretty Italy. It’s comparatively brutal, too. In the end, even if Rock’s better film doesn’t ultimately come together, it holds your interest with a frenetic push and jagged turns and features a stunner of a performance from Rosalind Eleazar.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Luke Grimes says he hasn't spoken to Kevin Costner since 'Yellowstone'</h4>
+                <p>"Yellowstone" star Luke Grimes told Fox News Digital that it felt like "leaving home" ditching Montana for Los Angeles after filming. During an interview with USA Today, Grimes explained that their relationship did not continue once Costner left the Taylor Sheridan series in 2024.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Former Goldman Sachs star takes Broadway by storm with heartfelt cabaret show: ‘Still find yourself chasing’</h4>
+                <p>After 25 years in finance, former Goldman Sachs partner Stacy Polley has been singing a new tune. The banker — a Goldman star who ran their fixed income sales — has taken Broadway by storm, performing a series of highly personal cabaret shows in recent years. Her latest one, set for Thursday at Sony Hall, has special resonance. She’ll be raising money for research about Alzheimer’s, which claimed her father’s life in August. The show, a mix of song, dance and humorous bits, “asks what happens after you’ve checked every box but still find yourself chasing the next accomplishment instead of enjoying the life you’ve built,” Polley told The Post.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2025/11/931/523/voting-booth-maryland.png?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>What strangers can learn from your political donation</h3>
+                <p class="lead-summary"><strong class="drop-cap">F</strong>ox News hosts Bill Hemmer, Dana Perino and Shannon Bream, alongside guests Trey Gowdy and Karl Rove, analyze pivotal Supreme Court decisions. The court upheld transgender sports bans, allowing states to block participation by biological males. It also ruled on campaign finance limits, striking down restrictions on party spending. Additionally, the Court upheld birthright citizenship, rejecting challenges to the 14th Amendment. Search your name in the Federal Election Commission's contribution database or on a campaign finance site such as OpenSecrets.org. If you have given enough to trigger federal disclosure requirements, you may be surprised by how much information can be connected to your donation. Depending on the record, that can include your name, mailing address, employer, occupation, donation amount and the political committee that received your money. This is not a data breach. It is part of federal campaign finance disclosure law. And once information about you is public, it can potentially be combined with personal details found elsewhere online. Here's what your political donation can reveal, how that information can be used and what you can do to reduce the rest of your exposure. Kurt "CyberGuy" Knutsson shares practical ways to stay safer, smarter and more confident with technology. Explore classes on stopping spam, phone security, financial protection and using AI to get better healthcare. Each class is free, easy to follow and comes with a free printable checklist. A simple online search can show how easily public records and people-search profiles connect information about you. (Kurt "CyberGuy" Knutsson) Federal campaigns generally must itemize an individual's contributions once that person's contributions exceed $200 in the aggregate during the applicable election cycle. For PACs and party committees, the reporting period can be based on the calendar year. One contribution may not seem revealing on its own. The privacy concern grows when those details can be connected with information already available through people-search sites, public records and data brokers.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Here’s an idea to help workers displaced by AI</h4>
+                <p>An influential think tank suggests how to pay for higher unemployment benefits in an era of workforce anxiety.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Trump Mobile failed to make required regulatory filings, senator claims</h4>
+                <p>The Washington Post could not find filings for the Trump-branded service that are required by the Federal Communications Commission under rules designed to prevent fraud.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>The best defense against high-tech AI scams is low-tech skepticism, expert warns</h4>
+                <p>From voice cloning to fake arrests, cyber expert Morgan Wright breaks down how scammers use high-tech tools to exploit basic human fears. As artificial intelligence rapidly evolves to make financial scams hyperrealistic, cybersecurity experts warn that the best defense isn't sophisticated detection software.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
