@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>SATURDAY, OCTOBER 10, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://thefederalist.com/wp-content/uploads/2026/10/Cornell-1-1200x675.png" alt="Lead Story Image" class="news-photo">
+                <h3>The ‘Cornell 7’ Lesson: Don’t Do Drugs, Stay In School</h3>
+                <p class="lead-summary"><strong class="drop-cap">W</strong>e’re wasting an awful lot of time talking about “consent” and sexual regret right now, thanks to a young woman suing several men she had group sex with at Cornell University, when we really should be talking about the powerful effect of not consuming hard drugs. TMZ this week published newly revealed text messages between who we now know as Cornell’s “Jane Doe” and one of the Chi Phi fraternity members she accused of gang raping her two years ago. “[I]f you have any regrets or anything you want to talk about i am always here to talk about it cause that was a lot,” Doe wrote in one of the messages. “i really do love u and matt and i promise i wont get quiet and weird w u like i did last time.” The name Matt appears to be a reference to another one of the men she is accusing, though public evidence shows she justified and defended their sexual engagement in a similar message to him as well. And here’s the truly relevant message she sent to one of the accused, as reported by TMZ: “ps. i’m not sure if u remember but i did ket off your d–k at some point?” she wrote. “[A]nd i honestly think that was one of the most insane/jaw dropping moments of the night.” Her use of the word “ket” is apparently a reference to the drug ketamine, which her own lawsuit indicates she snorted an alarming amount of on the night in question. That brings us to where we should have been all along. College students, ladies in particular, don’t do hard drugs. Especially when it involves a group of men. We don’t know yet what exactly happened in October 2024 at the Chi Phi fraternity house with Jane Doe. We probably never will. But all public evidence currently indicates a 20-year-old woman got drunk at a sorority house, went to a couple of bars, then went to a frat house where she met a male friend and initially agreed to a threesome that ultimately included drugs and may have included other men. No one begrudges a college student, whether male or female, drinking underage. If she’s legally old enough to have died for her country, she can have as many drinks as she wants (so long as she’s not caught). But drinking comes with consequences. Everything does. That includes consuming hard drugs. Jane Doe reportedly said in other text messages days after the night of partying that she could only “sleep and cry all day.” Without concluding whether she was raped, that testimony isn’t discernibly different from any person who has done hard drugs and is on a come-down. Drugs like ketamine create a hyper sense of euphoria while it’s in the system. And once it’s gone, the user crashes. Depression and anxiety are normal. Those feelings are almost certainly heightened when the user engaged in risky behavior while under the influence. That’s true whether it’s ketamine or alcohol or Adderall.</p>
+                <p class="source-credit">— The Federalist</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Trump Isn't Happy About Getting Snubbed for the Nobel Prize yet Again</h4>
+                <p>President Donald Trump is livid that he has once again been overlooked to receive the Nobel Peace Prize, taking to social media to lambast the prize committee someone else for the international honor. President Donald J. Trump posted minutes ago that he did not receive the Nobel Peace Prize despite his numerous accomplishments. He listed settling eight wars, returning all Israeli hostages including the final 28, securing the release of hundreds of other hostages, winning a war in Venezuela and capturing Venezuelan President Nicholas Maduro, and stopping Iran from obtaining a nuclear weapon. The post comes a day after the Norwegian Nobel Committee awarded the 2026 Peace Prize to Navi Pillay, the South African jurist and former UN human rights chief, “for her efforts to promote peace and international law.” The committee said the award is meant to remind the world that peace requires the rule of law. Trump has long said he deserves the prize. Last year’s winner, Venezuelan opposition leader María Corina Machado, gave Trump her medal after the U.S. ousted Venezuela’s leader.</p>
+                <p class="source-credit">— Townhall</p>
+            </div>
+            <div class="story-minor">
+                <h4>Why We Spaniards Want to Oust Pedro Sánchez</h4>
+                <p>The last far-left government in Europe may be on its way out.</p>
+                <p class="source-credit">— National Review</p>
+            </div>
+            <div class="story-minor">
+                <h4>Harrowing moment kayaker is pulled from Pacific as police share video of dramatic response</h4>
+                <p>A kayaker stranded in San Francisco’s frigid waters got lucky after a joint-effort rescue near the Bay Bridge. The San Francisco Police Department’s Marine Unit and Drone as First Responder (DFR) Team responded alongside the San Francisco Fire Department to rescue the kayaker Thursday afternoon. A 911 caller reported an overturned kayak near the San Francisco Ferry Building late Thursday afternoon. Video posted on Instagram by SFPD showed drone footage of the capsized kayak around 2:41 p.m. A second 911 caller reported that one kayaker, who was wearing a life jacket, had made it safely to shore. However, the boater’s companion still remained in the water.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/10/931/523/woman-gaza-genocide-placard-kuala-lumpur-rally.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Inside the protest playbook to vilify Israel on 'global day of action'</h3>
+                <p class="lead-summary"><strong class="drop-cap">F</strong>ox News host Greg Gutfeld and the panel discuss anti-Israel protests as the nation remembers the October 7 terrorist attack. WASHINGTON, D.C. – As demonstrators, including the headline-grabbing CodePink agitators, descend on the nation's capital late Saturday afternoon for a "coordinated global day of action" against Israel, they will join a worldwide wave of marches and planned disruptions that may appear to be unfolding independently. In Kuala Lumpur, Malaysia, on Friday, anti-Israel demonstrators carried signs deploying emotionally charged language against Israel, including one featuring a Palestinian flag and a bloodied hand with the message, "STOP GENOCIDE." Nearby, two women carrying mock machine guns flanked a cardboard image of a handcuffed Israeli Prime Minister Benjamin Netanyahu with a noose around his neck. Anti-Israel demonstrators carry a cutout depicting Israeli Prime Minister Benjamin Netanyahu alongside mock cardboard weapons and placards during a rally on Oct. 09, 2026 in Kuala Lumpur, Malaysia. People gathered in Kuala Lumpur in solidarity with Palestinians in Gaza as part of a "global day of action.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Saudi Arabia faces new level of peril in Houthi attacks, amid wider Iran war</h4>
+                <p>Yemen’s Houthis are striking Saudi oil infrastructure, as compounding Middle East conflicts threaten to expand.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>France is devouring itself as school riots reveal a crisis far bigger than broken classrooms</h4>
+                <p>FDD Special Envoy Simone Rodan-Benzaquen says legitimate student grievances have been hijacked by political movements seeking to fuel unrest and deepen divisions across France. Student protests over crumbling schools despite billions in public spending are fueling a broader crisis in France, as experts warn that the country's mounting financial troubles, President Emmanuel Macron's weakened political center and radical movements are pushing the unrest far beyond its original educational grievances.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>What to know about ‘NAZA,’ a  documentary that looks at Israeli war technology</h4>
+                <p>Israeli leader Benjamin Netanyahu has described the film, which got a standing ovation at the Venice Film Festival, as part of “global antisemitic incitement.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/statics.foxsports.com/www.foxsports.com/content/uploads/2026/10/1200/675/mlb.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Dodgers-Brewers NLCS Game 1 Will Be Skubal vs. Misiorowski; Yamamoto For Game 2</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>he Los Angeles Dodgers will start Tarik Skubal against the Milwaukee Brewers – who will go with staff ace Jacob Misiorowski – on Sunday in Game 1 of the National League Championship Series. Yoshinobu Yamamoto, last year's World Series MVP, will start Game 2 on Monday at American Family Field, manager Dave Roberts said Friday. Skubal also started Game 1 of the NL Division Series. The two-time Cy Young Award winner pitched six dominant innings, allowing one run and two hits, in a 5-3 victory over the Atlanta Braves. The left-hander struck out seven and walked two. Misiorowski had two starts during the regular season against the Dodgers and a relief appearance in last year's NLCS. In those 17 innings, he has posted a 1.59 ERA with 27 strikeouts and three walks. Yamamoto started Game 3 of the NLDS, and struck out 10 over seven innings. The right-hander allowed one run and four hits to go with one walk. Two-time Cy Young Award winner Blake Snell struggled as the Game 2 starter against the Braves, who won 3-2 to tie the best-of-five series 1-1. The Dodgers went on to eliminate the Braves, 3-1.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Underdog promo code NYPOST: Play $5, get $100 for college football Week 6</h4>
+                <p>DFS players can use the Underdog promo code NYPOST to play $5, get $100 for this Saturday’s college football action. Week 6 features some massive contests throughout the day, but it has a no-doubter of a headliner: Alabama vs. Georgia in primetime in Tuscaloosa. You can sign up with the Underdog promo code NYPOST to qualify for a bonus offer for college football action. Underdog is legal in many of states across the country. Thus, it’s easier to list the states where you can’t play Underdog. Underdog Fantasy Drafts are unavailable in Connecticut, Hawaii, Idaho, Iowa, Louisiana, Maine, Montana, Nevada, Ontario (Canada), Washington, and U.S. Territories outside of the continental United States, including but not limited to Puerto Rico, U.S. Virgin Islands, Guam, Northern Marina Islands and American Samoa.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Alexi Lalas' Post-World Cup Power Rankings: France Or Spain At The Top?</h4>
+                <p>This is my first post-World Cup power rankings. I love power rankings and I especially love counter rankings. FIFA has their own rankings (released on Oct. 7), and I'm sure they spend a lot of time and money and technology on the formula to come up with it. I can't say I do the same, it's more of a gut feel. But these are my power rankings, and as I have always said: If you don't like mine, then get your own.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>BetMGM bonus code POSTBET: Get up to $1,500 back in bonus bets for LSU vs. Kentucky</h4>
+                <p>College football bettors can sign up at BetMGM using the BetMGM bonus code POSTBET to get up to $1,500 in bonus bets if their first bet doesn’t win for Saturday’s best contests, including Kentucky vs. LSU. Will Stein’s Wildcats have already handed one season-wrecking loss to Texas A&M, and they’ll look to add another to their account with an upset over LSU. BetMGM is offering up to $1,500 in bonus bets back to your account for use on anything from college football to NFL, MLB games or Premier League matches. First-time users can place an initial bet between $10 and $1,500 and receive a full reimbursement of that initial wager amount if their bet is unsuccessful.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F10%2FBilly-Crystal.jpg?quality%3D90%26strip%3Dall" alt="Lead Story Image" class="news-photo">
+                <h3>How much are the cheapest tickets to see Billy Crystal in ‘860’ on Broadway?</h3>
+                <p class="lead-summary"><strong class="drop-cap">O</strong>n Oct. 11, 1975, Billy Crystal stood in the wings waiting to see if he would get to go onstage and perform a five-minute set in the first-ever episode of “Saturday Night Live.” 52 short years later (and a one-year stint as a cast member later), he’s guaranteed to take center stage in Midtown for the next few months. As of Oct. 1, the 78-year-old is starring in “860,” a one-man show at Broadway’s Imperial Theatre where the legendary funnyman reflects on the aftermath of the 2025 Palisades fires that took his home. “Billy relives his memories and moments that mattered the most, and reflects on how the power of laughter can overcome even the hardest of times,” the show’s website notes. “‘860’ is a hilarious and intimate story about family, friendship, love, luck, and loss. If you’d like to see Crystal reckon with heavy subject matter with a light touch, tickets are available for all 93 remaining performances. At the time of publication, the lowest price we could find on seats for any one show was $124 including fees on Vivid Seats (that’s for Tuesday, Dec. 15, by the way). Prior to this production, Crystal last starred on Broadway in the 2022 “Mr. Saturday Night,” based on the 1992 film that the “City Slickers” star wrote, directed and starred in. “The Borscht Belt is alive and kvell on Broadway,” NY Post critic Johnny Oleksinski wrote in his positive review of the bawdy comedic musical.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>George Clooney says family is still processing Presley Gerber's tragic death</h4>
+                <p>Fox News senior medical analyst Dr. Marc Siegel discusses the death investigation of Presley Gerber in California, toxicology reports and the discovery of cychlorphine and kratom in two student deaths at Ole Miss in Oxford, Mississippi. During a recent interview with Entertainment Tonight, the 65-year-old actor and close friend of Cindy Crawford and Rande Gerber discussed the family's grief following Presley's death, telling the outlet, "I don't think we're even in the position of being able to talk about it."</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>‘The Social Reckoning’ review: Aaron Sorkin’s Facebook sequel is a plodding, unnecessary bore</h4>
+                <p>Imagine a movie in which a dark corporate conspiracy is uncovered: McDonald’s is making its customers fat — and the suits all know it. Well, that’s not far off from the takeaway of writer-director Aaron Sorkin’s disappointing and unnecessary follow-up to “The Social Network,” “The Social Reckoning,” about the damage Mark Zuckerberg, Facebook and Meta went on to inflict on the world. Social media is bad and brings out the worst in everybody. Yeah, yeah. Big whoop. To call “Reckoning” a sequel feels wrong. “The Social Network,” one of the best studio films of this century, is infinitely superior and tonally unrecognizable from this high-on-its-own-supply dud in every way. Director David Fincher’s triumph took a relatively recent event (Facebook was founded in 2004; the movie hit theaters in 2010) and turned it into a sexy, unlikely and timeless underdog story.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Michael Douglas' wildest Hollywood confessions: From A-list actress bite to Julia Roberts clash</h4>
+                <p>In his memoir, "One Helluva Ride," the actor admitted he had an affair with his "Basic Instinct" co-star, Jeanne Tripplehorn. (This video contains AI-assisted content.) Michael Douglas is pulling back the curtain on the most explosive moments of his life, both in front of the camera and behind the scenes.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                
+                <h3>Anthropic AI agents took ‘unintended’ actions on government sites</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>he inappropriate actions by its agents included submitting a false tip about a murder to Philadelphia police, Anthropic said.</p>
+                <p class="source-credit">— Washington Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>AI system submits false homicide tip to Philadelphia police</h4>
+                <p>Anthropic’s AI agent used an online tip line to suggest it had information about an unsolved murder.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>How to save money buying Apple products</h4>
+                <p>Being an Apple customer can take a big bite out of your wallet. But we have some ways to save even as new products are on deck.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
