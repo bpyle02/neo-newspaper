@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>SUNDAY, OCTOBER 11, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F10%2Farch-manning-texas-nfl.jpg?quality%3D90%26strip%3Dall%261791715321" alt="Lead Story Image" class="news-photo">
+                <h3>Arch Manning’s NFL draft stock in question after ugly Texas meltdown with Heisman chances long gone</h3>
+                <p class="lead-summary"><strong class="drop-cap">A</strong>nd it’s fair to wonder what Peyton and Eli’s nephew did to his draft stock on Saturday. The Texas quarterback threw two interceptions in the fourth quarter as the Longhorns, who entered the day ranked No. 1 in the country, crumbled in a 27-24 loss to Oklahoma in the Red River Rivalry. The Sooners (3-2) were unranked. Manning’s first interception came with the game tied 17-17 and resulted in a pick-six that put Oklahoma ahead 24-17 with 10:07 remaining. He was scrambling to his right and chucked the ball up to nobody in particular, allowing defensive back Peyton Bowen to snag it and return it for a touchdown. While Manning responded with a 15-yard touchdown pass to Jermaine Bishop Jr. to tie the game with 6:32 left, he later threw a flat-footed interception to Sooners defensive back Courtland Guillory with 19 seconds remaining, an inexcusable throw on second-and-10 from the Sooner 49-yard line with the chance to put the Longhorns in position for a game-winning field goal. Instead, it was Oklahoma, which took over at its own 39-yard line, quickly moving up the field, allowing Tate Sandell to drill a game-winning 47-yard field goal as time expired. Manning, who finished 19-for-31 with 260 yards, three touchdowns and the two picks, is now a massive long shot to win the Heisman, as he’s tied for the 12th-best odds at +10000 as of Sunday morning, according to FanDuel. Ohio State wide receiver Jeremiah Smith is the clear favorite at -210. Smith is also the favorite at FanDuel to go No. 1 in the 2027 NFL Draft at +230, per FanDuel, with Manning and Notre Dame quarterback CJ Carr both next at +420. ESPN’s recent QB rankings for the 2027 NFL Draft have Manning fifth behind Oklahoma State’s Drew Mestemaker, Miami’s Darian Mensah, Ole Miss’ Trinidad Chambliss and Carr.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Xi ‘Sinicizes’ China’s Catholic Church, with Vatican Approval</h4>
+                <p>China’s clerics are becoming propagandists for the government.</p>
+                <p class="source-credit">— National Review</p>
+            </div>
+            <div class="story-minor">
+                <h4>Inside Rob Lowe’s son Matthew’s star-studded wedding: See all the celebrity guests</h4>
+                <p>A-list guests showed up to celebrate Matthew Lowe and Emily Markus’ big day! From Gwyneth Paltrow and Katy Perry to Cameron Diaz and Adam Levine, see all the stars who attended Rob Lowe’s son’s star-studded Santa Barbara, California, wedding.</p>
+                <p class="source-credit">— Https://pagesix</p>
+            </div>
+            <div class="story-minor">
+                <h4>Trump announces immediate energy ceasefire between Russia and Ukraine</h4>
+                <p>RSM US chief economist Joe Brusuelas warned restricting diesel exports could have provided short-term relief before driving up transportation costs and grocery prices for American consumers. President Donald Trump announced an immediate energy ceasefire between Russia and Ukraine, saying both countries have agreed to halt attacks on each other's energy infrastructure after weeks of escalating tensions over strikes on oil refineries and power plants.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/10/931/523/mahmoud-abbas-innovation-excellence-compound.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Abbas delays Palestinian elections again, making more than two decades without vote</h3>
+                <p class="lead-summary"><strong class="drop-cap">M</strong>ore than two decades after being elected to what was supposed to be a four-year term, Palestinian Authority President Mahmoud Abbas has once again postponed elections, extending a nearly 20-year wait for voters to choose a new legislature. Abbas issued a decree Friday pushing Palestinian Legislative Council elections from next month to Sept. 11, 2027, according to the official Palestinian news agency WAFA. Presidential elections, which have not been held since Abbas' 2005 victory, are also scheduled for that date. The delay allows Palestinian leaders to remain in power without facing voters and could further damage the credibility of the Palestinian Authority, which has faced criticism over corruption and its security cooperation with Israel. Palestinian President Mahmoud Abbas attends the inauguration ceremony of the Innovation and Excellence Compound in the West Bank city of Ramallah, Wednesday, Sept. 9, 2026. (AP Photo/Mahmoud Illean) The Palestinian Authority, dominated by Abbas' Fatah party, governs parts of the West Bank under agreements reached in the 1990s.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Saudi Arabia vows major response after Houthi strike on airport kills 12, injures 309</h4>
+                <p>The U.S. has stopped short of direct military support against the Houthis in Yemen, but President Donald Trump is weighing joining strikes on the Iranian-backed rebels.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Pope Leo announces tumor on lung, surgery planned in 'next few days'</h4>
+                <p>Pope Leo XIV announced he will undergo surgery in the coming days to remove a lung nodule discovered during a recent medical examination. The pontiff’s planned November trip to South America remains on the schedule. Pope Leo XIV announced Sunday that he will undergo surgery to remove a small nodule from his lung, revealing the unexpected health concern to thousands of faithful gathered in St. Peter's Square following his traditional Angelus prayer.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Pope will have surgery after doctors discover nodule in his lung</h4>
+                <p>Pope Leo XIV said that the nodule was “detected at a very early stage and is well localized,” and that the surgery would be in the coming days.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/statics.foxsports.com/www.foxsports.com/content/uploads/2026/10/931/523/e7a85d04447f6ed22aa42689678ec677430a9db256dbf1288fad950c4c9516ba.png?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>How to Watch Dodgers vs. Brewers: NLCS Game 1 TV Channel, Live Stream, Time</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>he Los Angeles Dodgers visit the Milwaukee Brewers for Game 1 of the NLCS on Sunday, October 11, 2026 at 8:00 p.m. ET from American Family Field in Milwaukee, WI. The Brewers have home field after going 103-59, three games better than the Dodgers at 100-62. Tarik Skubal is the listed probable starter for Los Angeles, and Jacob Misiorowski is the probable for Milwaukee. Milwaukee’s postseason has run through Andrew Vaughn, who is hitting .500, and Jackson Chourio, who leads the Brewers with six RBI. Jacob Misiorowski leads the staff with six strikeouts. Los Angeles has Kyle Tucker hitting .333 and Max Muncy leading the team with three RBI. Yoshinobu Yamamoto has 10 strikeouts to lead the Dodgers. Below, we’ll give you all the details you need to know about how to watch this game. Milwaukee's best October bat so far plays catcher. Contreras hit .375 with a .444 on-base percentage and a .750 slugging percentage in four NLDS games against San Diego, with two home runs and two RBI. His biggest day came Oct. 6, when he went 3 for 4 with a walk and a homer in a 4-3 loss. Los Angeles pitchers held opponents to a .145 batting average over 36 innings in the division round. A hitter who is already squaring up pitches gives the Brewers a direct route to runs in an opener where the Dodgers' staff has been hard to hit, and Milwaukee scored 13 runs in four games. Los Angeles hit .203 as a team in the NLDS and still scored 14 runs, and Muncy is a big reason. He went 3 for 12 with three home runs and three RBI against Atlanta, good for a 1.000 slugging percentage, and he homered in three of the four games.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Kalshi promo code NYPMAX55: Get up to $55 bonus for Bengals vs. Dolphins</h4>
+                <p>The NFL slate heats up in Week 5, and football traders can use the Kalshi promo code NYPMAX55 to receive up to a $55 bonus. Joe Burrow and the Bengals head to Miami, looking to return to the victory column against the winless Dolphins. New traders can sign up for the flagship prediction market to forecast contracts on football games, international soccer matches, women’s playoff basketball, and playoff baseball games. Once users have signed up, they’ll enter the Kalshi promo code NYPMAX55 verify their account information in order to qualify for a bonus up to $55. Kalshi operates in the following states and territories: Alabama, Alaska, Arkansas, California, Colorado, Connecticut, Delaware, Florida, Georgia, Hawaii, Idaho, Indiana, Iowa, Kansas, Kentucky, Louisiana, Maine, Minnesota, Mississippi, Missouri, Nebraska, New Hampshire, New Mexico, New York, New Jersey, North Carolina, North Dakota, Oklahoma, Oregon, Pennsylvania, Rhode Island, South Carolina, South Dakota, Tennessee, Texas, Utah, Vermont, Virginia, Washington D.C., West Virginia, Wisconsin and Wyoming.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>How to Watch Giants vs. Commanders: TV Channel, Live Stream, Time</h4>
+                <p>The New York Giants visit the Washington Commanders on Sunday, October 11, 2026 at 1:00 p.m. ET from Northwest Stadium in Landover, MD. The Giants are 3-1 after a 36-24 win over Arizona on Oct. 4. The Commanders are 1-3 after a 30-13 home loss to Indianapolis the same day. New York’s defense has allowed 79 points through four games, 19.8 per game. The Giants’ passing game ranks 27th in the NFL at 172.8 yards per game. Washington has allowed 122 points through four games, 30.5 per game. The Commanders’ ground game ranks eighth in the NFL at 124.0 yards per game. The Commanders are 3.5-point favorites over the Giants at DraftKings, with a total of 44.5 and a moneyline of -178 for the Commanders and +150 for the Giants.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>UCLA can’t waste any time locking remarkable Bob Chesney up with big contract extension</h4>
+                <p>Nearly two years ago, after leading Indiana to an unprecedented 10-0 start in his first season at the school, Cignetti was rewarded with a massive contract extension. Chesney is worth every penny it’s going to take to keep him for years to come and cease speculation about him going this way or that — especially should the NFL come calling for a coach some have labeled the next Sean McVay. This goes well beyond becoming the first coach in UCLA history to start 5-0 while putting the Bruins firmly in the running for the College Football Playoff in Year 1. He’s infused belief, accountability and an insatiable desire for improvement into a program that’s long lacked those qualities.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F10%2F144243917.jpg?quality%3D90%26strip%3Dall" alt="Lead Story Image" class="news-photo">
+                <h3>Tyler Cameron reveals fiancée encourages flirty moves with ‘DWTS’ partner Sharna Burgess: ‘Don’t be a prude’</h3>
+                <p class="lead-summary"><strong class="drop-cap">“</strong>Dancing with the Stars” contestant Tyler Cameron revealed that his fiancée gave him the green light to get down and dirty on the dance floor with his partner, Sharna Burgess. “She’s like, ‘Touch her. Touch her leg. Do what you’re supposed to do in the dance. Don’t be a prude little middle-schooler,’ which I tend to act like sometimes,” Cameron, 33,  said Tuesday during a rehearsal break. “She’s about the performance of it all and making that come to life because she was a dancer, so she understands. This is one of her dreams,” he added. Cameron made his reality show debut as the runner-up on Hannah Brown’s season of “The Bachelorette” in 2019, which landed him a modeling contract and his own home renovation show. He met Madden, a photographer, on the set of “Going Home with Tyler Cameron” in 2022. They announced their engagement in August. Madden, 33, is also helping her leading man — the most-followed male in the “Bachelor” franchise, with 2.1 million Instagram followers — perfect his sultry steps on Season 35 of the ABC competition series. “When Ty’s not with me, he’s usually in the gym with either himself or Tate practicing his moves, which I very much appreciate,” said Burgess, 41. At Wake Forest University, Cameron took ballet and jazz classes to boost his GPA before graduating in 2015, but he said the experience hasn’t given him a leg up on the show. “I ended up really liking it a lot. It didn’t really help me much, though, I’ll say that … All that’s out the window,” he said.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>'Reagan' star Lesley-Anne Down relives 3 terrifying brushes with death: ‘I should have been killed’</h4>
+                <p>The producer shared the lesson he learned from Ronald Reagan that he has tried to apply to his own life. The actress, who takes on the Iron Lady opposite Dennis Quaid in "Reagan," has shown plenty of steel off-screen, recalling "three times in my life when I should have been killed by other people."</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Ezra Frech, Paralympic gold medalist and ‘DWTS’ fan favorite, reacts to calls for him to be next ‘Bachelor’</h4>
+                <p>Ezra Frech, the two-time Paralympic gold medalist who has quickly become a fan favorite on “Dancing With the Stars,” is drawing calls to be the next “Bachelor.” Pop culture podcaster Morgan Paige posted an Instagram video in support of the idea, calling Frech the “fresh start” the ABC dating franchise needs. However, many replied that the 21-year-old is too young for the job, including his fellow “DWTS” castmate, “Bachelorette” alum Tyler Cameron. “Maybe we put a pin in him and let him just keep being a stud and keep growing up … I came on at 26. So let’s say, five years,” Cameron told The Post.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Kelly Clarkson slams Brooklyn store over ‘Pretty Woman’ treatment</h4>
+                <p>Steve Summers, Dolly Parton's creative director, joins Martha MacCallum on 'The Story' to discuss the opening of the 'Life of Many Colors Museum' and hotel in Nashville, Tennessee. The projects celebrate the legendary singer's rags-to-rhinestones legacy. Fans express emotional reactions to the immersive experience, sharing how they can feel her presence throughout the new building.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/04/931/523/microsoft-fake-windows-update.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Why verified social media accounts can still lead you into a scam</h3>
+                <p class="lead-summary"><strong class="drop-cap">W</strong>e have all developed little shortcuts for deciding whether something online looks legitimate. You check the account name. You recognize the company logo. Then you spot that verification badge and your guard comes down a little. That can be exactly what scammers are counting on. Microsoft’s official X account became the latest reminder after attackers gained unauthorized access and used the account in an apparent cryptocurrency pump-and-dump scheme. The account has more than 13 million followers, giving whoever controlled it access to a huge audience and the credibility that comes with Microsoft’s name. Here is what happened, why compromised verified accounts can be so convincing and what you should check before trusting the next surprising post that shows up in your feed. Kurt "CyberGuy" Knutsson shares practical ways to stay safer, smarter and more confident with technology. Explore classes on stopping spam, phone security, financial protection and using AI to get better health care . Each class is free, easy to follow and comes with a free printable checklist . Microsoft’s name and logo carry enormous trust, which is exactly why a compromised official account can make a scam look convincing. (Michael Nagle/Bloomberg via Getty Images) BleepingComputer reported that Microsoft's @Microsoft account followed and reposted content from another X account that appeared to be Clippy-themed. That account was promoting a cryptocurrency called $Clippy. Microsoft tells CyberGuy that two unauthorized posts appeared during the period when its account was compromised. According to the company, the first was a quote repost of content from what appeared to be a Clippy-themed account and referenced bringing back Microsoft Office's old animated paperclip character. The second appeared to be an apology related to the earlier activity. Microsoft says neither post originated from the company. A Microsoft spokesperson provided CyberGuy with the following statement: "We have confirmed unauthorized access to our account on X, including posts that did not originate from Microsoft. The account has been secured, the unauthorized posts have been removed, and we are continuing to investigate the circumstances."</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>He shares a name with a Cornell rape suspect. Strangers started hunting him down.</h4>
+                <p>As vigilantes race to expose those connected to the case, innocent people have been doxed, threatened and falsely accused.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>A scammer has your name, phone number and address. What can they actually do?</h4>
+                <p>Cybercrime losses reached nearly $21 billion last year, prompting Kurt Knutsson to warn of increasingly sophisticated AI scams. He joins 'Fox & Friends Weekend' to break down the FBI data, highlighting that investment fraud alone cost victims $8.65 billion. Knutsson hosts a free live class to teach families how to protect their money and secure accounts.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>8 seriously annoying tasks you can hand off to an AI agent</h4>
+                <p>Fox News anchor and White House correspondent Aishah Hasnie reports on President Donald Trump’s executive order renaming artificial intelligence ‘Super Intelligence’ following a summit with top technology leaders on ‘Special Report.’ I have a growing list of things I would gladly never do again. Checking the same airfare every morning is on it. Digging through an overflowing inbox is right up there too. And I would be perfectly happy never having to remember when some free trial is about to start charging me. This is where AI agents are starting to get genuinely useful.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
