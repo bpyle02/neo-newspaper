@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>MONDAY, OCTOBER 12, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://i0.wp.com/www.nationalreview.com/wp-content/uploads/2026/10/abdul-senate.jpg?fit=617%2C360&ssl=1" alt="Lead Story Image" class="news-photo">
+                <h3>El-Sayed’s Trouble with Minority Voters</h3>
+                <p class="lead-summary"><strong class="drop-cap">I</strong>t’s not just Jewish voters who have concerns about the Senate candidate’s judgment and loyalties.</p>
+                <p class="source-credit">— National Review</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Secretary Scott Bessent Just Wrote Another Savage Letter for Elizabeth Warren</h4>
+                <p>As long as Massachusetts Sen. Elizabeth Warren continues to struggle with basic economics, Treasury Secretary Scott Bessent will apparently continue to make an example of her. On October 7, Warren, the ranking member of the Senate Banking Committee, sent Bessent a letter blasting rising 10-year Treasury yields, which had reached roughly 5.3 percent, a multidecade high. Higher yields raise borrowing costs not only for a federal government determined to keep spending money it doesn’t have, but also for American households who will find it harder to borrow for mortgages, business, and other things that affect their daily lives. Warren called the damage “self-inflicted.</p>
+                <p class="source-credit">— Townhall</p>
+            </div>
+            <div class="story-minor">
+                <h4>Trump finally shut down this tech giant's America-last hiring policy</h4>
+                <p>The Trump administration recently targeted Microsoft over its use of foreign-worker visas, accusing the tech giant of laying off thousands of American employees while continuing to recruit overseas. It is a confrontation long overdue. Firing thousands of citizens via HR emails while simultaneously begging the government for new workers from overseas is a shameless business model. Microsoft axed 6,000 domestic workers last year. During that same period, the company snagged 6,300 H-1B visas and secured nearly 3,000 green cards. The corporate PR department insists that these filings were mostly routine extensions for current staff, but that claim deserves plenty of scrutiny. A company liquidating its domestic workforce should be forced to stand in the light and explain why its foreign hiring machinery runs at full speed. Corporate entities love to wrap themselves in the American flag when asking for tax credits, then toss it in the trash the moment cheap foreign labor offers a marginally better quarterly margin.</p>
+                <p class="source-credit">— The Blaze</p>
+            </div>
+            <div class="story-minor">
+                <h4>Biden-appointed judge with history of fiery Trump clashes erupts at DOJ: 'You've lost all credibility!'</h4>
+                <p>President Donald Trump unveils a plan to revitalize Joint Base Andrews' golf courses. Describing the current courses as 'really bad' with '400-year-old grass,' Trump announced legendary golfer Jack Nicklaus will design new 'world championship' courses. This initiative will benefit young people and disabled individuals, enhancing military facilities.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/02/931/523/volodymyr-zelenskyy-donald-trump-vladimir-putin-february-2026.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Zelenskyy accuses Putin of defying Trump's ceasefire push, sends pointed message to White House</h3>
+                <p class="lead-summary"><strong class="drop-cap">U</strong>krainian President Volodymyr Zelenskyy joins 'America's Newsroom' to express his support for President Donald Trump's energy ceasefire, calling it a 'good first step' toward ending the war. Ukrainian President Volodymyr Zelenskyy told Fox News on Monday that Russia continued attacking Ukraine's energy infrastructure despite President Donald Trump's announcement of what he called an immediate energy ceasefire, accusing Vladimir Putin of rejecting Washington's peace efforts and calling for greater pressure on Moscow. "We are ready today for energy ceasefire, as President Trump said. But I'm not sure that Putin is ready because even after yesterday's messages from the president about energy ceasefire, Putin attacked our gas infrastructure," Zelenskyy told Bill Hemmer in a live interview on "America's Newsroom." Asked whether Ukraine would honor the ceasefire, Zelenskyy answered, "Of course," insisting that Kyiv had already refrained from striking Russian energy facilities overnight. A family walks past an apartment building that was hit by a Russian drone, amid Russia's attack on Ukraine, in Kharkiv, Ukraine, October 12, 2026.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>U.K. prime minister accuses Russia of meddling in Brexit vote</h4>
+                <p>Officials scrambled to clarify that Andy Burnham’s remarks did not mean the government rejected the outcome of the controversial 2016 referendum.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Benjamin Netanyahu's legacy and political future on the line in Israel's Oct 27 election</h4>
+                <p>Fox News Digital speaks with three experts on Israel’s high-stakes election and the fight over Netanyahu’s political future. The election is set for Oct. 27, 2026. TEL AVIV, Israel: As Israel prepares to hold national elections on Oct. 27 for the first time since Hamas’s Oct. 7, 2023, massacre and the ensuing wars, Benjamin Netanyahu’s long political career and legacy are once again at the center of a vote some describe as the most fateful in the country’s history.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>He reached the Americas centuries before Columbus. Why doesn’t he get more credit?</h4>
+                <p>Accounts of Leif Erikson’s voyage to present-day Canada were known to Europeans in Christopher Columbus’s time.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F10%2Fnewspress-collage-9va5l1ohv-1791827681142.jpg?quality%3D90%26strip%3Dall%261791813314" alt="Lead Story Image" class="news-photo">
+                <h3>Dodgers slugger downplays slump with bold statement: ‘I’ve earned everyone’s trust’</h3>
+                <p class="lead-summary"><strong class="drop-cap">M</strong>ILWAUKEE –– Pressed on Monday morning about his glaring 1-for-19 slump at the plate to begin this year’s playoffs, Dodgers catcher Will Smith did his best to downplay the narrative. “It’s been five games,” the three-time All-Star said. “Obviously, want the results to be a little better. But at the end of the day, it’s five games at the plate. No panic from me.” The same can’t be said of the Dodgers’ fan base, where frustrations once focused on Shohei Ohtani’s injury-hampered form suddenly shifted to Smith’s even more dire struggles during a Game 1 loss in the National League Championship Series on Sunday, in which he went 0-for-3 and hit into a first-inning double-play. Evidently, Smith’s slump has raised concerns among the team’s decision-makers, as well, as he was dropped from the No. 3 to No. 5 spot in the batting order for Game 2 on Monday. “Just [have to] do what I do, continue to work, try to grind it out in the cage, and figure it out,” Smith added. Only, Smith insisted he doesn’t feel as bad as his numbers indicate –– even though he has the second-lowest average (.053) of all hitters with at least 10 at-bats this postseason. The 31-year-old said his swing “felt really good” coming into the playoffs, after he finished an injury-plagued regular season (he missed almost all of June, July and August with a neck injury) batting .354 over his final 16 games. He believes he has been “just barely missing some pitches” and played the “pitchers are making good pitches to me” card while explaining his cold spell.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Warriors ‘don’t know’ where Kristaps Porziņģis is amid mysterious illness</h4>
+                <p>“The Warriors say they don’t know where Kristaps Porziņģis is, exactly what he’s dealing with health-wise, or when he might be able to return to the court,” Danny Emerman of The San Francisco Standard wrote Sunday. This puzzling update arrives just a few days after Warriors head coach Steve Kerr admitted that the 31-year-old forward wasn’t at Golden State’s practice on Friday and added, “Yeah, we’ve texted. Seems to be doing okay, but we haven’t gotten into into depth… He’s got to take care of his health, and again, we’ll support that and keep moving forward with the team.” Kerr admitting that Porziņģis isn’t with the team for one practice is one thing. The fact that the organization doesn’t know where he currently is, now that’s another matter entirely.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Mike Tomlin was ‘disgusted’ by Cam Skattebo fumble: ‘Threw up in my mouth’</h4>
+                <p>Prior to the bizarre ending of the 27-27 tie between the Giants and Commanders, Big Blue had a chance to get off a game-winning field goal, but a fumble by the running back at Washington’s 24 yard-line ruined their chances. “I describe it as disgusting. Division wins are too precious in the National Football League,” Tomlin said on the broadcast after the game. “I was disgusted by the Skattebo fumble. I threw up in my mouth a little bit at the end of the game. I kind of love how blunt Mike Tomlin is regarding the end of Giants-Commanders: “I describe it as disgusting. Division wins are too precious in the National Football League. I was disgusted by the Skattebo fumble. I threw up in my mouth a little bit at the end of the game.” pic.twitter.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>49ers, not Rams, are true Super Bowl favorites and Mike Evans is biggest reason why</h4>
+                <p>SEATTLE — Besides George Kittle’s recruiting efforts, there was one clear reason why Mike Evans chose to make the 49ers only his second team in 13 NFL seasons. “I feel like they’re one piece away,” he said back in March after signing up to catch passes from Brock Purdy for the next three years. “And I’m that piece.” The veteran receiver has added an element the 49ers, a team that has reached the Super Bowl twice in the last seven seasons, have never had. Will that be enough to put them over the top? There’s been a certain amount of awe emanating from the 49ers’ locker room ever since they pried Evans away from the Buccaneers. To most of his teammates, he isn’t Mike; he’s Mike Evans. He’s a novelty to be admired almost as much as he is one of the guys.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2025/10/931/523/selma-blair.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Selma Blair arrested after in-flight incident</h3>
+                <p class="lead-summary"><strong class="drop-cap">S</strong>elma Blair was arrested Sunday after allegedly attacking crew members on board a Delta flight into New York City. "On Sunday October 11 at approximately 11pm at JFK Airport, PAPD responded to a call about a physically abusive passenger aboard Delta Airlines flight 938 which was parked at the gate after arrival from LAX," New York Port Authority officials confirmed to Fox News Digital. "Suspect was identified as Selma Blair, a 54-year-old woman. She was taken into custody and transported to the hospital for evaluation." A rep for Blair told TMZ, "Selma experienced a medical emergency that led to the alleged conduct. Upon landing, she received immediate medical attention and is currently in stable condition." Selma Blair was allegedly arrested after attacking crew members mid-air on a flight from LA to New York. (Marc Piasecki/WireImage/Getty Images) Officials confirmed two flight attendants also reported injuries, and one was transported to the hospital for further evaluation. Delta confirmed that law enforcement officials responded to an incident upon arrival to John F. Kennedy International Airport, a flight which departed out of Los Angeles earlier in the day.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Reality TV star shot dead in California just hours after tragic final post</h4>
+                <p>A reality TV star has been shot dead at age 29 in downtown Oakland, California, just hours after sharing a glimpse of her Saturday night out on social media. Police have arrested a woman from Richmond in connection with her death, but the suspect’s identity has not yet been released. The influencer had posted videos to her Instagram Stories showing herself enjoying a Saturday night out shortly before she was killed, according to KTVU. Officers who responded to the 200 block of 14th Street found Paige suffering from gunshot wounds. She was rushed to a hospital, where she later died from her injuries.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Ben Affleck has blunt response to teenage son's Lamborghini request after infamous mishap</h4>
+                <p>Actor Ben Affleck defended AI usage in Hollywood during a conversation with Bloombergs Lucas Shaw on Thursday. Ben Affleck's son Samuel appears to have developed a taste for Lamborghinis, four years after he accidentally backed one into another luxury car. During a recent appearance on his "Animals" co-star Kerry Washington's podcast, "Street You Grew Up On," the 54-year-old actor said that Samuel, 14, inherited his affinity for luxury items.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Iconic pop star, 45, stuns in sheer leather ensemble</h4>
+                <p>Pop star Christina Aguilera has pulled off yet another stunning red carpet look, this time sporting a black sheer outfit while attending the National PrEP Day in Los Angeles over the weekend. Aguilera was one of multiple stars who appeared at the queer-friendly event, and she arguably stole the show with a mesh minidress on top of black lingerie and lace-up, thigh-high boots.The sleeveless sheer number was dotted by cross-shaped stitching, while her thighs were covered in fishnet stockings. The singer brought it all together with her messy platinum blonde hairdo, some understated jewellery and a smouldering makeup look.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/04/931/523/pentagon-aerial-image.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Pentagon data breach exposes records of over 3M people</h3>
+                <p class="lead-summary"><strong class="drop-cap">Y</strong>ou can change a password after a breach. You can cancel a credit card. But when your Social Security number gets exposed, you could be dealing with the fallout for years. That is the concern after a major breach involving the Pentagon's Defense Manpower Data Center. If you have served in the military, worked for the Department of War or have other ties to the military community, your information could be among the records involved. A War Department official told CyberGuy that 2.76 million living individuals and 294,000 deceased individuals were affected. Depending on the person, the exposed information can include Social Security numbers, names, dates of birth, contact information and military personnel details. So, if a breach letter from the Pentagon shows up in your mailbox, don't toss it aside. Here's what happened, what may have been exposed and what you can do to protect yourself. Kurt "CyberGuy" Knutsson shares practical ways to stay safer, smarter and more confident with technology. Explore classes on stopping spam, phone security, financial protection and using AI to get better healthcare. Each class is free, easy to follow and comes with a free printable checklist. The Pentagon is home to the Department of Defense, whose Defense Manpower Data Center disclosed a breach affecting millions of military-connected individuals. (Bill Clark/CQ-Roll Call, Inc via Getty Images) The breach involved the Defense Manpower Data Center, or DMDC. A War Department official told CyberGuy that a DMDC information system experienced unauthorized access to personally identifiable information by a small number of unauthorized users between October 2025 and July 2026. The official said DMDC immediately remediated the vulnerability after discovering it. At this time, the department says it has no indication that the accessed information has been misused. The files accessed contained unencrypted personally identifiable information. That created a potentially long exposure window before the vulnerability was discovered. Personal information such as a Social Security number can remain useful to criminals long after the original breach fades from the headlines.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>They came to Washington to dismantle government. Now, they’re profiting from it.</h4>
+                <p>DOGE alumni have leveraged their government experience, raising at least half a billion dollars for firms spanning cyberwarfare, AI and data centers, a Post analysis found.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>IKEA turns to driverless semis with nobody in the cab</h4>
+                <p>Kurt "CyberGuy" Knutsson spoke with Daniel Goff, vice president of external affairs at Kodiak AI, about how attitudes toward autonomous trucks have shifted over time. You could soon be driving down a Texas highway, look over at a massive delivery truck and realize the driver's seat is completely empty. Kodiak AI plans to start hauling IKEA products between the Dallas and Houston areas later this year with nobody in the cab. The company has spent years preparing for this step, but removing the safety observer changes the equation.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
