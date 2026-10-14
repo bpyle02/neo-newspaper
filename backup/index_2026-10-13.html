@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>TUESDAY, OCTOBER 13, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://www.theblaze.com/media-library/newsom-ex-wife-kimberly-guilfoyle-fired-from-ambassador-role.jpg?id=68423177&width=980" alt="Lead Story Image" class="news-photo">
+                <h3>Newsom ex-wife Kimberly Guilfoyle fired from ambassador role</h3>
+                <p class="lead-summary"><strong class="drop-cap">K</strong>imberly Guilfoyle is out as U.S. ambassador to Greece, White House press secretary Katie Zacharia confirmed at her debut briefing on Tuesday. "We have asked Ambassador Guilfoyle to resign," said Zacharia. "She has been a wonderful asset to the team, and we wish her well." By Tuesday morning, Guilfoyle took to social media to announce her resignation: "While my time as Ambassador may be coming to an end, my commitment to President Trump, the America First movement, and the country I love will never end." The State Department did not immediately respond to Blaze News' request for comment. Guilfoyle's lawyer referred Blaze News to her statement on X. Guilfoyle — California Democrat Gov. Gavin Newsom's ex-wife and Donald Trump Jr.'s ex-fiancée who long served as a Fox News talking head — has been dogged in recent weeks by misconduct allegations. Just shy of the one-year anniversary of Guilfoyle's swearing-in as ambassador, the Wall Street Journal raised questions in a report last month about her "persistent promotion of a specific Greek company — and her extensive efforts to involve [energy lobbyist Christos] Marafatsos, a neophyte in both diplomacy and energy." Days later, the Journal published text messages from July 2025 that appear to show Guilfoyle hitting up Trump donor Eric Deters for $100,000 ahead of her congressional hearing to become ambassador to Greece. Citing both the damning text messages — the authenticity of which Guilfoyle has disputed, according to her lawyer — and claims from Deters, the Journal reported that the departing ambassador allegedly wanted the money to pay down her American Express card balance and that she had allegedly "offered to use her sway" on the donor's behalf. In response to Guilfoyle's alleged request for $100,000, Deters reportedly wrote, "I can't do this without getting a divorce." The departing ambassador's lawyers have denied that Guilfoyle engaged in a "quid pro quo," claiming in a statement Saturday that Deters owed Guilfoyle money for consulting work and speeches. "When Ms. Guilfoyle was preparing to leave private life for public service, she did what any professional does and tried to close out her outstanding receivables. Asking a client to pay for work already done is not corruption. It is the opposite of corruption," wrote lawyers David Schwartz and Jesse Binall. Guilfoyle addressed the allegations in her X post Tuesday: "These allegations are false, and I intend to vigorously defend my name, my reputation, and my integrity. I have dedicated my professional life to fighting for justice, standing up for what is right, and defending the values that make America exceptional. I will not allow false accusations to define my decades of public service."</p>
+                <p class="source-credit">— The Blaze</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Bill Maher Says Trump Invited Him Back To The White House — With A Promise</h4>
+                <p>Comedian and HBO host Bill Maher revealed that President Donald Trump has invited him back to the White House for a second dinner — and he plans to go. Maher, who made waves when he accepted the last invitation, announced his plans on a recent episode of his “Club Random” podcast. He told his guest, Ari Emanuel, that he’d gotten a call and a second invitation “out of the blue” — and that Trump had sweetened the pot by promising not to “say bad things” about him like he had after the last dinner. “It’s so weird, you know, after the first dinner, he was — I went back to doing what I do and you know, for people who —” Maher said.</p>
+                <p class="source-credit">— Daily Wire</p>
+            </div>
+            <div class="story-minor">
+                <h4>Ukraine Struck Russian Data Centers, and Its Effect on Social Media Is Raising Eyebrows</h4>
+                <p>Last week, the Ukrainian military carried out strikes on Yandex’s data center, one of the largest in Russia, located in eastern Moscow, and it has led to quite an interesting effect on social media, or at least that is what some reports are indicating. A number of social media figures have noticed a significant drop in bots on platforms like X, particularly those promoting Hamas, criticizing Israel, amplifying Germany’s far-right AfD, and spreading pro-Russian narratives about Ukraine. There has also been a reported decline in accounts posing as pro-Trump or MAGA while working to sow division among conservatives, accounts that often supply faux conservatives like Tucker Carlson with much of their audience.</p>
+                <p class="source-credit">— Townhall</p>
+            </div>
+            <div class="story-minor">
+                <h4>SCOTUS Agrees To Weigh Leftist Group’s Gambit To Acquire DOGE Records</h4>
+                <p>The U.S. Supreme Court agreed on Tuesday to take up a major case that will decide whether a leftist nonprofit can acquire records from President Trump’s Department of Government Efficiency (DOGE). The high court revealed in its newest order list that it has added U.S. DOGE Service v. U.S. District Court for the District of Columbia to its 2026 merits docket. This means that the justices have agreed to schedule the case for oral argument and will subsequently release a decision on the merits of the issues presented. The case’s origins can be traced back to early 2025, when the nonprofit Citizens for Responsibility and Ethics in Washington (CREW) filed a Freedom of Information Act (FOIA) request seeking to obtain records about DOGE, which was established to root out waste, fraud, and abuse in the federal government. This included attempts to acquire DOGE’s “organizational chart and financial disclosures,” according to CBS News.</p>
+                <p class="source-credit">— The Federalist</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2025/10/931/523/trump-signing-peace-deal.png?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>‘Peace through strength’: Trump Gaza plan gains global backing one year on</h3>
+                <p class="lead-summary"><strong class="drop-cap">R</strong>et. Four-Star Gen. Jack Keane breaks down the next phase of President Donald Trump's Gaza peace deal on 'Fox & Friends.' Keane explains how the historic agreement mandates the complete disarmament of Hamas and other armed groups, leading to the withdrawal of Israeli forces and the transition of power to a new Palestinian government. A year has passed since President Donald Trump made history by brokering a ceasefire between Israel and Hamas, setting in motion an ambitious peace plan aimed at bringing lasting stability to the region. In the days and months since the ceasefire and Trump’s 20-point peace plan took hold, progress has drawn support from across the globe — including from unexpected quarters. Senior advisor to the Board of Peace Josh Gruenbaum told Fox News Digital that the success of the last 12 months was largely attributable to President Donald Trump’s leadership and commitment to seeking peace. TRUMP-BACKED BOARD OF PEACE, ISRAEL 'WILL TAKE ACTION' IF HAMAS REMAINS OUT OF COMPLIANCE: NETANYAHU ADVISOR U.S. President Donald Trump poses with the signed agreement at a world leaders' summit on ending the Gaza war, amid a U.S.-brokered prisoner-hostage swap and ceasefire deal between Israel and Hamas, in Sharm el-Sheikh, Egypt, October 13, 2025.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>U.K. intelligence chief warns Iran is shifting plots to ‘harder targets’</h4>
+                <p>In annual speech on threats, Ken McCallum, the head of MI5, cited a “major shift” in Tehran’s “ambitions” to attack military sites and other high-security targets.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>As Houthis strike Riyadh, Saudi Arabia confronts the costs of U.S. war on Iran</h4>
+                <p>Deadly attacks by Yemen’s rebels have left Saudi leader Mohammed bin Salman juggling security risks and the kingdom’s economic ambitions.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Pope Leo arrives at hospital for surgery to remove lung nodule</h4>
+                <p>Pope Leo XIV arrived to Agostino Gemelli Hospital in Rome for a procedure to remove a small node on his lung Tuesday. Pope Leo XIV arrived at Agostino Gemelli University Hospital in Rome for a procedure to remove a small node on his lung on Tuesday. The 71-year-old pontiff said Monday that doctors discovered the nodule at a "very early stage" and recommended its removal. The surgery is not expected to last long, and the pope is expected to remain hospitalized for approximately one week, according to Vatican spokesman Matteo Bruni.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/statics.foxsports.com/www.foxsports.com/content/uploads/2026/10/1200/675/b4f4dd03-josh-allen-takeaways.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Josh Allen Is Superman: 3 Takeaways From Bills' Overtime Thrilling Win vs. Rams</h3>
+                <p class="lead-summary"><strong class="drop-cap">S</strong>oFi Stadium (Inglewood, California) — In a battle between the last two players to win MVP, Josh Allen and the Buffalo Bills emerged victorious over Matthew Stafford and the Los Angeles Rams in a 37-34 overtime win in a game widely billed as a Super Bowl preview. And the win helped Allen get at least one monkey off his back. It served as his first career overtime win. He had gone 0-7 in overtime games prior to Monday, including the postseason, as Buffalo improved to 4-1. As for Los Angeles, it's back to the drawing board as its underwhelming start has continued. It's now 2-3 on the year. With the team’s No. 1 receiver in DJ Moore out with a shoulder injury and Joshua Palmer (shoulder) also unavailable, Buffalo needed to rely on Khalil Shakur and Keon Coleman to fill the void. Neither wide receiver stepped up for much of the game, though. However, the lack of healthy receivers didn’t matter, as Josh Allen once again put the Bills on his back in the fourth quarter and overtime. He finished with a game-high 121 rushing yards and a score, and also threw for 210 passing yards, basically serving as the offense for the Bills.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Olympic gold medalist shares shocking life update after taking ‘one-way ticket’ to Dubai three years ago</h4>
+                <p>Stephanie Rice said she has taken her husband Mark Lassey’s last name while revealing the next chapter of her life. The Aussie swimming champ has taken her fans on a rollercoaster since publicly blowing up her life and moving to Dubai “with a one-way ticket” in 2023. The 38-year-old on Monday started a new Instagram account under the name Stephanie Lassey where she promotes her Stephanie Lassey business consultant services. “For the woman who knows she’s capable of more and is sick of starting over,” she writes in her bio. “I’m rebuilding at 38, but this time, with Jesus at the center of it all.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>David Ortiz Predicts Dodgers' Loss, Noting Los Angeles Is In 'Deep Trouble'</h4>
+                <p>The Dodgers lost their second straight NLCS game after falling 7-4 to the Brewers, recording just three hits against Milwaukee's pitching. FOX Sports' David Ortiz was the only one at the MLB on FOX pregame show desk to predict the Brewers win in Game 2. Why?"I have never seen the Dodgers offense be this poor," Ortiz said.He was able to take his victory lap postgame.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Blake Snell tasked with saving Dodgers’ season, eyes October redemption — and a new image</h4>
+                <p>Snell made two starts in the World Series a year ago, and he didn’t pitch well in either one. The pair of losses robbed him of the satisfaction he felt after winning each of his three previous starts of that postseason. His only solace was that he contributed 1 ⅓ innings of relief against the Toronto Blue Jays in Game 7 of the World Series. Reminded that he couldn’t feel his fingers in the World Series, Snell revealed that was also the case in the previous round when he limited the Milwaukee Brewers to one hit over eight scoreless innings in Game 1 of the National League Championship Series. “If I could do it in the CS,” he said, “I could have done it in the World Series.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/10/931/523/selma-blair-court.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Selma Blair accused of kicking nurse hours after JFK plane arrest</h3>
+                <p class="lead-summary"><strong class="drop-cap">A</strong>ctress Selma Blair appeared in Queens court after being accused of assaulting flight attendants, a police officer and a nurse following a Delta flight from Los Angeles to New York. Selma Blair's alleged airline assault did not end with the police. She is also accused of kicking a nurse in the chest at a Queens hospital hours after she was arrested following an alleged in-flight incident aboard a Delta flight from Los Angeles to New York. The criminal court affidavit, filed in Queens Criminal Court, says registered nurse Ashley DeLeo was assisting in transporting Blair for further medical treatment at Jamaica Hospital Medical Center at approximately 2 a.m. ET on Oct. 12 when Blair allegedly kicked her. "The defendant kicked complainant DeLeo in her chest," the affidavit stated, adding that the alleged conduct caused "substantial pain to her chest." Actress Selma Blair replied "yes, sir" to Judge Indira Kahn, a woman, in Queens Criminal Court in New York on Monday. (Fox News Digital) Blair, 54, was arraigned Monday on two counts of second-degree assault after Port Authority police responded to a call about a "physically abusive passenger" aboard Delta Flight 938, which had arrived at John F. Kennedy International Airport from Los Angeles, officials said.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>‘Friday the 13th’ prequel ‘Crystal Lake’ is a mediocre Jason Voorhees origin story: review</h4>
+                <p>The new “Friday the 13th” prequel series is a violent gore-fest that intermittently takes a stab at having a meaningful plot. But, you could also say that about the movies. So, while “Crystal Lake” is a middling show – not terrible; but not great – it’s a worthy entry in this franchise. Premiering Oct. 15 on Peacock, “Crystal Lake” stars Linda Cardellini as Pamela Voorhees, mother of iconic villain Jason Voorhees and the franchise’s original killer. On the big screen, Jason was said to have drowned at New Jersey’s Camp Crystal Lake. He returned as an adult, wielding a machete and wearing a hockey mask, out for blood. His mother Pamela (played by Betsy Palmer in the film) also had her own murder spree.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Sean 'Diddy' Combs hospitalized with head injury while behind bars: report</h4>
+                <p>Criminal defense attorney Donna Rotunno and former inmate Larry Levine join 'Fox & Friends Weekend' to discuss the sentencing of music mogul Sean 'Diddy' Combs and what to expect from his time in prison. The outlet indicated Diddy, 56, was transported to a nearby hospital to treat a head injury. It remains unclear how the disgraced music mogul was injured.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Ethan Hawke reveals ‘confusing and messy’ link between TV and real life. ‘Like jumping off a cliff.’</h4>
+                <p>But viewers of “The Lowdown” have watched his character, Lee Raybon, take repeated punches in the name of uncovering the truth. Now back for a second season on FX, Hawke is once again getting his (literal) kicks playing Raybon, the used bookseller and “truth-storian” at the center of the show, a noir drama with comedic elements set in the secret backrooms of Tulsa, Oklahoma. In a chat with The Post, Hawke compared making the show with creator Sterlin Harjo to “jumping off a cliff together.” When he signed on, there was just one episode with a full script. “It was a bet about what themes we wanted to talk about, and the tone of the show, and what we both wanted Lee to be like.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/04/931/523/woman-iphone-customer.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Stop losing photo quality when you share pictures</h3>
+                <p class="lead-summary"><strong class="drop-cap">A</strong>pple's newly unveiled foldable iPhone Duo sparks significant consumer interest despite a hefty $1,999 starting price tag. On 'Varney & Co.', Taylor Riggs explains the premium device's unique dual-screen capability and ultra-thin design. Host Stuart Varney admits he plans to purchase the high-end smartphone, which can cost up to $3,000 for the two-terabyte storage model. You take a great photo, send it to someone and then hear the question nobody wants to hear: "Why does this look blurry?" That can happen because some sharing methods resize or compress photos before they reach the other person. The image may still look fine on a phone screen, but zoom in or try to print it and the lost detail becomes easier to spot. With iOS 27, Apple is addressing one long-standing version of that problem. Shared Albums can now store newly added photos and videos in their original formats at full resolution. Samsung Galaxy and Google Pixel phones also have built-in ways to send photo files without relying on a messaging app that may shrink them along the way. Kurt "CyberGuy" Knutsson shares practical ways to stay safer, smarter and more confident with technology. Explore classes on stopping spam, phone security, financial protection and using AI to get better health care. Each class is free, easy to follow and comes with a free printable checklist. Existing Shared Albums can be upgraded so future photos and videos are added using Apple’s new full-resolution sharing experience. (iStock) Before iOS 27, Apple’s Shared Albums reduced photo resolution. Photos were generally limited to 2,048 pixels on the long edge, while videos could be delivered at resolutions up to 720p. Starting with iOS 27, newly shared photos and videos in the upgraded Shared Albums experience are stored in iCloud in their original formats at full resolution. That means newly shared photos can remain at their original resolution instead of being reduced to the limits used by older Shared Albums. There is one trade-off. New items added to an upgraded Shared Album count toward the album owner’s available iCloud storage, including items other participants add. Items that were already in the album before the upgrade do not count toward that storage, and temporary Shared Albums do not count either.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Did you spot the ‘space jellyfish’ cloud in the sky this morning?</h4>
+                <p>A SpaceX launch from Cape Canaveral, Florida, made for a spectacular sight across parts of the Southeast and Mid-Atlantic.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>How to protect your brain and your family from your phone</h4>
+                <p>You can reclaim control of your attention by putting physical and psychological distance between you and your device.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Fake Facebook Marketplace listing uses your name</h4>
+                <p>You get a text message from a number you don't recognize asking a pretty normal question: "Is this still available for purchase?" Attached to the text is an image that appears to show a Facebook Marketplace listing. Maybe you're confused because you don't remember selling anything. Then you look at the seller's name. It's yours. That small detail could be enough to make you respond with something like, "That's not me." And that reaction may be exactly what the person behind the message wants.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
