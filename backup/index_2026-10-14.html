@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>WEDNESDAY, OCTOBER 14, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://thefederalist.com/wp-content/uploads/2026/10/Screenshot-254-1200x675.png" alt="Lead Story Image" class="news-photo">
+                <h3>By The Past Standards Of The U.S. Military, Nidal Hasan’s Scheduled Execution Is Remarkably Polite</h3>
+                <p class="lead-summary"><strong class="drop-cap">B</strong>etrayal, dishonor, cowardly violence, willful cruelty to defenseless victims: rapid and certain execution upon discovery. This is the American military norm. At the beginning of June 1943, American soldiers searching for a missing nine-year-old girl in Algeria found her body face down in a field. An army doctor examined the body and concluded that the child had been sexually assaulted and suffocated, probably several days earlier. A soldier, Pvt. James Kendrick, had been seen with the girl. He told a series of shifting stories that ended with the claim that the sexually aggressive child had come on to him and asked to have sex, after which she suddenly and inexplicably just started to choke. Kendrick’s court-martial opened on June 12, quickly convicting him and sentencing him to death. He was executed by hanging on July 17. Pay close attention to the timeline: crime in very late May, discovery in early June, trial in mid-June, execution in mid-July. Later, the army dug up Kendrick’s body in Algeria and transferred it to a new cemetery plot, Plot E at the Oise-Aisne American Cemetery in France. That hidden plot, locked away behind tall walls, is where the American military relocated the bodies of 96 soldiers executed in Europe and North Africa during World War II. The graves in Plot E are marked only by a number, the names of the dead denied to them in shame. Visitors are rare, and need special permission for brief and supervised entry. The army quickly executed soldiers who shamed their uniform and betrayed their brothers-in-arms, then took the trouble to relocate the bodies to a place where they couldn’t be honored, visited, or mourned. You can find the stories of the army’s 96 hidden bodies in Col. French MacLean’s detailed history of Plot E, The Fifth Field. Those stories tend to go about the same way. Pvt. Fred McMurray and Pvt. Louis Till raped a pregnant woman in Italy, causing her to miscarry, and raped a second pregnant woman, then shot and killed a third woman who resisted as they tried to force their way into her home. The crime took place on June 27, 1944. Administrative delays slowed the opening of the court-martial – because the US Army was kind of busy in Europe in the summer of 1944 – so the executions by hanging weren’t carried out until July 10, 1945. By the prevailing standards, a year was a long wait. Soldiers who murdered a pregnant woman could expect to be executed.</p>
+                <p class="source-credit">— The Federalist</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>‘RHONY’ Recap: Sai questions Carole about Epstein files and confronts Erin about sharing divorce details</h4>
+                <p>"Virtual Reali-Tea" co-hosts Danny Murphy and Evan Real unpack season 16, episode 6 of "The Real Housewives of New York City." Sai De Silva has a lot of questions on the girls' trip! She wants to know more about Carole Radziwill's name appearing in the Epstein files. Sai also confronts Erin Lichy for sharing private details abut her marriage and the two get heated. Watch the full recap now! "Real Housewives of New York City" airs Tuesdays at 8 p.m. ET on Bravo and streams the next day on Peacock.</p>
+                <p class="source-credit">— Https://pagesix</p>
+            </div>
+            <div class="story-minor">
+                <h4>EXCLUSIVE: White House Shuts Down Fraudsters Double-Dipping From Government Healthcare</h4>
+                <p>Under Biden, CMS had stopped checking for duplicate Medicaid and Obamacare enrollment, a White House official said. WASHINGTON— The White House Fraud Task Force is canceling handouts for those who were double-dipping on government healthcare payouts under the Biden administration, The Daily Wire can first report. The Fraud Task Force will announce Wednesday morning that the Centers for Medicare & Medicaid Services has canceled Obamacare subsidies for 189,000 people who also had either Medicare or Medicaid, or were deceased. Under the Biden administration, the Centers for Medicare & Medicaid Services stopped checking for duplicate Medicaid and Obamacare enrollment between 2021 and 2024, a White House official said. The Trump White House has once again begun the process, called Periodic Data Matching, and used it to uncover the latest fraud.</p>
+                <p class="source-credit">— Daily Wire</p>
+            </div>
+            <div class="story-minor">
+                <h4>Nobels, Hoaxes, and a Murder of Crows</h4>
+                <p>The contradictions of a public-intellectual action flick.</p>
+                <p class="source-credit">— National Review</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/10/931/523/Greta-Thunberg-France-protests-001.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Greta Thunberg joins massive French student protests as cars burn, police fire tear gas</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>he Swedish activist rallied alongside students outside a high school near Paris as demonstrations over classroom conditions spread across France, with clashes erupting in several cities. (Credit: AP) Climate activist Greta Thunberg joined student protesters in France on Tuesday after weeks of violent confrontations with police, thousands of arrests and widespread school closures over demands for education reform. The 23-year-old Swedish activist appeared outside a high school in Saint-Denis, north of Paris, where students were demanding more teachers, better facilities and shorter school days, Reuters reported. More than 6,800 people have been detained since the protests began in September, according to French authorities. Demonstrators have set fires, erected barricades and confronted riot police in cities across France, although many protests have remained peaceful. Climate activist Greta Thunberg speaks with students outside a high school in Saint-Denis, near Paris, France, on Oct. 13, 2026, as nationwide protests over education reform continue.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>‘Peace through strength’: Trump Gaza plan gains global backing one year on</h4>
+                <p>Ret. Four-Star Gen. Jack Keane breaks down the next phase of President Donald Trump's Gaza peace deal on 'Fox & Friends.' Keane explains how the historic agreement mandates the complete disarmament of Hamas and other armed groups, leading to the withdrawal of Israeli forces and the transition of power to a new Palestinian government.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/statics.foxsports.com/www.foxsports.com/content/uploads/2026/10/931/523/luis-enrique-1.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>PSG’s Luis Enrique Hopes Man City Avoids Sanctions After Financial Rules Verdict</h3>
+                <p class="lead-summary"><strong class="drop-cap">P</strong>aris Saint-Germain coach Luis Enrique came to Manchester City's defense on Tuesday, saying he hopes the club won't be stripped of titles after being found guilty of breaching Premier League financial rules. City could face sanctions including a huge fine, points deductions or even expulsion from England's top flight. There have also been calls for it to be stripped of trophies it won during a nine-year period in which it was found to have artificially inflated its revenue by more than $1 billion. "I hope everything works out well for Man City because I think what they have done on the pitch has been incredible over the last few years and they certainly deserved to win all the trophies they have won," Luis Enrique said ahead of the Champions League game. "The trophies you win on the pitch remain on the pitch. They deserved to win that and I hope they can avoid the sanction. "But now we have to wait to see what the authorities decide or the judge is going to say." LIVERPOOL, ENGLAND - OCTOBER 11: Liverpool fans display a banner that reads "& after all, you really robbed us all" before the Premier League 2026/27 match between Liverpool FC and Manchester City at Anfield on October 11, 2026 in Liverpool, England.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Phillies make surprising decision on next manager as Don Mattingly stays after Alex Cora flirtation</h4>
+                <p>The Phillies are expected to name Mattingly, who finished the 2026 season as the interim manager, as their full-time skipper after being spurned by Alex Cora for the second time, according to The Athletic. Cora previously told the team “no” prior to the NL East squad promoting Mattingly in late April after firing Rob Thomson amid a horrible start. The Post’s Jon Heyman reported Wednesday morning that Mattingly has a “decent chance or better” to remain as the Phlilies’ manager. That Mattingly would ultimately emerge as the team’s skipper heading into the 2027 season is a bit of a surprise considering the franchise had not seem set on doing so.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Bob Chesney, UCLA Bruins Top List In AP Big Ten Midseason Awards</h4>
+                <p>By the looks of it, Bob Chesney is well on his way to fixing the fixer-upper he acquired when UCLA hired him. The No. 12 Bruins have their highest ranking in four years, reached midseason as one of nine unbeaten Football Bowl Subdivision teams and are tied with No. 4 Ohio State and No. 5 Indiana at 3-0 in Big Ten play.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Lakers’ Walker Kessler makes immediate impact by being ‘relentless’</h4>
+                <p>Relentless with his motor on both ends of the floor. With his running and changing ends in between possessions. With his screening and rolling towards the rim. With his rebounding. The Lakers got that in abundance during their marquee acquisition’s preseason debut, which came in a 101-89 loss to the Warriors on Tuesday night at T-Mobile Arena in the team’s penultimate exhibition. The 7-foot-2 center finished with 11 points, nine rebounds (two offensive boards), one block and one steal in 16 first-half minutes before sitting out of the second half. Kessler, who the Lakers acquired from the Jazz as part of a sign-and-trade with the Jazz that included a four-year, $130 million contract for the big man, missed the first three preseason games after injuring his left pinky finger.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F10%2Flake.jpg?quality%3D90%26strip%3Dall" alt="Lead Story Image" class="news-photo">
+                <h3>‘Crystal Lake’ creator breaks down Linda Cardellini’s casting and why the ‘Friday the 13th’ prequel used ‘gallons of blood’</h3>
+                <p class="lead-summary"><strong class="drop-cap">L</strong>inda Cardellini was “Crystal Lake” creator Brad Caleb Kane’s only choice to play Pamela Voorhees – the mother of iconic horror villain Jason Voorhees. “It wasn’t challenging to find the right Pamela. I knew from the beginning that the only person that I wanted was Linda Cardellini,” Kane exclusively told The Post. He added, “I was very fortunate that she said yes. I didn’t know what I would do if she hadn’t!” Premiering Oct. 15 on Peacock, “Crystal Lake” is a prequel to the “Friday the 13th” franchise. In the twelve slasher flicks released from 1980 to 2009, the villain Jason Voorhees supposedly drowned at Camp Crystal Lake as a child. He returned for bloody revenge as an adult, donning a hockey mask and wielding a machete. In the first movie, his mom Pam Voorhees (played by Betsy Palmer) was the original killer. “Crystal Lake” follows Pam in the ‘70s, shortly after Jason’s (Callum Vinson) drowning. She’s convinced that her son is still alive since a body was never found. Kane said he wanted the “Freaks and Geeks” actress for the role because “she has this effortless likability.” He noted, “It makes her somebody that – despite all of these terrible things that Pam has to do to survive – you want to take that journey with her.” The showrunner noted, “We do spend a lot of time on character, on nuance, on an emotional journey. But when we have the kills, I wanted them to be really visceral and gory.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>'Jon & Kate Plus 8' star Collin Gosselin accuses mom of trying to 'bury' him to ‘protect her reputation’</h4>
+                <p>‘In the Shadow of Eight’ author tells Fox News Digital he's willing to hear from estranged mom Kate Gosselin but insists she must own up to her alleged treatment of him during childhood. Collin Gosselin is taking aim at his estranged mother, Kate Gosselin, accusing the former reality TV star of trying to "bury" him to protect her public image as he makes allegations of childhood abuse in his new memoir, "In the Shadow of Eight."</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>We found the best prices to see former ‘SNL’ star Ana Gasteyer on tour in 2026</h4>
+                <p>Now that her crowd-pleasing run in the Tony Award-winning “Schmigadoon” on Broadway is in the rearview mirror, the former “Saturday Night Live” cast member is embarking on her annual Sugar and Booze Holiday Spectacular tour. From November 2026 through January 2027, she’ll spread holiday cheer at 11 auditoriums, theaters, playhouses, convention centers and performing arts centers all over North America. That includes not one, not two but three (!) gigs in New York. They’re slated to take place at: Town HallNew York, NYFriday, Dec. 4Suffolk TheaterRiverhead, NYSaturday, Dec. 5White Plains Performing Arts CenterWhite Plains, NYSaturday, Jan.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Kelly Clarkson 'has put us in danger,' Brooklyn store owner claims as bird's price tag soars to $15M</h4>
+                <p>Jay Aldebert says Clarkson’s first step should have been to contact the store’s owner and try to resolve the issue privately. If the owner dismissed her concerns or was rude, he says, she could then consider using her social media platform. Kelly Clarkson's public clash with a Brooklyn shop has left its owner concerned about more than a lost sale.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/10/931/523/heart-health-woman-doctor-stethoscope.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Your phone may reveal doctor, church and pharmacy visits</h3>
+                <p class="lead-summary"><strong class="drop-cap">K</strong>urt "CyberGuy" Knutsson lays out how to limit what health apps used by insurance companies can track about you, the user. Nobody needs to follow you to know where you went this week. The phone in your pocket can already keep a record of your movements. And parts of that information can end up in the hands of other companies. Your pharmacy. Your cardiologist. The church you attend on Sunday morning. The support group you'd rather nobody knew about. None of it necessarily comes from hacking. It can come from ordinary apps you installed yourself and the permissions you gave them. Here's how your movements can get out, who buys location data and the settings that can limit how much gets shared. Kurt "CyberGuy" Knutsson shares practical ways to stay safer, smarter and more confident with technology. Explore classes on stopping spam, phone security, financial protection and using AI to get better healthcare. Each class is free, easy to follow and comes with a free printable checklist. A smartphone can share location and other device data that may reveal sensitive details about where you go. (Tero Vesalainen/Getty Images) Smartphones can use advertising identifiers that help advertisers and developers measure ads and activity. On Apple devices, the system advertising identifier is known as the IDFA. Android devices can use Google's advertising ID. Advertising identifiers can help connect activity across apps when apps and advertising systems are permitted to use them. Combined with location data and other signals, those identifiers can help companies build a much more detailed trail of where a device has been. And a trail stops being anonymous fast. A device that sleeps at your address every night and turns up at a dialysis center every Tuesday and Thursday isn't much of a mystery to anyone who can connect those locations with other identifying information. An app asks for your location. Often for a fair reason, like providing a local forecast or showing the nearest pharmacy. What many people don't realize is that apps can include advertising and analytics software from outside companies. Depending on the app, its permissions and its privacy practices, that technology may collect or receive information about your device and location. Location information can also become part of the digital advertising ecosystem, where information about a device can pass among multiple companies. Once location data leaves your phone, controlling where it goes next becomes much harder.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>French supermarkets face millions in losses after cyberattack hits refrigerators nationwide</h4>
+                <p>A sophisticated cyberattack targets hundreds of French supermarkets by hacking refrigerators to heat up to 122°F. Ashley Webster reports how the temperature spike spoiled massive amounts of food and sparked fires across Europe. A cyberattack in France forced multiple grocery stores to discard large amounts of temperature-sensitive product after hackers turned the heat up on food refrigerators in hundreds of stores across at least five chain brands.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
