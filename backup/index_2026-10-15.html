@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>THURSDAY, OCTOBER 15, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F10%2Fslowhorses_83c0ad.jpg?quality%3D90%26strip%3Dall" alt="Lead Story Image" class="news-photo">
+                <h3>‘Slow Horses’ Season 6, Episode 5’s Kiss Got A Standing Ovation In My Living Room</h3>
+                <p class="lead-summary"><strong class="drop-cap">W</strong>here Was the ‘Love Of Your Life’ Movie Filmed? Discover the Filming Locations for Margaret Qualley’s New Amazon Romance Margaret Qualley, Aaron Pierre Talk New Heartbreaking Amazon Romance ‘Love Of Your Life:’ “Getting It Wrong to Get It Right” Stream It Or Skip It: ‘The Love Hypothesis’ on Prime Video, In Which An Awkward PhD Student And Imposing Professor’s Fake Dating Experiment Yields Real Results Stream It Or Skip It: ‘Toy Story 5′ on Disney+, the Continually Endearing Saga of Sentient Toys’ Tearjerking Existential Crises Is ‘Toy Story 5’ — Now Streaming on Disney+ — the Best Pixar Sequel Movie Ever Made? Stream It Or Skip It: ‘Jamie Foxx: Take Care Of Yourself’ On Hulu, The Comedy Star Responds To (And Impersonates) His Famous Critics Julianne Moore Screaming Obscenities at Paul Giamatti in Brilliant Scene From ‘The Debut’ Earns NYFF Applause Break ‘The Color of Money’ at 40: Why This Tom Cruise Movie Outshines ‘Top Gun’ in the Long Run So Who’s Ogling Mikey Madison More: Sean Baker in ‘Anora’ or Aaron Sorkin in ‘The Social Reckoning’? New Shows & Movies To Watch This Weekend: ‘Animals’ on Netflix, ‘Matchbox: The Movie’ on Apple TV and More Stream It Or Skip It: ‘Free Leonard Peltier’ on Netflix, a Documentary Portrait of the Man Who Became a Political Rallying Point for American Indians Stream It Or Skip It: ‘Who is Martin Mull?’ on Netflix, a Documentary Profile of a Gifted Comedy Star Whose True Calling Was Being a Painter Stream It Or Skip It: ‘Mother Mary’ on VOD, a Nutty Anne Hathaway-Michaela Coel Two-Hander About Gods, Ghosts and Pop Stars Is ‘Billie Eilish – Hit Me Hard and Soft: The Tour Live in 3D’ Streaming on Netflix or Amazon Prime Video? When Does The New Season Of ‘Dutton Ranch’ Come Out? Everything To Know About ‘Dutton Ranch’ Season 2 Release Date When Does Marshals Return With New Episodes?</p>
+                <p class="source-credit">— Https://decider</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>The Left’s Performative Misunderstanding</h4>
+                <p>Faux outrage earns progressives attention but only makes comedians like Shane Gillis stronger.</p>
+                <p class="source-credit">— National Review</p>
+            </div>
+            <div class="story-minor">
+                <h4>Obama's billion-dollar baby: Chicago center's price tag hits monumental milestone, tripling original estimate</h4>
+                <p>Ohio State accounting professor Brian Mittendorf examines the Obama Foundation's financial health, assets and endowment as construction costs hit $1 billion. FIRST ON FOX - The price tag for the beleaguered Obama Presidential Center is now projected to top $1 billion, nearly triple its original estimate, the foundation overseeing construction of the Chicago facility told Fox News Digital.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>James Talarico Flip-Flops on His Views Over Trans Kids and Parental Rights</h4>
+                <p>James Talarico held a town hall with Texas voters last night in an effort to save his foundering Senate campaign. You know he knows he's in trouble because he's changing positions he once held sincerely, including on transgender children. Talarico once said he loved transgender kids, and even called parents who protected their kids from gender mutilation "abusive." But last night, he said he had to have a more balanced approach to the issue. JAMES TALARICO (who previously called parents "abusive" for denying children's gender identity) now says, "When it comes to minors... I have to balance two things; protecting children and honoring the rights of parents" pic.twitter.</p>
+                <p class="source-credit">— Townhall</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/10/931/523/riot-police-detain-protester-tirana-albania.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Albania rioters clash with police for Socialist government as European unrest spreads</h3>
+                <p class="lead-summary"><strong class="drop-cap">C</strong>lashes between police and protesters who are against Albania's Socialist government erupted in the country's capital of Tirana for the third consecutive day on Thursday. (Credit: Reuters) Clashes between police and protesters who are against Albania's Socialist government erupted in the country's capital for the third consecutive day Thursday as Prime Minister Edi Rama vowed he will not resign. Rioters in Tirana were seen throwing rocks at a police cordon outside Albania's Education Ministry, prompting law enforcement to respond with tear gas and water cannons, according to The Associated Press. The clashes followed riots on Wednesday when protesters attacked government buildings, banks and businesses, leaving 89 people injured, including 61 police officers. "As for calls for my resignation, governments are changed through democratic elections. We had elections last year, not a revolution," Albanian Prime Minister Edi Rama told Reuters on Thursday. Riot police officers detain a hooded protester during clashes near the Ministry of Education in Tirana, Albania, on Tuesday, Oct. 13, 2026.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>'Not wanted': Irish hotel reportedly cancels 70 rooms reserved for antisemitism conference attendees</h4>
+                <p>Irish Prime Minister Micheál Martin explains Ireland's stance on Israel, the conflict in Gaza and concerns over antisemitism, while explaining how Ireland's own history shapes its approach. A Dublin hotel declined to host an international event focused on combating antisemitism and subsequently withdrew approximately 70 rooms reserved for delegates after its general manager questioned whether the Israel Defense Forces would be involved, according to a Jewish community leader who attended the meeting.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>UN inquiry member says some genocide claims against Israel unverified as Gaza reports population growth</h4>
+                <p>Elie Wiesel Foundation Chairman Elisha Wiesel joins 'The Story' to discuss New York City Mayor Zohran Mamdani facing bipartisan backlash over his social media post regarding the October 7 attacks. The allegations of genocide against Israel took more hits this week following the reported admission by a senior member of the U.N. Commission of Inquiry on Israel that claims had not been independently verified. This comes as the Palestinian Ministry of Health data shows Gaza’s population grew in 2025.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>El Salvador's Bukele announces plan to free up to half of prisoners jailed in gang crackdown</h4>
+                <p>Fox News congressional correspondent Bill Melugin has details on the arrest of Alexis Antonio Cedillos-Campos, an illegal immigrant from El Salvador suspected of brutally stabbing a woman in Virginia, on ‘Special Report.’ Salvadoran President Nayib Bukele has unveiled a plan that could allow the conditional early release of up to half of those detained under a state of emergency that authorities used to arrest more than 90,000 people in the past four and a half years as part of an effort to curb violent criminal gang activity.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/statics.foxsports.com/www.foxsports.com/content/uploads/2026/10/931/523/640b2847-16x9_1024.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>College Football Week 7 Expert Picks, Predictions For Ohio State-Indiana And More</h3>
+                <p class="lead-summary"><strong class="drop-cap">C</strong>an No. 4 Ohio State avenge its Big Ten championship game loss to No. 5 Indiana on "Big Noon Kickoff"? Will No. 6 Alabama bounce back against No. 14 Tennessee after a loss to No. 1 Georgia? Elsewhere, a College Football Playoff spot could be on the line when No. 2 Notre Dame visits No. 8 BYU. Austin Simmons leads No. 13 Missouri against his former team, No. 9 Ole Miss. With six matchups between Associated Press Top 25 opponents, Week 7 of the college football season might feature the most exciting slate of the season. We’re breaking down our straight-up picks and the matchups to watch closely throughout the weekend. Ohio State wide receiver Jeremiah Smith is two touchdowns away from breaking the all-time Big Ten receiving touchdowns record. (Photo by Ben Jackson/Getty Images) RJ Young: Ohio StateThe best player in the sport is Jeremiah Smith, and Ohio State coach Ryan Day should not be shy about reminding Indiana about that. Laken Litman: Ohio StateThis is my answer for nearly every Ohio State game: The Buckeyes have Jeremiah Smith and Indiana doesn't.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Rays vs. Guardians Game 3 prediction: Jose Ramirez remains hot in ALCS</h4>
+                <p>After struggling through an injury-plagued regular season, the Guardians superstar has been red-hot this postseason, batting .333 with a .667 slugging percentage. He’s cleared 1.5 total bases in four of his last five games, which includes two home runs, a triple, a double and a three-hit performance in Cleveland’s ALCS Game 1 victory over the Rays as he enjoys one of his best stretches of 2026. And there’s reason to believe his hot streak will continue Thursday when the series shifts to Cleveland for Game 3 with the series tied 1-1. Tampa Bay will send Griffin Jax to the mound, a familiar opponent for Ramirez from the right-hander’s years with the Twins.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Can Dodgers Flip A 3-Game Deficit? Big Papi, Jeter, A-Rod Know It Can Happen</h4>
+                <p>If the Dodgers want to make it three straight World Series titles, they must now win four straight games against the Brewers in the NL Championship Series. MLB on FOX analyst David "Big Papi" Ortiz, who helped the Boston Red Sox overcome a three-game ALCS deficit in 2004 against the New York Yankees, said it's time for the Dodgers to play like there is nothing to lose.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Polymarket promo code NYPMAX1: Deposit $10, get $25 for Seahawks vs. Broncos on ‘Thursday Night Football’</h4>
+                <p>NFL prediction market traders can use the Polymarket promo code NYPMAX1 to deposit $10, to get a $25 trading bonus for Seahawks vs. Broncos on “Thursday Night Football.” The defending Super Bowl champions head to Denver on Thursday with both teams sitting at 3-2. Enter the Polymarket promo code NYPMAX1 when you sign up and deposit $10 to receive a $25 trading bonus. New users can use their $25 bonus to trade on Seahawks vs. Broncos or any other event contracts listed on Thursday. You can gain instant access to the Polymarket mobile app by using the Polymarket promo code NYPMAX1: The Polymarket promo is available to eligible new users who reside in Alaska, Alabama, Arkansas, California, Colorado, Connecticut, District of Columbia, Delaware, Florida, Georgia, Hawaii, Iowa, Idaho, Indiana, Kansas, Kentucky, Louisiana, Maine, Minnesota, Missouri, Mississippi, North Carolina, North Dakota, Nebraska, New Hampshire, New Jersey, New Mexico, New York, Oklahoma, Oregon, Pennsylvania, Rhode Island, South Carolina, South Dakota, Tennessee, Texas, Utah, Virginia, Vermont, Wisconsin, West Virginia, and Wyoming.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F10%2Fnewspress-collage-wos8wzcxc-1792028222271.jpg?quality%3D90%26strip%3Dall%261792013891" alt="Lead Story Image" class="news-photo">
+                <h3>Baseball royalty goes to war over risque Megan Fox and Sydney Sweeney MLB playoff ads</h3>
+                <p class="lead-summary"><strong class="drop-cap">I</strong>f you’ve been watching the MLB Playoffs this October, it’s been hard to miss advertisements featuring Sydney Sweeney in her underwear, Megan Fox in a red bodysuit selling erectile dysfunction pills, or the latest horror movie set to hit theaters this Halloween. October baseball has parents across the country wondering if they need to keep the remote control within arm’s reach once the commercials come on. You can count Atlanta Braves legend Dale Murphy, and his son, Taylor among them, as baseball royalty takes aim at the increasingly provocative advertising invading baseball broadcasts. The controversy erupted Monday when Taylor Murphy, watching the playoffs with his children, decided he’d seen enough of the commercial breaks featuring Sweeney promoting sports prediction platform Novig, Fox advertising prescription erectile dysfunction treatment for Ro and frightening horror movie trailers. “Hey @MLB – wanna get more kids watching baseball? Maybe start with the commercials,” Murphy wrote on X. He then delivered the kind of common-sense criticism that should make Major League Baseball’s marketing department uncomfortable. “You don’t need a Nickelodeon game. You’re not the Savannah Bananas. Just show baseball in a way I can leave on in my house.” “Agree with my son, Taylor…” wrote Dale Murphy, the two-time National League MVP, seven-time All-Star, five-time Gold Glove winner and Braves Hall of Famer whose No. 3 hangs proudly in Atlanta.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>'Big Bang Theory' stars were 'outraged' over request to take pay cut for new co-stars, Chuck Lorre claims</h4>
+                <p>Hollywood in Toto founder Christian Toto reacts to Lorre’s speech at a charity event, where the comedy producer criticized President Donald Trump, compared first lady Melania Trump to an escort and took aim at Health Secretary Robert F. Kennedy Jr. The prolific television producer and writer wrote about his life and his many decades in the industry in his new memoir, "Sitcom," in which he gave tons of behind-the-scenes stories from some of his most popular TV shows.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Calvin Harris announces first U.S. tour, Barclays Center show. Get tickets</h4>
+                <p>The inimitable hitmaker just announced he’s striking out on his first-ever proper North American tour in spring 2027. Starting in early April, the party-starting DJ and producer will play arenas all over the U.S. and Canada. That includes a huge stop early in the run at Brooklyn’s Barclays Center on Friday, April 9. His explosive 29-song set — which Set List FM reported included smashes “I Need Your Love,” “This Is What You Came For,” “How Deep Is Your Love,” “Summer” and, of course “Feel So Close” —  was punctuated by unreal, strobing visuals that stretched deep into the desert to close the two-day extravaganza.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Prince Harry, Meghan Markle accused of staging 'royal theatre' as King Charles faces new dilemma: expert</h4>
+                <p>Hugo Vickers, author of "Queen Elizabeth II: A Personal History," details how the Duke and Duchess of Sussexs exit and Oprah interview added strain during the late monarch's final years. Prince Harry and Meghan Markle are being accused of playing royals on their own terms — and sidestepping the late Queen Elizabeth II's wishes in the process.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/10/931/523/hinge-match-san-francisco-49ers.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Man posing as NFL player accused of conning women out of $1.3M</h3>
+                <p class="lead-summary"><strong class="drop-cap">A</strong> man claiming to play for the San Francisco 49ers matched with a woman on a dating app, but Domonique DuBose had her doubts. When DuBose joined The CyberGuy Report podcast, she explained how she became suspicious of a man who allegedly used a fake NFL identity to pursue women and promote fraudulent investments. A man claiming to play for the San Francisco 49ers matches with you on a dating app. His Instagram has 85,000 followers and a blue checkmark. There are videos showing what appears to be his football lifestyle. He drives luxury cars and seems to have plenty of money. So, would you believe him? Domonique DuBose had her doubts. When she joined me on The CyberGuy Report podcast, she explained how she became suspicious of a man who allegedly used a fake NFL identity to pursue women and promote fraudulent investments. Federal prosecutors say Daejon Labrayae Love and an alleged accomplice received approximately $1.3 million from at least 26 women. Love pleaded not guilty Tuesday to a felony charge of conspiracy to commit wire fraud, and a public defender representing him did not reply to a request for comment. Magistrate Judge Jolie A. Russo ordered Love detained as a flight risk. DuBose recognized warning signs and avoided losing any money herself. "Basically, I caught on right away," DuBose told me. What she uncovered raises serious questions about how easily someone can fake an identity online and how you can spot the warning signs before it's too late. Kurt "CyberGuy" Knutsson shares practical ways to stay safer, smarter and more confident with technology. Explore classes on stopping spam, phone security, financial protection and using AI to get better health care. Each class is free, easy to follow and comes with a free printable checklist. According to an FBI affidavit, investigators allege Daejon Love used football-related imagery to support claims that he was a 49ers player, while representatives of the team and NFL said he had never been employed by either organization. (FBI via court documents) According to DuBose, Love's Instagram account looked like something you might expect from a professional athlete. His posts showed him wearing San Francisco 49ers clothing and enjoying an expensive lifestyle. There were also videos from football-related locations, including footage that appeared connected to the Super Bowl in New Orleans.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Your phone may reveal doctor, church and pharmacy visits</h4>
+                <p>Kurt "CyberGuy" Knutsson lays out how to limit what health apps used by insurance companies can track about you, the user. Nobody needs to follow you to know where you went this week. The phone in your pocket can already keep a record of your movements. And parts of that information can end up in the hands of other companies.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
