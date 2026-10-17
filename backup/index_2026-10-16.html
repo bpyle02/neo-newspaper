@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>FRIDAY, OCTOBER 16, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://www.theblaze.com/media-library/billy-crystal-no-longer-trusts-god-christians-should-listen.jpg?id=68443013&width=980" alt="Lead Story Image" class="news-photo">
+                <h3>Billy Crystal no longer trusts God. Christians should listen.</h3>
+                <p class="lead-summary"><strong class="drop-cap">J</strong>ob’s friends sat with him for seven days before opening their mouths. Too many Christians can’t go seven minutes without delivering a lecture that leaves a grieving person worse off. Billy Crystal recently said he has stopped talking to God. “No, ’cause I don’t trust Him,” he told CBS correspondent Tracy Smith. His home burned in the Pacific Palisades fire, and his longtime friend Rob Reiner and Reiner’s wife, Michele, were murdered. We arrive at someone’s sorrow with conclusions before we’ve heard their story. We deliver our answers and leave. They’re still grieving, and now they may also feel guilty for struggling. I asked that question on my radio program because someone we know may eventually trust us enough to say the same thing. A neighbor who buried a child. Someone who prayed beside a hospital bed and went home alone. Would we hear their anguish or immediately start preparing our answer? I’ve spent 40 years caring for my wife, Gracie. Her suffering began before I met her. Over her lifetime, she has endured 98 operations and the loss of both legs. Along the way, people have told us what we should believe, how we should feel, and what God was evidently trying to accomplish. Some never acknowledged the weight of what we carried. Rush Limbaugh used the phrase “drive-by media” to describe reporters who rushed into a story, stirred things up, and moved along, leaving others to deal with the damage. Are we in danger of engaging in drive-by ministry? We arrive at someone’s sorrow with conclusions before we’ve heard their story. We deliver our answers and leave. They’re still grieving, and now they may also feel guilty for struggling. It costs considerably more to pull up a chair. Job’s friends managed that at first. They sat silently beside him for seven days because they saw how greatly he suffered. Most of us struggle to give someone seven uninterrupted minutes. Scripture makes room for anguish. David asks in Psalm 13, “How long, O LORD? Will you forget me forever?” Those words are in our Bibles. We ought to be able to hear them from someone sitting in our living rooms. David ultimately recalls God’s steadfast love, but the psalm lets us hear his sorrow along the way. I learned something about the cost of coming near in a dusty prosthetic clinic in Ghana. Through Standing With Hope, the ministry Gracie envisioned after losing her legs, we’ve provided prosthetic limbs in Ghana for more than 20 years.</p>
+                <p class="source-credit">— The Blaze</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>'I Don't Know Anything': David Crowley Is Lying to Hide His Extreme Abortion Agenda</h4>
+                <p>This should be another campaign ad for Tom Tiffany, because his Democrat opponent David Crowley just said the most honest thing of his entire campaign: "I don't know anything." Crowley is the same guy who refused to answer how much his BadgerCare expansion would cost (hint: it's billions of dollars), in an interview that was so awkward it looked like a bad Saturday Night Live skit. In that same interview, he was pressed on his views on abortion, which Crowley said he wants to be enshrined in the Wisconsin state constitution. Right now, the state prohibits abortion after 20 weeks of pregnancy, and the vast majority of Americans support such limits. Does David Crowley? He won't say.</p>
+                <p class="source-credit">— Townhall</p>
+            </div>
+            <div class="story-minor">
+                <h4>Wyatt Flores answers questions about his new album ‘Scared of Heights’ in Confession Cube</h4>
+                <p>Wyatt Flores stopped by the Page Six Studio to answer burning questions from the Confession Cube. The country singer gets candid about his new album, “Scared of Heights,” and the creative shift that helped him find his sound, from early-2000s rock influences to his self-described “sexy song” era. He also gets a surprise of his own when he learns John Mayer played “Drive All Night” on his SiriusXM channel, reveals the unexpected hobby he has outside of music, and explains why he’s bringing his actual truck bed along for the Drive All Night Tour. Plus, Flores dishes on the kittens found under his tour bus and builds his country music Mount Rushmore. Watch the full video for more on the stories, sounds and surprises behind Wyatt Flores’ latest chapter.</p>
+                <p class="source-credit">— Https://pagesix</p>
+            </div>
+            <div class="story-minor">
+                <h4>James Talarico Says He Wants To See Fewer Abortions. But Why?</h4>
+                <p>A viral exchange over abortion during a CNN town hall exposes the Obama-like dishonesty and condescension of James Talarico. What does Democratic Senate hopeful James Talarico really think about abortion? At a CNN town hall this week in Texas, he confirmed his long-held views that abortion should be legal, that it’s not murder, and that “the Bible is silent on the issue of abortion.” That’s what he said during an exchange with a Catholic voter who challenged him on the abortion issue. The voter, a woman named Jodi Hunt who also happens to be a Catholic theologian, responded by saying, “I just want to add that the Bible is not silent on abortion. There is the 10 Commandments: ‘Thou shall not kill.’ And as Catholics, we take great insult, I guess sometimes, when it’s described that way.</p>
+                <p class="source-credit">— The Federalist</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/10/931/523/Stawell-railway-station-Australia.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Autistic teen lured to fake Snapchat meetup, brutally beaten by group of teens: report</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>hree teenage boys were charged after a 15-year-old boy with autism was beaten and robbed near a train station in Australia in a violent attack captured on video as other teenagers watched. The assault happened Oct. 5 in Stawell, a town in the Australian state of Victoria, after the victim was reportedly lured to the area through a Snapchat meetup arranged with two girls, according to Australian news outlet news.com.au. Video of the attack shows several teenagers punching and kicking the boy, knocking him to the ground and repeatedly striking him as he attempts to get away. One attacker demands the victim hand over his shoes before the group allows him to leave. TEXAS TEENS ACCUSED OF USING DATING APPS TO LURE YOUNG MEN INTO VIOLENT ROBBERIES THAT LEFT ONE VICTIM SHOT The Stawell railway station in Victoria, Australia, near where a 15-year-old boy was allegedly attacked and robbed by a group of teenagers Oct. 5, 2026. (Google Maps) Victoria Police announced Tuesday that detectives had charged one 14-year-old boy and two 15-year-old boys after an investigation.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Houthis emerge as global threat beyond Iran control amid Saudi strikes, former envoy warns</h4>
+                <p>Fox News chief foreign correspondent Trey Yingst reports on claims that Iran-backed Houthis are developing advanced missiles using Chinese parts and examines the potential threat to Saudi Arabia and stability across the Middle East on 'The Story.' The Houthis are increasingly operating independently of Tehran, posing a "clear and very present danger" on the international stage as the terror group rearms and sharpens its strike capabilities, a former U.S. envoy warned Thursday.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Albania rioters clash with police for Socialist government as European unrest spreads</h4>
+                <p>Clashes between police and protesters who are against Albania's Socialist government erupted in the country's capital of Tirana for the third consecutive day on Thursday. (Credit: Reuters) Clashes between police and protesters who are against Albania's Socialist government erupted in the country's capital for the third consecutive day Thursday as Prime Minister Edi Rama vowed he will not resign.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F10%2Fnewspress-collage-nmfz4cl11-1792122694780.jpg?quality%3D90%26strip%3Dall%261792108350" alt="Lead Story Image" class="news-photo">
+                <h3>Matthew Stafford reveals the Rams’ biggest problem — and it’s not the kicker</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>he team watched a victory sail away on a missed field goal on its opening drive and then the potential game-winner get blocked in Monday night’s 37-34 overtime loss to the Bills. The natural reaction was to blame Mevis. To blame the entire special-teams unit. Even Rams coach Sean McVay said he was sick to his stomach afterward watching another game slip through their fingers. “It cost us the game tonight,” McVay said of the kicking unit immediately after the loss. But after some reflection and sitting with the loss for a day, McVay changed his tune a bit. “He wasn’t exclusively the reason why we lost the game,” McVay said of Mevis after he was released on Tuesday morning. “This is the greatest team sport. The kicking unit cost us an opportunity to win the game. But that wasn’t the reason we didn’t win exclusively.” Veteran quarterback Matthew Stafford, the reigning NFL MVP, knows that as well. Making Mevis the scapegoat is the easy way out, but the harder thing to do is to look in the mirror and find ways you could have been better. Stafford delivered a revealing assessment on Thursday that should serve as a wake-up call for an offense talented enough to score on anybody, yet maddeningly inconsistent when it comes to opportunities in the game to put their opponents away. The problem isn’t necessarily how the Rams finish games or what the offense does when its backs are against the wall and it needs a score. They’ve been excellent when urgency is required, especially in two-minute situations. It’s more about the opportunities they miss before they reach the finish line.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>NLCS MVP Jake Bauers Picks Most Memorable Moment From Series Full Of Them</h4>
+                <p>What was Jake Bauers' favorite at-bat from the Milwaukee Brewers' National League Championship Series sweep of the Los Angeles Dodgers? His fourth-inning two-run double in the decisive Game 4 win? His epic two-run homer in Game 3 to put the Brewers ahead? Maybe his iconic 12-pitch at-bat in Game 2 that chased Yoshinobu Yamamoto from the game?</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>2026-27 NBA Awards odds & predictions: Best bets for MVP, DPOY, and Rookie of the Year</h4>
+                <p>NBA awards won’t be voted on for months, but it seems players, their fans, and their representatives start making their case for their preferred award early into the season. In fact, by the middle of December, the buzz usually starts getting loud for the frontrunners. In an era where odds for the awards are released in the offseason and can shape the public’s view of who the favorites are, it seems like the options for awards are shrinking. Since the 2019-20 season, only four players have won league MVP: Giannis Antetokounmpo, Nikola Jokic three times, Joel Embiid, and Shai Gilgeous-Alexander twice.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Seattle, Sam Darnold Are Struggling: 3 Takeaways From Broncos' OT Win vs. Seahawks</h4>
+                <p>In a game that looked like a 1980s flashback with the Seattle Seahawks and Denver Broncos wearing their throwback uniforms from their AFC West rivalry days, the defending Super Bowl champs appear to have lost their swagger. The Broncos took a double-digit lead into halftime, but needed overtime to escape with a 17-14 victory over the visiting Seahawks in primetime on Thursday night. The victory upped Denver’s record to 4-2 on the year and improved their home record to 17-3 since the start of the 2024 season, while Seattle dropped to the .500 mark at 3-3 for the first time this season. The reeling Seahawks have lost three of their last four games.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/10/931/523/joe_001.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Joe Manganiello says a shaman told him Sofia Vergara's ex 'put a voodoo curse' on him</h3>
+                <p class="lead-summary"><strong class="drop-cap">‘</strong>America’s Got Talent’ judge Heidi Klum tells Fox News Digital if she would ever set up Sofía Vergara on a date. Joe Manganiello released his new memoir, "Bloodlines," which is already receiving a lot of buzz online. From revealing details about his divorce from Sofía Vergara, the seven-year-long mystery illness that nearly took his life and Tom Cruise's alleged involvement in the star being nixed in the "Reacher" series, below are the biggest bombshells from "Bloodlines: A Memoir." Fox News may be compensated for or earn a commission if you buy through our referral links. Manganiello and Vergara married in 2015 and announced their separation in 2023. Their divorce was finalized in 2024. JOE MANGANIELLO DENIES SOFIA VERGARA’S CLAIM MARRIAGE ENDED BECAUSE HE WANTED A BABY: ‘SIMPLY NOT TRUE’ In his memoir, Manganiello detailed that he proposed to her in Spanish in Kauai, Hawaii, and the next year they were married. They planned on starting a family. "She told me that when we first met, she wasn’t thinking about having more children, but she had sworn that if she ever remarried and her husband wanted kids, she’d do it," Manganiello wrote. "It was clear right away how we felt about each other, so at the urging of her doctor, before we were even engaged, we began trying via IVF."</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Jerry Seinfeld calls out radical anti-Israel hecklers after chaotic stunt backfires</h4>
+                <p>Comedian Jerry Seinfeld turned the tables on anti-Israel hecklers who attempted to derail his Chicago performance last Friday, mocking the protesters as security removed them from the venue. Viral video from the confrontation shows activists shouting at Seinfeld at the Chicago Theatre, accusing Israel of committing “genocide” in Gaza and alleging that American taxpayer dollars are funding the deaths of thousands of civilians. “Twenty-two thousand Palestinians who are children now are killed with our taxpayer money, and you’re making jokes!” a woman shouted in clips posted online. Seinfeld then dances on stage and mocks the protesters with sarcastic remarks, calling himself “racist” and saying, “It’s a genocide. I’m into it.” He also joked that he would find out how much the protesters paid for their tickets and send the money directly to Israel.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Prince Harry's reported $100K deal for Princess Diana MasterClass sparks 'cash grab' claims from royal experts</h4>
+                <p>The Big Weekend Show co-hosts discuss reports of Prince Harry planning a movie on Princess Diana. Prince Harry has spent years publicly unpacking his grief over the death of his mother, Princess Diana. But his latest revelations have sparked renewed skepticism among royal experts.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>‘La Bola Negra’ review: Spanish gay drama is one of the best movies of the year</h4>
+                <p>In Spanish. Running time: 159 minutes. Rated R (violence/bloody images, graphic nudity, sexual content and language). In theaters. On Netflix Dec. 2. One of its funniest hours was on a 1999 episode of “Frasier.” “Blackball!”, the Crane brothers gleefully yelled to veto each other’s choices as they put together a dinner party guest list. But the sprawling and deeply moving Spanish film “La Bola Negra,” which recently won the all-important People’s Choice Award at the Toronto International Film Festival and the top prize at the Hamptons International Film Festival, should be enthusiastically embraced, not coldly shoved aside.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/10/931/523/man-reading-documents-laptop-home.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Was your identity stolen? What to do in the first 24 hours</h3>
+                <p class="lead-summary"><strong class="drop-cap">C</strong>ybercrime losses reached nearly $21 billion last year, prompting Kurt Knutsson to warn of increasingly sophisticated AI scams. He joins 'Fox & Friends Weekend' to break down the FBI data, highlighting that investment fraud alone cost victims $8.65 billion. Knutsson hosts a free live class to teach families how to protect their money and secure accounts. Discovering that your identity has been stolen can leave you feeling angry, frightened and unsure where to begin. Maybe someone drained your bank account, opened a credit card in your name or filed a fraudulent tax return using your Social Security number. Whatever happened, your next steps can help limit the damage. The first 24 hours are especially important because identity thieves may continue using your information until you secure your accounts. Fortunately, you can take several steps right away to protect yourself and begin recovering. In this free live online class, Kurt "CyberGuy" Knutsson will share five practical ways to protect your trip and your wallet this holiday travel season. You’ll learn how to secure your phone and personal information, find better travel deals, avoid common scams, save money on bookings and use technology to make your travels easier and less stressful. No technical experience is needed. Join us Saturday, Oct. 31, at 11 AM ET / 8 AM PT. Register free now at CyberGuyLive.com. Reviewing your credit reports and documenting suspicious activity are important steps toward recovering from identity theft. (Sara Diggins/The Austin American-Statesman via Getty Images) Identity theft can quickly spread beyond the account where you first discovered the problem. Someone who gains access to your email, for example, might use it to reset passwords for your banking, shopping or other accounts. That's why acting quickly can make a difference. However, you don't have to solve everything in one day. Identity theft recovery can take weeks or even months, depending on the circumstances. Your immediate goal is to stop additional fraud, protect your information and create a record of what happened.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Apple wants to move into your home. Should you let it?</h4>
+                <p>Your kitchen counter probably has enough gadgets already. Apple would like to put one more there, and this one recognizes your face. At its "Welcome Home" event on Oct. 13, Apple introduced a $299 smart display called HomeView that promises to make running your home as easy as having a conversation.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
