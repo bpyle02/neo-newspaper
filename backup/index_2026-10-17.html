@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>SATURDAY, OCTOBER 17, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://thefederalist.com/wp-content/uploads/2026/10/something-weird-1200x675.jpg" alt="Lead Story Image" class="news-photo">
+                <h3>American Universities Are Corporatized Grant Money Factories That Rely On Cheap Foreign Labor</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>here’s apparently not a single American who has a bachelor’s degree and understands accounting, so Stanford has no choice but to import a foreign laborer to fill in this extraordinarily technical knowledge gap. You have to count, or none of it makes sense. Remember that Congress created the H-1 labor category in the 1950s to allow temporary labor from foreign experts “of distinguished merit and ability,” after which Congress created the H-1B visa in 1990 to allow visiting workers to do scientific and technical work in the U.S. that requires “theoretical and practical application of a body of highly specialized knowledge.” The premise of the H-1B visa is that it allows the rocket scientist who lives overseas to come contribute to American industry for a while, doing highly specialized work that no American is able to do. It was created as a gap-filler, a way of importing brilliant minds for work that requires esoteric knowledge. With that in mind, look at this H-1B application from Stanford University: Stanford University (@Stanford) has just filed a notice of intent to hire an H-1B Financial AnalystSalary: $149,000Nobody in California was qualified for this job.California has the highest unemployment rate of any state. pic.twitter.com/QUaD0W3qvS Since Stanford is specifically looking for a Financial Analyst 3, you can look at the skill level and job duties associated with that category and level by looking for other help-wanted ads for Financial Analyst 3 positions at the same university. Here’s one. It requires a bachelor’s degree and an ability to perform “accounting-focused analysis,” with “strong Excel skills.” There’s apparently not a single American who has a bachelor’s degree and understands accounting, so Stanford has no choice but to import a foreign laborer to fill in this extraordinarily technical knowledge gap. And, I mean, knowledge of Excel? Of course you have to look overseas for so rarefied a skill. May I interest you in buying the Brooklyn Bridge? At his recent press conference on the abusive corporate use of foreign labor visas, Vice President J.D. Vance mostly talked about this topic: the H-1B visa, the general specialized labor document. And universities are very much implicated in that discussion. But the other kind of temporary labor visa that he discussed is also important. It’s the J-1 visa, and it allows universities to import foreign laborers for temporary work as researchers, usually in STEM fields.</p>
+                <p class="source-credit">— The Federalist</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Federal Agents Are Dumpster Diving Through Ilhan Omar's Trash. Does This Go Beyond Immigration Fraud</h4>
+                <p>Rep. Ilhan Omar (D-MN) is under pressure. For now, this seems to be an immigration fraud investigation. Her D.C. residence was raided by federal agents this week, with her phone, computer, and passport being seized. It was later determined that her staff changed her date of birth, her father was not a legitimate refugee, and now subpoenas are flying. This is looking like a conspiracy, and now we have federal agents sifting through her trash? Is there something else going on here? Multiple sources have confirmed to me that federal agents went dumpster diving to get DNA from Minnesota Congresswoman @IlhanMN and her family before the raid on her D.C. home earlier this week. Our reporting suggests investigations go far beyond simple immigration fraud. NewsNation sources say the likely coming indictments will be stunning in nature and far beyond anything the public has understood the case to be about.</p>
+                <p class="source-credit">— Townhall</p>
+            </div>
+            <div class="story-minor">
+                <h4>Trump's FTC gets a big win, but the job is far from over</h4>
+                <p>A successful antitrust case against Zillow and Redfin is a step in the right direction, but housing is far from under control. Hours before trial was set to begin last month, the Federal Trade Commission and five state attorneys general settled their antitrust case against Zillow and Redfin. While this was a major success, and the FTC should be proud, there is still more to be done. More than 30% of American households rent. For most of them, the search begins and often ends inside one company's ecosystem, which is a major violation of antitrust principles and laws. To be clear, the government was able to achieve much. In a $100 million deal, Zillow had paid Redfin to shut down its multifamily rental-advertising business, transfer its customers and salesforce, and stay out of the market for as long as nine years. That deal is now dead. Instead, Redfin will have to restart its former business within six months and display Zillow's listings under a partnership that will continue through at least 2030.</p>
+                <p class="source-credit">— The Blaze</p>
+            </div>
+            <div class="story-minor">
+                <h4>Inside Halle Berry messy divorces and custody battles: ‘Her rage is sometimes out of control’</h4>
+                <p>In 2012, Halle Berry made history as Hollywood’s first Black Best Actress Oscar winner — but her trailblazing career has often been overshadowed by her turbulent relationships and bitter legal battles. The 60-year-old actress is currently locked in a custody fight with ex-husband Olivier Martinez over their 13-year-old son, Maceo, after he sought sole legal custody and a domestic violence restraining order against her. In court papers seen by Page Six earlier this month, Martinez, also 60, accused Berry of choking and physically abusing Maceo during an altercation at her Los Angeles home on Sept. 26. Berry and her legal team have strongly denied the allegations as “meritless and deliberately misleading.</p>
+                <p class="source-credit">— Https://pagesix</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/10/931/523/Pope_Leo_Rome.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Pope Leo XIV to be discharged from hospital and return to Vatican after surgery to remove lung cancer</h3>
+                <p class="lead-summary"><strong class="drop-cap">D</strong>r. Lary Robinson, an oncologist at Moffitt Cancer Center in Tampa, Florida, reacts to the Pope's diagnosis and how lung cancer can occur in never-smokers. Pope Leo XIV will be discharged from Gemelli Hospital in Rome on Saturday following surgery to remove a cancerous node in his lung, according to a statement from the Holy See. "Following the doctors’ assessment this morning, Pope Leo XIV will be discharged today from Gemelli Hospital, where he was hospitalized for surgery on his right lung," the statement read. "He will leave the hospital in the early afternoon and return to the Vatican. Tomorrow, he will lead the Angelus prayer from the window of the papal apartment," the statement added. The pope received blood tests and a chest X-ray Saturday, both of which confirmed he is well enough to return to the Vatican, according to Vatican News. Pope Leo XIV leaves the Vatican before being admitted to Rome's Gemelli University Hospital for an operation to remove a lump from his lung, in the Vatican on 13 October 2026.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>ChinaAid raises alarm over imprisoned Chinese pastor's health as family seeks answers</h4>
+                <p>ChinaAid founder Bob Fu warns that imprisoned Chinese pastor Wang Yi may have advanced liver cancer as his family struggles to obtain medical information. The founder of Christian human rights organization ChinaAid is raising concerns over the health of an imprisoned Chinese pastor who may be suffering from advanced liver cancer, as his family continues to face restrictions on visitation adn access to medical information.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Recovering from lung surgery, Pope Leo urges Putin to agree to ceasefire in Russian-held Ukraine city</h4>
+                <p>Pulmonologist Cedric Rutland joins 'Fox & Friends' to share medical insights on Pope Leo's health following lung cancer surgery. Dr. Rutland explains the typical recovery process for lung surgery, noting why the pope is expected to remain in the hospital for a week.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F10%2Fknickspreview.jpg?quality%3D90%26strip%3Dall" alt="Lead Story Image" class="news-photo">
+                <h3>Knicks 2026-27 season preview: Daunting repeat chances in loaded East</h3>
+                <p class="lead-summary"><strong class="drop-cap">W</strong>ith other champions — namely LeBron James’ Heat and Stephen Curry’s Warriors — the rest of the NBA took caution. Teams paused their big maneuvers until the dynastic cores aged out or at least looked more vulnerable. But this is a different NBA. Adam Silver loves to trumpet his parity, and clearly the East isn’t intimidated by the Knicks.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>College Football Week 7 Schedule: Top Games, TV Channels, Streaming, Previews</h4>
+                <p>College football Week 7 brings a top-five Big Ten matchup to Bloomington, where No. 4 Ohio State visits No. 5 Indiana on FOX at noon ET on Saturday. This guide covers nine games on FOX, FS1 and BTN, starting with Washington at Purdue on Friday night, plus three more national matchups, including No. 2 Notre Dame at No. 8 BYU.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Polymarket promo code NYPMAX1: Deposit $10, get $25 for Saturday’s college football slate</h4>
+                <p>One of the best weeks of the college football season has arrived, and prediction market users can apply the Polymarket promo code NYPMAX1 to deposit $10, to get a $25 trading bonus for any game on Saturday. There are a number of head-turning contests on the slate, but Florida vs. Texas will get plenty of attention. You can input the Polymarket promo code NYPMAX1 when you sign up and deposit $10 to get $25 in trading bonus. Once you have signed up, trade with the $25 bonus or any other market on Saturday.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>NFL Week 6 Schedule: How to Watch, TV Channels, Streaming, Game Previews</h4>
+                <p>Week 6 of the NFL regular season runs from Thursday, Oct. 15 through Monday, Oct. 19, 2026, with 14 games on the schedule and an International Series game at Wembley Stadium in London. FOX carries five of them: four at 1 p.m. ET on Sunday and one at 4:05 p.m. ET.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/10/931/523/kelly-clarkson-toms-restaurant.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Kelly Clarkson risks looking like 'rich and famous prima donna' in $15K bird fight, expert says</h3>
+                <p class="lead-summary"><strong class="drop-cap">F</strong>ox News host Will Cain discusses singer Kelly Clarkson's social media post about her feud with a toy store in Brooklyn, N.Y. on 'The Will Cain Show.' Kelly Clarkson’s public dispute with a Brooklyn small business over a $15,000 mechanical bird could damage the relatable image she has built over the past two decades, a crisis PR expert warned. "There will certainly be some naysayers who think Clarkson was acting like a rich and famous prima donna and using her platform vindictively," Steve Honig, founder of The Honig Company, told Fox News Digital. "But most people will likely think that, for the most part, she acted accordingly and in many ways was a role model for standing up for oneself." The controversy began after Clarkson claimed she was treated like Julia Roberts’ character in "Pretty Woman" while shopping at Art of Play in Brooklyn. Kelly Clarkson sparked a public feud with a Brooklyn boutique store over a sales dispute.  (GC Images) Clarkson said an employee appeared to judge her based on her appearance and suggested she look at "something comparable" instead of the $15,000 mechanical bird she wanted to purchase. She also called the employee an "idiot" and said the store lost a major sale.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Real Housewives’ star Carole Radziwill vows to buy ‘every copy’ of The Post front page exposing her scofflaw parking</h4>
+                <p>“Real Housewives” royalty Carole Radziwill was so thrilled to grace the cover of New York’s favorite tabloid in a story about being a parking scammer, she jokingly vowed Friday to buy “every copy” and “make it wallpaper.” Radziwill — who made Page 1 for proudly admitting to deceptively saving spots with ConEd cones — said the paper featuring her grinning mug is worthy of more than a frame. “My family has bought out every copy in Rockland County. We are planning on making wallpaper,” she told The Post. “My first call was Andy Cohen. We were both running to our local newspaper stand to see if it was an actual cover. We were in shock! We’re there weeks out from an election!” she added.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Fox News Entertainment newsletter: Prince Edward wanted 'two wives'; Harry, Meghan accused of 'royal theatre'</h4>
+                <p>Memoir claims Prince Edward wanted "two wives"; Prince Harry and Meghan Markle accused of staging "royal theatre" by experts.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>The truth about getting pregnant during the menopause transition — as Hilary Swank carrying baby at 52</h4>
+                <p>Oscar-winner Hilary Swank recently announced she’s expecting her third baby later in December, adding to the growing list of women becoming pregnant during the transition to menopause. While the 52-year-old actress is hardly the last woman to carry a child while approaching “The Change,” an expert breaks down what to know about the risks and possibilities. The average age of menopause in the US is 51 to 52 years old, with perimenopause (the transition years leading up to menopause) typically starting in a woman’s 40s. Already a mom to 3-year-old twins, Swank joins several other women who became pregnant during perimenopause,  though the odds drastically decrease as age increases.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/10/931/523/food-shopper-hannaford-supermarket-vermont.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Major US grocery chains hit by cybersecurity incident</h3>
+                <p class="lead-summary"><strong class="drop-cap">Y</strong>ou pull out your phone to check your grocery store's digital coupons or place an order for dinner. Suddenly, the app won't open. The website is unavailable, and the groceries you were counting on for tonight may never arrive. For anyone who depends on online grocery shopping, that's a frustrating problem. That's the situation shoppers encountered this week at several major U.S. supermarket chains. A cybersecurity incident at grocery giant Ahold Delhaize forced the company to take some systems offline. The disruption affected Stop & Shop, Food Lion, Hannaford and the Giant supermarket chains. The company says its physical stores have remained open, although customers have experienced interruptions to online services. There's another reason this story deserves attention. The same company suffered a major data breach in 2024 that exposed personal information belonging to more than 2.2 million people. So, as investigators work to understand the latest incident, shoppers have a reasonable question: Could their personal information be at risk again? In this free live online class, Kurt "CyberGuy" Knutsson will share five practical ways to protect your trip and your wallet this holiday travel season. You’ll learn how to secure your phone and personal information, find better travel deals, avoid common scams, save money on bookings and use technology to make your travels easier and less stressful. No technical experience is needed. Join us Saturday, October 31, at 11 AM ET / 8 AM PT. Register free now at CyberGuyLive.com. Stop & Shop is among five major U.S. supermarket chains that experienced online service disruptions following a cybersecurity incident at parent company Ahold Delhaize. (Ahold Delhaize) On Oct. 12, Ahold Delhaize confirmed a cybersecurity issue within its network. The Netherlands-based company owns some of America's best-known regional supermarket chains and operates more than 9,400 stores worldwide. The company took certain systems offline to protect its operations while security teams investigated the problem. In its official statement, Ahold Delhaize said: "Our teams are taking steps to assess and mitigate the issue. This includes taking some systems offline to help protect them."</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Fox News AI Newsletter: AI engineer accused of bugging conference room</h4>
+                <p>A man described as Abdulrahman Alfozan, a Saudi national formerly employed as an OpenAI engineer, looks behind a television where a recording device had been placed at a conference room in OpenAI offices, in a still image from surveillance video.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Amazon About You may know you a little too well</h4>
+                <p>Amazon's 'About You' page sparks concern as the 'Outnumbered' panel reacts to the retail giant's data tracking. Kayleigh McEnany, Kat Timpf, Adam Carolla, Harris Faulkner and Kennedy discuss a viral post regarding the discovery. Amazon knows what you buy, what you search for and even what you tell its shopping assistant. Now, the company is giving you a look at the personality profile it has built from all that information. When I checked my own Amazon About You profile, I found 81 results, including a reference to my mother that caught me off guard. The feature brings together details about your shopping habits and preferences. Some are helpful. Others might make you wonder how Amazon reached those conclusions in the first place.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
