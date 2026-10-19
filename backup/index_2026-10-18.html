@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>SUNDAY, OCTOBER 18, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://pagesix.com/wp-content%2Fuploads%2Fsites%2F3%2F2026%2F10%2F145571624.jpg?quality%3D90%26strip%3Dall" alt="Lead Story Image" class="news-photo">
+                <h3>Taylor Swift performs ‘The Fate of Ophelia’ live for the first time in front of star-studded crowd at Academy Museum Gala</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>aylor Swift performed some of her biggest hits during her performance at the Academy Museum of Motion Pictures’ sixth annual Academy Museum Gala in Los Angeles Saturday evening. The “Fortnight” singer took the stage in a strapless sparkling gown to give her first live performance of her chart-topping single “The Fate of Ophelia,” per videos shared online. Swift, 36, also performed “Love Story,” “Blank Space” and her original song from “Toy Story 5,” titled “I Knew It, I Knew You.” The “Bad Blood” songstress channeled Cinderella when she arrived at the “Met Gala of the West” on Saturday. Swift stunned in a strapless pale blue Dior dress to walk the red carpet. The floor-length gown was crafted from pleated silk and embellished with a beaded bow. The well-heeled crowd included this year’s honorees filmmaker and composer John Carpenter, Oscar nominee Colman Domingo and Oscar winner Charlize Theron. Co-chairs of the gala, Tom Ford, Robert Rodriguez, Steven Spielberg and Kate Capshaw were also in attendance. A-listers including Jessica Alba, Adrien Brody and Georgina Chapman, Kirsten Dunst, Regina Hall, Kate Hudson, Jessica Lange, Greta Lee, John Legend and Chrissy Teigen, Rami Malek, Demi Moore, Olivia Munn, Da’Vine Joy Randolph, Seth Rogen and Teyana Taylor were among the 2026 Academy Museum Gala host committee. The Academy Museum of Motion Pictures announced in an Oct. 8 press release that Swift would take the stage at the gala. In the press release, Academy Museum Director and President Amy Homma described Swift as “an extraordinary talent whose work resonates around the world.” The pop superstar’s last major public appearance was at the 2026 MTV Video Music Awards in September, where she made history by surpassing Beyoncé to become the most-awarded artist in the show’s history. The record-breaking moment came when Swift won the inaugural MTV VMA Artist Director Honors, presented by Dakota Johnson at the ceremony in Los Angeles’ Peacock Theater. “First of all, I want to say thank you to MTV for giving this platform to music videos so long ago,” Swift said in her acceptance speech. “I got to start making music videos and being a part of music videos 20 years ago, and since then, I’ve gotten to be a part of making 60 music videos, roughly 60 of them — 18 of those I wrote and directed. And I really love writing and directing music videos. “I gotta tell you, though, the main reason why I love writing and directing music videos so much is because you, the fans, make it so much fun. You make it so rewarding because you actually care about what we’re making,” she continued.</p>
+                <p class="source-credit">— Https://pagesix</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>AI’s Great Big ‘Dumbening’ Effect</h4>
+                <p>Brains are so outdated.</p>
+                <p class="source-credit">— National Review</p>
+            </div>
+            <div class="story-minor">
+                <h4>Jets vs. Patriots prediction, odds: Expect Gang Green to keep things close in Foxborough</h4>
+                <p>After a disastrous start to the season, Drake Maye and the Patriots offense have found their groove. Over the last two weeks, New England has scored 74 points, including a 45-point explosion against the Raiders in Week 5. Maye showed flashes of his dual-threat ability from last season, throwing for five touchdowns (four passing, one rushing) in the 28-point win. With A.J. Brown and Christian Gonzalez also designated for return, Aaron Glenn and the Jets will face a Patriots team near full strength. The Jets enter Foxborough as touchdown dogs, aiming for their second road win of the season. Geno Smith carries a pristine six-touchdown, no-interception ratio into this matchup, and the veteran has won his last two starts in New England. Braelon Allen continues to fill in well for the injured Breece Hall, posting a career-best 116 yards and a touchdown last week.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>France Burns: Palestinian Flags Fly Over France’s Republic Statue As Riots Rock The Country</h4>
+                <p>Masked mobs hijacked a nationwide day of protest, torcxhing a 143-year-old town hall, storming government buildings and fighting police in the streets. In the middle of the chaos, protesters waved Palestinian flags. In the heart of Paris, demonstrators climbed the monument at Place de la République, the towering statue of Marianne that symbolizes the French Republic. A Reuters photographer captured them perched on it holding a French tricolor alongside a Palestinian flag amid pink smoke. One outlet reported that rioters pulled down the statue’s French flag and hoisted a Palestinian banner in its place.</p>
+                <p class="source-credit">— Daily Wire</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/10/931/523/pope-leo-return-after-surgery.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Pope Leo welcomed back as he delivers Angelus prayer days after lung cancer surgery</h3>
+                <p class="lead-summary"><strong class="drop-cap">A</strong> crowd of supporters greet Pope Leo XIV outside of Gemelli Hospital in Rome, Italy, on Saturday, Oct. 17 as the pontiff returns to the Vatican following surgery to remove a cancerous node in his right lung. Credit: Reuters. Pope Leo XIV made a remarkable return to the Vatican on Sunday, appearing before thousands of Catholic faithful in St. Peter's Square just five days after undergoing surgery to remove a cancerous tumor from his lung. The 71-year-old pontiff delivered his traditional Angelus prayer from a window overlooking the square, marking his first official engagement since being discharged Saturday from Rome's Gemelli hospital, where doctors removed the lower lobe of his right lung. Leo thanked the faithful for their prayers and support throughout his hospitalization, saying his recent health struggles had brought him closer to those suffering from illness. He also expressed gratitude to the doctors, nurses and hospital staff who cared for him following the operation.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>European Parliament votes to confront Muslim Brotherhood, 'Islamist entryism' in overwhelming vote</h4>
+                <p>George Washington University Program on Extremism director Lorenzo Vidino joins 'Fox & Friends' to discuss the Senate's examination of the Muslim Brotherhood's quiet, long-term influence in American institutions. Following the sanctioning of foreign Muslim Brotherhood groups by the Trump administration, the European Parliament recently took its own action against the transnational radical Islamist group.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Fatalities, injuries reported at Canadian Forces Base Wainwright in Alberta after 'incident' that sparked fire</h4>
+                <p>Fatalities and injuries were reported after a serious incident sparked a major fire at Canadian Forces Base Wainwright in Alberta. Canadian officials confirmed fatalities and injuries following a serious incident that sparked a major fire at one of the country's busiest military bases Saturday.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Limoges Town Hall 'largely lost' after far-left rioters set historic building on fire amid French unrest</h4>
+                <p>Far-left protests and riots have broken out across Europe and in France, where police and violent rioters have clashed, leading to destructive fires to businesses and infrastructure. (Credit: Reuters) A historic building in the French town of Limoges, about three hours south of Paris, has been "largely lost" after it was set on fire by rioters as demonstrations continue across France.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/statics.foxsports.com/www.foxsports.com/content/uploads/2026/10/1200/675/gettyimages-2300698759-scaled.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Julian Sayin Injury: What We Know About Ohio State's Star Quarterback</h3>
+                <p class="lead-summary"><strong class="drop-cap">O</strong>hio State might have bigger problems than the very few flaws the Buckeyes have shown this season after quarterback Julian Sayin was injured during the Week 7 19-15 win against Indiana on the road. Against Indiana in a rematch of the 2025 Big Ten championship game, Sayin — who entered Week 7 tied for fourth with 17 passing touchdowns this season and ranked sixth among FBS quarterbacks with 1,772 passing yards — left the field and went to the locker room with about eight minutes remaining in the fourth quarter. It was unclear what injury Sayin may have suffered, but Ohio State head coach Ryan Day said after the game that Sayin will be out for "several weeks." Here's what we know so far about the Ohio State quarterback's injury. In the fourth quarter against Indiana in Bloomington, the Hoosiers sacked Sayin on first-and-10 from Indiana's 38-yard line. He fumbled the ball, and it was recovered by the Buckeyes. But it appears Sayin was injured on this play. When Sayin left the game, he had completed 15-of-29 passes for 235 yards and two touchdowns with two interceptions against the Hoosiers.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Mike LaFleur knows all Rams secrets, but can Sean McVay outsmart former pupil?</h4>
+                <p>The Cardinals don’t have many advantages going up against the Rams on Sunday at SoFi Stadium. Sure, they have Trey McBride, an otherworldly tight end who can catch anything in his orbit, but if there is a distinct advantage for the double-digit underdog Cardinals, it lives somewhere inside the mind of coach Mike LaFleur. Sitting inside LaFleur’s head is a treasure trove of intelligence on the Rams that would make any CIA operative jealous. He has three years of Sean McVay’s offensive playbook. He knows all of Matthew Stafford’s tendencies. He knows the terminology that the head coach and quarterback like to use at the line of scrimmage. Hand signals, audibles and adjustments that make one of football’s most sophisticated offenses tick.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Brewers Fan Cashing In On 'Timeless Ticket' Purchase For 2026 World Series Seat</h4>
+                <p>Willy Wonka gave away five golden tickets to visit his Chocolate Factory. Meanwhile, the Milwaukee Brewers offered up 1,000 "Timeless Tickets." In 2015, the Brewers put 1,000 "Timeless Tickets" up for sale, which entailed a $1,000 payment for a ticket that could be used for any future contest with no deadline to select a game. That select contest could be a Wednesday night game in May, a Wild Card Series game or even a seat for the Fall Classic.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Titans vs. Colts Week 6 prediction, best bets: Miserable season to only get worse for Cam Ward</h4>
+                <p>Sports betting writer Dylan Svoboda is in his third season in the Post’s NFL Bettor’s Guide. The Colts haven’t exactly set the world on fire this season, but they just might be better than their 2-3 record suggests. Indianapolis took the undefeated Chiefs to overtime in Week 2 before beating the Texans and later cruising past the Commanders, 30-13, in London. Even in Sunday’s 34-22 loss to Pittsburgh, the Colts moved the ball well against a solid Steelers defense but repeatedly settled for field goals instead of touchdowns. They’ve scored at least 22 points in four of five games, which should be more than enough offensive firepower to handle the Titans, who have been perhaps the worst team in the NFL this season.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2024/04/931/523/Sylvester_Stallone.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Sylvester Stallone scoffs at nepotism critics over daughter's 'Tulsa King' role: 'You idiot'</h3>
+                <p class="lead-summary"><strong class="drop-cap">S</strong>tallone reflects on the toll of decades in action movies, citing nine back operations, three neck fusions and other injuries. He says performers should leave stunts to the professionals. The 80-year-old action star is pushing back against criticism of nepotism after casting his daughter, Scarlet Rose Stallone, in his crime drama "Tulsa King," delivering a blunt response to those who question whether she earned her place on the show. "First, they go, 'Nepotism is terrible.' I said, 'Oh please, you're not a good parent if you haven't performed a little nepotism. Then obviously you don't care about your kids, because they come first,'" he said, according to USA Today. Sylvester Stallone is standing by his decision to cast daughter Scarlet Rose Stallone in "Tulsa King." (Getty Images) "Of course it's nepotism, you idiot. That's why we're parents. We want the best for our children. So obviously we let them have every advantage," Stallone laughed. The "Rocky" legend made clear that getting an opportunity and proving oneself are two different things. Scarlet Stallone as Spencer and Garrett Hedlund as Mitch in "Tulsa King" season 4.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>John Goodman says ‘Roseanne’ fame left him struggling: ‘That ain’t me’</h4>
+                <p>John Goodman is getting real about the downside of starring in one of the biggest sitcoms of all time. During a conversation with the SAG-AFTRA Foundation, the 74-year-old actor admitted he was “frightened” by the level of fame he achieved following his starring role in “Roseanne” and other projects. When asked what his biggest pitfalls were that he wished he would have foreseen, he replied he wished he would have understood fame better. “I wish I would have taken to it better,” he said. “I didn’t. I was frightened … I’m my own worst enemy, by far.” Earlier in the conversation with interviewer Joe Neumaier, Goodman was asked about the way his career picked up in the late ‘80s and early ’90s, and how he shifted from being a more independent actor to being a celebrity.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Hollywood veteran Kevin Pollak spills wild secrets about 'craziest' actor he's ever worked with</h4>
+                <p>Kevin Pollak didn’t have to think twice when asked to name the craziest actor he ever worked with. The "Tulsa King" actor singled out late Hollywood veteran Rip Torn, recalling a string of bizarre incidents from the set of "Canadian Bacon," a film starring John Candy that was released after his death.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>‘Memoirs of Amorous Gentlemen’ review: Musical Duncan Sheik was working on when he died is an awkward letdown</h4>
+                <p>When Duncan Sheik, the writer of the musical “Spring Awakening” and singer of the song “Barely Breathing,” unexpectedly died last month at age 56, his new off-Broadway show was about a week away from starting previews. That’s tough for a work in progress, which should be making changes nightly. Without one of the creators, they’re stuck in a state of paralysis. But Sheik’s score, while far from perfect, is not really the main problem for “Memoirs of Amorous Gentlemen,” the clumsy and uncomfortable musical that opened Thursday in the old “Sleep No More” compound in the depths of Chelsea. Although not his best work (that’s still “Spring Awakening”), some of the songs — particularly those sung by Sophia Anne Caruso as Colette — are emotive and rousing; a wall of pure sound that’s more transportive than anything else in this awfully familiar nightclub.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/10/931/523/Photos-App-Photo-1.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Here's some tips on how to organize photos with keywords on your phone</h3>
+                <p class="lead-summary"><strong class="drop-cap">Y</strong>our phone probably holds thousands of pictures. Some are important family memories, while others are screenshots you saved because you thought you might need them later. Then comes the frustrating part. You remember taking a particular photo, but finding it feels like searching for a needle in a digital haystack. Apple's iOS 27 offers a way to make that search easier by letting you add keywords to individual photos. Instead of scrolling through months of pictures, you can search for a word you've assigned to a photo and pull it up again. Samsung Galaxy and Google Pixel users have similar ways to organize their pictures, although the tools work differently. Here's how to take advantage of them and spend less time hunting for photos. In this free live online class, Kurt "CyberGuy" Knutsson will share five practical ways to protect your trip and your wallet this holiday travel season. You’ll learn how to secure your phone and personal information, find better travel deals, avoid common scams, save money on bookings and use technology to make your travels easier and less stressful. No technical experience is needed. Join us Saturday, October 31, at 11 AM ET / 8 AM PT. Register free now at CyberGuyLive.com. Samsung Galaxy users can organize photos with custom tags in the Gallery app, while Google Pixel users can search images using Google Photos. (Photographer: SeongJoon Cho/Bloomberg via Getty Images) Apple's Photos app can already recognize people, pets, places and objects. However, automatic searches don't always understand why a particular photo is important to you. That's where manually assigned keywords can help. For example, you might photograph a parking spot at an airport or save a picture of a particular appliance model number. Adding a keyword you will remember later can make the photo much easier to find. Choose words that make sense to you. For example, a picture of your car's license plate might get a keyword such as "license plate." You could also tag pictures from a family vacation with a memorable trip name. You can also manage your keywords by opening Photos > Collections > your profile icon > Manage Keywords. From there, you can rename keywords, delete them or add frequently used keywords to your favorites.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Hackers hide dangerous fake AI downloads behind Google ads</h4>
+                <p>'America Reports' co-anchors John Roberts and Sandra Smith discuss President Donald Trump hosting top tech leaders to discuss the future of artificial intelligence. You search Google for Claude, the popular AI assistant, and spot a sponsored result. The link points to Bing, Microsoft's search engine. Nothing immediately screams scam.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
