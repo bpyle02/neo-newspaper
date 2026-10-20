@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>MONDAY, OCTOBER 19, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/10/931/523/trump-rally-fox-news.png?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Trump takes border crackdown to deep-red state as shock Senate battle threatens GOP stronghold</h3>
+                <p class="lead-summary"><strong class="drop-cap">P</strong>resident Donald Trump touted his record on reducing violent crime committed by illegal immigrants during a rally in Highland Heights, Ky. EXCLUSIVE: WICHITA, KANSAS — President Donald Trump is expected to tout his immigration agenda in ruby-red Kansas on Monday, weeks after federal immigration agents made dozens of arrests in the southwestern portion of the state. Trump is headed to the Sunflower State for a rally just outside of Wichita as a tighter-than-expected Senate race that could determine the balance of power in the upper chamber unfolds. Fox News Digital has learned that Trump will lean into the policy positions that helped propel him and Republicans to power two years ago. President Donald Trump waves as he leaves the stage following a campaign rally at Freeman Coliseum on Oct. 7, 2026, in San Antonio, Texas. (Win McNamee/Getty Images) "President Trump stopped the invasion of our country and delivered Americans the most secure border in American history," White House spokeswoman Lauren Bis told Fox News Digital. "Under the President’s leadership, 3 million illegals have left the United States and zero illegals have been released at the border in seventeen months." "Meanwhile, radical Democrats want to go back to their extreme open border policies, abolish ICE, and grant amnesty to the illegal aliens they released into our communities," she continued. The Trump-led Department of Homeland Security (DHS) and Immigration and Customs Enforcement (ICE) have touted a string of arrests and deportations of illegal immigrants in the state over the last several months. According to the White House, among some of the "worst of the worst" who were arrested in the state by federal immigration officers include Omar Israel Hernandez of Mexico, convicted of first-degree murder, Jose Luis Rauda-Diaz of El Salvador, convicted of aggravated robbery and two counts of possession of a weapon, Oscar Sanchez-Corona of Mexico, who had previously been deported for drug offenses, damaging property, and driving under the influence, Greg Chukwuka Orji of Nigeria, convicted of dangerous drugs and possession with intent to distribute fentanyl, and Alberto Estrada of Mexico, convicted of aggravated indecent liberties with a child and rape.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Sightseer slips plunges to death off 65-foot waterfall — friends filmed horrific moment</h4>
+                <p>A sightseer slipped and fell to her death off a 65-foot waterfall in Indonesia while being filmed by horrified friends. Windy Rahma Putri, 25, was bathing in waters above Robo Waterfall in Harau, a protected nature preserve in West Sumatra, on Thursday afternoon when she was swept away by swift currents and plunged dozens of feet down the steep drop, officials said. Putri’s friends were filming her as she was lying on her back on a rock when she lost her grip — showing her desperately trying in vain to grab onto a friend as she slipped and fell off the edge. “The victim was reported to have slipped and was suspected of drowning and being swept away,” Abdul Malik, head of the Padang search and rescue office, said, according to Newsflash.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Usha Vance And Sarah Sanders Join Forces For A Classroom Comeback</h4>
+                <p>Second Lady Usha Vance will join Republican Arkansas Governor Sarah Huckabee Sanders on Tuesday to promote childhood literacy and recognize educators as part of her ongoing efforts to get more American children to fall in love with reading. Vance and Sanders will begin their visit at Glenview Elementary School in North Little Rock, where they will visit students in their classrooms. The pair will then host a roundtable with state education leaders before Vance reads aloud to a school assembly. The second lady and governor will conclude the day with a reception at the Arkansas Governor’s Mansion honoring teachers who earned bonuses through the state’s Merit Teacher Incentive Fund.</p>
+                <p class="source-credit">— Daily Wire</p>
+            </div>
+            <div class="story-minor">
+                <h4>Abdul El-Sayed Was Asked to Disavow the Muslim Brotherhood. Here's What He Had to Say.</h4>
+                <p>Over the weekend, Michigan Democrat Senate candidate Abdul El-Sayed was asked to draw a line: Would he disavow the Muslim Brotherhood? The exchange took place Saturday in Caro, Michigan, during a stop on his “It Shouldn’t Be This Hard” campaign tour. An attendee named Tommy asked the Michigan Democrat point-blank whether he would disavow the Muslim Brotherhood, which several countries, including some with Muslim-majority populations, designate as a terrorist organization. El-Sayed answered the question directly, but then turned his response into a lecture, accusing those who would ask him to draw that line, of questioning his allegiances entirely because of his Muslim faith.</p>
+                <p class="source-credit">— Townhall</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/10/931/523/alberta-independence-rally.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Alberta holds non-binding separation vote as independence fight grips Canada</h3>
+                <p class="lead-summary"><strong class="drop-cap">C</strong>anadian Prime Minister Mark Carney addressed the Alberta separation vote on Oct 15 on a visit to the province. (Video: Associated Press.) OTTAWA: Residents of Alberta began voting Monday in a non-binding referendum that will determine whether the western-Canadian province should pursue separation from Canada. The vote comes at a time when the province is mourning the deaths of four soldiers, while dozens of others were injured from a fast-moving fire that burned through a military base in Alberta. While the results of a poll involving 1,021 respondents released by Abacus Data on Saturday showed that 74% of decided voters favor Alberta remaining within the Canadian Confederation, the independence issue won’t disappear for the nearly 30% who want Alberta’s government to begin the process to hold a binding provincial referendum on whether Alberta should separate from Canada, according to veteran separatist organizer Cory Morgan, who leads a group called Pathway to Independence. "It will say that about one in three Albertans have had it," Morgan told Fox News Digital. "There is a big rift within Alberta and if things don’t change, it will be a growing faction in this province — so this vote is an important one."</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>US lawmakers sound alarm as violence grips NATO ally Albania amid anti-government protests</h4>
+                <p>Student-led protests over alleged corruption, jobs and education turned violent as demonstrators demanded Prime Minister Edi Rama resign. (Reuters.) U.S. lawmakers are growing concerned with ongoing violence gripping the small NATO nation of Albania as police clashed with protesters in the capital Tirana.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>WHO'S WHO: Inside France's 'Chaos Inc' franchise of communist groups, labor unions and global activists</h4>
+                <p>Dr. Qanta Ahmed, a fellow at the Independent Women's Forum, warns of rising violence in Europe as pro-Palestinian and communist mobs clash with police. After more than 800 rioters are arrested in France for looting and setting buildings ablaze, Ahmed analyzes the cultural and political shifts driving destructive protests across major European cities.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Strait of Hormuz crisis traps 6,000 sailors as attacks on ships mount, UN maritime chief says</h4>
+                <p>International Maritime Organization Secretary-General Arsenio Dominguez discusses efforts to communicate with Tehran as attacks escalate and commercial shipping faces growing risks. Thousands of sailors remain stranded near the Strait of Hormuz amid escalating attacks on commercial ships, the United Nations' top maritime official warned Sunday after Iran accused the U.S. military of using an international emergency radio channel to threaten civilian crews.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F10%2Fmike-mcdaniel-fired.jpg?quality%3D90%26strip%3Dall%261792403880" alt="Lead Story Image" class="news-photo">
+                <h3>‘Growing buzz’ Mike McDaniel could be out as Chargers coordinator after latest debacle</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>he 0-6 Chargers boast the league’s worst offense (No. 32 in DVOA) and are averaging just 15 points per game, with speculation running rampant that Los Angeles will fire its offensive coordinator. Pro Football Talk reports there’s “growing buzz” that Jim Harbaugh will fire McDaniel as the team’s offense continues to flounder in bizarre fashion. The Chargers put up a lackluster effort on Sunday, again failing to score a touchdown as they were beaten 22-6 by the Chiefs. If McDaniel is fired, former Jets head coach Adam Gase is expected to take over play-calling duties for the Chargers. He’s currently their passing game specialist. “We’re going to look at everything,” Harbaugh said when asked whether McDaniel would still be the play caller. “The job I’m doing, it starts with me. We’ll watch this and get with our offensive coaches,” Harbaugh added. “I see the effort, I see the work being put in in the meetings, on the practice field, and to get that to translate to the field is what’s necessary. Feel bad for our players, our team, our coaches, our fans. And [offense] needs to be addressed.” McDaniel had previously signed to be the Dolphins head coach through 2028 and was fired last offseason. He chose to continue coaching this season as the Chargers offensive coordinator gig became available. McDaniel is likely still being paid by Miami with his Chargers salary being offset by the big contract he got from Miami.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Tom Brady’s ice-blue $68K Rolex watch steals spotlight during NFL broadcast</h4>
+                <p>The seven-time Super Bowl champion and arguable NFL GOAT continued with his now weekly tradition of showing off a designer watch in the broadcast booth. The Fox Sports color commentator was in the booth for the Chicago Bears vs. Atlanta Falcons game on Sunday. Before opening kick, he posted a photo of the watch he was wearing to his Instagram story with the caption, “Game time @nflonfox / Bears at Falcons !! 💪🏻💪🏻💪🏻”. The watch appears to be a Rolex Land-Dweller 40 in platinum that includes an ice-blue honeycomb dial and an integrated Flat Jubilee bracelet. The ice-blue dial is currently reserved by Rolex for platinum models, making it exclusive. And the non-diamond 40mm version is currently retailing for $68,400.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Kyle Juszczyk pleads for disgruntled ex-49ers star to ‘come home’</h4>
+                <p>San Francisco 49ers star fullback Kyle Juszczyk wants his team to address its injury-plagued defensive line with a familiar face. The Indianapolis Colts fell to 2-4 on the season after their 26-20 loss to the previously winless Tennessee Titans on Sunday. Colts edge rusher made waves with comments he made to the media after Sunday’s loss. “I mean, I’m sick and tired of the same song and dance every year,” a visibly frustrated Buckner postgame. He has a right to be frustrated, given that the Colts haven’t made the postseason since the 2020 season—which was Buckner’s first season with the franchise.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Shawne Merriman ordered to pay $4 million for model’s overdose death</h4>
+                <p>Shawne Merriman has been ordered to pay $4 million in a wrongful death lawsuit regarding a Playboy employee dating back to 2017, TMZ Sports reported Monday. A Los Angeles judge made the order against the former Chargers linebacker along with three other defendants — J.P. Castro, Monica Maass and Elias Wehbe — in early October, per court documents, after a jury found them liable in 2025. The funds will be paid to the family of Kimberly Fattorini, who died of an overdose after a night out. Fattorini’s parents, DeAnn and Ferdinand Fattorini, previously sued Merriman in 2019, alleging he drugged and sexually assaulted their daughter before she overdosed.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F10%2Fnewspress-collage-woad11gs0-1792376227577.jpg?quality%3D90%26strip%3Dall%261792361884" alt="Lead Story Image" class="news-photo">
+                <h3>‘Other Desert Cities’ review: Julia Louis-Dreyfus and Allison Janney’s play has laughs, but no bite</h3>
+                <p class="lead-summary"><strong class="drop-cap">“</strong>Other Desert Cities,” like so many plays, is about a family with issues, to say the very least. A free-spirited Manhattan writer named Brooke jets to sunny Palm Springs to visit her well-to-do mom, dad, TV producer brother and leftist aunt for Christmas. She’s very New York, they’re very California circa 2004. Her buttoned-up Republican parents were close friends of Ronald and Nancy Reagan from their days working alongside them in Hollywood — mom as a screenwriter with her sister, and dad as an actor like Ronnie. Now, their downcast daughter has brought along a surprise lump of coal as a present: galleys of her new memoir, which airs their dirtiest laundry. Those toxic pages have the potential to destroy them. But the likeable enough Broadway revival of Jon Robin Baitz’s sharp-tongued drama, which opened Sunday night at the Hudson Theatre, takes these people’s competing personalities way too far. Quite by accident, everybody in this midcentury modern home — not just Brooke — becomes the black sheep. Director John Benjamin Hickey’s discordant production starring Julia Louis-Dreyfus, Allison Janney, Ed Harris, Joe Keery and Lily Rabe fails to click when it’s anything more than one person tossing off mean zingers. Each actor has their moments, most are fine and one is excellent. Not for a second, however, does anybody believe that the Wyeths are a real family or something other than an impressive assemblage of celebrities.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Prince Harry risks 'lobbing a grenade' at Prince William as chance to heal yearslong feud emerges: expert</h4>
+                <p>Royal broadcaster Helena Chard says Prince Harry's reported Diana documentary won't be viewed as a peace offering, warning it could reignite tensions with his older brother, Prince William. Prince Harry’s return to the U.K. could offer him his best chance yet to reconcile with his estranged brother, Prince William, but royal experts say a major obstacle remains in his way.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Poison drummer Rikki Rockett recorded messages for his kids as cancer threatened to take his tongue</h4>
+                <p>Poison drummer Rikki Rockett was staring down a terrifying possibility as he battled cancer: Doctors might have to remove his tongue. After chemotherapy and radiation failed to stop the disease, the rocker began recording messages for his young children so they could remember the sound of his voice. “I was recording pieces of information for my kids so they could watch it, because the next step was to cut my tongue out if they had to,” Rockett (born Richard Allan Ream) told Fox News Digital. “And I wanted them to know what I sounded like and my advice to them growing up, and I wanted them to hear it from me. I wanted them to understand what I was, what I thought I was or would become.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Kevin Bacon pleads for help recovering missing FedEx package rerouted multiple times around the globe</h4>
+                <p>Hollywood Nation: Kevin Bacon launches 'six degrees' campaign to encourage people to self-isolate amid the coronavirus outbreak. Kevin Bacon was yearning and burning for somebody to tell him where his lost clothes were hiding. Bacon, 68, pleaded with his followers to help him figure out where FedEx sent a package of clothing he sent last month to a location across the pond.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2025/03/931/523/2-fbi-warns-about-free-document-conversion-sites-spreading-malware.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>New iPhone spyware can steal passwords and photos</h3>
+                <p class="lead-summary"><strong class="drop-cap">A</strong>pple's newly unveiled foldable iPhone Duo sparks significant consumer interest despite a hefty $1,999 starting price tag. On 'Varney & Co.', Taylor Riggs explains the premium device's unique dual-screen capability and ultra-thin design. Host Stuart Varney admits he plans to purchase the high-end smartphone, which can cost up to $3,000 for the two-terabyte storage model. Your iPhone probably holds more personal information than your wallet. Think about the passwords you've saved, the photos you never intended to share and the private notes you keep handy. Now, security researchers have uncovered a more aggressive version of spyware designed to get its hands on that information. The threat is called P7 DarkSword, and researchers at mobile security company iVerify discovered it while investigating an infected iPhone. According to their Oct. 8, 2026, report, the spyware can collect sensitive information and communicate with attackers who can issue additional commands remotely. That sounds alarming, and it should get your attention. However, the research does not establish that every iPhone is vulnerable. Here's what researchers discovered and how you can better protect your device. Researchers discovered a stealthier version of DarkSword spyware that can secretly collect personal information and receive commands from attackers. (iStock) In this free live online class, Kurt "CyberGuy" Knutsson will share five practical ways to protect your trip and your wallet this holiday travel season. You'll learn how to secure your phone and personal information, find better travel deals, avoid common scams, save money on bookings and use technology to make your travels easier and less stressful. No technical experience is needed. Join us Saturday, October 31, at 11 AM ET / 8 AM PT. Register free now at CyberGuyLive.com. P7 DarkSword is a newly identified variant of DarkSword, an existing iPhone spyware family. Researchers at iVerify discovered it while investigating a suspicious infection in August 2026. Their security system had flagged unusual activity on a customer's device. After examining the phone with the customer's permission, the team discovered that the spyware behaved differently from versions they had previously encountered.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Hackers could already be inside American utilities, cyber experts warn of 'Trojan Horse' threat</h4>
+                <p>John Walsh, Senior Vice President and Field CTO for Government and Critical Industries at IGEL, explains how a cyberattack on French grocery stores exposes vulnerabilities in America's critical infrastructure. The cyberattack targeting French supermarket freezers and causing millions of dollars in losses last week should be an ominous warning to American businesses, cybersecurity experts told Fox News Digital.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
