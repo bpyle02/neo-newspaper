@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>TUESDAY, OCTOBER 20, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://pagesix.com/wp-content%2Fuploads%2Fsites%2F3%2F2026%2F10%2F145031255.jpg?quality%3D90%26strip%3Dall" alt="Lead Story Image" class="news-photo">
+                <h3>Bethany Joy Lenz shares her six favorite books</h3>
+                <p class="lead-summary"><strong class="drop-cap">E</strong>ver wonder what your favorite celebrities are reading — whether it’s a timeless classic or the buzzy bestseller they can’t put down? Welcome to Page-Turners, where stars reveal the books that keep them hooked, inspired and up all night. Warning: your TBR pile is about to get a lot longer. Bethany Joy Lenz has the ability to get lost in a book wherever she is, but prefers when she can cozy up with her dogs and a great read. “Neurodivergents of the world may know this superpower of reading anywhere,” Lenz — whose new book “The Betrayal of Cora Wexford” is on sale now — told Page Six. “Many times it can feel easy to drown out any large noises and hyper focus on reading or writing, but my favorite spot to read is on the couch.” The “One Tree Hill” alum added her ideal book-reading locale is by a fire, while it’s raining outside with one of her Great Pyrenees next to her. “I love that books take me anywhere I want to go, and often places I didn’t know I needed to go,” she explained. The “Dinner for Vampires” author loves a variety of genres, including fiction, specifically murder mysteries, theology, memoirs and cooking. “Choosing a top six is an impossible task, but these come to mind first,” Lenz said, noting that she put asterisks beside the titles that have online spoilers. “Happy Reading (adventuring?).” “I watched the TV series first and was so captivated by the world and characters that I wanted to live in it longer — I needed more. The story spans decades in Russia, beginning at the turn of the century, and centers on a man who is sentenced to live out his days as a prisoner in a luxury hotel while the guests who come and go usher in innovation, romance, the devastation of communism and the hope of a new world. The prose is exceptional and the details sweep me away.” “I’m a sucker for time-travel novels and fully intend to write one someday. The story is so elegant and creative, and this is his debut novel, I believe. A middle-aged man in 1988 wakes up 91 years prior in Vienna. While he searches for the reason for his displacement (and how to get home), adventures ensue. This is a fabulous Autumn and Winter read.” “Another debut novel and a masterclass in suspense and craft. I listened to the audiobook of this during COVID-19 and found myself just standing still in the middle of rooms around my house, staring off into the distance and holding my breath. It’s written with such care and precision. This is a really special book.</p>
+                <p class="source-credit">— Https://pagesix</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Alberta Votes to Remain a Part of Canada</h4>
+                <p>Alberta, Canada's fourth most populous province, has voted overwhelmingly to remain part of the country after a months-long push by some to separate from Canada. The attempt at independence stemmed from concerns about energy policy and the province's robust oil industry, how much the province pays in taxes and transfers, and political alienation — Alberta is more conservative than much of central and eastern Canada. Last night, voters had a chance to approve a non-binding referendum to begin the process of independence. They overwhelmingly voted to stay, with 76 percent rejecting independence.</p>
+                <p class="source-credit">— Townhall</p>
+            </div>
+            <div class="story-minor">
+                <h4>Is the New ‘Street Fighter’ Movie Streaming? Where to Watch ‘Street Fighter’ 2026</h4>
+                <p>Stream It Or Skip It: ‘Holiday Touchdown: A Bears Love Story’ on Hallmark, Another Solid Christmas Collab Between the NFL and Hallmark Where Was the ‘Love Of Your Life’ Movie Filmed? Discover the Filming Locations for Margaret Qualley’s New Amazon Romance Margaret Qualley, Aaron Pierre Talk New Heartbreaking Amazon Romance ‘Love Of Your Life:’ “Getting It Wrong to Get It Right” Stream It Or Skip It: ‘Toy Story 5′ on Disney+, the Continually Endearing Saga of Sentient Toys’ Tearjerking Existential Crises Is ‘Toy Story 5’ — Now Streaming on Disney+ — the Best Pixar Sequel Movie Ever Made?</p>
+                <p class="source-credit">— Https://decider</p>
+            </div>
+            <div class="story-minor">
+                <h4>America Last? The Influx Of International Players Is Squeezing Out Domestic College Athletes And Washington Wants To Fix It</h4>
+                <p>The top-25 teams in the NCAA rankings feature 265 international student-athletes, which represent 36.9 percent of the available roster spots. This article was written by Karen Crouse and published on Sport & State, a new media company founded by Clay Travis that is built around sports, culture, original voices, and live conversation. SPRINGFIELD, Mo. — The parents drove from their home in St. Louis, three-and-a-half hours each way, with their soccer-playing son for a daylong recruiting visit at Missouri State. As the son stood on the pitch kicking balls to Bears team members, the unseasonably warm September sun dissolved the years as the father, who played Division I soccer at a university in another state, reminisced about his own career.</p>
+                <p class="source-credit">— Daily Wire</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/03/931/523/iran-leaders-poster-tehran-iran.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Iran regime under pressure as rebel groups escalate attacks in volatile southeast</h3>
+                <p class="lead-summary"><strong class="drop-cap">I</strong>sraeli Prime Minister Benjamin Netanyahu outlines his vision for the future of Iran’s Islamic regime on ‘Life, Liberty & Levin.’ A new coalition of Iranian opposition groups in the restive southeastern provinces of Sistan and Baluchistan and Kerman in the Islamic Republic have launched a string of armed attacks against the clerical regime in the region. The six strikes claimed by the coalition known as the People’s Fighters Front (JMM) have contributed to instability in the provinces, raising pressing questions about whether armed resistance against the clerical regime in Tehran will spread and if the regime can retain control over Sistan and Baluchistan, which is a majority Iranian Sunni province. Iran is largely a Shiite Muslim country, and the minority Iranian Sunni population has faced discrimination over the decades. Sistan and Baluchistan is the second largest of the 31 Iranian provinces. Mardo Soghom, an Iran expert who has written extensively about the Islamic Republic, told Fox News Digital, "The Sunni unrest can stretch the regime's military and internal security capabilities and have a psychological impact on its forces, in addition to what they experienced during the 40-day operation by the U.S. and Israel. The armed groups would not be able to establish control of the south-east, but they can seriously weaken the regime's control."</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Global 'Chaos Inc' grows to 101 groups with plans for new rounds of demonstrations</h4>
+                <p>Fox News Digital senior editor Asra Nomani discusses far-left groups funding French riots, the organizations behind the unrest and the indoctrination of young people around the world on 'America Reports.' Two days after an estimated 500,000 demonstrators poured into streets across France and clashes left parts of Paris and other cities burning, French activists are calling supporters back into the streets Saturday, Oct. 24, for a new protest billed as "Acte II," with 212 "mobilizations" currently planned, according to a digital map of the plans.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Some synagogues canceled prayers as French Jews faced warnings amid violent protests</h4>
+                <p>For some French Jews, Saturday's unrest brought an unsettling warning: conceal outward signs of Jewish identity and avoid gathering outside synagogues. One community member told Fox News Digital that some congregations had even canceled afternoon prayers on the Sabbath as demonstrations across France descended into violence.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Beleaguered Macron cites US-Iran war as factor in protests amid Trump, Vance criticism</h4>
+                <p>President Donald Trump tells reporters that he warned French President Emmanuel Macron about what would happen if the country's borders remained open. The embattled French President Emmanuel Macron on Sunday pinned some of the blame on the U.S. war against the terrorist regime in Iran for the widespread riots and looting unfolding across France.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F10%2Fnewspress-collage-3b57dqv2p-1792499427645.jpg?quality%3D90%26strip%3Dall%261792485065" alt="Lead Story Image" class="news-photo">
+                <h3>Dan Quinn ‘definitely knew it was 4th down’ after lip readers questioned Commanders bizarre play</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>he Commanders have been a disaster managing game situations in the last two weeks and during Monday night’s 23-17 road loss to the 49ers, Jayden Daniels made another head-scratching decision. On a fourth-and-2 play from the 49ers’ 13-yard line early in the second quarter, Daniels bizarrely chose to throw the ball away rather than force it to a receiver since it would be a turnover either way. After the play, ESPN showed Quinn appearing to say, “Oh, that was 4th down,” along with some profanity, according to some online lip readers. Quinn denied not knowing what down it was postgame, despite what appeared to be him saying the contrary on the sidelines. “I just gotta execute better in that situation, regardless of a flag or not,” Daniels told reporters. “Fourth down … don’t die with the ball, so I have to be better in that spot.” Daniels appeared to be referring to a flag that was thrown by officials that he potentially thought was for a defensive offside that would have given Washington a first down regardless of the play. That was not the case, though, as running back Rachaad White was instead flagged for an illegal shift while trailing 13-3, a penalty that the 49ers declined. Washington hasn’t been on the same page for a few weeks now, as last week it embarrassed itself with clock mismanagement during a tie against the Giants. The Commanders had a first down in field goal range and over 50 seconds remaining in overtime when Quinn and Daniels befuddingly ran a quarterback run with no timeouts and less than 10 seconds left.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Jalen Hurts’ mom speaks out on scary blood clot situation</h4>
+                <p>Jalen Hurts’ mother, Pamela Hurts, offered a positive message Monday night just hours after her son’s season ended due to multiple blood clots on his lungs. “Just a reminder y’all, be grateful,” Pamela said in a TikTok video in which she seemingly walked around a residence while filming hardwood. “Be grateful for where you are and what you have because your life could change at a blink of an eye. Be grateful. What are you grateful for?” The Hurts family is dealing with a significant scare after further testing revealed a more serious situation facing the Super Bowl-winning quarterback than initially believed.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Despite Rams’ awful start, devastating injuries, Super Bowl run still in the cards</h4>
+                <p>Well, the Los Angeles Rams apparently never got the memo because not only did they lose to the Arizona Cardinals on the scoreboard on Sunday afternoon, but also on the injury report that was revealed on Monday. The Cardinals delivered a humiliating 18-16 defeat that dropped the Rams to 2-4 and into last place in the NFC West. Then, less than 24 hours later, they were dealt another brutal blow when head coach Sean McVay revealed an avalanche of injuries that was somehow more devastating than the final score. Newly signed kicker Blake Grupe tore his ACL making a touchdown-saving tackle after another special teams coverage breakdown.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Why Mike Brown is the perfect coach for these Knicks to chase a repeat</h4>
+                <p>When I think about Mike Brown, my mind keeps coming back to J.K. Simmons in those Farmers Insurance commercials. “At Farmers Insurance, we know a thing or two because we’ve seen a thing or two.” Brown knows a thing or two because he’s seen a thing or two — and that’s why he has as good a chance as any coach to defy the NBA’s era of parity and lead the Knicks to a repeat championship. He was a part of four championship teams as an assistant before leading the Knicks to a title last season — including the dynasty Warriors teams, who successfully went back-to-back in 2017 and ’18.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/10/931/523/diana-harry-william.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Princess Diana feared Prince Harry would ‘wither’ in Prince William’s shadow: expert</h3>
+                <p class="lead-summary"><strong class="drop-cap">R</strong>oyal broadcaster Helena Chard says Prince Harry's reported Diana documentary won't be viewed as a peace offering, warning it could reignite tensions with his older brother, Prince William. Princess Diana feared Prince Harry would struggle to find his place in the royal family while growing up in the shadow of his older brother and future king Prince William, according to a royal expert. The late Princess of Wales’ concerns about her sons are back in the spotlight amid news of the upcoming three-part documentary "Diana Unheard," which will feature never-before-heard audio from roughly five hours of secret recordings that Diana made with her friend Dr. James Colthurst in 1991. The documentary's producers told Deadline that the recordings, which were used in Andrew Morton’s explosive 1992 biography, "Diana: Her True Story," include the princess speaking candidly about her sons, William and the line of succession, as well as her troubled marriage to then-Prince Charles and other aspects of royal life.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Metallica Vegas Sphere ticket price hit new low. Get last-minute seats now</h4>
+                <p>A few days ahead of Metallica’s fourth week of their Life Burns Faster residency at Las Vegas Sphere, ticket prices are lower for the Thursday, Oct. 22 show than ever before. At the time of publication, the lowest price we could find on seats for the first night of their No Repeat Weekend was $486 including fees on Vivid Seats. While the $9 in savings is relatively small, it speaks to a trend we’ve noticed on a weekly basis for Metallica Sphere tickets. If you go through The Post’s past stories on Metallica, our records show that ticket prices often start high and drop at the last minute. And should you take the plunge and procure tickets, you’ll be treated to the show of a lifetime.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>'Office Space' star Richard Riehle dead at 78</h4>
+                <p>Actor Richard Riehle, who starred in "Office Space" and "Casino," died over the weekend, Fox News Digital confirmed. He was 78. (This video contains AI-assisted content.) Actor Richard Riehle, who starred in "Office Space" and "Casino," died over the weekend, Fox News Digital confirmed. He was 78.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>John Mayer’s Mohegan Sun concert had Vegas-worthy range—Here’s what to expect at Sphere</h4>
+                <p>And for John Mayer, his October 9, 2026 performance at the Uncasville, CT 10,000-seat arena was a homecoming. Mayer, a Connecticut native, put on an impressive two-hour solo concert in honor of Mohegan Sun’s 30th Birthday Celebration. Nostalgic yet still new, Mayer’s live performance was a mix of hometown comfort meets freedom of expression — or better yet, freedom to jam out and be himself on stage for the first time in quite a while. It was his first show on his own in years, but Mayer took bluesy, folksy inspiration from his Las Vegas Sphere residency with Dead & Company, giving fans a first look at what they might experience at his own upcoming Sphere performances next spring.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
