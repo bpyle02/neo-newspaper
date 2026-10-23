@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>THURSDAY, OCTOBER 22, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F10%2Fdate-gone-wrong.jpg?quality%3D90%26strip%3Dall" alt="Lead Story Image" class="news-photo">
+                <h3>Studies show 58% of New Yorkers bail on dates; This simple strategy makes them stick around</h3>
+                <p class="lead-summary"><strong class="drop-cap">F</strong>inding a boyfriend or girlfriend when living in New York City can seem impossible. It feels like every other person has a dating disaster tale to tell, and now, there’s data to back up that hypothesis. According to new data from ResX, 58% of New Yorkers revoke their tables of two, with the peak window being Fridays between 4 and 5 pm. Since when did not showing up to dates become a trend? I’ve had my fair share of romantic misadventures (heck, I published a whole book about them), and one of the most important things I learned along the way was keeping an open mind. The first step is a leap of faith, sitting at the table and letting the conversation flow, which, yes, is easier said than done. Luckily, we’re here to help. If you’re stuck on what to talk about, or the first date ice-breaker questions start to run dry, Esther Perel Where Should We Begin? Card Game is the perfect backup plan. Designed for date night, the deck of cards encourages storytelling and deeper conversations without having too think too much about new prompts. The small box is easy enough to take on the go and stash in your purse while going for dinner and drinks. It comes with 200 cards and one six-sided die. Play with just your date, or bring in a group of up to six people. Sample prompts include, “My latest crush is…”, “I owe an apology to…” and “When I notice myself getting older, I…” There’s a great mix of lighthearted and more thoughtful cards depending on how the conversation is flowing leading up to the game. It’s also worth mentioning that the product was carefully curated by Esther Perel, a best-selling author and psychotherapist known for her wise takes on relationships and intimacy. She also has a podcast and an active Instagram channel with frequent musings on romance. With her expertise in a small, pocket-sized card box, your first date will surely be a success. Bad breath on a first date can be a total dealbreaker. This minty fresh formula is fool-proof. Cozying up to your new boo with a home-cooked meal? Add a touch of class to your date with these high-quality wine glasses. Hear me out…if you’re headed toward a one-night stand, a spacious tote can come in clutch. This roomy option is lightweight, durable and contains various compartments. This article was written by Carrie Berk, Commerce Reporter for the New York Post. Carrie specializes in New York City-ready fashion finds for every style, age and budget. Combing the internet’s sale sections, brand collaborations, seasonal trends, timeless staples and lookalike styles, she makes recommendations that stand the test of time in your wardrobe – without breaking the bank. Before joining The Post full time in 2026, her work appeared in HuffPost, Women’s Health, Newsweek and more.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>NRSC’s ‘Did You Know’ Series Exposes Just How Long Sherrod Brown Has Been Screwing Over Ohioans</h4>
+                <p>The National Republican Senatorial Committee's (NRSC) "Did You Know" series has been exposing just how long Democrat Sherrod Brown has been screwing over Ohioans, and the facts may shock you. Brown was first elected to Congress in 1974, nine years before this writer was even born, and over the past half-century, Brown has been a consistent yes-vote for the far-left and its radical agenda. Sherrod Brown started running for office in 1974 — the same year the Rubik's Cube was invented.52 years, no results for Ohio.It's time to retire him for good. pic.twitter.com/ExcCVDwLJL During that time, here are the inventions, movies, and historical events that have happened since Brown first took office. In 1974, the same year Brown was elected to Congress, People Magazine released its first issue (Gerald Ford was on the cover), the catalytic converter was mandated in cars, "The Godfather: Part II" was released, and baseball legend Babe Ruth's home run record was broken. The digital camera was invented the following year, followed by VHS and the cold medicine DayQuil in 1976.</p>
+                <p class="source-credit">— Townhall</p>
+            </div>
+            <div class="story-minor">
+                <h4>There’s A New Resource In The Legal Fight Against Trans Madness</h4>
+                <p>They know the law, they know the topic, they know the system, and they can offer guidance in a legal fight if you need it. In a Substack post last year, the then-newly formed Gender-Critical Law Society (GCLS) announced its intention to change the legal environment around transgender identitfication. “Our work includes persuading the judiciary to allow lawyers, parties, and witnesses to use sex-based pronouns in their courtrooms,” wrote New York consumer protection lawyer and GCLS co-founder Glenna Goldis. Their argument: The law should recognize reality. You should be able to walk into a courtroom and say the word “he” if you find yourself looking at a man who declares that he’s a woman, without a judge chastising you or compelling you to use supposed gender pronouns that don’t match a person’s sex.</p>
+                <p class="source-credit">— The Federalist</p>
+            </div>
+            <div class="story-minor">
+                <h4>He Didn’t Ask</h4>
+                <p>President Trump cut the public out of the decision to go to war.</p>
+                <p class="source-credit">— National Review</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/10/931/523/burned-cars-paris.png?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Macron has one more chance to save the country or ‘it’s lost for France,’ business owner warns</h3>
+                <p class="lead-summary"><strong class="drop-cap">M</strong>ichÃ¨le Teboul tells Fox News Digital France faces a critical test after last week's violent protests. She says some store owners have bought weapons ahead of upcoming protests. FIRST ON FOX: A French business owner who had five of her family's stores wrecked by looters last week said this coming Saturday's protest could be a watershed moment for France. Her message to President Emmanuel Macron: "Next Saturday is your last chance to save France," Michele Teboul, the business owner, said in an interview with Fox News Digital. Addressing both Interior Minister Laurent Nunez and Macron, she said, "If they don't do whatâs necessary to do next Saturday, I think it is lost for France." Teboul lost more than merchandise when looters ransacked 15 of the stores owned by her family, leaving five completely destroyed. She is also losing faith in whether the government of France can still protect them. Broken window panels lean against the facade of La Barrique bar and restaurant as debris covers the surrounding pavement following protests in Paris, France, on October 17, 2026.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Pope Leo XIV needs no further cancer treatment after lung tumor removed, doctors say</h4>
+                <p>Pope Leo XIV's brother Louis Prevost shares updates on the pope's recovery following cancer removal surgery. He discusses the pope's first public prayer and messages of support from Rome. Pope Leo XIV will need no further treatment for lung cancer after final tests confirmed the disease was localized, his doctors said Wednesday.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Bibas family relative takes fight to ICC after mother, two young boys murdered by Hamas</h4>
+                <p>Secretary of State Marco announced Friday that the Trump administration is sanctioning International Criminal Court, arguing it does not have the power to prosecute American citizens and leaders. The International Criminal Court has so far turned a blind eye to the family of Shiri Bibas and her young sons, who were brutally murdered by Iran-backed Hamas terrorists after being forcefully taken from their homes during the Oct. 7 attack on Israel.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F10%2Fcrop-41449400.jpg?quality%3D90%26strip%3Dall" alt="Lead Story Image" class="news-photo">
+                <h3>Kalshi promo code NYPMAX55: Trade $25, get up to $55 bonus for Patriots vs. Bears on ‘TNF’</h3>
+                <p class="lead-summary"><strong class="drop-cap">N</strong>ew NFL prediction market traders can use the Kalshi promo code NYPMAX55 to trade $25, to get up to a $55 bonus. The Patriots are +2.5 underdogs, with Kalshi traders projecting them a 49 percent chance to win. New traders can sign up for the flagship prediction market to forecast contracts on mens hoops, football games, international soccer matches, women’s playoff basketball, and playoff baseball games. Once users have signed up, they’ll enter the Kalshi promo code NYPMAX55, verify their account information, and make $25 worth of trades to qualify for a bonus of up to $55. Kalshi operates in the following states and territories: Alabama, Alaska, Arkansas, California, Colorado, Connecticut, Delaware, Florida, Georgia, Hawaii, Idaho, Indiana, Iowa, Kansas, Kentucky, Louisiana, Maine, Minnesota, Mississippi, Missouri, Nebraska, New Hampshire, New Mexico, New York, New Jersey, North Carolina, North Dakota, Oklahoma, Oregon, Pennsylvania, Rhode Island, South Carolina, South Dakota, Tennessee, Texas, Utah, Vermont, Virginia, Washington D.C., West Virginia, Wisconsin and Wyoming. Chicago’s defense has benefited from facing just 50.2 snaps per game, helping mask a unit surrendering 6.0 yards per play, the second-highest mark in the NFL. Caleb Williams presents an unusual challenge for New England’s man-heavy secondary, having completed 72.7 percent of his passes against man coverage with a 123.3 passer rating.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Angel Reese repeatedly taunts Valkyries during historic performance as Dream take WNBA Finals lead</h4>
+                <p>Atlanta forward Angel Reese was fired up during the Dream’s 97-71 win over the Valkyries to take a 2-1 series lead in Wednesday’s Game 3 of the WNBA Finals. Reese started to trash talk early when she drove to the basket on Valkyries center Aminata Gueye and made the bucket while being fouled in the first quarter at State Farm Arena in Atlanta. “She can’t f–k with me,” Reese appeared to say as her shot gave the Dream a 8-1 lead. She was chirping in front of the Golden State bench as she made her way to the free throw line. Fast forward to the fourth quarter and USA Network cameras captured Reese seemingly taunting Gueye from the Dream bench with roughly 30 seconds left as Atlanta held a large lead.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Grizzlies’ Ty Jerome stuns NBA with historic 45 points as wild career trajectory takes hold for 29-year-old</h4>
+                <p>MEMPHIS, Tenn. — Ty Jerome scored a career-high 45 points as the Memphis Grizzlies used a third-quarter rally enroute to a 123-103 victory over the Utah Jazz on Wednesday night in the season opener for both teams. The game featured two of the top rookies in the current class: Utah picked Darryn Peterson of Kansas No. 2 overall right before Memphis selected Cam Boozer from Duke. Peterson had nine points; Boozer finished 11 rebounds, seven points and five assists but was 2-of-15 shooting, 0 for 6 from 3-point range. Jerome connected on 17 of 25 shots including 5 of 10 from 3-point range. The 45 points were the most by a Memphis player in an season-opener, eclipsing the 44 by Ja Morant in 2020.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Ron Duguay, iconic Rangers forward, dead at 69 after cancer battle</h4>
+                <p>Ron Duguay, a 12-year NHL veteran most famous for his paparazzi-and-celebrity-filled time as a Ranger, died on Thursday after a battle with colon cancer, according to his girlfriend Sarah Palin. He was 69. Drafted 13th overall by the Blueshirts in 1977, Duguay was a speedy and skillful offensive-minded forward whose feathered curls made him easily identifiable on the ice. His six seasons in New York were highlighted by a run to the 1979 Stanley Cup Final, where the Rangers lost to the Montreal Canadiens in five games. Over 499 games with the Rangers, Duguay finished with 164 goals and 176 assists for 340 points.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F10%2Fnewspress-collage-0j5566wow-1792628421727.jpg?quality%3D90%26strip%3Dall%261792614121" alt="Lead Story Image" class="news-photo">
+                <h3>‘Curious Case of Benjamin Button’ review: A sweet and folksy musical that wants to go to Broadway</h3>
+                <p class="lead-summary"><strong class="drop-cap">M</strong>uch as Benjamin Button ages backwards from elderly to infant, the new musical “The Curious Case of Benjamin Button” also starts off unrecognizably from where it ultimately winds up. From annoying to beautiful. That stark reversal could be because its style, folksy and verbose Paul Bunyan-ish exposition in overeager group songs, takes some getting used to. But truth be told, that often confusing and self-satisfied aspect never grew on me. The sweet show from London with a new American cast that opened Wednesday night at the Public Theater with Broadway aspirations improves, and staggeringly so, in the second half when many of the side characters and story-theater shtick get the heave-ho and its rich romantic leads are allowed to live and breathe more freely and honestly. They’re Benjamin, played from tomb to womb by Andrew Durand, and his life-long love Elowen, earthily portrayed by Kelsee Kimmel. That pair of actors and their earnest passion, which radiate genuine love for each other rather than the hopped-up theatrical suggestion of it, is “Button”’s greatest asset and enough of a reason to recommend this very sincere show. But it takes a while for the material and director Jethro Compton’s production to calm down and find that focus. Most will know F. Scott Fitzgerald’s short story from David Fincher’s 2008 movie starring Brad Pitt. Composer Darren Clark and book writer Compton (both co-wrote the lyrics) have moved the action from Baltimore in the US to coastal Cornwall, England, and changed the commencement point from 1860 to 1918.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Chris Pratt says his faith will be 'the most important thing' that he passes on to his kids</h4>
+                <p>The actor opened up to Fox News Digital about fatherhood and admitted he hopes to learn from both his own father's strengths and mistakes while raising his children. Chris Pratt is shedding light on the reality of raising four kids in Hollywood while keeping his Christian faith present in their lives.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>‘860’ review: Billy Crystal pays tribute to house lost in Palisades fire in hilarious, heartbreaking one-man show</h4>
+                <p>There are very few comedians left who can do what Billy Crystal can do. Almost none. Stand-ups who talk about the news tend to pick finger-pointing, strident activism or irony, like they’re auditioning for a spot on “The Daily Show.” But what the extraordinary Crystal manages in “860,” his latest one-man Broadway show that opened Wednesday night at the Imperial Theatre, is a feat. He takes the devastating 2025 Palisades fire in California, and the total destruction of his family’s cherished home that they lived in for 46 years, and makes it funny. Not the blaze itself, of course. He rightly treats the disaster with solemnity, stress and disbelief. Based on the freshness of the performance I saw, I reckon he hasn’t fully moved on from those difficult January days. Crystal could have written this show as therapy as much as for our entertainment.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>John Anderson, country music hall of famer, dead at 71</h4>
+                <p>John Anderson during Atlanta's Country Kicks 101.5 and Eagle 106.7 Present Country Fair 2007 - Day 2 at HiFi Buys Amphitheater in Atlanta, Georgia, United States. (Frank Mullen/WireImage via Getty Images) John Anderson, the Country Music Hall of Fame singer known for hits including "Swingin'," "Seminole Wind" and "Straight Tequila Night," has died. He was 71.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/10/931/523/istock-2229982662.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Your phone can alert you when prices drop; here's how</h3>
+                <p class="lead-summary"><strong class="drop-cap">K</strong>urt ‘CyberGuy’ Knutsson explains how algorithms track browsing history and location to estimate what shoppers are willing to spend on ‘Fox & Friends.’ Have you ever found something you wanted to buy, only to wonder whether the price might drop next week? Maybe it's a new pair of headphones, a kitchen appliance or a gift you've had your eye on. You could keep checking the website every day, but who has time for that? Here's something you may not realize. Your phone can help watch prices for you. Apple's Safari browser has a feature that monitors website changes, while Google's shopping tools offer price tracking on supported products. That means you can spend less time refreshing product listings and more time deciding whether a deal is actually worth your money. I'll show you how to set up these alerts on an Apple iPhone, Samsung Galaxy and Google Pixel. In this free live online class, Kurt "CyberGuy" Knutsson will share five practical ways to protect your trip and your wallet this holiday travel season. You’ll learn how to secure your phone and personal information, find better travel deals, avoid common scams, save money on bookings and use technology to make your travels easier and less stressful. No technical experience is needed. Join us Saturday, Oct. 31, at 11 AM ET/8 AM PT. Register free now at CyberGuyLive.com. Safari offers iPhone users a way to track price drops and website updates through a new feature. (Kurt "CyberGuy" Knutsson) Apple introduced a feature called Notify Me in Safari with iOS 27. Instead of returning to a website to see whether something has changed, you can tell Safari what to watch. For example, you might ask Safari to notify you when a pair of headphones drops below $150. You could also monitor a sold-out item and get an alert when the website indicates it's available again. Unlike a traditional price tracker, Safari can look for other changes on a webpage, too. However, the feature doesn't work with every website, and alerts depend on Safari detecting the requested change. Important: Notify Me requires Apple Intelligence. It works on compatible models, including the iPhone 15 Pro, iPhone 15 Pro Max and iPhone 16 or later. The standard iPhone 15 and iPhone 15 Plus do not support Apple Intelligence.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Why political texts keep coming even after you block them</h4>
+                <p>George Weiner, CEO of Whole Whale and creator of PACspam.org, tells Kurt "CyberGuy" Knutsson why blocking political texts rarely works and how a free tool can help you fight back. Your phone buzzes. Another political text. This time, it's an urgent fundraising appeal claiming a campaign desperately needs your help before midnight. You delete it, block the number and get on with your day. Then tomorrow, another one arrives from a completely different number. Sound familiar? I've been there, and frankly, I'm fed up with it.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
