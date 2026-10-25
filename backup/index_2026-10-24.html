@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>SATURDAY, OCTOBER 24, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F10%2Ferin-foster-nwt.jpg?quality%3D90%26strip%3Dall" alt="Lead Story Image" class="news-photo">
+                <h3>‘Nobody Wants This’ Season 4: Creator Erin Foster Shares A Promising Update On The Show’s Future Amid Uncertainty And Teases A Messy Character She Would Love To Introduce</h3>
+                <p class="lead-summary"><strong class="drop-cap">S</strong>tream It Or Skip It: ‘Holiday Touchdown: A Bears Love Story’ on Hallmark, Another Solid Christmas Collab Between the NFL and Hallmark Where Was the ‘Love Of Your Life’ Movie Filmed? Discover the Filming Locations for Margaret Qualley’s New Amazon Romance Margaret Qualley, Aaron Pierre Talk New Heartbreaking Amazon Romance ‘Love Of Your Life:’ “Getting It Wrong to Get It Right” Stream It Or Skip It: ‘Moana’ on Disney+, a Disney ‘Live Action’ Remake Boasting an Even Bigger and Buffer Dwayne Johnson Stream It Or Skip It: ‘Toy Story 5′ on Disney+, the Continually Endearing Saga of Sentient Toys’ Tearjerking Existential Crises Is ‘Toy Story 5’ — Now Streaming on Disney+ — the Best Pixar Sequel Movie Ever Made? We Need to Bully the Academy Into Nominating Olivia Wilde for Best Director for ‘The Invite’ Stream It Or Skip It: ‘The Invite’ on HBO Max, a Robust Four-Hander Comedy Directed by and Starring Olivia Wilde New Movies and Shows to Watch This Weekend: ‘Nobody Wants This’ on Netflix, ‘The Invite’ on HBO Max and More ‘The Rainmaker’ Stars Tease Season 2’s Two Big Cases, Bruiser’s Ex-Husband & One Very Shirtless Surprise Stream It Or Skip It: ‘Paralyzed By Hope: The Maria Bamford Story’ On Netflix, A Loving Portrait Of The Comedian Who Found Her Unique Voice By Channelling The Voices Around Her When Will ‘You Can See Everything’ Be Streaming? What We Know About the ‘You Can See Everything’ Digital and Streaming Release Date Stream It Or Skip It: ‘The Disciple: A Wu-Tang Fable’ on Netflix, the Story of a Superfan Who Helped Immortalize (and Nearly Destroy) His Favorite Hip-Hop Group Stream It Or Skip It: ‘Mother Mary’ on VOD, a Nutty Anne Hathaway-Michaela Coel Two-Hander About Gods, Ghosts and Pop Stars Is ‘Billie Eilish – Hit Me Hard and Soft: The Tour Live in 3D’ Streaming on Netflix or Amazon Prime Video? ‘Marshals’ Star Ash Santos Breaks Down “Heartbreaking” Season 2, Episode 3 Ending, Teases “Andrea Reconciling With Her Past” And A Trip To New York ‘Dutton Ranch’ Season 2 Release Date Info: When Does The Second Season Of ‘Dutton Ranch’ Come Out? When Does The New Season Of ‘Dutton Ranch’ Come Out?</p>
+                <p class="source-credit">— Https://decider</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Chilling new details emerge in teen girl’s alleged murder by 20-year-old ex in LA suburb — as his secret exposed</h4>
+                <p>The 20-year-old accused of murdering his 15-year-old ex-girlfriend at her Arcadia home Thursday drunkenly barged into the house that morning before returning later to allegedly gun her down, her distraught family said. Close relatives of the slain teen, Mina Kurdian, described to the California Post the terrifying lead-up to the alleged killing — while also revealing they believed suspect Paul Anthony Cruz Jr. was only 17 years old. “He was never presented to any of the family members,” a relative said, adding Mina’s loved ones would not have approved if they knew Cruz was an adult. Her family said the two began an on-again, off-again relationship about a year ago, but she largely kept the relationship under wraps.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>From Monster to Martyr</h4>
+                <p>Netflix’s reimagining of East of Eden’s Cathy Ames is beautiful, tragic, and merciful — that’s the problem.</p>
+                <p class="source-credit">— National Review</p>
+            </div>
+            <div class="story-minor">
+                <h4>Canada is feeling the pain from Trump's tariffs — but the trade fight didn't start overnight</h4>
+                <p>Scott Lincicome, vice president of general economics at the Cato Institute, breaks down the politically sensitive dispute complicating one of America’s largest trading relationships. President Donald Trump's escalating trade fight with Canada is squeezing the economy north of the border, threatening jobs and adding to families' financial strain as steep U.S. tariffs on roughly $20 billion in goods remain in place.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/01/931/523/rubio-defends-strike-mtp.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Rubio urges Cubans to work with CIA to bring political change to communist-run island</h3>
+                <p class="lead-summary"><strong class="drop-cap">P</strong>resident Donald Trump teases that U.S. warships could stop near Cuba after Iran and send Secretary of State Marco Rubio in to "finish the job," during a midterm rally speech Friday, Oct. 23, 2026, in Fort Myers, Florida. Secretary of State Marco Rubio urged Cubans seeking political change Friday to discreetly cooperate with the CIA as President Donald Trump separately floated sending Rubio to the communist-run island to negotiate a deal. "To those who seek to create positive change in Cuba - now is the time," Rubio wrote in a post on X. "The disappointment of failed promises, corruption, and the privileged lives of only a few; seize this opportunity to create the change you desire through a discrete partnership with the CIA." Rubio's message explicitly encouraged Cubans to work with the U.S. intelligence agency but did not identify a specific operation or explain what such cooperation would involve. Rubio, the son of Cuban immigrants, has long advocated for a tougher U.S. approach toward the Cuban government. The former Florida senator has been a prominent critic of the communist leadership in Havana and opposed efforts to normalize relations without political reforms.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>France on edge with 70,000 police deployed for unrest as authorities probe suspected terror attack near Paris</h4>
+                <p>CEO of Argil AI Brivael Le Pogam discusses the widespread unrest, business damages and arrests ahead of upcoming demonstrations in Paris. A suspected terrorist attack near Paris Friday added to tensions across France as the nation prepares for more potential violence Saturday.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>CHAOS INC.: Communists, Antifa, agitators in the red-green alliance</h4>
+                <p>Violent riots spread across France as 'Big Money in the Morning' breaks down the economic damage and massive arrests. Fox News Digital Senior Editor of Investigations Asra Nomani exposes 'Chaos Inc,' a network of 101 global activist groups, communist organizations and labor unions coordinating the unrest. Nomani highlights how these groups use specialized handbooks to train rioters and amplify chaos.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Brazil’s rapid election count puts spotlight on voting security ahead of US midterms</h4>
+                <p>Footage from a polling station in Rio de Janeiro showed electoral officials retrieving the voting results reports and disconnecting the machines after the first round of voting on Oct. 4, 2026. (Reuters) SAO PAULO, Brazil— About 125 million Brazilians voted Oct. 4 on machines that print no paper ballots. Less than four hours after polls closed, the country knew its presidential election was headed to a runoff between conservative challenger Flavio Bolsonaro and leftist President Luiz Inacio Lula da Silva.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F10%2Fcrop-41391495.jpg?quality%3D90%26strip%3Dall" alt="Lead Story Image" class="news-photo">
+                <h3>Polymarket promo code NYPMAX1: Deposit $10, get $25 for Indiana vs. Michigan</h3>
+                <p class="lead-summary"><strong class="drop-cap">W</strong>eek 8 of the college football season continues on Saturday, and prediction market users can apply the Polymarket promo code NYPMAX1 to deposit $10, to get a $25 trading bonus for Indiana vs. Michigan. Indiana finally saw its 22-game winning streak snapped against Ohio State in Week 7, but the Hoosiers gave a great account of themselves in defeat. You can input the Polymarket promo code NYPMAX1 when you sign up and deposit $10 to get $25 in trading bonus. Once you have signed up, trade with the $25 bonus or any other market on Saturday. You can gain instant access to the Polymarket mobile app by using the Polymarket promo code NYPMAX1: The Polymarket promo is available to eligible new users who reside in Alaska, Alabama, Arkansas, California, Colorado, Connecticut, District of Columbia, Delaware, Florida, Georgia, Hawaii, Iowa, Idaho, Indiana, Kansas, Kentucky, Louisiana, Maine, Minnesota, Missouri, Mississippi, North Carolina, North Dakota, Nebraska, New Hampshire, New Jersey, New Mexico, New York, Oklahoma, Oregon, Pennsylvania, Rhode Island, South Carolina, South Dakota, Tennessee, Texas, Utah, Virginia, Vermont, Wisconsin, West Virginia, and Wyoming. It’s been 22 months since Indiana had to bounce back after a loss, but Curt Cignetti has given us no reason to doubt that he can get his Hoosiers right after a tough-luck loss to the Buckeyes. Michigan, meanwhile, needs a signature win in their account if they’re going to make a push for a spot in the College Football Playoff.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Stitches bets on three college football games after making World Series pick</h4>
+                <p>“Very noble of you not to bet $1,200 on the Series just to make the money back. Thought you might go there and abuse the system. LOL” We do, however, have a plan that will surely backfire because we are playing with fire. Here we go. Play $100 on Texas Tech (-440) over Cincinnati, LSU (-280) over Auburn and BYU (-285) over UCF. We bet on the Brewers to win the World Series, and it behooved Milwaukee that it took the opener with ace Jacob Misiorowski because the Rays’ Drew Rasmussen is scheduled to start Game 2 on Saturday. The one and only Stitches has been handicapping baseball, daily, for the Post since 2019. Miraculously, he has finished in the black twice. But wait there’s more. He showed his versatility by winning the Post’s NFL Best Bet crown last year.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>College football Week 8 betting promos: Collect $5K in sportsbook, prediction market bonuses for primetime games</h4>
+                <p>No week in college football was wilder than Week 7, which featured a slew of upsets involving top-ranked teams and several controversial finishes. Seventh-ranked Ole Miss hits the road looking to hand No. 19 Texas its third straight loss in a pivotal SEC showdown under the primetime lights. Steve Sarkisian’s Longhorns are searching for answers as they try to avoid slipping out of the top 25. On the other side, Pete Golding has the Rebels’ defense firing on all cylinders post-bye week, as they aim to contain a sputtering Texas offense. Elsewhere on Saturday’s slate, top-ranked Miami welcomes Pittsburgh, while Curt Cignetti’s sixth-ranked Hoosiers look to bounce back against Michigan.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Kalshi promo code NYPMAX55: Get up to $55 bonus for Ole Miss vs. Texas</h4>
+                <p>The eyes of the college football world will be fixated on Austin on Saturday, and readers of The Post can use the Kalshi promo code NYPMAX55 to receive up to a $55 bonus for Ole Miss vs. Texas. Ole Miss is coming off a statement win over Missouri in Week 7, while Texas’ season is now on the ropes after consecutive defeats to Oklahoma and Florida. New traders can sign up for the flagship prediction market to forecast contracts on football games, international soccer matches, women’s playoff basketball and playoff baseball games. Once users have signed up, they’ll enter the Kalshi promo code NYPMAX55, verify their account information in order to qualify for a bonus up to $55.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/02/931/523/christy-romano.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Former Disney star Christy Carlson Romano thought she was 'going to die' after freak shooting accident</h3>
+                <p class="lead-summary"><strong class="drop-cap">"</strong>Even Stevens" and "Kim Possible" star Christy Carlson Romano describes how a terrifying shooting accident nearly cost her an eye. The actress has written a memoir, "Once Upon a Trainwreck." Christy Carlson Romano is hoping to preserve her vision after a clay pigeon shooting accident in 2025 left birdshot lodged near her eye, putting her at risk of blindness. "I was peppered with birdshot at about 250 feet away, and I was struck in a fat pocket under my eye, and also in my forehead," Romano told Fox News Digital. "I still have birdshot behind my eye about a millimeter away from anything critical. And if it were to move, I would go blind. So we're hoping that doesn't happen." The former Disney child star opens up about navigating childhood fame and toxic relationships in her memoir, "Once Upon a Trainwreck." She also recounts being struck by birdshot during the outing in Texas. In 2025, Christy Carlson Romano was shot in the face by stray birdshot at a clay pigeon shooting range in Texas. She wrote about the experience in her new memoir, "Once Upon a Trainwreck: The Fall and Rise of a Child Star.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Metallica is playing Las Vegas Sphere on Halloween. How much are tickets?</h4>
+                <p>On Halloween — aka Saturday, Oct. 31 — the “Enter Sandman” rockers are slated to shred at Lars Vegas Las Vegas’ Sphere as part of their ongoing Life Burns Faster residency. And, if you’d like to be there for Hetfield, Ulrich, Hammett and Trujillo’s first U.S. Halloween show since 1983, last-minute tickets are still available for purchase. At the time of publication, the lowest price we could find on seats for the spooky Sin City show was $603 including fees on Vivid Seats. In the event that’s not enough Metallica for you, the Saturday show is the second of two for the Rock Hall of Famers over the course of the Halloweekend.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Fox News Entertainment newsletter: Harry risks 'lobbing a grenade' at William; Kate brings back Diana's tiara</h4>
+                <p>Royal expert says Prince Harry risks "lobbing a grenade" at Prince William; Kate Middleton brings back Princess Diana's famous tiara.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Kate Hudson flaunts toned abs in strapless red bikini during beach day with fiancé</h4>
+                <p>Kate Hudson spoke to Fox News Digital on the red carpet at the 28th Costume Designers Guild Awards and reflected on the advice that she would give her younger self. The 47-year-old actress shared a series of vacation throwbacks on Instagram, including photos from a recent trip to Hawaii for a friend's wedding.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/10/931/523/uber-eats-robot-standoff-002.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Pennsylvania law requires delivery robots to yield to pedestrians, yet protester still faced arrest</h3>
+                <p class="lead-summary"><strong class="drop-cap">U</strong>nion workers, rideshare drivers and other protesters rallied against a D.C. proposal that would allow commercial robotaxis, warning autonomous vehicles could eliminate driving jobs. (Credit: Nicholas Ballasy for Fox News Digital) Most people see a food delivery robot rolling down the sidewalk and simply walk around it. But one Philadelphia woman decided she wasn't moving. She stood directly in front of an Uber Eats delivery robot, refusing to let it continue. Police eventually arrived, and the 78-year-old retired professor ended up in handcuffs. Her protest has now sparked a much bigger conversation about robots taking over human jobs and how much space these machines should get on our sidewalks. And there's a surprising detail about Pennsylvania law that makes this whole situation even more interesting. In this free live online class, Kurt "CyberGuy" Knutsson will share five practical ways to protect your trip and your wallet this holiday travel season. You’ll learn how to secure your phone and personal information, find better travel deals, avoid common scams, save money on bookings and use technology to make your travels easier and less stressful. No technical experience is needed. Join us Saturday, Oct. 31, at 11 AM ET / 8 AM PT. Register for free now at CyberGuyLive.com. Philadelphia police escort 78-year-old retired professor Carolyn Marvin away in handcuffs after she refused to move out of an Uber Eats delivery robot's path during a sidewalk protest. (@thatsphillybusiness/TikTok) On Oct. 14, Carolyn Marvin, a retired University of Pennsylvania professor, was leaving a flu shot appointment in Center City Philadelphia when she spotted an Uber Eats delivery robot. Instead of stepping aside, she positioned herself in front of the machine near Reading Terminal Market on Filbert Street. Police reportedly responded after witnesses reported a disturbance. Officers said Marvin repeatedly refused instructions to move out of the robot's path. They eventually arrested her and issued her a disorderly conduct citation. The encounter was captured on video and quickly attracted attention online. However, Marvin wasn't surprised by the attention. She had been deliberately blocking delivery robots for months, turning what might look like a strange sidewalk encounter into her own form of public protest.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Cheap Android phones found with malware already installed</h4>
+                <p>Some low-cost Android phones may come with malware already hidden in their software before you even turn them on. (NickyLloyd via Getty Images) Buying a cheap smartphone can feel like a smart move. After all, why spend hundreds more when a phone promises a big screen, decent cameras and all the Android apps you use every day? But what if that bargain phone came with a hidden surprise that was already hiding inside the device when you bought it?</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Fox News AI Newsletter: What we saw inside a massive Texas data center</h4>
+                <p>Compass Datacenters CEO Chris Crosby explains why protecting sensitive information and critical infrastructure requires tight security at facilities powering America’s growing digital economy.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Why some people are falling for Meta's Muse AI</h4>
+                <p>Dana Perino highlights an AI chatbots study showing one in five middle-schoolers uses technology for companionship. Heritage Foundation policy analyst Annie Chestnut Tutor warns that chatbot design features are hooking vulnerable children. Tutor explains that these artificial relationships cannot replace real human connection, ultimately leading to increased feelings of loneliness and isolation among youth.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
