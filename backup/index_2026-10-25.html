@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>SUNDAY, OCTOBER 25, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://pagesix.com/wp-content%2Fuploads%2Fsites%2F3%2F2026%2F10%2F146243115.jpg?quality%3D90%26strip%3Dall" alt="Lead Story Image" class="news-photo">
+                <h3>Martha Stewart’s top-rated cookware and home decor is deeply discounted for Way Day</h3>
+                <p class="lead-summary"><strong class="drop-cap">W</strong>e love all things Martha Stewart, from her chic phone cases to everything she makes to keep our kitchens and homes in style. So, when we noticed massive deals on her signature Wayfair line of furniture, home decor and linens during Way Day — the big annual sale event running Oct. 24 to 26 — we knew what we were shopping this weekend. One of the best kitchen picks is this refit-ready Martha Stewart 14-Piece Non-stick Cookware Combo Set that’s under $135 during the sale event. With heavy-gauge aluminum construction, enamel exteriors and an oven-safe rating, this gorgeous set is also made with a PFOA-free platinum coating. The gold details are chef’s kiss, plus shoppers love it too. Two frying pans, a Dutch oven, utensils and more make the set a one-and-done buy or absolutely lovely gift for anyone whose kitchen needs an upgrade. “This set is exactly what I was looking for! They are very nice and match my kitchen nicely!” raves one shopper. Of course, if you’re in the market for furniture, linens or other home decor, plenty of other top-rated Martha Stewart line styles are on sale, from sheets to bathmats. Way Day only runs through Oct. 26 — so shop fast for smart buys the domestic doyenne would certainly approve of. This article was written by Erica Radol, Page Six Commerce Reporter. From identifying the top anti-aging skincare secrets the stars trust to dishing on the latest fashion collabs to finding a great deal on all of the above, Erica has a knack for reporting on – and even testing – Hollywood’s bestselling fashion and beauty products. Before joining Page Six in 2025, she wrote about entertainment, lifestyle and shopping trends for Us Weekly, The Daily Beast, Entertainment Tonight, Well+Good and Hearst. Our community is about connecting people through open and thoughtful conversations. We want our readers to share their views and exchange ideas in a safe space. In order to do so, we've created a simple set of rules that will improve your experience. Thanks for reading our community guidelines. Don't forget, freedom of speech is not the freedom of reach!</p>
+                <p class="source-credit">— Https://pagesix</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Socialism's growing appeal meets an awkward reality check on college campus</h4>
+                <p>As socialism gains popularity among young people, confusion over what it actually means persists, as Fox News Digital discovered while speaking with students in Michigan. ANN ARBOR, Mich. — Socialism is gaining popularity among young Americans, but Fox News Digital found strikingly different understandings of the ideology among college students, some of whom acknowledged that their generation may not fully grasp what they're embracing.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>We’re Doomed</h4>
+                <p>In our brave new tech world, there’s nothing to fear but . . . everything.</p>
+                <p class="source-credit">— National Review</p>
+            </div>
+            <div class="story-minor">
+                <h4>Obama Really Went There at the Dem Rally in Michigan, Huh?</h4>
+                <p>I didn’t watch this rally, but Barack Obama is back on the trail, as promised. He went up to Michigan, usually a kiss of death for any Democrat running there. The former president will also swing by Ohio. Two states he won, though, have become shakier for Democrats, thanks to Donald J. Trump. Obama is campaigning for Abdul El-Sayed, an odd-couple pairing: El-Sayed opposed most, if not all, of Obama’s key agenda items when he was president. NOW - Obama says that Iran is "in a stronger strategic position now than before the war started." https://t.co/0nCKTKg7CF The Iranian economy is in shambles, the country has Great Depression levels of unemployment, inflation is over 100%, oil exports and revenue have dropped to $0, the Iranian Rial has collapsed over 60% of its value vs the Dollar since March, almost its entire navy has been sunk, virtually the entire upper echelons of the government were decapitated in the opening salvo of the war, and there now appears to be a growing rebellion against the central government in Balochistan. In what universe does this put Iran in a stronger strategic position now than in January?</p>
+                <p class="source-credit">— Townhall</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/10/931/523/brazil-election-1.png?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Brazil becomes next test for Latin America’s surging conservative movement</h3>
+                <p class="lead-summary"><strong class="drop-cap">F</strong>lavio Bolsonaro joined supporters in Santa Barbara D'Oeste to lead a motorcade. Polls in Brazil show a tight presidential race with incumbent Luiz Inacio Lula da Silva. (Video: Reuters.) Brazil's estimated 158 million voters could advance Latin America's conservative wave in Sunday's election as the continent's most populous nation could elect conservative Sen. Flavio Bolsonaro as its next president. The first round election three weeks ago saw a strong performance by Bolsonaro, proving the polls wrong. While incumbent President Luiz Inacio Lula da Silva (Lula) had been predicted to take the first round by single digits, Bolsonaro ended up winning 47% to Lula's 45%. As neither candidate won a majority, the election went to a second round. Brazil's election follows a long string of victories for the Latin American right across Central and South America that started with the election of Libertarian outsider Javier Milei in Argentina in 2023. Brazilian President Luiz Inácio Lula da Silva, left, and Sen. Flávio Bolsonaro, right, face off in a presidential election runoff.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Former IDF chief Gadi Eisenkot emerges as Netanyahu’s leading election challenger</h4>
+                <p>Fox News Digital speaks with three experts on Israel’s high-stakes election and the fight over Netanyahu’s political future. The election is set for Oct. 27, 2026. JERUSALEM — Israel’s high-stakes election on Oct. 27 pits the longest serving prime minister, Benjamin Netanyahu, against the highly decorated retired Lt. Gen. Gadi Eisenkot. While fairly new to politics, Eisenkot has an impressive resume that could help him become the Jewish state's next leader.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Nearly 1,000 arrested across France as police find potential weapons on protesters: officials</h4>
+                <p>Police in Paris, France, were captured on video Saturday firing water cannons at protesters following a march. (Credit: Lena Pontrucher/Abaca for Fox News Digital) Nearly 1,000 people were arrested Saturday as nationwide protests resumed, French Interior Minister Laurent Nuñez told reporters.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Death toll rises to 9 in church attack; officials blame 'extremist' Islamist ideology</h4>
+                <p>CCTV in Jordan showed what appeared to be gunmen running toward a Greek Orthodox church in Karak, Jordan, where seven people were killed in what King Abdullah II called an act of terrorism. (Jordan TV via AP) A group of gunmen stormed a Christian church in Jordan during a funeral Friday, killing nine people and injuring more than two dozen, according to authorities.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/statics.foxsports.com/www.foxsports.com/content/uploads/2026/10/931/523/23398e008031ae0936aeea61b61584adde28c3942c2908fc9832dee97d715379.png?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>How to Watch Giants vs. Texans: TV Channel, Live Stream, Time - October 25, 2026</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>he Houston Texans host the New York Giants in a 2026 NFL regular-season Week 7 matchup on Sunday, October 25, 2026, at 1:00 PM EDT at Reliant Stadium in Houston, Texas. Houston enters at 2-4 and has started to steady itself with a two-game winning streak, even while sitting third in the AFC South. The Texans have been productive through the air, ranking fourth in the league in passing yards per game at 270.2 and fourth in receiving yards per game at 285.7. Their pass rush has also been a clear strength, with 18 sacks through six games, tied for third in the NFL, which gives this matchup some real edge at the line of scrimmage. The Giants come in at 3-2-1 and sit first in the NFC East despite a one-game losing streak. New York has stayed in the division lead with a defense that has produced six interceptions, tied for fifth in the league, and an offense that ranks 10th in third-down conversion rate at 41.7 percent. The road record stands out here, though, because the Giants are still looking for their first away win at 0-1-1. Houston’s passing game is the clearest strength on the field in this matchup, which puts Stroud at the center of it on October 25 at Reliant Stadium. Through six games, the Texans are averaging 270.2 passing yards per game, which ranks 4th in the league, and Stroud leads Houston with 1,714 yards and 9 touchdowns. What makes him especially important here is the contrast in styles. The Giants have generated 6 interceptions through six games, tied for 5th in the league, so Stroud’s ball security matters as much as his production. Houston has thrown only 1 interception all season and owns a +3 turnover margin. IF Stroud keeps that efficiency intact, the Texans have a strong path to controlling the game through the air.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Sean McVay is the reason the Rams are falling apart — and the only man who can fix them</h4>
+                <p>Sean McVay has spent the better part of a decade building a reputation as one of football’s brightest minds. Six weeks into the 2026 NFL Season, and the Los Angeles Rams’ head coach is getting outsmarted by the one person who should know his offense better than anyone. The Rams are currently 2-4, dead last in the NFC West, and watching their Super Bowl dreams unravel one self-inflicted wound at a time. And while McVay deserves enormous credit for transforming this franchise into a perennial contender, he deserves an equally large share of the blame for its current predicament. Let’s start with special teams, an annual problem McVay has allowed to fester like an untreated infection.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>How to Watch 49ers vs. Falcons: TV Channel, Live Stream, Time - October 25, 2026</h4>
+                <p>The matchup brings an early measuring-stick feel to Week 7, with the San Francisco 49ers visiting the Atlanta Falcons in the 2026 NFL regular season on Sunday, October 25 at 1:00 PM EDT at Mercedes-Benz Stadium in Atlanta, Georgia. Atlanta enters this game at 2-4 and sitting second in the NFC South, with the urgency rising after back-to-back losses. The Falcons have been productive on the ground through six games, ranking fourth in the league in rushing yards per game at 149.5 and tied for fifth in rushing touchdowns with 8. That run game has helped keep them competitive, but a minus-7 turnover margin, which ranks 31st in the league, has made it tougher to string together wins.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Raiders’ LA rejection turned into a Vegas jackpot</h4>
+                <p>Nothing extravagant. Certainly nothing that suggests they intend to be gracious hosts Sunday at Allegiant Stadium. Just a little acknowledgment that sometimes the people who stand in the way of what you want inadvertently help you find exactly what you need. In the Raiders’ case, that turned out to be Las Vegas. And a magnificent stadium that looks like someone took the franchise’s personality, poured it into an architectural drawing and built it just off the Strip. Getting here required swallowing a bitter pill. But with the Rams arriving Sunday for their first game at Allegiant Stadium, preseason or regular season, the Raiders can appreciate how that disappointment helped change their future.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F10%2Fnetflix-picture-shows-queen-elizabeth-146334765.jpg?quality%3D90%26strip%3Dall" alt="Lead Story Image" class="news-photo">
+                <h3>The endless James Bond search is worse than a presidential election cycle</h3>
+                <p class="lead-summary"><strong class="drop-cap">U</strong>sing history as a guide, next month somebody will likely announce their candidacy for the US presidency, kicking off a long, exhausting, two-year race to the White House. But that election cycle will be a brisk and happy stroll compared to the never-ending slog to find the actor who will replace Daniel Craig as James Bond. I’m so sick of it. I couldn’t believe the headlines this week — that sources told the trades that the final four contenders are Callum Turner, Josh O’Connor, Jack Lowden and possibly Jacob Elordi. “No Time To Die” was released five years ago this month. You mean to tell me it took half a decade to winnow the field to the same three British men and one Aussie who are already in everything? The delay and rumored result almost makes you root for Blofeld. I wanna angrily rip off my bowler hat and whip it at a statue in disgust, or grind my steel teeth on a structurally important wire. The iconic 64-year-old franchise has dangerously toyed with the thin line between building anticipation and totally alienating the public. Bond has always wisely kept a royal-family-like “never complain, never explain” mystique that the ridiculous search has completely blown up. Come to think of it, much like the royal family’s! First because of a stated effort to reinvent the character for modern times (ugh) and then headline-making corporate tumult, there’s been an unprecedented holdup. There has never been this great a gap between Bond movies before.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>‘Grey’s Anatomy’ star Sarah Drew met husband leading worship at Christian youth camp</h4>
+                <p>The "Grey's Anatomy" alum is starring in Lifetime's "When I Said I Do," inspired by Clint Black and Lisa Hartman Black's hit duet. Drew opened up about meeting her husband while leading worship at a Christian youth camp nearly three decades ago. The actress, who has been married to Peter Lanfer for 24 years, credited their shared faith and strong partnership with helping her navigate the highs and lows of Hollywood. Drew and Lanfer married in 2002 and have two children.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>My Chemical Romance gives middle finger to Dallas Cowboys Cheerleaders over bloody on-stage stunt at Hollywood Bowl</h4>
+                <p>My Chemical Romance apparently isn’t ready to give up its controversial Dallas Cowboys Cheerleaders stunt — even as the band faces a legal fight over the look-alike uniforms. The rockers appeared to stick with the disputed stage act Friday night, Oct. 23, with fan-posted videos showing dancers in the same blue-and-white cheerleader-style outfits performing in the background at the Hollywood Bowl. The apparent defiance came hours after Pro Silver Star Ltd., owner of the Dallas Cowboys Cheerleaders (DCC), filed for a temporary restraining order and temporary injunction against the band. The legal action claims My Chemical Romance misled fans with look-alikes wearing the iconic uniforms during a bloody staged shootout at the group’s sold-out Hollywood Bowl concert on Oct. 21.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Sacha Baron Cohen says 'Ali G: Who Iz I?' is his last in this style of comedy, calling them too risky</h4>
+                <p>Comedian Adam Carolla says he was troubled by what he saw during COVID, when some performers appeared less willing to question authority or push against conventional thinking. In a recent interview with The Hollywood Reporter, the 55-year-old actor confirmed that his new movie, "Ali G: Who Iz I?," will be his last in the risky, character-driven comedic style that made him famous.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/10/931/523/robotic-space-claws.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Giant robotic claws will grab dead satellites in space</h3>
+                <p class="lead-summary"><strong class="drop-cap">P</strong>eter Doocy reports on the Pentagon's public confirmation of US space weapons. Former NASA astronaut Butch Wilmore joins to analyze the growing space arms race. Wilmore discusses the strategic importance of controlling the exo-atmosphere and explains the challenges of kinetic and non-kinetic weaponry as Russia and China expand their space capabilities. Space is getting crowded, and I'm not talking about astronauts. Thousands of pieces of junk are circling Earth at incredible speeds. Some are dead satellites. Others are leftover rocket parts or fragments from past collisions. Any one of them could cause serious trouble if it hits a working spacecraft. Now Britain has a pretty wild solution. It's developing a robotic spacecraft with giant claws that can grab dead satellites and move them toward a fiery end in Earth's atmosphere. Think of a garbage truck in orbit, except this one has to track down its trash while both objects are traveling thousands of miles per hour. The UK is putting roughly $81 million behind the project. And if everything goes according to plan, the mission could change how we deal with the growing mess above our heads. In this free live online class, Kurt "CyberGuy" Knutsson will share five practical ways to protect your trip and your wallet this holiday travel season. You’ll learn how to secure your phone and personal information, find better travel deals, avoid common scams, save money on bookings and use technology to make your travels easier and less stressful. No technical experience is needed. Join us Saturday, October 31, at 11 AM ET / 8 AM PT. Register free now at CyberGuyLive.com. ClearSpace's robotic capture technology could help remove abandoned satellites before they collide with working spacecraft. (ClearSpace) The UK Space Agency has selected aerospace company ClearSpace UK to develop a spacecraft specifically designed to remove dead satellites from orbit. The contract is valued at approximately $81 million. The project is part of Britain's Active Debris Removal mission, known as UK ADR. The spacecraft is targeted for launch in 2029 from SaxaVord Spaceport in Scotland's Shetland Islands.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Fake Social Security statement email hides a scam</h4>
+                <p>Following the arrest of an alleged leader in the Netherlands, a top FBI cyber official released an unusual public address urging the remaining cybercriminals to turn themselves in "while the choice is still yours." There's something about an email from Social Security that makes you pay attention. After all, we're talking about your retirement benefits and years of earnings. So when a message lands in your inbox saying your statement is ready, clicking to take a look might seem perfectly reasonable. That's exactly what scammers are counting on.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Your credit can look normal while someone steals your identity</h4>
+                <p>JPMorgan Chase Head of Consumer Fraud and Scam Prevention Darius Kingsley discusses bank scams in an interview with Kurt ‘CyberGuy’ Knutsson for the ‘Beyond Connected’ podcast. You check your credit score, see nothing unusual and assume your identity is safe. But what if someone has already stolen your personal information, and your credit report shows absolutely nothing? That's entirely possible.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
