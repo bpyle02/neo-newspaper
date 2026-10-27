@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>MONDAY, OCTOBER 26, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F10%2Fforgotten-island-movie-streaming-release-date-peacock.jpg?quality%3D90%26strip%3Dall" alt="Lead Story Image" class="news-photo">
+                <h3>‘Forgotten Island’ Comes to Digital, But When Will ‘Forgotten Island’ Be Streaming on Peacock?</h3>
+                <p class="lead-summary"><strong class="drop-cap">S</strong>tream It Or Skip It: ‘Holiday Touchdown: A Bears Love Story’ on Hallmark, Another Solid Christmas Collab Between the NFL and Hallmark Where Was the ‘Love Of Your Life’ Movie Filmed? Discover the Filming Locations for Margaret Qualley’s New Amazon Romance Margaret Qualley, Aaron Pierre Talk New Heartbreaking Amazon Romance ‘Love Of Your Life:’ “Getting It Wrong to Get It Right” Stream It Or Skip It: ‘Moana’ on Disney+, a Disney ‘Live Action’ Remake Boasting an Even Bigger and Buffer Dwayne Johnson Stream It Or Skip It: ‘Toy Story 5′ on Disney+, the Continually Endearing Saga of Sentient Toys’ Tearjerking Existential Crises We Need to Bully the Academy Into Nominating Olivia Wilde for Best Director for ‘The Invite’ Stream It Or Skip It: ‘The Invite’ on HBO Max, a Robust Four-Hander Comedy Directed by and Starring Olivia Wilde New Movies and Shows to Watch This Weekend: ‘Nobody Wants This’ on Netflix, ‘The Invite’ on HBO Max and More ‘The Rainmaker’ Stars Tease Season 2’s Two Big Cases, Bruiser’s Ex-Husband & One Very Shirtless Surprise Stream It Or Skip It: ‘Paralyzed By Hope: The Maria Bamford Story’ On Netflix, A Loving Portrait Of The Comedian Who Found Her Unique Voice By Channelling The Voices Around Her When Will ‘You Can See Everything’ Be Streaming? What We Know About the ‘You Can See Everything’ Digital and Streaming Release Date Stream It Or Skip It: ‘Mother Mary’ on VOD, a Nutty Anne Hathaway-Michaela Coel Two-Hander About Gods, Ghosts and Pop Stars Is ‘Billie Eilish – Hit Me Hard and Soft: The Tour Live in 3D’ Streaming on Netflix or Amazon Prime Video? ‘Marshals’ Season 2: Ash Santos Teases Dre And Kayce Romances, Jimmy’s Return, A Trip To New York, And More ‘Marshals’ Star Ash Santos Breaks Down “Heartbreaking” Season 2, Episode 3 Ending, Teases “Andrea Reconciling With Her Past” And A Trip To New York ‘Dutton Ranch’ Season 2 Release Date Info: When Does The Second Season Of ‘Dutton Ranch’ Come Out?</p>
+                <p class="source-credit">— Https://decider</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Why Humanity Needs Death</h4>
+                <p>As AI pioneers target a post-human future, we must not forget the importance of confronting life’s fragility.</p>
+                <p class="source-credit">— National Review</p>
+            </div>
+            <div class="story-minor">
+                <h4>The Anti-Trump Left Has Descended Into A Persistent Hallucinatory State</h4>
+                <p>The relentless handwringing and panic-mongering is literally unreal: It invents an American past that never existed, then laments its fake loss. The first task of defeating political opponents is to understand who they are. What is it that Democrats think they’re doing? And what they think they’re doing in 2026 amounts to a relentless ritual hallucination in the service of an institutional status quo. They’re making up a fake world in their heads to protect their paychecks: in media, in academia, in government, in the results-not-required world of the nonprofit organization. If you doubt that, go read the opinion pages of The New York Times, the agenda-setting newsletter of the government and nonprofit class. You couldn’t possibly do better than to start with Nicholas Kristof’s Oct. 24 column about Mean Orange Man, the journalistic equivalent of a street crazy babbling to himself on a bus bench. The theme of the essay is American norms. Trump is a deviation; Kristof is fighting for things that are normal.</p>
+                <p class="source-credit">— The Federalist</p>
+            </div>
+            <div class="story-minor">
+                <h4>Elon Musk Suggests Prison For Former Clinton Official Over Scheme To Steal SpaceX</h4>
+                <p>Leave it to the ivory-tower Left to look at the greatest American innovation engine of the 21st century and think, “Hey, Uncle Sam should steal that.” Former Clinton Labor Secretary Robert Reich went completely off the deep end during a podcast screed with his sidekick Heather Lofthouse over the weekend, floating an unhinged, authoritarian scheme to have a Democrat administration seize control of Elon Musk’s SpaceX and Starlink. In Reich’s twisted fantasy, building a company from scratch, revolutionizing space travel, and giving American astronauts a ride into orbit without begging Russian dictator Vladimir Putin for rocket seats is an offense punishable by state confiscation.</p>
+                <p class="source-credit">— Daily Wire</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/09/931/523/naftali-bennett-israel-former-pm.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Former Israeli PM emerges as wild card in high-stakes election with Middle East's future at stake</h3>
+                <p class="lead-summary"><strong class="drop-cap">A</strong> mid-air pilot stabbing causes a flight to Israel to nosedive before passengers intervene. Former Israeli Prime Minister Naftali Bennett joins Harris Faulkner to analyze the investigation. Witnesses recount the terrifying moment the co-pilot attacked the pilot, attempting to crash the plane before being neutralized by travelers. Former Israeli Prime Minister Naftali Bennett is seeking a political comeback with an ambitious vision for the Middle East: expanding the Abraham Accords, building economic partnerships with Arab nations and rebuilding Israel's strained international relationships, particularly with the United States. For Bennett, whose American parents moved to Israel from San Francisco, the U.S. connection is both personal and political. The 54-year-old former technology entrepreneur, a familiar face on American television, believes his business background could help him work with President Donald Trump to advance regional diplomacy. "He was a businessman, not a career politician, same as me," Bennett told The Times of Israel in June, referring to Trump. "His worldview is, let's get stuff done. Let's look at results, not process. And that's precisely my view."</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Israel drills for surprise attack with massive military exercise as expert invokes 1973 war</h4>
+                <p>An Israeli national security expert warns a single missile launch could spark rapid escalation amid major military drills. The Israeli military launched large-scale domestic military exercises on Sunday to counter surprise border infiltrations and ground raids across northern and central Israel, mobilizing multiple divisions and air assets amid rising regional tensions.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Conservative wave hits roadblock in Brazil as Lula holds off Bolsonaro challenge</h4>
+                <p>Flávio Bolsonaro joined supporters in Santa Barbara D'Oeste to lead a motorcade. Polls in Brazil show a tight presidential race with incumbent Luiz Inacio Lula da Silva. (Video: Reuters.) Incumbent leftist President Luiz Inácio Lula da Silva defeated right-wing challenger Sen. Flávio Bolsonaro in Sunday's presidential second-round runoff, according to Brazil’s electoral court and The Associated Press. The deeply polarized nation returned to the polls for a second round of voting on Sunday.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Zelenskyy can leverage Moscow ties from comedy days to make peace deal, says former key aide</h4>
+                <p>Former Ukrainian presidential press secretary Iuliia Mendel urges Zelenskyy to 'travel to Moscow' for peace talks with Putin. Ukrainian President Volodymyr Zelenskyy's former spokesperson urged him Sunday to meet Russian President Vladimir Putin face-to-face in Moscow, arguing that his past business and political connections in the Russian capital from years back could help him negotiate a peace deal there.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F10%2Fnewspress-collage-dudqdvpiv-1793027247389.jpg?quality%3D90%26strip%3Dall%261793012879" alt="Lead Story Image" class="news-photo">
+                <h3>Luka Doncic sends savage response to longtime critic after 52-point explosion</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>he superstar guard produced a staggering 52-point performance in the Los Angeles Lakers’ 132-123 win over the Utah Jazz on Sunday night. Dončić’s 34.3 points per game is second-highest in the league and a key reason why the Lakers are undefeated to this point in the season. The former NBA forward called Dončić out for having missed time during the playoffs with an injury last season and even defended the Dallas Mavericks’ decision to trade Luka in 2025 because he didn’t believe Dončić was prepared to lead a team to a NBA championship. But even Perkins couldn’t deny Dončić’s dominance on Sunday, as he made an X post in the wake of Los Angeles’ win against Utah that read, “Luka with a cool 52 and 10 on the lord’s day.”. Dončić’s response has over 600,000 views in about 13 hours. This savage response suggests Dončić has seen what Perkins has said in the past and was eager to show that he sees Perkins’ praise as well.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Where to watch the Ballon d’Or ceremony 2026 live for free: Time, nominees</h4>
+                <p>A 30-player shortlist was announced earlier this year that includes eight-time Ballon d’Or winner Lionel Messi and last year’s winner, Osumane Dembélé, who could become just the 11th man to win more than once. The women’s Ballon d’Or will go to a new player this year, as three-time winner and current award-holder Aitana Bonmatí was left off the shortlist after she missed most of the season with a broken leg. This year’s awards will take into account achievements from Aug. 3, 2025 to July 19, 2026 (the date of the 2026 World Cup final) for the men, and Aug. 3, 2025 to Aug 16, 2026 (the date of the women’s Africa Cup of Nations final) for women.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>The six things we learned from Giants’ Week 7 win: How entire offense stepped up for J.J. McCarthy</h4>
+                <p>The Giants were, by far, the biggest underdog in the NFL for the slate of games in Week 7. The Texans were 10.5-point favorites, the only spread close to double figures. Yes, the Giants entered the game with a record of 3-2-1. The Texans were 2-4. Clearly, those records were pushed to the side when it came to assessing this matchup. It turned out to be a bad spread. The Giants took a 7-3 lead midway through the first quarter and never again trailed in the game. When the game went into overtime, it was the Giants who picked up their performance and came away with a 27-21 victory inside Reliant Stadium.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>HS football star from NFL family killed by alleged drunk driver hours after game</h4>
+                <p>A Washington high school football player from a family of NFL players was killed by an alleged drunk driver — close to where he’d just played a game hours earlier. Deejay Tuiasosopo, 16, was in his first season with the Federal Way High School football team and had dreams of becoming a state champion as he looked to become his family’s latest success story before his untimely death Friday, KOMO reported. Tuiasosopo was standing on the sidewalk late Friday — near to where he had played football that night — when he was struck by a car that had smashed into another vehicle at an intersection. Tuiasosopo was pronounced dead at the scene while a man, 29, was arrested on a vehicular homicide charge for allegedly being under the influence. Police have not revealed any further details about the suspect, nor disclosed anything about the other driver’s condition.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/10/931/523/natalie-grant.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Christian singer Natalie Grant urges fans not to 'ignore your body' after fall led to emergency surgery</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>he Christian singer told Fox News Digital about the time she tripped while on the way to dinner and suffered internal bleeding. During a recent interview with Fox News Digital, the 54-year-old singer discussed what it meant to her to honor Dolly Parton at the Dove Awards and how she ended up in the hospital with internal bleeding. Grant explained that after moving her daughter into her dorm room at college, they went out to dinner together with her husband, and on the way, her foot "caught this brick on the ground" and she "belly flopped" onto the ground. "I thought, 'Oh, maybe I broke a rib' or 'Man, that's gonna leave a bruise' or 'I kind of knocked the wind out of me,'" she said. "But then I got up and I kept walking to dinner. I'm like, I'm sore, but I'm gonna be okay. It wasn't until I realized that I was bleeding internally. And when I realized that it was an emergency, got to the emergency room. And they were like your bladder could rupture, because my kidney was bleeding, and I wasn't able to pass urine." Grant shared how a simple fall on the way to dinner led to internal bleeding.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Prince Harry making 'big mistake' that could destroy chance of royal reconciliation: expert</h4>
+                <p>Royal broadcaster Ian Pelham-Turner argues King Charles must take action to bring Prince Harry and Meghan Markle back into the royal fold amid family tensions. Several royal experts believe Prince Harry is making a "big mistake" that could ruin his chances of reconciling with his family.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Donna Mills, 85, draws the line at unexpected OnlyFans request: ‘I’m not going to’</h4>
+                <p>Donna Mills tells Fox News Digital what changed her mind about joining the platform — and why she says there's no pressure to bare it all. "Knots Landing" star Donna Mills is revealing the one unexpected request she refuses to fulfill for her OnlyFans subscribers.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Brandi Glanville says doctors are 'taking my face off' in exploratory surgery after years of health issues</h4>
+                <p>Reality star Brandi Glanville explains why her recent financial strain made turning down opportunities more difficult and pushed her to prove she could perform again on FOX's "Special Forces." Brandi Glanville is taking a major step in her ongoing health battle by going under the knife.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
