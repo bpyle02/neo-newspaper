@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>TUESDAY, OCTOBER 27, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://i0.wp.com/www.nationalreview.com/wp-content/uploads/2026/10/cambridge.jpg?fit=617%2C360&ssl=1" alt="Lead Story Image" class="news-photo">
+                <h3>The Big Scholarly Lie</h3>
+                <p class="lead-summary"><strong class="drop-cap">A</strong>cademia is committed to clearing Jason Arday of plagiarism, despite the overwhelming evidence against him.</p>
+                <p class="source-credit">— National Review</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Insane console prices are crushing gamers — just weeks before Grand Theft Auto VI arrives</h4>
+                <p>Thirteen years have passed since the last Grand Theft Auto launched to critical acclaim. Now, at long last, GTA VI is almost here, but thanks to the AI boom, prices on current consoles are skyrocketing, and next-gen hardware is expected to be even worse. Here’s why you might have to pay more to play this November. If you already own a compatible game console, you’re among the lucky ones who aren’t affected by the ever-increasing gadget prices that hit gamers particularly hard starting early this year. If you don’t have a console though, or if you own the wrong game console, it’s going to cost you a pretty penny for the privilege to play GTA VI on launch day.</p>
+                <p class="source-credit">— The Blaze</p>
+            </div>
+            <div class="story-minor">
+                <h4>‘RHONY’ Star Daisy Toye Says Martha Stewart “Does Not Care At All” About Her Popcorn Ceiling: “She’s Very Comfortable In My Home”</h4>
+                <p>Stream It Or Skip It: ‘Holiday Touchdown: A Bears Love Story’ on Hallmark, Another Solid Christmas Collab Between the NFL and Hallmark Where Was the ‘Love Of Your Life’ Movie Filmed?</p>
+                <p class="source-credit">— Https://decider</p>
+            </div>
+            <div class="story-minor">
+                <h4>Pregnant Savannah Chrisley defends ‘huge’ age gap with fiancé amid ‘brutal’ backlash</h4>
+                <p>Pregnant Savannah Chrisley said she does “not care” about the “brutal” criticism of her and her fiancé’s “huge” age gap on Tuesday, insisting her partner does not “act his age.” The reality star, 29, did not specify Jason’s age on the latest episode of her “Unlocked” podcast — but did acknowledge that it’s “probably part of the reason” she has kept their relationship “private” since it began last year. “I have always said, ‘I would rather [have] 20 phenomenal, unbelievable years with someone than 50 just [fine] years,'” the “Chrisley Knows Best” alum said. Chrisley went on to gush over the “love and respect” she and Jason have, adding that they “do everything together.</p>
+                <p class="source-credit">— Https://pagesix</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/10/931/523/pakistani-christian-woman.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Pakistan’s top court upholds Christian man’s death sentence for blasphemy</h3>
+                <p class="lead-summary"><strong class="drop-cap">F</strong>ox News anchor Harris Faulkner highlights the ongoing persecution of Christians in Nigeria and how rapper Nicki Minaj is using her platform to raise awareness on 'The Story.' Shock and anger greeted the Pakistani Supreme Court's decision to uphold the conviction and death sentence of a Christian man accused of blasphemy against the Prophet Muhammad. Supporters say that the decision has far-reaching implications for human rights in Pakistan and for Pakistan’s standing on the international stage. The Open Doors 2026 World Watch List listed the Asian nation in its top ten list of countries where Christians face the most extreme persecution. CeCe Heil, Senior Counsel and International Legal Director for the American Center for Law and Justice (ACLJ), told Fox News Digital the case against brothers Amoon and Qaisar Ayub began in 2014. AMERICANS TRAVEL TO PAKISTAN TO FREE CHRISTIANS TRAPPED IN MODERN-DAY SLAVERY: 'GOD'S HAND WAS IN IT' Qaisar was arrested after a WordPress site displayed the Ayub brothers’ contact information and shared content that insulted the Prophet Muhammad. Amoon was arrested the following year. Heil says that in the 12 years of legal wrangling that followed, the Pakistani legal system has never presented evidence proving that either brother was truly affiliated with the offending WordPress blog site.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Ceasefire negotiated by Melania Trump holds in Russia-occupied Ukrainian city</h4>
+                <p>Marc Beckman, a senior advisor to Melania Trump, joins 'Fox & Friends Weekend' to discuss first lady Melania Trump's humanitarian efforts in Ukraine. Beckman details how the first lady successfully brokered a ceasefire in Oleshky, allowing critical aid to reach the town and evacuate elderly residents. The discussion also highlights other initiatives, including her White House 'Be Best' campaign.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Israel heads into deeply divided election as Oct 7 reckoning looms: What to know</h4>
+                <p>Fox News Digital speaks with three experts on Israel’s high-stakes election and the fight over Netanyahu’s political future. The election is set for Oct. 27, 2026. TEL AVIV, ISRAEL — Campaign banners bearing the faces of Israel's political leaders cover buildings and roadsides, while in homes, coffee shops and family gatherings, the same question dominates conversations: Will Prime Minister Benjamin Netanyahu remain in power?</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Former Colombian president accused of exploiting dozens of women for presidential parties</h4>
+                <p>President Donald Trump said Colombian President Gustavo Petro should not feel relaxed after the U.S. operation in Venezuela, citing cocaine coming from Bogotá. Former Colombian President Gustavo Petro has been accused of trapping and exploiting 48 women for presidential parties, with officials alleging they were hired "just to be with President Petro."</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F10%2Fnewspress-collage-m1ctfi0vn-1793111577088.jpg?quality%3D90%26strip%3Dall%261793097218" alt="Lead Story Image" class="news-photo">
+                <h3>Kiah Stokes, once waived by Liberty, becomes WNBA Finals’ unlikely hero</h3>
+                <p class="lead-summary"><strong class="drop-cap">K</strong>iah Stokes stayed on the court with a Gatorade towel draped over her shoulder and a camera pointed in her face. Consider the post-game interview her reward after having such a meaningful impact on the Valkyries’ 64-55 victory against the Atlanta Dream that put Golden State up 3-2 in the WNBA Finals. A cheer broke out from among the moat of lavender surrounding Stokes. At first, it was hard to make out. But the chants gradually picked up steam as more voices joined in. Eventually it became undeniable.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Kalshi promo code NYPMAX55: Trade $25, get up to $55 bonus for World Series Game 4 on Tuesday</h4>
+                <p>The World Series continues Tuesday, and traders can use the Kalshi promo code NYPMAX55 to trade $25, to get up to a $55 bonus for Game 4 at Tropicana Field. Tropicana Field was buzzing Monday, and the Brewers and Rays will run it back in Tampa Bay the next day for another matchup between the last two teams remaining in baseball. The Brewers can clinch their first championship with a win after their 10-1 Game 3 win Monday. New traders can sign up for the flagship prediction market to forecast contracts on football games, international soccer matches, women’s playoff basketball and playoff baseball games.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Steve Kerr dishes on Yaxel Lendeborg’s eye-opening impact: ‘Extremely rare’</h4>
+                <p>DENVER — In his first four games, Yaxel Lendeborg has already gone head-to-head against Luka Doncic and Nikola Jokic. How’s that for a welcome to the NBA? The way the 24-year-old rookie has responded to the test, the more pertinent question might be: How’s that for an introduction to Yaxel Lendeborg? And maybe another: How much better can this dude get? After Lendeborg’s most impressive showing yet, leading the Warriors to their first road win over Jokic and the Nuggets since 2022, Draymond Green offered an answer: Eons. “I don’t care what age you are, it’s the NBA. If you don’t know the NBA game, you’re already at a deficit. He don’t know the game,” Green said. “Not that he don’t know the game of basketball — he don’t know the NBA. And to be able to have the ability to go out there and still do that, not knowing what the NBA really, truly brings on a nightly basis is special.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>The deleted ‘College GameDay’ video that fueled Pat McAfee’s Utah anger</h4>
+                <p>The University of Utah-produced video that left Pat McAfee vowing to never return — and referencing Charlie Kirk’s assassination — included students mildly joking about his mannerisms. McAfee called out Monday a since-deleted video published by the university in advance of ESPN’s “College GameDay” coming to campus for Saturday’s huge 21-13 win over Houston. The host of the video asks a fan for his best McAfee impression, and a male fan predicted the host would say a “corny line.” This is the video the University of Utah posted on Instagram that people claim turned Pat McAfee against Utah.They’re calling him a creep for taking his shirt off… (when the entire crowd was chanting for him to do it???) https://t.co/4oSNDLbRJO pic.twitter.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/10/931/523/rob-riggle-ted-lasso-season-4-premiere.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Rob Riggle says Hollywood work is disappearing from LA: 'It's the exception now'</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>he "Christmas at the Kringles" actor told Fox News Digital he'd like to move back to the Midwest someday. Rob Riggle said many people in the industry are leaving Los Angeles because the work has moved away. The comedian, who stars in the upcoming holiday horror film "Christmas at the Kringles," told Fox News Digital that getting a job in the city is more the exception than the rule now. "I think a lot has changed, the way things are done," he explained. "I used to be out here because I needed to be available to work here. A lot of the work isn't here anymore. I mean, a lot of it, the work is not here anymore. It's the exception now, if you get to work here. So that's one reason." Rob Riggle said that industry work is moving away from Los Angeles. (Variety via Getty Images) "They don't even do that anymore. Like you don't get to go in anymore," he said. "You have to put yourself on tape standing in front of a white, opaque wall in your garage, trying to make a selfie video, reading with your neighbor, you know, or whoever's in the house, you know? It's terrible. It's just a terrible way to do business. And for whatever reason, that's what we get after COVID. So that's the new paradigm and it sucks."</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>2-time ‘Jeopardy!’ champ arrested for child porn — less than a year after caught peeping</h4>
+                <p>Perverted two-time Jeopardy champion Joey DeSena has been busted in North Carolina for having child pornography — while he was already on probation for peeping, according to court documents. DeSena, 44, was arrested Friday in Wake County and charged with 10 counts of second-degree sexual exploitation of a minor after he was found with sexually explicit pictures and videos featuring children, according to an arrest warrant obtained by WBTV. The perv was on probation after pleading guilty to a pair of felony peeping charges in July. A judge denied his bond on Monday and he remains locked up at the Wake County Jail, records show.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Meghan Markle's acting comeback suffers major blow as Netflix 'safety net' disappears: expert</h4>
+                <p>Doug Eldridge, founder of Achilles PR, explains why Meghan Markle may need to break from her public image and take on unexpected acting roles to revive her acting career. Meghan Markle is no longer in talks to join "The Gentlemen," with friends alleging she was "used to help promote" the Netflix series.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>New ‘prestige porn’ makes sex the ultimate luxury — and hot older women the main characters</h4>
+                <p>Rachel is a 41-year-old doctor in Bergen County, New Jersey. She has a solid, loving marriage to a fellow MD, two boisterous kids under seven, and one method that she uses to stay sane: Specifically, the kind of highbrow erotica with the same explicit content as a softcore video, but made by award-winning filmmakers and novelists, and starring Oscar-winning actors instead of OnlyFans girls. “It’s become like my therapy,” said the family medicine specialist, who plays XXX-rated audiobooks like “Helpless” by Jessica Knoll and “A Court of Thorns and Roses” by Sarah J. Maas when she’s driving alone in her family SUV, and watches movies like “Baby Girl” and shows like “Industry” on her iPhone while doing laundry.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/09/931/523/couple-looks-at-bills.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Data brokers don't just collect facts. They guess about you</h3>
+                <p class="lead-summary"><strong class="drop-cap">K</strong>urt ‘CyberGuy’ Knutsson explains how algorithms track browsing history and location to estimate what shoppers are willing to spend on ‘Fox & Friends.’ They know where you live. They may know your phone number, your relatives' names and roughly what your house is worth. By now, most people have at least a vague sense that data brokers collect personal information. What many don't realize is what happens next. Data brokers also analyze that information. They use algorithms, compare records from different sources and sort people into categories that predict their interests, circumstances and behavior. Those predictions can involve your health, finances, religious beliefs and potential vulnerabilities. Data brokers analyze personal information to identify patterns and predict your finances, health and behavior. (Neil Godwin/Future via Getty Images) Some may be wrong. Others could reveal sensitive details you never intended to share. And depending on the company and the type of information involved, those profiles may be sold or shared with businesses you have never heard of. Here's a closer look at the labels data brokers assign to you, how they come up with them and what you can do to protect your personal information. In this free live online class, Kurt "CyberGuy" Knutsson will share five practical ways to protect your trip and your wallet this holiday travel season. You’ll learn how to secure your phone and personal information, find better travel deals, avoid common scams, save money on bookings and use technology to make your travels easier and less stressful. No technical experience is needed. Join us Saturday, October 31, at 11 AM ET / 8 AM PT. Register free now at CyberGuyLive.com. Data brokers do far more than maintain databases of addresses and phone numbers. Some build detailed profiles designed to help advertisers identify specific audiences. The Federal Trade Commission documented this practice years ago. Its investigation found that brokers combined information from multiple sources to infer sensitive characteristics, including income, religion, political views and health conditions.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Elon Musk vows to give every US child SpaceX stock</h4>
+                <p>Elon Musk announces a plan to give one share of SpaceX stock to every child in America. The 'Big Money Show' debates the business and charitable aspects of this multi-billion dollar giveaway, contrasting it with Anthropic's decision to commit five percent of its equity to a public benefit fund. Panelists discuss the motivations behind these high-profile corporate charity initiatives.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
