@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>WEDNESDAY, OCTOBER 28, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://media.townhall.com/cdn/hodl/2026/286/3557c4b0-7c7f-4b29-aa75-466288abc4d5.jpg" alt="Lead Story Image" class="news-photo">
+                <h3>Abdul El-Sayed Called Drone Killing of 9/11 Mastermind Ayman al-Zawahiri 'Troubling' and 'Fig Leaf'</h3>
+                <p class="lead-summary"><strong class="drop-cap">M</strong>ichigan Democrat Senate candidate Abdul El-Sayed once criticized the U.S. drone strikes that killed 9/11 mastermind Ayman al-Zawahiri in 2022 as "troubling" and called them a "fig leaf" to cover up the Biden administration's botched withdrawal from Afghanistan. Abdul El-Sayed wrote that it was “troubling” that the United States killed the al Qaeda chief Ayman al-Zawahiri, who is widely considered the mastermind of 9/11, in a targeted 2022 drone strike, @LevineJonathan reports.Killing al-Zawahiri was “a fig leaf” to cover up the… pic.twitter.com/iv2INrGKI1 On August 5, 2022, El-Sayed published a piece in The New Republic titled "Projecting Strength Abroad Isn't Simply About Killing Terrorists. It's About Standing Up to Despots, Too." In it, he attacked the drone strike that killed Al-Zawahiri, who was a fellow Egyptian and member of the Muslim Brotherhood who eventually went on to lead al-Qaeda. President Biden is using the strike to bolster his approval here at home. It is troubling to watch yet another American president flog “War on Terror” themes to resurrect a laggard term. That said, Biden’s approval numbers began to slip toward their current historic lows after the botched pullout from Afghanistan, where Al Zawahiri was killed. The shambolic, if courageous, pullout left open questions about whether the U.S. had even accomplished the aims it had set out to achieve after 9/11. This strike, then, offers the Biden administration a fig leaf, demonstrating that even in Taliban hands, Afghanistan is not off-limits for direct action against terrorist targets. If Biden is serious about projecting strength abroad, he needs a new playbook. The War on Terror themes he struck—extrajudicial executions of foreign terrorists—while justifiable, have gotten stale. If he’s serious about addressing the root causes of terrorism, he needs to demonstrate now the same bold leadership he showed when he pulled us out of Afghanistan in the first place. Rather than dapping dictators U.S. presidents have backstopped for far too long, it means confronting them. And that starts with demanding the immediate release of Asim Ghafoor. A husband and father of three, Ghafoor was recently taken to the emergency room for complications of Covid-19, which he contracted in his Emirati prison. That the United States should allow a foreign government to treat an American political prisoner this way is pathetic.</p>
+                <p class="source-credit">— Townhall</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Who is Left on ‘Dancing With the Stars’? Who Got Eliminated?</h4>
+                <p>Stream It Or Skip It: ‘Holiday Touchdown: A Bears Love Story’ on Hallmark, Another Solid Christmas Collab Between the NFL and Hallmark Where Was the ‘Love Of Your Life’ Movie Filmed?</p>
+                <p class="source-credit">— Https://decider</p>
+            </div>
+            <div class="story-minor">
+                <h4>Netanyahu Lives Another Day</h4>
+                <p>After the Israeli election, it appears that Bibi’s coalition will be the largest but that no leader will have a clear path to a majority.</p>
+                <p class="source-credit">— National Review</p>
+            </div>
+            <div class="story-minor">
+                <h4>Jennifer Lawrence reveals reason she ‘came down hard’ on crew over uncensored scenes</h4>
+                <p>Jennifer Lawrence said that she “came down hard” on movie bosses after she learned that unauthorized crew members were allowed to see her film nude scenes. “There was an instance on set where crew members who weren’t approved when I was doing nudity were on set, and I came down hard on it,” Lawrence said during the Oct. 28 episode of “Call Her Daddy.” “Purely because if we’re not setting that kind of principle at the level of which we’re doing it right now, you know, then what on earth is going to happen to an 18-year-old?” she said. The “Hunger Games” star explained she felt she had a duty to speak up, given her experience in the industry.</p>
+                <p class="source-credit">— Https://pagesix</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2025/09/931/523/uk-march-against-antisemitism.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Holocaust educator says Mamdani could learn from UK's targeted approach to antisemitism in schools</h3>
+                <p class="lead-summary"><strong class="drop-cap">A</strong>uthor and Holocaust educator Dov Forman says Britain’s new measures are a start but warns the government must follow through with action. The British government’s decision to embrace sweeping measures addressing antisemitism in schools is drawing a sharp contrast with New York City Mayor Zohran Mamdani’s recently unveiled strategy, raising questions about why Britain’s plan appears more specific than the one proposed in America’s most Jewish city. The U.K. government accepted all 27 recommendations from an independent review into antisemitism in schools and colleges in England. The measures include encouraging adoption of the International Holocaust Remembrance Alliance working definition of antisemitism, specialized training for educators, strengthened reporting procedures and independent oversight. Mamdani’s 33-page strategy — while not only focused on education — by comparison, does not adopt a single definition of antisemitism, explicitly address the relationship between anti-Zionism and antisemitism or establish numerical benchmarks for measuring whether its initiatives succeed.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Attacker shouting 'Allahu Akbar' killed outside Israeli Embassy in Serbia, police say</h4>
+                <p>Members of Serbia's Gendarmerie stand guard at the entrance to the Israeli Embassy in Belgrade on Oct. 28, 2026, after a police officer stationed at the mission was attacked with two knives shortly after midnight. (Andrej Isakovic / AFP via Getty Images) An assailant armed with two knives attacked a member of Serbia's Gendarmerie guarding the Israeli Embassy in Belgrade shortly after midnight Wednesday, prompting the officer to fatally shoot the attacker in self-defense, according to Serbian authorities.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Spain high-speed train crash kills at least 64</h4>
+                <p>Aerial footage showed the aftermath of a deadly high-speed train crash in central Spain Wednesday. (SPANISH CIVIL GUARD via AP) Spain suffered its second deadly high-speed train accident this year when one train on Wednesday slammed into another that had stopped on the tracks, with the impact shredding cars and killing at least 64 people.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Netanyahu defies exit polls as vote shifts in his favor, but majority remains elusive</h4>
+                <p>Netanyahu’s bloc gains ground as votes are counted but remains short of a governing majority, with Arab parties emerging as a key factor in what comes next. Fox News Digital reporter Efrat Lachter reports from Tel Aviv, Israel. TEL AVIV, Israel — Prime Minister Benjamin Netanyahu's political bloc gained ground Wednesday morning as Israel counted votes from its first national election since the Oct. 7, 2023, Hamas massacre, but remained short of the majority needed to form a government, leaving the country facing another potential political deadlock.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/statics.foxsports.com/www.foxsports.com/content/uploads/2026/10/931/523/bace5381-brewers2.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Historic 5th Inning And Much More: Brewers' World Series Game 3 By The Numbers</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>he Milwaukee Brewers squeaked past the Tampa Bay Rays in Games 1 and 2 of the 2026 World Series. But, in Game 3, the Brewers got past the Rays with a sledgehammer. After earning a 10-1 win in Tampa Bay, the Brewers now have a 3-0 series lead and are on the verge of their first World Series triumph following a historic Game 3 rout and a dramatic, eight-run fifth inning. Here are the numbers to know from Game 3 of the 2026 World Series with nuggets provided by FOX Sports Research: 0: The number of outs Rays reliever Cam Booser recorded in relief of starter Freddy Peralta in the top of the fifth inning; Booser, who entered the night having surrendered zero runs over six innings pitched this postseason, gave up four consecutive hits and was pulled. 1A: Brewers manager Pat Murphy challenged an inning-ending force-out in the fifth. He won the challenge, and Milwaukee went on to drive in eight runs on six consecutive hits. The Brewers are the first team to log seven consecutive hits in a postseason game. 1B: The aforementioned inning also tied the 1921 New York Giants (Game 3) and 2001 Arizona Diamondbacks (Game 6) for the most runs scored in a World Series game without hitting a home run.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Former Knicks forward Barry Clemens dead at 83</h4>
+                <p>Clemens was the 19th overall pick in the third round by the Knicks in the 1965 NBA draft and played one season in New York. During an 11-year NBA career, the 6-foot-6 Clemens played for the Chicago Bulls (1966-69), Seattle SuperSonics (1969-72), Cleveland Cavaliers (1972-74) and the Portland Trailblazers (1974-76). He won the Ohio Athletic Conference’s most valuable player award as a senior, averaging 23 points and 14.7 rebounds. Clemens ended his career at Ohio Wesleyan as the all-time leading scorer at OWU and the OAC.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Soccer league dealing with ‘intense’ backlash after incident with ‘too good’ 3-year-old</h4>
+                <p>i9 Sports is feeling the heat after a controversial incident that involved a 3-year-old being pulled from a soccer league following a 911 call to police. The youth sports league told TMZ on Tuesday that local league owners and team members have received threats, and the response “has been intense.” The organization also told the outlet that the threats and the sharing of names and photos of those involved must stop. On Saturday, league director Thomas Hayes called 911 around 9:50 a.m. about a parent being “really, really disruptive” at a game in a league for 5-year-old kids at Martin Luther King Jr. Park in Winter Park, Fla.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>DeForest Buckner responds to George Kittle’s comments on 49ers blockbuster trade</h4>
+                <p>The defensive tackle has received much love from his San Francisco teammates, who are also loving the reunion in the Bay. Buckner responded to George Kittle’s five-word reaction to the Colts deal that sent the Pro Bowler to the 49ers in exchange for a 2027 fourth-round pick. DeForest Buckner is ready to get to work with the 49ersBuck’s message to George Kittle“We back Jorge‼️” pic.twitter.com/BhlJTXwDCV Buckner is reuniting with a handful of his former teammates as the veteran tackle spent the first four seasons of his NFL career with the 49ers. San Francisco selected him with the No. 7 overall pick in 2016.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/10/931/523/vince-gill-amy-grant.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Amy Grant says Vince Gill isn't 'afraid to put somebody in their place' after confronting radio host</h3>
+                <p class="lead-summary"><strong class="drop-cap">A</strong>my Grant recalls how a chance doctor visit saved her life. The singer was diagnosed with a potentially catastrophic heart condition after  accompanying husband Vince Gill to his cardiologist appointment. Amy Grant is opening up about her relationship with her husband, Vince Gill, after over 20 years of marriage, saying he will always stand up for her. During a recent interview with Fox News Digital, the 65-year-old singer touched on her marriage to Gill, noting that while he is "kind, kind, kind," he will do anything to protect her. "He does have a toggle switch, and if somebody does something to throw that switch, he can respond so quickly," she said. "And so he can see the field, and he's got a quick mind. And he is not afraid to put somebody in their place or be protective. And so, yeah, I mean, I feel so loved by him." In March, Gill told the story of the time he confronted host Don Imus while on his radio show, and called him out for talking negatively about him and Grant. Grant shared that Gill is not afraid to stand up for her, no matter who he is going up against.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Last-minute Metallica Sphere ticket prices continue to drop</h4>
+                <p>If you’ve been on the fence about buying tickets to see Metallica at Sphere, we have news that just might “Fuel” you. After reviewing prices, it appears they are dropping for their upcoming “No Repeat Weekend” in Las Vegas. When we last looked into how much it cost to see the Rock Hall of Famers’ Life Burns Faster residency at Sphere on both Thursday and Saturday, two-day passes started at $1,102 including fees on Vivid Seats. Based on our findings, the cheapest seats for either show is $463 including fees to get in on Thursday, Oct. 29. While these lower prices are certainly still expensive, we’d argue the juice is worth the squeeze for this bucket list-worthy live show.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Collin Gosselin calls out reality TV producers for putting ratings ahead of kids: 'The show must go on'</h4>
+                <p>The "Jon & Kate Plus 8" star tells Fox News Digital reality TV puts children at risk when adults ignore their discomfort. Collin Gosselin is sounding the alarm on the reality TV industry, accusing adults of turning a blind eye when children are hurting — all to keep the cameras rolling.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Japanese manga artist Tetsuya Chiba, known for his boxing masterpiece ‘Ashita no Joe,’ dead at 87</h4>
+                <p>Legendary Japanese manga artist Tetsuya Chiba, who caused a national sensation with his boxing series “Ashita no Joe” or “Fighting for Tomorrow,” a story about an orphan becoming a professional boxer, has died. He was 87. Chiba’s masterpiece series became so popular that fans even attended a mock funeral for the protagonist Joe Yabuki’s rival. Chiba died at a Tokyo hospital last Thursday, his publisher Kodansha Ltd. said Tuesday, without specifying the cause of his death. While he depicted aspiring young athletes fighting for their life and career, Chiba was a vocal supporter of peace and freedom of expression, telling stories of his harrowing memories of war as a child in autobiographical stories and manga.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/10/931/524/pixel-11-pro-fold-camera-app-new-york.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>How to get rid of unwanted AI on your phone</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>he camera app on a Pixel 11 Pro Fold smartphone during a content capture event in New York on Monday, Aug. 10, 2026. (Bloomberg via Getty Images) You pull out your phone to look something up on Google. Maybe you're researching a purchase or trying to find a restaurant. You expect a list of websites. Instead, Google serves up a lengthy artificial intelligence-generated answer before you even get to the search results. Sound familiar? I like AI when it helps me get something done. But sometimes I just want to search the internet without an AI summary appearing every time. Fortunately, there are ways around it. One involves adding a few characters to your search. Another uses a built-in Google filter. And if you've had enough of Siri suggestions on your iPhone or AI features popping up on your Samsung Galaxy or Google Pixel, there are settings worth changing there, too. In this free live online class, Kurt "CyberGuy" Knutsson will share five practical ways to protect your trip and your wallet this holiday travel season. You’ll learn how to secure your phone and personal information, find better travel deals, avoid common scams, save money on bookings and use technology to make your travels easier and less stressful. No technical experience is needed. Join us Saturday, October 31, at 11 AM ET / 8 AM PT. Register free now at CyberGuyLive.com. You can take back control of your smartphone by turning off unwanted AI features on your iPhone, Samsung Galaxy or Google Pixel. (Kurt "CyberGuy" Knutsson) Google calls those automatically generated summaries AI Overviews. They appear above traditional search results when Google's systems decide an AI-generated answer might be helpful. Sometimes they save time. However, they can also get in the way when you'd rather read information directly from a website. Unfortunately, Google confirms that AI Overviews cannot be permanently turned off through a standard Search setting. However, you have a few ways to avoid them. This trick takes only seconds and is worth trying on an iPhone, iPad, Samsung Galaxy or Google Pixel.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Is that campaign merch store official? Here's how to tell</h4>
+                <p>George Weiner, CEO of Whole Whale and creator of PACspam.org, tells Kurt "CyberGuy" Knutsson why blocking political texts rarely works and how a free tool can help you fight back. You're scrolling online when you spot a campaign T-shirt supporting your favorite candidate. The website looks professional, the merchandise looks legitimate and the address includes the candidate's name. You might even see the word "official" at the top of the page. So, you assume your purchase supports the campaign. But what if the candidate has nothing to do with that store?</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>GM wants drivers to take their eyes off the road by 2028</h4>
+                <p>GM plans to introduce eyes-off driving in the Cadillac Escalade IQ by 2028, allowing drivers to look away from the road under approved conditions. (General Motors) Would you feel comfortable watching a movie while your car cruises down the highway at 70 mph? General Motors is betting that someday you will. The automaker plans to introduce technology in 2028 that could let drivers take their hands off the steering wheel and their eyes off the road. That means you could potentially answer emails, watch a show or attend a virtual meeting while your vehicle handles the driving.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
