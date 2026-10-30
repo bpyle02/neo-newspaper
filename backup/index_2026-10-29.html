@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>THURSDAY, OCTOBER 29, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://media.townhall.com/cdn/hodl/2025/241/8a53d83f-f373-4f82-b8e3-e4746cce9eb7.jpg" alt="Lead Story Image" class="news-photo">
+                <h3>Alaska Governor Announces Investigation Into Democrat Plot to Trick Voters</h3>
+                <p class="lead-summary"><strong class="drop-cap">A</strong>laska Gov. Mike Dunleavy announced on Wednesday that he is ordering the Alaska Department of Public Safety to investigate a Democrat scheme to recruit spoiler candidates and confuse voters. The announcement came after The New York Times published a report on the effort to run a candidate with the same name as Democrat Mary Peltola’s Republican opponent, Sen. Dan S. Sullivan. The Times’ investigation found that Peltola’s team not only collaborated with others trying to recruit Daniel J. Sullivan Jr. to run for Senate, but also sought to enlist other potential spoiler candidates to dilute the incumbent’s chances of winning. In other words, Democrats are trying to cheat, but they’re not doing a great job at hiding it. Gov. Dunleavy, in a post on X, noted that the report revealed “an organized effort to manipulate Alaska’s elections by recruiting candidates—including one with the same name as an incumbent U.S. Senator—to deliberately confuse voters and misdirect their votes.” He further noted that the Alaska Division of Elections “investigated these very concerns in June of this year” and that the New York Times’ report “substantially supports the Division's findings.” I am therefore directing the Department of Public Safety to investigate whether this scheme violated Alaska’s laws and whether criminal charges or civil action are warranted. The evidence will determine what happens next. Alaskans have a fundamental right to vote for the candidate they actually intend to support. Deliberately tricking voters into casting their ballots for someone else strikes at the integrity of our elections. Today’s New York Times reporting reveals disturbing new evidence of an organized effort to manipulate Alaska’s elections by recruiting candidates—including one with the same name as an incumbent U.S. Senator—to deliberately confuse voters and misdirect their votes. The Alaska Division of Elections investigated these very concerns in June of this year. The new reporting substantially supports the Division’s findings. I am therefore directing the Department of Public Safety to investigate whether this scheme violated Alaska’s laws and whether criminal charges or civil action are warranted. The evidence will determine what happens next. Alaskans have a fundamental right to vote for the candidate they actually intend to support. Deliberately tricking voters into casting their ballots for someone else strikes at the integrity of our elections. Anyone or any organization found to have broken the law must be held accountable.</p>
+                <p class="source-credit">— Townhall</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Kim Kardashian plucks Elizabeth Taylor’s $12.7M emerald necklace from the vault</h4>
+                <p>Kicking off her “All’s Fair” press tour in Rome, Kardashian’s new stylist hooked her up with the “best birthday present ever,” letting the reality star play starlet for the day and play in Elizabeth Taylor’s jewelry box. Closing down the Bulgari store in Rome on Friday morning, Kardashian was presented with part of Elizabeth Taylor’s suite of emerald and diamond jewelry. “Law really pulled some strings,” Kardashian joked — although, it was the truth. “You did it. I don’t’ know how you did this,” she said as she FaceTimed her stylist. Kardashian was given a pair of similar earrings to try on with the necklace, though they were not the exact ones owned by Taylor. She was not, though, presented with the original matching earrings, ring or bracelet on this particular occasion.</p>
+                <p class="source-credit">— Https://pagesix</p>
+            </div>
+            <div class="story-minor">
+                <h4>Trump’s Rollback of Methane Regulations Is Welcome</h4>
+                <p>Even if administration projections are optimistic, the proposed changes move energy policy in the right direction.</p>
+                <p class="source-credit">— National Review</p>
+            </div>
+            <div class="story-minor">
+                <h4>This is where most NYC Marathon runners rip off their bibs: ‘a low point’</h4>
+                <p>The New York City Marathon devolves into a Greek tragedy for ill-prepared runners at an unsuspecting half-mile stretch of the Upper East Side — where quitters are statistically inclined to rip off their racing bibs, The Post has learned. The highest number of runners tap out every year at Mile 18 — a dreaded marker the race organizers have dauntingly dubbed “The Wall.” Last year, 203 runners vanished between mile 18 and 30K, marking the highest loss of runners between two timing points, according to Road Runners data. That 0.64-mile stretch lies along a fairly quiet stretch of First Avenue from 96th to 103rd Street, which is littered with parking lots, sports fields and municipal buildings rather than apartments.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/10/931/523/Israeli-Election-Banners-Netanyahu-Eisenkot.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Netanyahu falls short of majority as Israel faces three possible paths to a new government</h3>
+                <p class="lead-summary"><strong class="drop-cap">A</strong>s coalition negotiations loom and allegations of foreign election interference emerge, Fox News Digital reporter Efrat Lachter reports from Tel Aviv, Israel. TEL AVIV, Israel - Israeli Prime Minister Benjamin Netanyahu's governing coalition remained well short of a parliamentary majority Thursday as newly counted ballots showed a dramatic surge in support for Arab parties, potentially giving the opposition enough votes to challenge his control of parliament. With 93.8% of ballots counted as of 4 a.m. ET Thursday (10 a.m. local time in Israel), including votes from the double-envelope count, Netanyahu's right-wing and religious bloc was projected to win 53 seats in Israel's 120-member Knesset, compared with 48 for the opposition bloc led by former military chief Gadi Eisenkot. The two predominantly Arab parties were projected to secure a combined 19 seats, bringing the potential anti-Netanyahu parliamentary majority to 67. The updated figures showed Netanyahu's Likud remaining the largest individual party with 26 seats, followed by Eisenkot's Yashar party with 21 and former Prime Minister Naftali Bennett's Beyachad party with 12. The figures remain preliminary.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Netanyahu alleges fraud as Arab parties score record gains — emerge as potential kingmakers</h4>
+                <p>Danny Danon joins 'Fox & Friends First' to discuss Israel holding its first election since the October 7 attacks. He analyzes the future of Prime Minister Benjamin Netanyahu and reacts to President Donald Trump's call for Netanyahu's re-election. TEL AVIV, Israel: Israel's two Arab parties are in a position to have a say in who the country's next prime minister and government will be — but not if Prime Minister Benjamin Netanyahu has anything to do with it, after he alleged serious criminal activities took place during voting in the Arab areas of the nation.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>GOP lawmakers urge Rubio to weigh visa restrictions on corrupt officials as Albania rocked by protests</h4>
+                <p>Former Secretary of State Mike Pompeo reacts to widespread violent protests across Europe and reports of Iranian threats against Americans. EXCLUSIVE: Two Republican members of Congress sent a letter to Secretary of State Marco Rubio expressing concern over the state of NATO ally Albania’s democratic backsliding, urging the department to use its visa restriction authority against Albanian officials complicit in significant corruption.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F10%2F146857363.jpg?quality%3D90%26strip%3Dall" alt="Lead Story Image" class="news-photo">
+                <h3>Connecticut high school football coach quits mid-game after ‘confrontational exchanges’ with players</h3>
+                <p class="lead-summary"><strong class="drop-cap">A</strong> high school football coach in Connecticut resigned at halftime of a recent game after “confrontational exchanges” with his players. Donny Panapada, coach of Stamford High School’s football team since 2022, quit in the middle of the team’s loss to Warde in Fairfield on Friday, according to CT Insider. In an email to parents, Stamford principal Matthew Forker said the coach “engaged in exchanges with our student athletes and demonstrated poor judgement while coaching the first half of the game against Warde.” The coach announced he was resigning to his players and athletic director Chris Passamano and didn’t coach the second half, but stayed at Warde HS, the report said. The team trailed by 30 points at halftime and lost 42-14 to fall to 3-3 on the season. After Passamano met with Panapada, his coaching staff and some of the players the next morning, it was determined there wasn’t “a viable path forward for coach Panapada to rescind his resignation and resume his role as head coach,” Forker’s email said, according to CT Insider. Forker also said Panapada was remorseful but the coach “fell short” of Stamford’s “standards and expectations.” “It is clear that Coach Panapada has the support of families who believe he has been a positive influence in their children’s lives. We recognize and appreciate the relationships he has built with his players and the contributions he has made to the Stamford High School football program. Those contributions are not diminished by the circumstances surrounding his resignation,” Forker wrote, according to Patch.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Tennis star’s ex speaks out after cheating rumors explode</h4>
+                <p>The ex-partner of a tennis star has gone public after fuel was poured on rumours she is the reason two players have fallen out. Speculation has swirled across cyberspace this week with allegations Italian star Matteo Berrettini’s ex girlfriend Vanessa Bellini had a romance with Lorenzo Mussetti. The two Italian players were once considered to be close friends, however, Berrettini, the 2021 Wimbledon runner-up, has recently unfollowed his countryman on Instagram. The rumours exploded on Tuesday (AEDT) when Berrettini, 30, was asked if Musetti’s recent Lyon Open title in France serves as “inspiration” for him.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Novig promo code NYPOST: Deposit $10, get $50 in trade credits for Panthers vs. Packers on ‘TNF’</h4>
+                <p>Traders can use the Novig promo code NYPOST to bank $50 in trade credits for Panthers vs. Packers on “Thursday Night Football.” The Panthers travel to Lambeau Field on a short week with their NFC South lead intact despite suffering an embarrassing defeat to Tampa Bay. Green Bay enters as a 3.5-point favorite, with the line holding steady since opening despite the Packers’ 3-3-1 record against the spread. If you’re just jumping into the prediction market space, you can unlock $50 in trade credits by entering the Novig promo code NYPOST during sign-up. Novig opened the NFL season with a bang by introducing their “Just Sports” ad campaign with actress Sydney Sweeney. Sweeney reportedly sought out Novig co-founder and CEO Jacob Fortinsky herself, pursuing an ownership stake rather than a conventional paid endorsement.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Matthew Stafford’s wife Kelly blasts NFL over head injuries: ‘Not good enough!’</h4>
+                <p>Los Angeles Rams quarterback Matthew Stafford’s wife, Kelly, articulated what many football fans have been feeling about turf fields in two posts to her Instagram story on Wednesday. “GET RID OF TURF. PLEASE. / Will it fix everything? No. Will it eliminate injuries? Absolutely not. But my goodness, wouldn’t it be a step in the right direction?” Stafford’s caption read. “You want your ‘stars’ to last in this league? The guys who bring in the viewers, fill the stadiums, sell the jerseys, and make this league billions? Then why aren’t we doing EVERYTHING we can to protect them? / We know there are serious concerns about turf and the injuries that come with playing on it. Knees, ankles, ligaments… you name it. / But what really gets me is the HEAD,” she continued.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F10%2FCarrie-Underwood.jpg?quality%3D90%26strip%3Dall" alt="Lead Story Image" class="news-photo">
+                <h3>Barefoot Country Music Festival 2027 lineup revealed: Carrie Underwood, more</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>he Barefoot Country Music Festival just announced four household names who will perform at the annual Wildwood, NJ festival at Wildwood Beach from June 17-20, 2027. Carrie UnderwoodEight-time Grammy winner known for “Before He Cheats” and “Church Bells”Florida Georgia LineThe recently-reunited group are playing concerts after their 2022 splitTim McGrawTimeless hitmaker with hits like “I Like It, I Love It” and “Live Like You Were Dying”Riley GreenFan favorite who duets with Ella Langley on “You Look Like You Love Me” If you’d like to be there, single and multi-day Barefoot Country Music Festival passes are available as of today. At the time of publication, the lowest price we could find on four-day passes was $412 including fees on Vivid Seats. “[Barefoot] brings good vibes, great food, and the best performers to one place that makes the occasion a little more special for people that grew up in the tristate area,” The Mirror wrote in a glowing review of the 2025 festivities. “Between the surprise appearances, the sand in my feet, and the stellar lineup, it’s safe to say Barefoot Country Music Fest is one of the best music festivals I’ve ever been to.” Food vendors at the 2026 edition of Barefoot included Southern Smoke Show (known for their “Redneck Bowl,” which combines bacon, mac and cheese and brisket for a singular taste) and Muncheese who sell loaded cheesesteaks and hot dogs.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>'Lioness' star Jill Wagner raises daughters in Tennessee town of 800, where horses and buggies still roam</h4>
+                <p>"A Very Arctic Christmas" star tells Fox News Digital why she traded Hollywood's fast pace for small-town Tennessee and the life lessons she hopes her daughters will carry into adulthood. From the high-stakes action of "Lioness" to the holiday adventure of "A Very Arctic Christmas," Jill Wagner is taking on two very different worlds.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>System of a Down has four Rose Bowl concerts. Which is the cheapest?</h4>
+                <p>System of a Down just announced they’ve extended their June 2027 stint at Pasadena, CA’s Rose Bowl Stadium with Pierce The Veil and Gojira to four concerts. Saturday, June 5, 20276:30 p.m.with Pierce The VeilSunday, June 6, 20276:30 p.m.with Pierce The VeilThursday, June 10, 20276:30 p.m.with GojiraSaturday, June 12, 20276:30 p.m.with Gojira If you’d like to be there to see Serj Tankian wail live, tickets for all four System of a Down Pasadena concerts are officially on sale as of today. At the time of publication, the lowest price we could find on seats for any one show was $107 including fees on Vivid Seats (that’s for the Saturday, June 12 gig).</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Buckingham Palace 'blindsided' by Thomas Markle allegations as Harry, Meghan face new family turmoil: expert</h4>
+                <p>Royal commentator Kinsey Schofield says Buckingham Palace was blindsided by allegations involving Meghan Markle's father, Thomas Markle Sr., who denies the claims. Buckingham Palace was reportedly "blindsided" by allegations involving Meghan Markle's estranged father, former Hollywood lighting director Thomas Markle Sr.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
