@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>FRIDAY, OCTOBER 30, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://www.theblaze.com/media-library/is-watching-horror-movies-a-sin-a-christian-makes-the-case-for-fear.jpg?id=68545507&width=980" alt="Lead Story Image" class="news-photo">
+                <h3>Is watching horror movies a sin? A Christian makes the case for fear</h3>
+                <p class="lead-summary"><strong class="drop-cap">A</strong>llie Beth Stuckey's warning about frightening entertainment raises a larger question: Can horror serve a redemptive purpose? This simple question has sparked a massive debate in Christian circles. It all started when "Relatable" host Allie Beth Stuckey raised concerns about believers consuming entertainment designed to terrify them. Movies like 'Nefarious' and 'The Conjuring' set up battles between good and evil, showcasing what happens when the demonic realm bursts into our lives. Whether you agree with Stuckey’s argument that we’re not meant to watch content that stokes fear in our hearts, the conversation — especially as Halloween looms — is worth having. At first glance, the simplest response to the horror movie question is a whopping: It depends. Christians often have different convictions, and even seemingly simple questions should be met with prayer and action based on the convictions that come from seeking God’s will. That said, I think it’s essential to go a bit deeper. Christians are called to guard our hearts and minds, taking great care with what we consume. Matthew 6:22-23 offers a stark warning many of us overlook when we watch movies, listen to music, or consume content that bends moral boundaries: "The eye is the lamp of the body. If your eyes are healthy, your whole body will be full of light. But if your eyes are unhealthy, your whole body will be full of darkness. If then the light within you is darkness, how great is that darkness!" The Bible is clear that we’re meant to keep our hearts and minds pure and focused on the Lord. But what does that mean for entertainment that deliberately frightens us or confronts us with evil? Does depicting something disturbing necessarily make a movie spiritually harmful? I depart from Stuckey on the fear front. I have no problem watching content that stokes fear in my heart, so long as that fear serves a redemptive purpose. Sometimes fear is a storytelling tool that helps us understand the seriousness of evil, drawing us closer to our need for a Savior. But I also agree with much of what Stuckey said about the dangers of some horror films. Much of the horror content on the market today is simply designed to disturb and perturb the mind, offering little more than jitters and insanely unpalatable imagery. The intent is simply to terrify, with no real purpose beyond the shock itself. I’m not interested in that sort of content, and I don’t think it is honorable or helpful to the Christian mind.</p>
+                <p class="source-credit">— The Blaze</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Bre Tiesi reveals to VRT why she regrets her ‘Special Forces’ departure and reacts to Chrishell Stause’s split</h4>
+                <p>Bre Tiesi joined 'Virtual Reali-Tea" co-hosts Evan Real and Danny Murphy to unpack her exit from "Special Forces." She spoke about regretting her decision, but also dished to us about how she celebrated her birthday right when she got home. Tiesi also shared Nick Cannon's opinion on her exit and how this experience stacked up to filming 'Selling Sunset." Speaking of, we had to ask her about her thoughts on Chrishell Stause's split from G Flip. Check out the full interview now!</p>
+                <p class="source-credit">— Https://pagesix</p>
+            </div>
+            <div class="story-minor">
+                <h4>Defense Lawyers For The SPLC Appear To Bizarrely Undermine The SPLC In Court</h4>
+                <p>The defense brief, saying explicitly that the government’s informant was ‘taking SPLC records and privileged information,’ is corroborating government claims. They just said in court that documents obtained by prosecutors are real. The Southern Poverty Law Center is defending itself against criminal charges in federal court by admitting a bunch of things, but that’s not even the strangest development. Attacking the government’s case this week, the SPLC is attacking itself. They don’t appear to have noticed, but neither have the media.</p>
+                <p class="source-credit">— The Federalist</p>
+            </div>
+            <div class="story-minor">
+                <h4>Shocking bodycam video shows Miami cops accidentally killing innocent woman with stray bullet</h4>
+                <p>Shocking bodycam footage shows Miami cops opening fire at an armed suspect on a street packed with nightclub revelers — and accidentally killing a woman celebrating her birthday. The video shows Evelyn Valdes, 28, behind the wheel of her SUV when she was struck and killed by a stray bullet as officers shot 14 times at Norman Lindo, who was carrying a handgun while pushing people out of his way in the Florida city’s popular Wynwood neighborhood on June 14, 2025. It was released Monday as prosecutors cleared the officers of any wrongdoing — enraging Valdes’ relatives, who call it a “cover-up” and are suing the Miami Police Department.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/10/931/523/Israel-Elections-Banners.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Netanyahu's bloc falls short as longtime allies reportedly weigh move that could end his rule</h3>
+                <p class="lead-summary"><strong class="drop-cap">W</strong>ith final election results leaving both major blocs short of a majority, Fox News Digital reporter Efrat Lachter reports from Israel on the negotiations that could determine the country's next government. Israel's final election count has confirmed that Prime Minister Benjamin Netanyahu's bloc has lost its parliamentary majority, but whether opposition leader Gadi Eisenkot can assemble a government to replace him remains an open question as negotiations begin behind closed doors. The completed count, published early Friday by Israel's Central Elections Committee, gave Netanyahu's bloc 53 seats in the 120-member Knesset, compared with 48 for Eisenkot's opposition alliance. The two predominantly Arab parties secured a historic 19 seats, placing them in a potentially decisive position. Netanyahu's Likud emerged as the largest individual party with 27 seats, followed by Eisenkot's Yashar with 21 and former Prime Minister Naftali Bennett's Beyachad with 12. Final voter turnout reached 77.9%, according to the Central Elections Committee results. Posters of former Israeli Chief of General Staff and Yashar Party leader Gadi Eisenkot, right, and Prime Minister and Likud Party leader Benjamin Netanyahu are seen as election campaigns intensify two days before the vote as campaign posters of candidates are displayed on billboards and buildings across the streets ahead of the Knesset elections scheduled for October 27, in Tel Aviv, Israel, on October 25, 2026.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Albanian opposition lawmakers disrupt parliament with smoke flares and furious attacks on socialist PM</h4>
+                <p>Student-led protests over alleged corruption, jobs and education turned violent as demonstrators demanded Prime Minister Edi Rama resign. (Reuters.) Opposition lawmakers in Albania disrupted a parliamentary session on Thursday by setting off flares that filled the chamber with colored smoke, marking an escalation following weeks of student-led anti-government protests.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Houthis hold 37 UN food workers as Trump-backed WFP chief inherits humanitarian crises across globe</h4>
+                <p>World Food Programme chief pushes to free aid workers held by Houthis, calls for end to hunger Thirty-seven United Nations World Food Programme (WFP) workers are being held captive by Iran-backed Houthi terrorists in Yemen, the agency's new executive director told Fox News Digital on Wednesday. Many have been detained for two years.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>ASRA NOMANI: 106 far-left groups in 'red-green' alliance target global ports</h4>
+                <p>Asra Nomani discusses how far-left networks are funding chaotic France protests. The senior investigations editor breaks down a Fox News Digital investigation exposing how radical adult groups, pro-communist outlets, and far-left organizations are bankrolling the ongoing unrest, revealing that fewer than one-third of the fifty active organizations are actually student or youth groups.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/statics.foxsports.com/www.foxsports.com/content/uploads/2026/10/931/523/aa55b8a7-artboard-1.png?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>2027 NFL Draft Big Board: 6 QBs Rank Among Top 50 Overall Prospects</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>he hope at the beginning of every college football season is that good players will improve to become great and that previously undiscovered talent will make a draft class that much better. The reality, however, is that some players regress. And with today’s liberal transfer policy and the allure of NIL dollars, players are more hesitant than ever to enter the NFL before exhausting their college eligibility. We won’t know for certain which prospects will make up the Class of 2027 until mid-January. But if the 2027 NFL Draft were to take place tomorrow, here is how I would rank the top prospects. Size, power and positional versatility are awfully important boxes to check when evaluating offensive tackles, and Heard possesses all of those. At 6-foot-5, 325 pounds, with vines for arms and experience playing both right and left tackle following tours at Tennessee and LSU, Heard has the frame and game that scream NFL starter. NFL teams are hesitant to invest early picks in specialists, but Wilson offers one of the best combinations of burst and bend of this year’s edge rushers. Teams will pry into his reasons for transferring from Georgia to Missouri to Miami over the past three seasons but his production at every stop is undeniable.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Novig promo code NYPOST: Deposit $10, get $50 in trade credits for Pistons vs. Nets</h4>
+                <p>New prediction market traders can use the Novig promo code NYPOST to deposit $10 and get $50 in trade credits for Friday’s NBA Cup clash between the Nets and Pistons. The Nets were looking for a step forward in 2026-27, but things have not panned out just yet. Brooklyn is the only winless team in the Eastern Conference, and they’ll face the team at the top of the standings on Friday. New traders will unlock $50 in trade credits by entering the Novig promo code NYPOST during sign-up. Use this link to visit the official homepage and begin your registration. This trading value is eligible for any sporting events on the schedule, including NBA and WNBA playoffs, NFL, college football and whatever else is happening in the sports world.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Jordan Love For MVP? 3 Takeaways From Packers' Win Over Panthers</h4>
+                <p>It’s crazy to think that Micah Parsons hasn’t even played a snap yet for the Green Bay Packers, because they’re starting to look pretty darn good without him. They beat the Carolina Panthers, 27-13, on Thursday night at Lambeau Field. There were warts. There were issues — particularly in the fourth quarter. But the Packers held on. And it must not feel great that the Packers entered this week as the fourth-ranked team in the NFC North — and the Panthers entered this week first in the NFC South. This helped demonstrate the substantial divide in quality between the two divisions. But there’s no consolation for the Packers, who face a tough schedule to get themselves into the playoffs.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Jalen Brunson’s ‘Law & Order SVU’ role revealed as trailer drops</h4>
+                <p>The Knicks guard plays a detective in a new “Law & Order SVU” trailer that released on Friday. Brunson appears opposite the show’s megastar, Mariska Hargitay, who plays Captain Olivia Benson in the long-running NBC police drama. The pair are close friends and the actress is a diehard Knicks fan, as well as a staple on Celebrity Row at Madison Square Garden. “Hey captain,” Madison, portrayed by Brunson, wearing a detective badge around his neck responds with a smile. Episode 5 of Season 28 centers around an assault of a wedding guest at the reception. “Benson and the squad uncover a secret that changes the course of the investigation; [DA Sonny] Carisi’s pursuit of justice becomes increasingly complicated when key witnesses refuse to cooperate,” the episode description reads.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/10/931/523/kim-kardashian-donald-trump-split.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Kim Kardashian had sharp response to warnings Trump White House visit would end her career: book</h3>
+                <p class="lead-summary"><strong class="drop-cap">P</strong>olice arrested a man allegedly breaking into Kim Kardashian's home in Hidden Hills, California, and stealing a vehicle. The suspect faces charges for burglary and vehicle theft. In the new book, "Citizen Kim: The Woman Who Created the Future," writer Jonathan Van Meter dove deep into the lives of the Kardashians, particularly Kim, and how she built her empire outside of reality TV. Through a series of interviews with members of the Kardashian family, including Kim, Khloe and Kourtney, as well as those close to the famous family, Van Meter discusses the biggest moments in her life, including her relationship with Kanye, the terrifying Paris robbery, her mother's affair and her prison reform and advocacy work. A tense conversation between President Donald Trump and Kim Kardashian is just one story told in the book surrounding Kim's life. (Getty Images) Fox News may be compensated for or earn a commission if you buy through our referral links. Kardashian worked with Donald Trump to get clemency for a prison inmate.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>‘A Few Good Men’ review: Aaron Sorkin’s mediocre courtroom drama is back on Broadway</h4>
+                <p>Two hours and 30 minutes, with one intermission. At the Vivian Beaumont Theatre at Lincoln Center, 150 West 65th St. Actually, the core problem of “A Few Good Men,” Aaron Sorkin’s 1989 play that’s been ceremonially trotted out at Lincoln Center, is that we can handle the truth for a whole two and a half hours. The truth is revealed early on, we acknowledge its extreme predictability and then said truth is repeatedly discussed by the adjectives — sorry, the characters — all night long. Such is this musty old courtroom drama that resembles a million others with its chatty windbags and zero surprises. This is Sorkin at his most oom-pah-pah, earning cheap applause breaks for self-important lines delivered like asteroid impacts.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>'Days of our Lives' star Robert Kelker-Kelly's cause of death revealed</h4>
+                <p>The 'Days of Our Lives' actor experienced alarming symptoms before his wife found him unresponsive, a police report reveals. (This video contains AI-assisted content.) Robert Kelker-Kelly, the actor best known for playing Bo Brady on "Days of Our Lives," died from arteriosclerotic heart disease, the St. Charles County medical examiner confirmed to Fox News Digital.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Patrick Stewart’s final touching video gushed about love: ‘I hope it has brought pleasure and curiosity’</h4>
+                <p>Sir Patrick Stewart gushed about love in a touching final video recorded before his death at 86 — sharing what he hoped listeners would glean from his readings of Shakespeare’s sonnets. The celebrated English actor and Royal Shakespeare Company veteran’s final creative endeavors were an audio series dedicated to the Bard’s timeless works. “I hope it has brought pleasure and curiosity, but more than anything else, I want it to have communicated all the multiple features that love might have,” he said of the recordings in a video posted on May 20. The “Star Trek” icon died at his Los Angeles home after suffering from Alzheimer’s disease and Lewy body dementia, according to a family statement posted to his Instagram page.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/10/931/523/cybersecurity-cyber-defense-center.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>AI-powered cyberattacks fuel 'Black October' fears</h3>
+                <p class="lead-summary"><strong class="drop-cap">K</strong>urt 'CyberGuy' Knutsson joins 'Fox & Friends First' to discuss the threat of rogue artificial intelligence agents targeting bank accounts. Knutsson shares safety tips to protect personal finances from unauthorized transactions and addresses AI-enabled romance scams, detailing a case where a woman was defrauded of $10,000 by a scammer posing as Jon Bon Jovi. Startup founder Colin Parsons woke up to roughly 50 billing notifications he never expected. He reported that his OpenAI and Anthropic accounts had racked up $449 in charges he didn't recognize. It was an expensive surprise that highlights how quickly stolen credentials can become a financial headache. His experience comes as hackers increasingly use artificial intelligence to automate attacks at speeds that leave security teams scrambling. Meanwhile, researchers have uncovered dangerous weaknesses in software that helps power millions of websites. Some cybersecurity professionals are calling this turbulent period "Black October." The name may sound dramatic, but the developments behind it deserve attention. And while many attacks target large organizations, the consequences can eventually reach your personal accounts. Here's what's happening, how AI-powered cyberattacks are changing online security and what you can do to protect yourself. In this free live online class, Kurt "CyberGuy" Knutsson will share five practical ways to protect your trip and your wallet this holiday travel season. You’ll learn how to secure your phone and personal information, find better travel deals, avoid common scams, save money on bookings and use technology to make your travels easier and less stressful. No technical experience is needed. Join us Saturday, October 31, at 11 AM ET / 8 AM PT. Register free now at CyberGuyLive.com. Hackers are using artificial intelligence to accelerate cyberattacks, raising concerns about personal data security as researchers uncover critical vulnerabilities affecting millions of websites. (Felix Zahn/Photothek via Getty Images) October 2026 has delivered a troubling wave of cybersecurity developments. Hackers have gained access to more powerful tools, while researchers have uncovered serious weaknesses in widely used software. Security professionals are reportedly struggling to keep pace with increasingly automated attacks. Some have started calling the current wave "Black October."</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Millions of students caught in California data breach</h4>
+                <p>Millions of current and former California public school students may have had sensitive personal information stolen in a massive data breach involving a state testing contractor. (Kurt "CyberGuy" Knutsson) You send your child to school expecting teachers to protect their education. You probably don't think much about what happens to their personal information after they take a standardized test. But a massive data breach in California is raising some uncomfortable questions about who has access to student records and how safely that information is stored.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Apple confirms some iPhone Duo screen problems after launch</h4>
+                <p>D.A. Davidson head of technology research Gil Luria discusses Apple's unveiling of its first foldable iPhone, the 'Duo,' what the long-awaited device could mean for Apple's product strategy, the competitive landscape in the foldable smartphone market, consumer demand, and the company's broader innovation outlook on 'The Claman Countdown.'</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
