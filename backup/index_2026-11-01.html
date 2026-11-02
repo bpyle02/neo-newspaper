@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>SUNDAY, NOVEMBER 01, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://pagesix.com/wp-content%2Fuploads%2Fsites%2F3%2F2026%2F11%2F147204199.jpg?quality%3D90%26strip%3Dall" alt="Lead Story Image" class="news-photo">
+                <h3>‘Heat’ director Michael Mann, 83, hospitalized after accidentally shooting himself at LA gun range</h3>
+                <p class="lead-summary"><strong class="drop-cap">“</strong>Heat” director Michael Mann has been hospitalized after accidentally shooting himself at a Los Angeles gun range. The 83-year-old filmmaker was attempting to holster the firearm when it went off, striking his leg, around 4 p.m. at the Range LA on Saturday, sources told TMZ. The Los Angeles Police Department confirmed the incident to the outlet, stating that the victim was in the middle of firearm training when he accidentally disarmed his gun. Our community is about connecting people through open and thoughtful conversations. We want our readers to share their views and exchange ideas in a safe space. In order to do so, we've created a simple set of rules that will improve your experience. Thanks for reading our community guidelines. Don't forget, freedom of speech is not the freedom of reach!</p>
+                <p class="source-credit">— Https://pagesix</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Sorry, Bill Gates. We’re sitting out this apocalypse.</h4>
+                <p>A self-fulfilling prophecy needs willing participants. What becomes of the prophets, their warnings, and their pretensions to authority when the audience stops believing? I was a little shocked by my own reaction to hearing Bill Gates, the famous face of the unelected world elite, push yet another omnicrisis on a prominent podcast. Especially for someone in the informal guild of prognosticators, the temptation is always strong to get caught up in what techies call “hyperstition” — and the rest of us call self-fulfilling prophecies. The urge to get swept up in the current wave of “futurist” forecasting can become almost irresistible when the tenor of the times tilts toward the apocalyptic.</p>
+                <p class="source-credit">— The Blaze</p>
+            </div>
+            <div class="story-minor">
+                <h4>Election Trutherism Is Not a One-Sided Problem</h4>
+                <p>Protecting faith in elections requires confronting sources of distrust on both sides of the aisle, Democrats included.</p>
+                <p class="source-credit">— National Review</p>
+            </div>
+            <div class="story-minor">
+                <h4>To Catch A Fraudster: Watch Us Bust A Refugee Medicaid Scammer Red-Handed</h4>
+                <p>"Home care" is now the most common job in America. Many bill the government for no-show work. Every morning at 6 a.m., he pulls into the driveway of a nearby home, sits in the car for two or three minutes, then leaves. At 5 p.m., he does the same: drives up, fiddles with his phone in the driver’s seat, then returns home. Pennsylvania allows poor elderly people to steer government Medicaid payments to their relatives or friends for helping them cook, clean and perform other everyday in-home tasks. Its version of the program is so generous that home care is now the most common profession in the state. A “home care” aide only has to do one thing to get the state to pay out: use a GPS-enabled phone app that confirms that the worker is at his client’s house when he clocks in and clocks out.</p>
+                <p class="source-credit">— Daily Wire</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F10%2Fnewspress-collage-3xlbsiptu-1793497162172.jpg?quality%3D90%26strip%3Dall%261793482793" alt="Lead Story Image" class="news-photo">
+                <h3>St. John’s bold predictions, key storylines and games to watch for the 2026-27 season</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>he Post’s Zach Braziller answers key questions, gives predictions and picks the top games to watch for St. John’s ahead of the 2026-27 college basketball season. He seems poised for a quantum leap as a junior. Jackson surprised coach Rick Pitino by returning after an uneven first season at St. John’s, and he has impressed his coach with his actions since. Jackson will return to his natural position at shooting guard after being used on the ball a year ago out of necessity. The Bronx native and former top 10 high school prospect appears more mature and comfortable. His teammates voted him one of two captains — along with Senegalese newcomer Babacar Sane — a promising sign of his personal growth. Get Zach Braziller’s text messages with all the latest St. John’s info and get your questions answered — exclusive to Sports+ subscribers. Casper Pohto and Lefteris Liotopoulos are the top two guards off the bench right now. The hope is that the sharpshooting Liotopoulos can take a step forward as a junior. An unheralded sophomore, Pohto defends and may have had a role on the second unit last year if not for a hip surgery in December. But EuroLeague addition Quinn Ellis and Jackson are going to be asked to play heavy minutes. You could also see St. John’s go big on occasion, with either Tounde Yessoufou or Keyshawn Hall at shooting guard. St. John’s has three players — Indiana transfer Reed Bailey, Hall and Sane — in court dealing with eligibility questions. Bailey and Hall are part of the 2022 high school class (seniors last season) that wasn’t grandfathered into the NCAA’s new five-seasons-in-five-years eligibility model. The NCAA ruled Sane ineligible, mostly because he signed an Exhibit 10 contract with the Utah Jazz in the summer of 2024, although he never attended training camp with the Jazz or played a game for them. All three are protected through court orders and able to play. Sane has a second injunction hearing in Queens Supreme Court on Nov. 9.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>How to Watch Chargers vs. Rams: TV Channel, Live Stream, Time</h4>
+                <p>The Los Angeles Chargers visit the Los Angeles Rams in Week 8 of the 2026 NFL season on Sunday, Nov. 1, 2026, at 4:05 p.m. ET from SoFi Stadium in Inglewood, California. The Chargers have not won a game, and the Rams have won once at SoFi Stadium. The Chargers are 0-6 and fourth in the AFC West, and they come out of their Week 7 bye after a 22-6 loss at Kansas City in Week 6. The Rams are 3-4 and third in the NFC West, and their home losses came against San Francisco, Buffalo and Arizona. The Rams come in off a 35-21 win at Las Vegas in Week 7 and allow 302 total yards per game, No. 5 in the NFL. The Chargers score 15 points per game and have 15 giveaways, both bottom 10 marks.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Kalshi promo code NYPMAX55: Trade $25, get up to $55 bonus for Ravens vs. Bills</h4>
+                <p>The Kalshi promo code NYPMAX55 can be applied at sign up to allow new users to trade $25 and get up to a $55 bonus on Ravens vs. Bills. The Bills return from their bye week Sunday to host the Ravens in a marquee AFC showdown, with Baltimore looking to snap a two-game losing streak. Buffalo enters as a 3.5-point home favorite at 5-1, although the potential return of two-time MVP Lamar Jackson could significantly alter Baltimore’s outlook. New traders can sign up for the flagship prediction market to forecast contracts on football games, international soccer matches, women’s playoff basketball and playoff baseball games.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>How to Watch Raiders vs. Jets: TV Channel, Live Stream, Time</h4>
+                <p>The Las Vegas Raiders visit the New York Jets in Week 8 of the 2026 NFL season on Sunday, Nov. 1, 2026, at 1 p.m. ET from MetLife Stadium in East Rutherford, New Jersey. Las Vegas has lost four straight since a 3-0 start, and the Jets keep losing close games. The Raiders are 3-4 and third in the AFC West. New York is 2-5 and third in the AFC East, and four of its five losses came by seven points or fewer. The Raiders' skid reached four with a 35-21 home loss to the Rams in Week 7, and they score 26.1 points per game, a top 10 mark, while allowing 28.1. The Jets come in off a 28-25 loss to Miami in Week 7 and score 19.6 points per game, a bottom 10 mark.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F10%2Fcrop-41614556.jpg?quality%3D90%26strip%3Dall" alt="Lead Story Image" class="news-photo">
+                <h3>Mamdani’s wife Rama Duwaji leaves US again to team up with Dua Lipa on London art installation</h3>
+                <p class="lead-summary"><strong class="drop-cap">N</strong>YC First Lady Rama Duwaji has yet again jetted overseas, this time to England where she collaborated with global pop star Dua Lipa on an art installation for the 2026 London Literature Festival. Duwaji – a  Syrian-American artist who has made more headlines for being out of the country than for being by her husband’s side – provided animation for Lipa’s “Read the World Differently” public art and billboard campaign that centers around Lipa’s Service95 Book Club, a global reading project. Lipa, who is curating the Oct. 20-Nov. 1 festival, provided the words for the collab, FirstPost.com reported. NYC Mayor Zohran Mamdani’s wife came under fire in July for ditching America’s 250th anniversary, to jet off for an Islamic “spiritual wellness” retreat on the Spanish resort island of Mallorca ahead of the patriotic celebration. The Dallas-raised, Dubai-educated first lady’s solo trips since Mamdani was sworn in Jan. 1 also include hitting Corscia, France in July where was a host and artist-in-residence for a The Women Sanctuary’s sold-out retreat that that honored “the legacy of Mary, the most honored woman in the Quran.” And a month later, she resumed her role as the “artist-in-residence” with The Women Sanctuary when it hosted the “Journey through Islamic Calligraphy” retreat in Porto, Portugal. The Women Sanctuary has  called for the destruction of Israel and for “Palestine” to be cleansed of its “oppressors” in a series of hateful social media posts.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>‘Baywatch’ beauty Erika Eleniak on pace for $1 million OnlyFans payday decades after iconic TV role</h4>
+                <p>Donna Mills tells Fox News Digital what changed her mind about joining the platform — and why she says theres no pressure to bare it all. The actress, who famously patrolled the beaches of Southern California in the hit '90s series, has raked in nearly $300,000 in just three months on OnlyFans — putting her on pace to make roughly $1 million during her first year on the subscription platform, TMZ reported.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Legendary skateboarder thrown out of LA spot while recreating iconic video game</h4>
+                <p>Even skateboarding legend Tony Hawk isn’t above the law — or at least the security guards at one of Los Angeles’ most iconic public plazas. The 58-year-old pro skater revealed Friday that he was kicked out of Pershing Square while filming a nostalgic tribute to his legendary video game, “Tony Hawk’s Pro Skater 3.” “Fun fact: we got kicked out of Pershing Square while shooting this today,” Hawk wrote on Instagram, alongside a video recreating scenes from the classic game, which is celebrating its 25th anniversary. The clip shows Hawk rolling through the downtown LA landmark, skating past its signature red spheres and a nearby car wash before footage from the video game takes over.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Brittany Aldean says husband Jason is 'always there' with advice as she builds venture of her own</h4>
+                <p>Brittany Aldean shares how her grandmother inspired her new fragrance line, VADA, and opens up about the challenges of building a beauty business more than a decade in the making. After spending more than a decade considering a venture in the beauty or fashion industry, the wife of country superstar Jason Aldean launched VADA, a fragrance brand inspired by someone close to her heart.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
