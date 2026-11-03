@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>MONDAY, NOVEMBER 02, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://www.theblaze.com/media-library/judge-tosses-out-charges-against-ex-fbi-officials-accused-of-lying-about-hunter-biden-laptop-but-there-s-a-catch.jpg?id=68578113&width=980" alt="Lead Story Image" class="news-photo">
+                <h3>Judge TOSSES OUT charges against ex-FBI officials accused of LYING about Hunter Biden laptop — but there's a catch</h3>
+                <p class="lead-summary"><strong class="drop-cap">A</strong> federal judge has tossed out the cases against two former Federal Bureau of Investigation officials, accusing the Trump administration of weaponizing the power of government in order to prosecute them. The Dept. of Justice had sought criminal charges against 46-year-old Nikki Floris and 56-year-old Bradley Benavides on the basis that they had allegedly lied to Congress about the Hunter Biden laptop case. Both Floris and Benavides had testified in 2023 that they had no part in the investigation into Biden's laptop, but prosecutors cited evidence that both may have discussed the case with other FBI officials. He said the government could have brought the charges at any time but chose to do so two weeks before the election. He also cited a prime time speech where President Donald Trump aired his grievances about the 2020 election. "I will not bury my head in the sand and pretend that I cannot read a calendar," Faruqui added. Floris' attorney had argued in court that his client had been prosecuted in order to influence public opinion for the sake of the election. Critics of Floris pointed to an unearthed alleged text where she claimed to be "basically running a shadow government" in the FBI. Both Floris and Benavides had been a part of the FBI's Foreign Influence Task Force, which no longer exists but had spearheaded the agency's efforts to oppose foreign influence in the 2020 election. The Justice Dept. has the option to pursue indictments of both Floris and Benavides through a grand jury. Faruqui was heavily criticized when he apologized in court to Cole Tomas Allen, the man accused of trying to assassinate Trump at the White House Correspondents' Dinner in April. Cole had been placed on suicide watch and been denied access to a Bible, according to his attorneys. As a magistrate federal judge, Faruqui was not nominated by a president or approved by the U.S. Senate but selected by the court in Washington, D.C. Like Blaze News? Bypass the censors, sign up for our newsletters, and get stories like this direct to your inbox. Sign up here!</p>
+                <p class="source-credit">— The Blaze</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>‘In the City’ Season 2 new cast members revealed after Amanda Batula exit</h4>
+                <p>The wait is over for “In the City” fans eager to find out who’s joining the Bravo gang. Page Six can exclusively reveal the five new cast members set to shake things up in the show’s highly anticipated second season. A source tells us Brittany Whitfield, Robert Morrison, Reagan Baker, Natasha Parker and Barthelemy Jallet will be newbies in the upcoming season. The newcomers will join the returning cast as cameras roll on the new season, which was filmed in Cancún, Mexico, this past weekend at the SLS Playa Mujeres. Parker is no stranger to reality TV, having appeared on Peter Weber’s season of “The Bachelor” before heading to “Bachelor in Paradise.</p>
+                <p class="source-credit">— Https://pagesix</p>
+            </div>
+            <div class="story-minor">
+                <h4>That Scented Laundry Soap Is Toxic. Use This Instead.</h4>
+                <p>Do you smell that? It’s not the crisp autumn air, a low-burning cinnamon candle, or even a waft of the season’s baked goods. No, it’s the overpowering scent of laundry soaked in layers of scented detergent, fabric softener, and dryer sheets. And it’s consuming clothing everywhere. In fact, 68% of Americans who do laundry at home are spending their hard-earned money on fabric softener or dryer sheets, and 36% are throwing in scent beads or boosters. If the smells drifting off of Americans and their clothing in my neck of the woods are any indication, the affinity for these products is only growing stronger. But the secret behind these scents is a wash of endocrine-disrupting chemicals that actually don’t make your clothes any cleaner.</p>
+                <p class="source-credit">— Daily Wire</p>
+            </div>
+            <div class="story-minor">
+                <h4>What Time Is ‘The Voice’ On Tonight? How To Watch ‘The Voice’s “Cut Week” Episode At Its Special Start Time</h4>
+                <p>Stream It Or Skip It: ‘Holiday Touchdown: A Bears Love Story’ on Hallmark, Another Solid Christmas Collab Between the NFL and Hallmark Where Was the ‘Love Of Your Life’ Movie Filmed?</p>
+                <p class="source-credit">— Https://decider</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/01/931/523/hackers-photo-3.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Ukraine says air alert system hacked after false radiation warning in Kyiv</h3>
+                <p class="lead-summary"><strong class="drop-cap">I</strong>n a Fox News Digital exclusive, Estonian Foreign Minister Margus Tsahkna says Moscow is relying on hybrid tactics, including cyberattacks and GPS interference, instead of preparing for a full-scale invasion of NATO. Ukraine officials said the country’s official air-raid alert app was likely hacked after emergency alerts warned on Sunday that there was a "radiation hazard" and a "chemical attack alert" in Kyiv. Cyber actors associated with Russian Intelligence have targeted thousands of commercial messaging apps (CMAs) according to a PSA shared jointly by the FBI and CISA Friday. (Photo by Morteza Nikoubazl/NurPhoto via Getty Images) The public air alert online map also displayed Kyiv and other areas as under a nuclear alert. The app also issued false warnings about Russia’s hypersonic Oreshnik missile and alleged street fighting in Kyiv. Flame engulfs the city administration building partially destroyed by a Russian airstrike on November 1, 2026, in Kramatorsk, Ukraine. (Alex Nikitenko/Global Images Ukraine via Getty Images) But Ukraine’s Air Force said its air alert app was hacked and that there was no radiation hazard to be concerned about.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Iranian ‘ghost fleet’ filmed evading US blockade en route to China, UANI says</h4>
+                <p>A United Against Nuclear Iran analyst reveals a small Iranian tanker breached U.S. blockade, delivering LPG to China. Small Iranian "ghost fleet" tankers are slipping past the U.S. naval blockade and smuggling sanctioned liquefied petroleum gas (LPG) to China through a shadowy maritime hub off Malaysia, according to U.S. investigators who covertly filmed one of the vessels en route in September.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F11%2Fgiants-nfc-east-favorites.jpg?quality%3D90%26strip%3Dall%261793624465" alt="Lead Story Image" class="news-photo">
+                <h3>Giants leap to clear favorite status to win the NFC East after Cowboys collapse</h3>
+                <p class="lead-summary"><strong class="drop-cap">J</strong>ohn Harbaugh’s group has moved to clear favorite status to win the NFC East this week despite not playing a game, shifting from +170 to -155 on BetMGM. The massive move comes after the Cowboys blew a ridiculous game to the Arizona Cardinals, allowing Gardner Minshew to drive down the field with a minute left and steal a victory from the jaws of defeat. Dallas came into Sunday’s game as a massive seven-point favorite, one of the week’s highest, but their defense let them down late. BetMGM has the Eagles at +400 to win the NFC East, followed by the Commanders at +550 and the Cowboys at +225. The Giants (4-2-1) have the early tiebreaker lead over the Cowboys after a Week 1 win, the only game that Jaxson Dart completed. With J.J. McCarthy in the fold as the starting quarterback, Big Blue has a golden chance to win the NFC East division. The Giants are coming off an overtime win over the Houston Texans as 10-point underdogs in McCarthy’s first game as the Giants starter. In Week 9, the Giants will face off with the Eagles, a team that has lost six straight games after starting the season 2-0. After that, though, they will face the Commanders in a game with massive divisional implications, after the two teams tied earlier this season. The trade deadline will be something to watch, as Jonathan Taylor, among others, is expected to be traded, which could bolster either team’s roster to close the year.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Tracy Wolfson goes off over Patrick Mahomes sore-loser claim: ‘I was right there’</h4>
+                <p>CBS Sports sideline reporter Tracy Wolfson shut down the idea that Chiefs Patrick Mahomes snubbed Broncos QB Bo Nix after Denver stunned Kansas City with a dramatic 28-24 comeback victory to take first place in the AFC West on Sunday. Wolfson, who covered the game for CBS Sports, reshared an X post from ML Football, which is a social media sports aggregator, that said Mahomes was under fire for his interaction with Nix after the game. “This is absolutely not true,” Wolfson wrote. “I was right there and Nix was on the other side of field when game ended and celebrating and took a while to get to Mahomes.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Dodgers face new big-market contender for Tarik Skubal who want him ‘badly’</h4>
+                <p>The MLB lockout set to begin less than a month from now and the time for the Dodgers to try and resign Tarik Skubal is now. The problem for Los Angeles is that other teams have the same desire and could force an all-out bidding war for this year’s top free agent. On Monday morning, ESPN MLB insider Jeff Passan reported that “The Chicago Cubs badly want Skubal.” But while they desire to have Skubal lead their rotation, Passan noted that the Cubs “are skeptical that they will be willing to compete at the sort of dollars Skubal is expected to get — well in excess of $300 million, potentially in the $400 million range.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Michael Wilbon stepping away from ESPN due to worrisome health problems: ‘I should have listened’</h4>
+                <p>Longtime ESPN broadcaster Michael Wilbon is taking a step back from work to address “multiple health issues” he said he should have listened to sooner. The co-host of ESPN’s long-running debate show “Pardon The Interruption” alongside Tony Kornheiser, said on Monday that he will take an indefinite leave of absence from “PTI” and his NBA analyst duties in a message on social media. “This isn’t retirement but it is a trip to the injured list,” Wilbon wrote. “Hopefully not an extended one. Struggle with multiple health issues in recent months lead me to take an indefinite leave of absence from my PTI and NBA duties at ESPN and ABC.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/10/931/523/bailey-chase_001.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>'Homestead' star Bailey Chase says California vaccine plans were 'final straw' that drove family out of LA</h3>
+                <p class="lead-summary"><strong class="drop-cap">"</strong>Homestead" star  Bailey Chase tells Fox News Digital his family is now "living our best life" in North Carolina after leaving Los Angeles five years ago. "Homestead" star Bailey Chase is opening up about the "final straw" that drove him and his family out of California for a new life in North Carolina. During a recent interview with Fox News Digital, the 54-year-old actor, who shares daughter Waverly, 12, and 10-year-old twins Maggie and Gauge with his wife Amy, explained that concerns over how California's COVID-19 restrictions would impact his children led him to leave the Golden State behind. "That happened five years ago in the throes of COVID," Chase said. "My wife and I picked up sticks with our three young children when they were mandating vaccines out there." "They said they couldn't go back to school without it," Chase, who stars as former Green Beret Jeff Eriksson in "Homestead," continued. "And that was the final straw. And we've been in the mountains of North Carolina ever since living our best life." Bailey Chase revealed that California's COVID-19 vaccine mandates for schools was the "final straw" that led him and his family to pack up and leave Los Angeles.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Morgan Wallen reveals Sand In My Boots Festival 2027 lineup: See Kings of Leon</h4>
+                <p>The controversial country singer just announced his self-curated lineup for the second edition of his Sand In My Boots Music Festival. From May 21-23, Wallen will host 32 (!) country icons, roots-y rockers, pop stars, Hip-Hop heroes and more at Gulf Shores, AL’s Gulf Shores Beach. Just a few of the most notable of acts on the stacked bill include Millennial icons The Kings of Leon, “Choosin’ Texas” hitmaker Ella Langley, throwback ’90s group Third Eye Blind, chart-topping rapper Nelly and groovy new wave duo Empire of the Sun. Cole Swindell, Rick Ross, Ying Yang Twins, Kameron Marlowe and Hudon Westbrook round out the genre-hopping lineup.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>'DWTS' judge Carrie Ann Inaba speaks out on lift controversy after Val Chmerkovskiy suspension</h4>
+                <p>The "Boy Meets World" alum says partner Pasha Pashkov has helped her embrace confidence on and off the dance floor. Carrie Ann Inaba addressed recent controversies on "Dancing With the Stars" with one swift social media post. Inaba embraced Jenna Johnson in one image captured during the Oct. 20 show, the same episode where Johnson's husband, Val Chmerkovskiy, was suspended after sharing an inappropriate image online aimed at the judge.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Insane number of Americans would sacrifice sex — and their pets — to play ‘GTA VI’ early</h4>
+                <p>A shocking number of Americans would give up sex, and even their pets, for the chance to play the highly anticipated video game “Grand Theft Auto VI” early, a new survey found. Over 20% of American gamers are willing to go without doing it for a month while another almost 10% said they’d abandon their furry friends in exchange for being able to play “Grand Theft Auto VI” a week in advance, a survey of over 1,300 fans from Unwind Media found. “One in five sexually active fans would give up sex for a month to play one week early,” the study said. For fans who already pre-ordered the game — the share of American gamers willing to give up sex sprang up even higher to 32%, while the share of gaming pet owners who would give up their animal-children nearly doubled to 13%, the survey found.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
