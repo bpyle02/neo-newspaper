@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>TUESDAY, NOVEMBER 03, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://i0.wp.com/www.nationalreview.com/wp-content/uploads/2026/11/trump-presidency.jpg?fit=617%2C360&ssl=1" alt="Lead Story Image" class="news-photo">
+                <h3>To the Bitter End, Trump Has Been the Author of His Own Ruin</h3>
+                <p class="lead-summary"><strong class="drop-cap">I</strong>t’s a perversely Nietzschean triumph of the will.</p>
+                <p class="source-credit">— National Review</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Former Navy Pilot Battling ALS Gives Congressman In Purple State The Greatest Endorsement</h4>
+                <p>"This is a deeply personal request for you to consider voting for my very dear friend." Pennsylvania incumbent Republican Congressman Brian Fitzpatrick has received many endorsements throughout his campaign for re-election. His most heartfelt endorsement came from a husband, father, and former Navy Pilot who has battled amyotrophic lateral sclerosis (ALS) for over a decade. “Most of you know that I left social media because it was too challenging to use on my current device. An issue has finally become so important to me that I have worked painstakingly to type out this message character by character,” Matt Bellina wrote in a November 1 social media post. “This is far from a political post. This is a deeply personal request for you to consider voting for my very dear friend, Brian Fitzpatrick.</p>
+                <p class="source-credit">— Daily Wire</p>
+            </div>
+            <div class="story-minor">
+                <h4>Jack Campbell, wife welcomed first child months before horrifying injury</h4>
+                <p>While giving an update on Jack Campbell on Monday, Lions’ Dan Campbell gave insight to the linebacker’s family. “I got to go see him last night, it was good, it was positive,” the coach told reporters during a press conference. “Got to see his parents, talk to his wife and everybody’s in good spirits. It’s about the recovery and it’s a small setback. It was a reminder to fans about Campbell’s home life after he suffered a horrifying injury on Sunday just months after his first child was born. Campbell, 26, and his wife Megan welcomed their first child, son Cooper James Campbell on July 3. “The beginning of our favorite chapter yet! We love you so much buddy 💌” she wrote in an Instagram post.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Michigan voters make surprising cross-party choices as Rogers, El-Sayed race reaches final hours</h4>
+                <p>The afternoon before Election Day, three voters on the streets of Rochester told Fox News Digital why they are backing former Michigan Rep. Mike Rogers or his Democratic Senate opponent, Abdul El-Sayed. Michigan voters showed the swinginess of their state in conversations with Fox News the day before the midterm elections, with one former Democrat firmly backing GOP Senate candidate Mike Rogers and a lifelong Republican holding his nose to vote for Dr. Abdul El-Sayed, a Democrat.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/11/931/523/zelenskyy-yingst-interview-walking.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Ukraine's Zelenskyy on defying US in attacking Russian oil: 'Our response must be painful'</h3>
+                <p class="lead-summary"><strong class="drop-cap">U</strong>krainian President Volodymyr Zelenskyy defended strikes on Russian oil facilities in an exclusive Fox News interview with Trey Yingst, saying Ukraine's response to Moscow's attacks "must be painful." KYIV, Ukraine — Ukrainian President Volodymyr Zelenskyy is defying calls from the Trump administration for his armed forces to stop attacking Russian oil refineries, telling Fox News: "Our response must be painful." In an interview in Kyiv, Zelenskyy acknowledged holding discussions with the Trump administration about targeting oil facilities, attacks President Donald Trump has pinned as being partly to blame for high gas prices in the U.S. "We had different conversations — different, and several — with President Trump and with his team about attacks on refineries," Zelenskyy said. "We said that if you want us not to attack Russia's refineries, they have not to attack our energy system." During an interview with Fox News, Ukrainian President Volodymyr Zelenskyy urged President Donald Trump to pursue an energy cease-fire with Russia as Washington pressures Kyiv to halt attacks on Russian oil refineries.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>US will mediate upcoming Ukraine-Russia talks in Abu Dhabi, Witkoff says</h4>
+                <p>Negotiations to end the war could resume after Russian President Vladimir Putin met with U.S. envoy Steve Witkoff. Ukrainian President Volodymyr Zelenskyy tells Brian Kilmeade he is open to freezing front lines in exchange for security guarantees. American Military Project director Will Thibeau provides his analysis on the developments during 'Fox & Friends First.'</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Russia plotting 'massive strike' during midterms, Zelenskyy warns, urges US to stop Putin</h4>
+                <p>Fox News chief foreign correspondent Trey Yingst reports on Ukrainian President Volodymyr Zelenskyy's response to Russian attacks, warning that strikes on their infrastructure will meet a painful response. Ukrainian President Volodymyr Zelenskyy warned Monday that Russia is preparing a "massive attack" on Ukraine centered on Tuesday's midterm elections in the United States, accusing Moscow of seeking to exploit the historical vote to unleash strikes while the world's attention is elsewhere.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Poland's constitutional crisis deepens as Prime Minister Tusk faces accusations of power grab</h4>
+                <p>Protesters gathered outside Poland’s top court as a long-running political dispute involving President Karol Nawrocki and Donald Tusk’s government escalated.  (AP Video.) Friday’s late-night confrontation at Poland's Constitutional Tribunal, which drew riot police and protesters and prompted President Karol Nawrocki to turn his plane around and return to Warsaw, has reignited a bitter debate over whether Prime Minister Donald Tusk is restoring the rule of law or overstepping constitutional limits.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F11%2Fnewspress-collage-1181pxcf7-1793722371233.jpg?quality%3D90%26strip%3Dall%261793704395" alt="Lead Story Image" class="news-photo">
+                <h3>Luka Doncic reveals intentions for off-day after another 40-burger in Lakers win</h3>
+                <p class="lead-summary"><strong class="drop-cap">“</strong>It’s not bad. Now we got two wins in a row right here, so it’s a great start,” he said. Doncic then added what he planned to do after the Lakers improved to 6-2 with a win over the Heat Monday night. “Play some golf,” Doncic said with a smirk as he walked through the tunnel after Los Angeles’ 138-117 win over the Heat on Monday. The Lakers superstar has become enamored with the sport, going as far as installing a gold simulator in his home. Doncic credits former teammate LeBron James and Austin Reaves as key influences in his golf game. Now, it appears the green is all the 27-year-old can think about after a great start to the week on the court. In the victory over Miami, Doncic finished the night with 42 points, 13 assists, seven rebounds and two steals. It marked the fourth time in the last five games that Doncic scored at least 40 points. By halftime Monday night, the Lakers superstar already had 24 points, making Doncic the first Lakers player to score at least 20 points in the first half in five consecutive games since Kobe Bryant in 2007. The Lakers offense roared against the Heat, with arguably the unit’s greatest showing of the 2026-27 campaign. The squad finished with a season-high 138 points, putting the finishing touches on a historic Doncic performance. The Lakers superstar seems ready for his next challenge, only this time off the court and on the course.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>TV host who proposed to Tom Brady arrested by ICE in $160 million fraud scheme — after five years on the run</h4>
+                <p>Inés Gómez Mont, who previously made headlines for proposing to Tom Brady, was arrested and detained by ICE in Miami on Friday, according to The Sun. The Mexican TV presenter of “TV Azteca” and “Televisa” is wanted in Mexico regarding a $160 million fraud scheme involving herself and her lawyer husband Víctor Manuel Álvarez Puga. The couple is accused to have used shell companies, false invoices and contracts to bring in the money from Mexico’s Interior Ministry and launder it. Investigators allege the two are part of a network led by Álvarez Puga, also known as the “King of the Invoice Mills.” He has been linked to a network of contacts including politicians, government officials, lawyers, business people and celebrities.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>St. John’s lands top-25 stud Malachi Jordan in recruiting coup after strategy shift</h4>
+                <p>On Tuesday morning, the Johnnies landed their first five-star recruit in 13 years, picking up a verbal commitment from top-25 wing Malachi Jordan of Prolific Prep (Calif.). Get Zach Braziller’s text messages with all the latest St. John’s info and get your questions answered — exclusive to Sports+ subscribers. The 6-foot-7 Jordan picked St. John’s over Kansas and Vanderbilt. He recently took an official visit to Queens.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Dave Portnoy trolls LeBron’s controversial mid-game sip of wine: ‘Checked into AA’</h4>
+                <p>Barstool Sports boss Dave Portnoy wasn’t entertained by LeBron James’ decision to help himself to a fan’s red wine during the Sixers’ 126-107 victory over the Bulls on Monday night. The 76ers superstar made waves when he took a sip of a fan’s drink after crashing into him while trying to catch a long transition pass from Tyrese Maxey midway through the third quarter at Xfinity Mobile Arena in Philadelphia. “If anybody else did this they’d be checked into AA but because it’s Bron Bron SportCenter will do an hour special on it,” Portnoy said in an X post, including a clip of James. “Who cares the example it sets for kids that you need to be drunk to play sports?</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/11/931/523/john-rich-kathy-hochul-.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>John Rich says Kathy Hochul is ‘running over’ NY farmers with renewable energy agenda</h3>
+                <p class="lead-summary"><strong class="drop-cap">C</strong>ountry singer John Rich accused the New York governor of helping redefine prime farmland and creating a "chokeout" for farmers through ORES. John Rich is blasting New York Gov. Kathy Hochul over the state’s renewable energy policies, accusing her administration of silencing farmers and overriding local officials in upstate New York. The 52-year-old Big & Rich member has publicly joined local landowners, activists and officials who are challenging New York’s Office of Renewable Energy Siting (ORES), a state agency that reviews and permits major renewable energy and transmission projects. Last month, Rich released his new country song "Dear Kathy," which is directed at the Democratic governor, who is running for re-election. In the song, Rich speaks on behalf of farmers and landowners who are protesting large-scale solar and wind projects on upstate New York farmland, arguing that ORES has undermined local control and put family farms, rural communities and private property rights at risk. During a recent interview with Fox News Digital, Rich shared his message for Hochul, pointing to the final line of "Dear Kathy," which asks, "Why do you hate these people so much?"</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Loew’s Theatre set to reopen in Jersey City. Get tickets to shows</h4>
+                <p>On Monday, Nov. 9, the historic Loew’s Jersey Theatre — aka one of the five historic 1929 movie palace “Wonder Theatres” — is re-opening in Jersey City’s Journal Square. This re-entrance into the Garden State comes after more than 40 years of limited use and a thorough $130 million restoration to preserve the venue’s historic architecture, shimmering chandeliers, gold leaf and custom-built “Wonder Morton” pipe organ. Once open, the classically-designed theatre will host household name bands, singers and comedians. At the time of publication, they’ve booked 16 huge shows. Trey Anastasio BandFriday, Nov. 137:30 p.m.The War On DrugsSaturday, Nov. 148 p.m.JodeciWednesday, Nov. 188 p.m.Chelsea HandlerSaturday, Dec. 127 p.m. and 9:30 p.m.Jimmy O. YangSaturday, Feb. 27, 20278 p.m.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Dave Chappelle is at MSG this week. Last-minute ticket prices are dropping</h4>
+                <p>As part of the 2026 New York Comedy Festival, Dave Chappelle is headlining two nights at MSG. And, based on our findings, ticket prices are dropping to see the “Chappelle’s Show” star live at the Knicks home this week. When our team last reported on how much the cheapest seats cost to see Chappelle at the Garden back on Sept. 18, prices started at $156 including fees on StubHub. Now, a little more than a month later, tickets are going for as low as $142 including fees on Vivid Seats. This set of large-scale sets conclude Chappelle’s phone-free fall 2026 Karamageddon Tour that sent him to a number of arenas (and a comedy festival) all over North America this past month.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Morgan Wallen reveals Sand In My Boots Festival 2027 lineup: See Kings of Leon</h4>
+                <p>The controversial country singer just announced his self-curated lineup for the second edition of his Sand In My Boots Music Festival. From May 21-23, Wallen will host 32 (!) country icons, roots-y rockers, pop stars, Hip-Hop heroes and more at Gulf Shores, AL’s Gulf Shores Beach. Just a few of the most notable of acts on the stacked bill include Millennial icons The Kings of Leon, “Choosin’ Texas” hitmaker Ella Langley, throwback ’90s group Third Eye Blind, chart-topping rapper Nelly and groovy new wave duo Empire of the Sun. Cole Swindell, Rick Ross, Ying Yang Twins, Kameron Marlowe and Hudon Westbrook round out the genre-hopping lineup.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/11/931/523/Foldable-Smartphones-Photo-3.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>iPhone Duo vs Galaxy Z Fold 8: Is $2,000 worth it?</h3>
+                <p class="lead-summary"><strong class="drop-cap">A</strong>pple's newly unveiled foldable iPhone Duo sparks significant consumer interest despite a hefty $1,999 starting price tag. On 'Varney & Co.', Taylor Riggs explains the premium device's unique dual-screen capability and ultra-thin design. Host Stuart Varney admits he plans to purchase the high-end smartphone, which can cost up to $3,000 for the two-terabyte storage model. How much would you pay for a phone that turns into a small tablet? Apple is betting the answer is nearly $2,000. After seven years of watching Samsung build folding phones, Apple has finally entered the race with its first-ever foldable iPhone. The new iPhone Duo, which went on sale Oct. 23, opens like a book to reveal a 7.6-inch screen. Its biggest competitor, Samsung's Galaxy Z Fold 8, offers the same screen size and a remarkably similar design. However, Samsung's phone is lighter and costs about $100 less. Apple has some interesting advantages of its own, including impressive battery performance and a clever screen designed to reduce glare. But there are compromises on both sides, including a repair bill that might make you think twice about carrying either phone without protection. So, has Apple finally cracked the folding phone formula, or does Samsung still have the better idea? Missed CyberGuy LIVE? Watch the replay and discover 5 ways to travel smarter and save money. Our free CyberGuy LIVE class, 5 Ways to Travel Smarter and Save Money, has ended, but you can still watch the full replay. Kurt "CyberGuy" Knutsson walks you through five practical ways to protect your phone and personal information, avoid common travel scams, find better deals, save money on bookings and use technology to make your travels easier and less stressful. No technical experience is needed. Apple's first foldable iPhone, the iPhone Duo, takes on Samsung's Galaxy Z Fold 8 with longer battery life, a glare-reducing display and a higher price tag. (Annice Lyn/Getty Images) Samsung introduced the original Galaxy Fold in 2019. Those early devices came with plenty of growing pains, including concerns about screen durability. Since then, Samsung has steadily improved its folding technology.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Florida police unveil $148K flying patrol vehicle</h4>
+                <p>Florida Polytechnic University's Astro flying patrol vehicle takes to the skies above campus as police explore how electric aircraft could support emergency response. (Florida Polytechnic University) You may be used to seeing police cars cruising through your neighborhood or helicopters flying overhead. But what if an officer could respond to an emergency in a small electric aircraft that looks like a giant drone? That idea is getting closer to reality in Florida. The Florida Polytechnic University Police Department in Lakeland has introduced a flying patrol vehicle that the university has nicknamed Astro. Jetson, the company behind the Jetson ONE personal flying machine, built the single-seat aircraft.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
