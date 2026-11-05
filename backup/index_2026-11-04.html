@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>WEDNESDAY, NOVEMBER 04, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://www.theblaze.com/media-library/image.jpg?id=68592048&width=980" alt="Lead Story Image" class="news-photo">
+                <h3>Democrats didn’t win with better candidates. They won with a different electorate.</h3>
+                <p class="lead-summary"><strong class="drop-cap">B</strong>lazeTV’s John Doyle and Nick Freitas on why demographic change, not candidate quality, decided the midterms. Democrats won control of both the House and Senate in a sweeping blue wave on Tuesday night, flipping seats even in red states like Texas, Kansas, and South Carolina in a sharp rebuke of the Trump administration. BlazeTV host John Doyle argues that the midterm results reflect a deeper demographic shift in the country — especially in places like Texas. “This is not the same country it was even six years ago. I mean, everybody's looking at Texas starting to go blue. This is something that a lot of people have been warning about for decades, actually, as the demographic situation in Texas has changed,” he says, highlighting that the state’s white population fell and that the vast majority of Republican votes still come from white voters. This demographic shift, Doyle suggests, is why Democrats are able to win with candidates who are “insane” and “very low-quality.” “Now the conversation is not being participated in by people who are Americans, people who have deep roots in this country. It's this imported permanent underclass of foreigners who are happy to install people like Mamdani in New York or Abdul El-Sayed in Michigan,” he says. At the same time, he says, Trump’s approval first dipped when the early mass-deportation videos appeared, and the largest swing back left came from Latino men, Latino women, and young Catholics — groups Doyle says are more "sympathetic to the plight of the immigrant” than to “American sovereignty.” “I also think a lot of this too was driven by the fact that Americans like the idea of not having people flooding in. … They don't like seeing those videos of mass deportations. … When people actually start to see this stuff play out, the American stomach, I don't think, is as strong as a lot of people would like to think it is,” he says, highlighting the need “to be better on our messaging.” “We mass-imported a population from cultures that were not just different than the United States, but in some cases diametrically opposed,” he says. “It wasn't the first generation of immigrants that came into Europe that were actually the most radical. It was their children,” says Freitas, “which also says something about our own educational systems in the West, where if you really want to radicalize someone, just send them through your university system. That'll do it.</p>
+                <p class="source-credit">— The Blaze</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Majority of Americans broadly reject socialist ideology even as far left surges to power</h4>
+                <p>House Republicans force a vote condemning socialism to put Democrats on the record on Capitol Hill. GOP lawmakers target the Democratic Socialists of America platform and argue Democrats should declare their positions openly. Most Americans have a negative view of socialism, according to the Fox News Voter Poll, even as left-wing candidates across the country notched resounding victories on Election Day.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Voters Who Claim To Reject Unlimited Abortion Are Duped Into Affirming It In 3 States</h4>
+                <p>Abortion activists successfully executed another round of deceptive ballot measure schemes in multiple states on Tuesday. The midterm support for unlimited abortion in three states poses a striking contrast with Americans’ feelings about ending life in the womb. Pew Research Center’s 2026 American Trends Panel found the the lowest support, 23 percent, for the radical unlimited abortion-for-all touted by Democrats since 2019. That figure is down six percentage points from the 29 percent recorded shortly after the Supreme Court’s 2022 Dobbs v. Jackson decision. Idahoans acted on those figures when they rejected a proposition that would have given “every person” in the Potato State, no matter their age, a “right to reproductive freedom and privacy.” The majority of voters in Nevada and Virginia, however, cast ballots in favor of abortion without limits. Missouri, similarly, rejected an effort to repeal the state’s 2024 pro-abortion constitutional amendment approximately 55.5 percent to 44.5 percent, with more than 95 percent of the votes tallied.</p>
+                <p class="source-credit">— The Federalist</p>
+            </div>
+            <div class="story-minor">
+                <h4>Kids’ e-bike and e-scooter injuries are skyrocketing — doctor reveals what all parents should do</h4>
+                <p>But this deadly threat isn’t just affecting adults. In fact, injuries among kids are climbing much faster than grown folks. Dr. Jose Prince, senior vice president of children’s surgery and pediatric surgeon in chief at Northwell Health, breaks down the new research, weighs in on what’s behind this alarming trend and what we can do to stop it. Between January 2023 and March 2026, 13,000 young people were treated for bike, scooter and skateboard injuries at six large children’s hospitals around the US. During that time, e-scooter injuries rose 15% while e-bike injuries rose a shocking 33% — every three months, researchers at Stanford found. Those increases were much higher than those seen on non-motorized versions of bikes and scooters.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F11%2Fnewspress-collage-htekngzi0-1793808486454.jpg?quality%3D90%26strip%3Dall%261793790620" alt="Lead Story Image" class="news-photo">
+                <h3>Giants clear favorites to trade for Jonathan Taylor: prediction market</h3>
+                <p class="lead-summary"><strong class="drop-cap">W</strong>e have a clear leader to be the new home for superstar running back Jonathan Taylor. The Giants are a massive favorite to land the Colts’ star as traders at Kalshi have boosted Big Blue’s outlook to land Taylor from 16 percent to 40 percent in just 48 hours. There is currently $1.9 million in trading volume on the market at the time of writing Wednesday. The line movement is interesting because there has not been any new reporting that the Giants are close to a trade for Taylor or that a formal offer has been made. While the Giants sit at 40 percent, the Colts have a 24 percent chance at keeping their prized running back, while the Broncos sit at 16 percent to land Taylor, respectively. As of early afternoon on Monday, the Giants had just a 16 percent chance of landing Taylor, the fifth-best odds of any team. This latest update reveals a massive move as coach John Harbaugh’s “call me maybe” group fields many conversations. Taylor’s market is red hot as teams put together their offers and the Colts start selling off pieces. There were some rumors that the Giants could look to swipe Taylor as well as defensive Glover Stewart from the Colts in a trade to help sure up their run defense. The Giants are allowing the fourth-highest yards per carry (4.8) and need help slowing down opposing ball carriers. DJ Reeder has been solid, clogging things up for opposing run games, but another big bodied defenseman like Stewart could go a long way toward helping the Giants stay atop the NFC East.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>LeBron James’ agent Rich Paul explains what 76ers offer that Lakers couldn’t</h4>
+                <p>The discourse around LeBron James’ decision to leave the Los Angeles Lakers in favor of the Philadelphia 76ers is still raging, despite the decision being months old at this point. James’ agent Rich Paul and Max Kellerman discussed this during a recent episode of their “Game Over” podcast. “When you’re in years 22, 23, 24, and you still have something left in the tank, it is a beautiful situation where you can position yourself alongside other guys that can play roles at a high level that give you a real chance of winning. And you don’t have to try to be someone that you’re no longer capable of being today,” Paul said.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Brandon Aiyuk sets stage for awkward 49ers reunion amid reinstatement push</h4>
+                <p>NFL insider Adam Schefter reported that Aiyuk has filed the paperwork to be reinstated by the NFL on Wednesday. “Brandon is healthy and ready to get back on the field,” Aiyuk’s agent, Drew Rosenhaus, was quoted saying in an X post from Schefter. The veteran wide receiver, who is currently on San Francisco’s Reserve/Left Squad list, will report to the 49ers’ training facility on Friday. This news is significant because it shows Aiyuk’s eagerness to return to the football field. It’s also a 180-degree shift from comments he made over the summer. “I will not be reinstating with them or ever doing any kind of business with [the 49ers]. I’m locked in and focused on my opportunity to return to the field this season,” Aiyuk said in a social media post back in July, per NBC.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>7-foot-9 college hoopster Olivier Rioux is finally playing — and dominating</h4>
+                <p>The tallest college basketball player of all time is looking like a weapon for UC Irvine. Olivier Rioux, a 7-foot-9-inch center who played for Florida for two years but was mostly a bench warmer, debuted for the Anteaters on Tuesday and the results were big. Rioux went for 13 points and 12 rebounds in 18 minutes in a 92-66 rout over the Chapman Panthers. Rioux was second on the team in points scored while he started for Anteaters on Tuesday, and figures to be a fixture for the team going forward. In one particularly bizarre play, Rioux dunked the ball from behind the basket as close to the baseline as possible without stepping out of bounds.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/11/931/523/spencer-pratt-los-angeles-mayoral-candidate.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Spencer Pratt says $1,200 hotel 'fortress' was cheaper than security as death threats mounted</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>he 'Outnumbered' panel discusses Spencer Pratt’s claims that Los Angeles Mayor Karen Bass mismanaged the Palisades wildfire response and the city’s homelessness crisis. Spencer Pratt explained why his controversial stay at the Hotel Bel-Air was actually the cheaper option as he faced death threats while running for mayor of Los Angeles. The 43-year-old reality star faced scrutiny in May after TMZ reported he had been staying at the luxury hotel despite appearing to suggest in a campaign ad that he was living in an Airstream trailer on the site of his California home, which was destroyed in the devastating Pacific Palisades fire. At the time, the outlet reported that Pratt had been staying at the Hotel Bel-Air for more than a month, though "The Hills" alum disputed that characterization, saying he had spent no more than six days there during the previous month. In a lengthy X post he shared Tuesday, Pratt, who lost in the June primary election, defended his choice to stay at the pricey hotel during the race. "Why is he spending $1,200 a night? Why couldn’t he stay somewhere for $300 a night? Well, the answer to that question is not as pretty as any of us may like to hear," Pratt wrote.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Winter is coming, but the new Brooklyn Pacha DJ lineup is extra hot</h4>
+                <p>Brooklyn Pacha is bringing the party inside — next door to the recently-opened Pacha New York, which took over the former Brooklyn Mirage site in East Williamsburg this past summer. It was hardly a simple undertaking. FIVE Holdings, Pacha’s Dubai-based parent company, had to navigate permits, logistical hurdles and the sky-high expectations of New Yorkers still nostalgic for the palm-tree-laden Mirage of 2015. Pacha had lots to live up to, and the job isn’t over yet. “New York deserves great nightlife all year round,” Pacha Group’s CEO Aloki Batra, told The Post in an exclusive statement. “We experienced Brooklyn’s incredible dance floor energy during Pacha New York’s summer season this year, and Brooklyn Pacha carries that spirit through the winter indoors, before Pacha New York returns outdoors in May.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Country singer Nicole Taylor of Taylor Red dead at 35</h4>
+                <p>On Monday, Nika and Natalie Taylor, the other members of the group and Nicole's sisters, announced her death in a TikTok post. "We’re heartbroken to announce the passing of our sister, Nicole Taylor," Nika said. "We honestly thought she’d be healed here on earth, but now she’s healed in heaven."</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>I worked out with rapper Ferg at his new NYC spin class — but his top wellness must have isn’t what you’d expect</h4>
+                <p>For rapper Ferg — formerly known as A$AP Ferg — sitting in silence every day has become an integral part of his health routine. When the pressure to come up with new music or run his various business ventures gets to him, the practice helps him find calm in his fast-paced life. “I do 15 minutes every morning,” the 38-year-old told The Post. “It just clears the slate from yesterday until today. Whatever happened yesterday, I inhale and breathe it away.” “We could reminisce about what happened yesterday, but we’re not merging the days and we want to be excited about today,” he added. The Harlem native has been practicing for nearly a decade, with no apps, just sitting still and allowing himself to be present in the moment, in addition to not reaching for his phone first thing in the morning.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/11/931/524/macbook-pro-touch-screen-launch-los-angeles.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Apple's first touchscreen MacBook comes at a price</h3>
+                <p class="lead-summary"><strong class="drop-cap">P</strong>eople try out the new MacBook Pro with a touchscreen following the launch by Apple CEO John Ternus in Los Angeles, on Oct. 28, 2026. (REUTERS) Apple has finally given the MacBook Pro something many people have wanted for years: a touchscreen. The company unveiled its first touchscreen MacBook Pro on Oct. 28, introducing a new way to interact with its laptop. It also brings a stunning OLED display, a thinner design and some serious processing power. However, there's one detail that might make you think twice before reaching for your wallet. The new touchscreen MacBook Pro starts at $2,899. That's a lot of money for a laptop, even by Apple's standards. So, what exactly are you getting for that price? More importantly, will touching your MacBook's screen make enough of a difference to justify an upgrade? Let's look at what Apple has introduced and who might benefit most. Missed CyberGuy LIVE? Watch the replay and discover 5 ways to travel smarter and save money. Our free CyberGuy LIVE class, 5 Ways to Travel Smarter and Save Money, has ended, but you can still watch the full replay. Kurt "CyberGuy" Knutsson walks you through five practical ways to protect your phone and personal information, avoid common travel scams, find better deals, save money on bookings and use technology to make your travels easier and less stressful. No technical experience is needed. Apple's first touchscreen MacBook Pro lets users interact directly with the display, bringing familiar iPhone and iPad gestures to the Mac. (Apple) For years, Apple maintained that the Mac worked best with a keyboard and trackpad. Meanwhile, Windows laptop owners have enjoyed touchscreen options for a long time. Apple even experimented with touch controls through its Touch Bar, but that feature never replaced the traditional laptop experience. Now Apple has changed course. Its new MacBook Pro with PROLED XDR Display lets you interact directly with the screen. You can scroll through websites with your finger or pinch to zoom into photos. Apple also lets you drag content between windows and interact with supported creative apps.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>7 holiday shopping scams to watch for this season</h4>
+                <p>Cybercrime losses reached nearly $21 billion last year, prompting Kurt Knutsson to warn of increasingly sophisticated AI scams. He joins 'Fox & Friends Weekend' to break down the FBI data, highlighting that investment fraud alone cost victims $8.65 billion. Black Friday is still weeks away, but the holiday shopping season is already picking up. Stores are promoting early deals, our inboxes are filling with sales emails, and chances are you're already thinking about gifts for family and friends. Scammers are getting an early start, too.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
