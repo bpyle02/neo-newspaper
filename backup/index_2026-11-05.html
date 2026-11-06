@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>THURSDAY, NOVEMBER 05, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://thefederalist.com/wp-content/uploads/2026/11/Immigration-1200x675.jpg" alt="Lead Story Image" class="news-photo">
+                <h3>Post-Election Data: Immigration Is A Winning Issue For Republicans</h3>
+                <p class="lead-summary"><strong class="drop-cap">A</strong>mid Republicans’ many losses in the 2026 midterms is a silver lining indicating that the party still holds an advantage over Democrats on a key policy issue: immigration. NBC News exit polling suggests that, despite Democrat-led opposition to immigration enforcement and deportations, the GOP is generally viewed as more trustworthy on the topic. When asked how important immigration policies were in determining their vote for Congress, 73 percent said it was “crucial or a major factor,” while 23 percent said it was “a minor factor or not a factor.” Among the 73 percent who indicated the former, Republicans won 51 percent to 47 percent. Upon further analysis, the same poll found that, among the 36 percent who said the issue was “crucial” to their vote, Republicans won 57 to 42 percent. Among the 64 percent who said the issue was “a major factor or a minor factor or not a factor,” Democrats won 63 percent to 36 percent. The poll did find a majority of voters (60 to 40 percent) disapprove of the way ICE “is handling its job,” however. Data from CNN’s exit polling similarly appears to indicate that immigration enforcement remains a winning issue for Republicans. Of the 73 percent of respondents said such policy was a “crucial” or a “major factor” to their vote, Republicans won 51 to 47 percent. Among the 36 percent who said immigration enforcement was “crucial” to their vote, Republicans won 57 to 42 percent. Here is a quadrant chart using CNN’s exit poll. It shows what issues hurt Republicans, by how many voters called each issue crucial and how they voted. Cost of living (49%, D+34), corruption (55%, D+28), & Iran (34%, D+46) made people vote D. Only immigration (36%, R+15) helped… pic.twitter.com/kA0ab0ThAt Democrats also seemed to recognize that their opposition to enforcing America’s immigration laws was not a winning issue for their party heading into Tuesday’s elections. An Axios analysis of each party’s campaign ads found that “ICE” was the third most-featured policy issue in Democrat ads during the 2026 primary season. When it came to the general election, however, “ICE” plummeted to the 35th policy issue talked about in Democrat ads. The party’s general election ads instead focused heavily on health care and inflation, among other issues. The post-election data comes amid concerns that the White House and Republicans could collaborate with open-border Democrats on “immigration reform,” which has often served as a euphemism for both parties to push mass amnesty for illegal aliens in the United States.</p>
+                <p class="source-credit">— The Federalist</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Gunman Opens Fire At Iowa Post Office</h4>
+                <p>Three people were injured in a shooting at an Iowa post office Thursday, and a suspect is in custody, according to authorities. Gunshots erupted at around 9:10 a.m. on the second floor of the United States Postal Service facility in Des Moines, according to local police. The victims were rushed to local hospitals with injuries believed to be life-threatening, according to local outlet KCCI. “We are monitoring the situation and our prayers are with everyone involved,” Iowa Governor Kim Reynolds posted on social media. “Grateful for the immediate response by law enforcement.” BREAKING: Active shooter with multiple injuries reported at Des Moines, Iowa post office; possible suspect detained. https://t.</p>
+                <p class="source-credit">— Daily Wire</p>
+            </div>
+            <div class="story-minor">
+                <h4>Bianca Censori’s catsuit plunges past her belly button at Kanye West’s Yeezy comeback show</h4>
+                <p>Bianca Censori’s neckline took a deep dive Wednesday night as her husband, Kanye West, returned to the runway for the first time in four years. The Yeezy architect, 31, sat front row at the label’s “Season 01” show in a curve-hugging, sand-colored catsuit unzipped to well below her navel. The one-piece, presumably a design from her husband’s label, had a small pouch strapped around one bicep. Censori styled it with matching suede lace-up stiletto boots and an auburn blowout with bangs. Stepdaughter North West, 13, opted for an oversized black nylon jacket and chunky black boots. She finished the look with her signature faux piercings and extra-long blue hair.</p>
+                <p class="source-credit">— Https://pagesix</p>
+            </div>
+            <div class="story-minor">
+                <h4>Zach LaVine takes bizarre shot at Lakers after Kings’ embarrassing defeat</h4>
+                <p>The Los Angeles Lakers’ defense did more that enough to stifle the Sacramento Kings on Wednesday night, as evidenced by the Lakers’ 116-103 road win. But that final score didn’t stop Kings guard Zach LaVine from taking a shot at Los Angeles’ defense after the game. “They’ve got some bad defenders on their team, but so do we, so they exploited them,” LaVine said about the Lakers, per an X post from Brenden Nunes. LaVine, who finished with 21 points on 6-for-14 shooting from the field, also spoke about how Luka Dončić shredded the Kings’ defense, and how the Lakers make it hard when they funnel their offense through Walker Kessler down low.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/11/931/523/riot-police-detain-protester-lyon-france.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Protests erupt across France after left-wing groups call for mobilization</h3>
+                <p class="lead-summary"><strong class="drop-cap">F</strong>ox News foreign correspondent Jeff Paul reports on nationwide protests in France, where up to 700,000 demonstrators are expected and 70,000 police officers have been deployed. The U.S. embassy is warning Americans about possible danger in traveling. France deployed 70,000 police officers Thursday as tens of thousands of people took to the streets for nationwide strikes and protests after left-wing groups called for a mobilization. In Paris, the Eiffel Tower was closed; in Lyon, French riot police fired tear gas and charged a group of protesters; and near Toulouse, a high school was set on fire, according to Reuters. "We need to turn up in big numbers on the streets today," the news agency quoted the head of the left-wing CGT union Sophie Binet as saying. The demonstrations come after France was rocked by violent protests in October, which outgoing French President Emmanuel Macron blamed on "ultra-left groups whose aim is to bring down the Republic." A car burns as demonstrators look on during a nationwide day of strikes and protests over wages, the cost of living and public services, called by French labor unions and joined by high school and university students calling for better education conditions, in Lyon, France, on Nov. 5, 2026.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Multiple flights in Europe diverted because of bomb threats</h4>
+                <p>Fox News foreign correspondent Jeff Paul reports on a series of bomb threats forcing multiple commercial flights to divert or make emergency landings across Europe. Paul details incidents involving Aer Lingus, Finnair and Wizz Air flights alongside previous security warnings that government authorities classified as hoaxes.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>US Marine dies in training incident at Japan military base, officials say</h4>
+                <p>A U.S. Marine died following a training incident on a military base in Okinawa, Japan. (Yuichi YAMAZAKI / AFP via Getty Images) A U.S. Marine died Tuesday after an incident during training at Camp Schwab in Okinawa, Japan, military officials said. The incident happened in Okinawa, on a Marine Corps base near the northeastern coast of Okinawa Prefecture.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Canadian mother and daughter dead after suspected grizzly bear attack on hiking trail</h4>
+                <p>Captain Carter Brown, an Alaskan fishing guide, shares his experience after a grizzly bear swam directly up to his boat in Soldotna, Alaska, on ‘The Story.’ A Canadian woman and her daughter were killed in a suspected grizzly bear attack over the weekend while hiking on a trail near their home, according to authorities.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/statics.foxsports.com/www.foxsports.com/content/uploads/2026/11/931/523/26brady-power-rankings-week-8-a.png?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Tom Brady's NFL Power Rankings: Are The Bears Really The Best Team In The League?</h3>
+                <p class="lead-summary"><strong class="drop-cap">W</strong>hen Tom Brady unveiled his power rankings last week, he teased that the Chicago Bears could jump from No. 6 to No. 1 if they defeated the Seattle Seahawks — and that was before they added All-Pro defensive tackle Jeffery Simmons. Well, the Bears made it tough for Brady not to be a man of his word this week. They picked up a decisive victory in the defending champs' home stadium, winning 34-17 as Caleb Williams, D'Andre Swift and Simmons all showed out. But other top teams, like the Buffalo Bills and Denver Broncos, also picked up impressive victories in Week 8, making the debate for the No. 1 spot in Brady's power rankings even stronger following the Minnesota Vikings' first loss of the year. So, was Brady a man of his word with his power rankings this week? Here's his full top 10. Brady's thoughts: I kind of chose a temporary winner from the Cloud of Dust that's the AFC North. The Pittsburgh Steelers, welcome to the top ten. The defense lived in Cleveland's backfield all afternoon, and the offense ran it all over them. Aaron Rodgers and Co. secured their payback for the loss in Cleveland earlier this year. They've won four in a row, hold sole possession of first in the division, and they've got a defense that's been suffocating during the streak. Enjoy the bye, fellas.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Jonathan Taylor trade price revealed as suitors emerge for Colts’ star running back</h4>
+                <p>We finally have a price on what the Colts want for Jonathan Taylor at the trade deadline, and they have another elite running back’s precedent in mind. The Colts are seeking a “Christian McCaffrey-type package” for their star running back who has drawn serious interest around the league, according to NFL Network’s Ian Rapoport. “Where we’re at is essentially where we’ve been, which is several teams interested in Taylor, willing to offer a significant pick package but maybe not quite what Ed Dodds, who is running personnel now … what he wants and what the organization wants,” Rapoport reported Wednesday. “They want a Christian McCaffrey-type package for Jonathan Taylor. It’s clear they don’t have it yet; otherwise, they would have obviously made the trade.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Rory McIlroy gets costly penalty as controversial video circulates in $2 million Race to Dubai</h4>
+                <p>ABU DHABI, United Arab Emirates — Rory McIlroy was handed a two-shot penalty after his first round at the Abu Dhabi Championship on Thursday, with officials ruling he improved his lie on a hole where he made double-bogey to spoil his card. McIlroy’s score of 6 at the par-4 12th hole turned into an even uglier 8 and left him posting a 2-under 70 to be eight shots off the lead, held by Francesco Laporta after his bogey-free round of 62. In actions that have dented his bid to win a record-tying eighth season-long Race to Dubai title, McIlroy was seen in video footage pressing his club on grass behind his ball that had rolled back down the hill and into a divot after he duffed an attempted chip onto the green on No. 12.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Savannah James shares why daughter Zhuri refused to leave LA for LeBron</h4>
+                <p>LeBron James’ decision to leave the Los Angeles Lakers for the Philadelphia 76ers was a family matter. It was reported that LeBron and his wife Savannah’s 12-year-old daughter, Zhuri, would have a say in James’ free agency decision. But LeBron taking his talents to Philadelphia didn’t mean his family followed him there, as Savannah and Zhuri have remained in LA. Savannah explained why Zhuri ultimately wanted to stay on the West Coast instead of following her father to Philly in her “Baby, This is Keke Palmer” and “Everybody’s Crazy” collaboration podcast episode from Tuesday. “[Zhuri] was trying to figure it out. Like, ‘So, am I not going to see him? How is this going to work?’ But we also [told] her, ‘So, you can go to school, we can go to New York, we can go to Philly.’ And she’s actually like, ‘Yeah, no,'” Savannah said.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2025/04/931/523/russell-brand.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Russell Brand found guilty of one count of rape and three counts of sexual assault</h3>
+                <p class="lead-summary"><strong class="drop-cap">F</strong>ox News correspondent Stephanie Bennett reports as Russell Brand faces trial in London over allegations of rape and sexual assault on 'America Reports.' Russell Brand has been found guilty of one count of rape and three counts of sexual assault in the U.K. He denied the charges and was acquitted of two additional rape charges and attempted indecent assault. He has been taken into custody and is due to be sentenced Monday, according to BBC. Brand, 51, was accused of three counts of rape, three counts of sexual assault and one count of attempted indecent assault involving six women between 1999 and 2009. Russell Brand was found guilty of one count of rape and three counts of sexual assault.  (Mike Marsland/WireImage) According to Sky News, Brand acknowledged that he had been "reckless" and used his fame to pursue sexual relationships, but insisted that the encounters were consensual. He also told the jury that consent was "fundamental, essential and necessary." Brand has denied forcing any of the women to engage in sexual activity against their will.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>‘The Heart’ review: Touching EDM musical blends ‘The Pitt’ with Broadway</h4>
+                <p>In the strong new off-Broadway musical “The Heart,” about that literal blood-pumping body part, the word beats gets a “z” at the end of it. That’s because its score is EDM, or electronic dance music for those who learned about hip-hop from “Hamilton.” It’s a sharp idea in the affecting show that’s nntz-nntz-ing away at Roundabout Theatre Company’s Laura Pels Theatre en route to Broadway. Hearts do beat, ideally, and hospitals, like the one in which the musical is mostly set, beep-boop. Think of the theme song of “ER.” And then there’s the importance of this genre of music’s pulsing urgency. In “The Heart,” with a catchy “Mr. Roboto” score by Anne Eisendrath and Ian Eisendrath, we experience a time-sensitive organ donation, from the donor’s sad death to the lucky recipient’s surgery hours later. The sounds and the scenes move fast with nary a pause for breath. Like a sweaty night on a jam-packed dance-floor, stopping isn’t an option.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Paris Jackson demands $600M from father Michael Jackson's estate in legal war with longtime executor</h4>
+                <p>Victoria Price told Fox News Digital that as long as there is Halloween, people will listen to the horror icon's narration in the hit song. Paris Jackson accused John Branca, the sole executor of her late father Michael Jackson's multibillion-dollar estate, of financially retaliating against her and her siblings after she challenged his handling of the King of Pop's fortune.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Tony Butala, voice behind 'The Way You Look Tonight' and The Lettermen co-founder, dead at 87</h4>
+                <p>Tracy Clark, the band's media coordinator, confirmed his death to The Associated Press with a statement, saying, "We have lost an integral member of The Lettermen family." "It is with profound sadness that we announce the recent passing of Tony Butala, founding member of the international recording artists ‘The Lettermen,’ and recipient of a Star on the Hollywood Walk of Fame," the statement read.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/11/931/524/autonomous-food-delivery-robot-downtown-los-angeles.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Why are people attacking food delivery robots?</h3>
+                <p class="lead-summary"><strong class="drop-cap">A</strong>n Avride delivery robot covered in graffiti travels along a Philadelphia sidewalk as frustration with AI-powered delivery machines grows. (Aluminum-001/Wikimedia Commons/CC BY 4.0) There's something pretty strange happening on American sidewalks. People are picking fights with food delivery robots. Yes, those little four-wheeled machines that roll around carrying somebody's meal are getting kicked and knocked over. Some people are even filming themselves doing it. Now, I can understand being curious about a robot delivering your dinner. After all, watching a small machine navigate city streets with a bag of burgers inside is pretty impressive. But apparently, some people have had enough of these rolling delivery machines. And when you look at what's happening, you start to see just how frustrated some Americans have become with artificial intelligence showing up in their neighborhoods. Missed CyberGuy LIVE? Watch the replay and discover 5 ways to travel smarter and save money. Our free CyberGuy LIVE class, 5 Ways to Travel Smarter and Save Money, has ended, but you can still watch the full replay. Kurt "CyberGuy" Knutsson walks you through five practical ways to protect your phone and personal information, avoid common travel scams, find better deals, save money on bookings and use technology to make your travels easier and less stressful. No technical experience is needed. In Philadelphia, an Uber Eats delivery robot found itself on the receiving end of two kicks in late March 2026. The second kick reportedly knocked it over near a parking garage. The people involved eventually put it back on its wheels, but the encounter became another example of people taking out their frustrations on delivery technology. And Philadelphia is hardly alone. Similar attacks have surfaced in Los Angeles and other cities. Videos circulating online show robots being tipped over or deliberately kicked. Some encounters have attracted enormous attention, turning attacks on delivery robots into viral entertainment. Think about that for a second. These machines generally move at walking speed. Some even have friendly-looking digital eyes that make them look like little cartoon characters. Yet somehow, they've become targets for people who seem determined to teach them a lesson. Here's what I find particularly strange. A robot can't argue with someone who attacks it. It certainly can't defend itself the way a person might. So what is it about these little machines that makes some people so angry?</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Why removing your data online may still leave your family exposed</h4>
+                <p>Data privacy expert Brittany Kaiser says restrictions on data center development could force American companies to process information abroad, raising concerns over where sensitive data ends up. You removed your information from data broker sites. You submitted the opt-out forms, did the work and maybe even felt good about it. Here's what you may have missed: Your family members' personal information could still be exposed. And because their profiles may point directly back to you, some of your information could remain accessible, too.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
