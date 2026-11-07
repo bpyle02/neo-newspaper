@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>FRIDAY, NOVEMBER 06, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://media.townhall.com/cdn/hodl/2026/256/8b0956c0-16b8-45c2-a907-0679b97dcb07.jpg" alt="Lead Story Image" class="news-photo">
+                <h3>Gavin Newsom Commutes 548 Death Sentences to Life in Prison</h3>
+                <p class="lead-summary"><strong class="drop-cap">C</strong>alifornia Gov. Gavin Newsom announced Thursday that he will commute every death sentence in the state to life in prison without the possibility of parole. The clemency covers 548 people, including 529 men and 19 women, and represents the largest mass commutation of death sentences in U.S. history. Newsom published an open letter explaining his decision. “I take this action because I firmly believe that state-sanctioned killing is incompatible with California’s values, undermines the foundations of our legal system, and diminishes each of us,” he wrote. The governor further argued that “we cannot execute people in our imperfect legal system and remain true to our core values, first among them justice and human decency” and that he “could not remain true to my values and oversee the killing of people with death warrants in California. He added, “We can now let these offenders die in obscurity while we forever remember and honor their victims.” The governor also responded to suggestions that he only preserve the death penalty for the “worst of the worst” and explained why he could not go this route. Some have said I should not grant clemency to people who committed the "worst of the worst" crimes. I carefully considered different categories of capital crimes and offender characteristics. I have learned, however, from speaking with the victims harmed by these crimes, that each experiences their loss as the worst of the worst. I have concluded that attempting to distinguish among crimes and offenders for clemency would inadvertently create two classes of murder victims—those whose perpetrators deserve the death penalty and then the rest. BREAKING: California Gov. Gavin Newsom has commuted the death sentences of all 548 people on the state’s death row to life without parole, in the largest mass commutation in modern U.S. history. https://t.co/F2NiU8okXM Sacramento District Attorney Anne Marie Schubert, who leads the Criminal Justice Legal Foundation, said she plans to challenge the clemency in court. She argued that the court must review each case individually. Some victims’ families were incensed by Newsom’s announcement. Marc Klaas, the father of a murder victim whose killer is on death row, said, “We’re talking about absolutely the worst people in our society, without a doubt. And he’s putting his energy into commuting these characters?” On the other side of the coin, those who oppose the death penalty celebrated Newsom’s announcement. Demetrius Minor, executive director with Conservatives Concerned, told Townhall, “This is a major step toward a smarter, more responsible justice system. Conservatives can lead on public safety, fiscal responsibility, and the dignity of every human life. Conservatives Concerned is positioned to help take the lead with this.</p>
+                <p class="source-credit">— Townhall</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Leftist Dem Registers As Paid Foreign Agent To Bash Israel</h4>
+                <p>After getting booted from Congress in 2024 and vowing to “tear down” the pro-Israel lobby, Bush has officially registered under the Foreign Agents Registration Act (FARA), the Washington Free Beacon reported on Thursday. Her mission is to operate as a paid foot soldier organizing visits to Judea and Samaria to sell anti-Israel narratives to American politicians. According to the Free Beacon, Bush and her ex-campaign boss Stephany Spaulding inked a deal for a $25,000 through January. The pact funnels them $6,000 a month, plus a $7,000 cushion to cover FARA paperwork. The bankroller is the International Federation for Rights and Development (IFRD), a Brussels outfit run by Palestinian filmmaker Gamaal El Attar. IFRD insists no foreign regimes give them money.</p>
+                <p class="source-credit">— Daily Wire</p>
+            </div>
+            <div class="story-minor">
+                <h4>Don’t toss those toys! Childhood collectibles could be worth up to $250K</h4>
+                <p>Collectors across the globe are paying top dollar for novelty knickknacks and figurines like Power Rangers, Teenage Mutant Ninja Turtles and other iconic action figures. Multiple experts and toy collectors recently told People some figurines — like the White Power Ranger — could be worth up to $250,000 in the coming years. Today, reputable collectors on eBay are already offering up a signed copy of a series 2 White Power Ranger for  $100,000 with a certificate of authenticity. The retro White Power Ranger is based on the character Tommy Oliver, who was introduced back in the 90s. Here are a few more toys to break out of the storage units, as they could be worth some major green.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>‘The Traitors: New Blood’s Morgan Cook Says It’s “Glaringly Obvious” Joe Vanella Is a Traitor And That She Was Planning To Go After Him Before Her Murder: “I Had A Six-Point Speech Ready To Go At The Roundtable”</h4>
+                <p>Stream It Or Skip It: ‘Holiday Touchdown: A Bears Love Story’ on Hallmark, Another Solid Christmas Collab Between the NFL and Hallmark Where Was the ‘Love Of Your Life’ Movie Filmed?</p>
+                <p class="source-credit">— Https://decider</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/11/931/523/ABU.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Oil-rich UAE makes massive AI bet as Sam Altman unveils ambitious plan to transform energy industry</h3>
+                <p class="lead-summary"><strong class="drop-cap">F</strong>ox news digital visits At the ADIPEC energy conference in Abu Dhabi, where OpenAI CEO Sam Altman joined UAE officials to unveil a major partnership aimed at transforming the energy industry. ABU DHABI, United Arab Emirates — At the opening of the world's largest energy conference in Abu Dhabi, artificial intelligence took center stage alongside oil and gas as OpenAI CEO Sam Altman joined senior UAE officials for the announcement of a major partnership aimed at bringing advanced AI into the energy industry. The opening ceremony of ADIPEC 2026, attended by Fox News Digital, brought together senior government officials and energy industry leaders at a time when the war involving Iran and disruptions to the Strait of Hormuz have placed extraordinary pressure on global energy supplies. But amid discussions about oil production, shipping routes and energy security, Dr. Sultan Al Jaber, the UAE’s minister of industry and advanced technology and chief executive of state-owned energy giant ADNOC, delivered a different challenge to the technology industry.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Melania Trump hails Oleshky ceasefire as potential ‘spark’ for progress amid Ukraine-Russia war</h4>
+                <p>The 'Outnumbered' panel discusses Melania Trump's diplomatic efforts, including brokering a temporary limited ceasefire between Russia and Ukraine. First lady Melania Trump and envoys from both Russia and Ukraine spoke from the White House on Thursday, hailing the ceasefire in the Russian-occupied Oleshky region as a potential "spark" for peace that lasts beyond a temporary regional ceasefire.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/statics.foxsports.com/www.foxsports.com/content/uploads/2026/11/931/523/98f46b7a-nfl-16x9-1.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Jaguars Overwhelm Lamar Jackson-Less Ravens: 3 Takeaways From Jacksonville's Win</h3>
+                <p class="lead-summary"><strong class="drop-cap">W</strong>e didn’t know what to expect back from the Ravens. But we knew there was a chance that it could get ugly Thursday night for Baltimore, which was down to its third-string quarterback in undrafted rookie Joe Fagnano. The Jaguars whooped the Ravens 33-10 at M&T Bank Stadium in a game that was never close. Jacksonville (6-2) has recorded back-to-back wins by 20-plus points. The Jaguars seemed to be playing with fire with the play clock on Thursday night, at least in the first half. On more than a few occasions, it went all the way down to one before they got the snap off. It appeared to hit zero at least a couple of times on the broadcast, though Jacksonville was never penalized for a delay of game. Slow pre-snap development hasn’t been uncommon for the Jaguars this season. Entering this week, they snapped the ball on average with just 7.0 seconds left on the play clock, second-slowest in the NFL, and had used no-huddle just 3.4% of the time, the fourth-lowest, according to Next Gen Stats. Offensive coordinator Grant Udinski (left) will know his team can play even better than it did in its blowout win over the Ravens.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Troy Aikman shreds ‘embarrassing’ UCLA attendance amid undefeated season</h4>
+                <p>Troy Aikman is one of many UCLA Bruins alumni who is stoked about the football team’s undefeated 8-0 record this season. Aikman is less stoked about his alma mater’s mediocre attendance at home games this season, which was made apparent during No. 8-ranked UCLA’s 27-0 win over Nevada last weekend. UCLA’s iconic Rose Bowl Stadium can fit 90,888, but only 24,611 were present for the Bruins’ eighth win against Nevada. Aikman admitted this irked him during an appearance on Dallas’ 96.7 “The Ticket” show on Thursday. “Little embarrassing that we were 7-0 going into last week’s game and, they shoot it pretty low [on TV] so you can’t really tell when you’re watching the game — I’m told there was about 20-25,000 people at the game,” Aikman said, per Awful Announcing.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Who Are Tom Brady's Top 4 NFL MVP Candidates? The GOAT Assesses The Favorites</h4>
+                <p>That gives him more than enough credence to assess the candidates for that award now that he's retired from the league and is an NFL broadcaster. So when posed with the question on FOX Sports' "Ask Tom," Brady shared a few candidates for the 2026 MVP. Most of Brady's candidates aren't surprises. However, he's throwing a running back into the MVP race through the first half of the season, as a non-quarterback hasn't won the award since 2012.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Patriots’ TreVeyon Henderson suffers ‘unexplainable medical emergency’ in stunning health update</h4>
+                <p>Treveyon Henderson is dealing with a medical emergency, the Patriots’ star running back revealed in a social media post on Friday morning. After he missed last week’s game with what was described as an illness, the situation has lingered for more than a week and will likely cost him this Sunday’s matchup with the Packers. Henderson described his battle as an “unexpected and unusual medical emergency” involving a series of “unexplained” neurological symptoms. “Recently, I experienced an unexpected and unusual medical emergency involving a series of unexplained neurological symptoms that required hospitalization for several days. During that time, I underwent extensive medical testing and evaluation. While the results of my comprehensive medical testing have come back positive and reassuring, the cause of this remains unknown and unexplainable,” Henderson said in a statement.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F11%2F147656895.jpg?quality%3D90%26strip%3Dall" alt="Lead Story Image" class="news-photo">
+                <h3>How to watch Jalen Brunson guest star on ‘Law and Order: SVU’ for free</h3>
+                <p class="lead-summary"><strong class="drop-cap">A</strong>fter hosting “SNL” earlier this season, the reigning NBA Finals MVP and Knicks captain will appear in tonight’s episode of “Law & Order: Special Victims Unit,” titled “Forsaken.” The first look at Brunson’s “SVU” appearance dropped in a teaser last week, in which Mariska Hargitay’s Detective Olivia Benson approaches Brunson as Detective Madison. Per the episode’s official synopsis, “Benson and the squad uncover a secret that changes the course of the investigation; [DA Sonny] Carisi’s pursuit of justice becomes increasingly complicated when key witnesses refuse to cooperate.” “Don’t tell anyone but we got some things in the works,” Hargitay whispered to “TODAY” anchor Savannah Guthrie. Hargitay and Brunson are close friends and the actress, a die-hard Knicks fan, is a mainstay on Celebrity Row. Brunson makes his acting debut in “Law & Order: SVU” tonight, Nov. 5, at 9 p.m. ET. If you don’t have cable, you’ll need a live TV streaming service to stream “SVU” live for free. DIRECTV is our favorite service for trying live TV for free. Right now, you can take advantage of a five-day free trial before saving $30 on your first month. We recommend the Choice plan, which includes NBC as part of its 125+ channel options. You can also stream the episode live on Peacock. The streamer doesn’t directly offer a free trial, but if you subscribe to the streamer via Prime Video, you can take advantage of seven days free before payments begin. Can’t watch live? You can watch on-demand on Peacock beginning tomorrow.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>'Jimmy' star Jen Lilley says keeping Jesus at center of marriage helped through 'extremely difficult times'</h4>
+                <p>"Jimmy" star and Hallmark actress Jen Lilley tells Fox News Digital she’s turned down Hollywood roles to put her husband and four children first. Hollywood has seen its fair share of high-profile breakups, but Jen Lilley says the secret to her nearly 20-year marriage has nothing to do with fame, fortune or romance.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Tom Jones reveals he almost died in return to stage following serious mystery illness</h4>
+                <p>Music legend Tom Jones admitted he thought he was going to die after being rushed to the hospital by paramedics last week. The 86-year-old “What’s New Pussy Cat” singer triumphantly took the stage at the Greek Theater in Los Angeles on Wednesday night and revealed to the crowd that he was rushed to UCLA Medical Center after contracting pneumonia. “I thought this was it, you had a wonderful life Tommy but it’s over now,” the singer told the crowd. What Jones thought was a case of the flu turned into pneumonia, “And then they had to get the paramedics in, and I was like I can’t breathe,” Jones said of the horrific moment.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Meghan Markle's father is arrested in Florida: law enforcement source</h4>
+                <p>Meghan Markle's father, Thomas Markle, has been arrested in Florida, a law enforcement source told Fox News Digital. Authorities arrested Markle Sr. in connection to possession of child sexual abuse material (CSAM), according to the Daily Mail. The Sun previously reported that Meghan's half-brother, Thomas Markle Jr., recently found "hundreds, if not thousands" of child sex abuse images in boxes at his father’s former home in the Philippine city of Cebu when he was clearing out the property. Markle Jr. told the newspaper that he reported the images to police in the Philippines and contacted the Federal Bureau of Investigation in the U.S.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/11/931/524/data-center-nevada-construction.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Fox News AI Newsletter: Voters' unmistakable message</h3>
+                <p class="lead-summary"><strong class="drop-cap">S</strong>teamfitter Jason Jordan, 44, arranges building materials for data center infrastructure at the Silicon Valley Mechanical workshop in Sparks, Nevada, Oct. 8, 2026. (REUTERS/Daniel Cole) NOT IN MY BACKYARD: Voters across at least 10 states delivered a sweeping rebuke to data center expansion in Tuesday's midterm elections, backing restrictions and rejecting development proposals amid growing concerns about electricity costs, land use and the rapid buildout of artificial intelligence infrastructure. PROFIT PRESSURE: U.S. stocks plunged Thursday as investors dumped AI stocks, but market experts say Wall Street's concerns go beyond a single bad day. POWER STRUGGLE: President Donald Trump has thrown the federal government's weight behind massive data center build-outs needed to power the country's artificial intelligence (AI) boom. But a historic Democratic sweep in Texas has put one of the nation's biggest AI infrastructure hubs under new political leadership, raising questions about the future of billions of dollars in planned investments. CORPORATE TRIM: Google is extending its buyout program to selected workers in five additional countries as the company looks for ways to control expenses while pouring money into artificial intelligence programs. ON HIS FEET: Former Army Secretary Dan Driscoll is joining the artificial intelligence company OpenAI in a national security-related role, the organization announced on Monday. OPINION: The key objective in economic warfare is to do more harm to your enemy than you do to yourself, and President Donald Trump is doing what every American president should do: putting America first and making sure the Chinese Communist Party (CCP) cannot use our own resources against us. OUT OF SIGHT: Ever handed someone your phone or let them use your computer to show them something, then suddenly worried about what else they might see? Maybe you've been using ChatGPT to work through a personal issue or plan a surprise for someone. Your conversation history can reveal quite a bit. NEXT CHAPTER: Democrats' takeover of both chambers of Congress in the midterm elections drew mixed reactions from investors and business leaders Wednesday, with some anticipating greater economic stability and others warning of increased scrutiny of artificial intelligence and data center development.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Your old Android phone could become a walking robot</h4>
+                <p>UCLA researchers developed PhoneBot, a small humanoid robot that uses an Android smartphone as its brain to walk on two legs. (Ruochen Hou et al./UCLA RoMeLa) Got an old Android phone collecting dust in a drawer? You might want to hang on to it. Researchers at UCLA have figured out how to turn an aging smartphone into the brain of a small walking robot. It's called PhoneBot, and it can walk on two legs, follow people and even get back up after falling face down.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Fake Amazon invoice scam uses $988 iPad order as bait</h4>
+                <p>A fake Amazon invoice scam uses a realistic $988 iPad receipt to trick victims into calling a fraudulent customer support number. (Getty Images) You open your email and see an invoice from Amazon. It says you bought a new iPad for nearly $1,000. The order has supposedly shipped, and your payment has already gone through. There's even a customer support number to call if something looks wrong. Your first reaction might be to grab your phone and stop the charge. That's exactly what makes this fake Amazon invoice scam so dangerous. It uses a realistic-looking receipt and an expensive purchase to make you worry about your money. Then it offers what appears to be an easy solution. Matt, who lives in California, recently sent us one of these suspicious emails. He wanted to help others recognize the warning signs before someone falls for the same trick. After examining the message, we found several clues worth sharing.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
