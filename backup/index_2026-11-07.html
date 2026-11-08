@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>SATURDAY, NOVEMBER 07, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/11/931/523/JASON-ANDERSON-SAN-BERNADINO-DISTRICT-ATTORNEY.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Newsom’s death-row commutations spark DA revolt as prosecutors warn of legal fight</h3>
+                <p class="lead-summary"><strong class="drop-cap">,</strong>Former DOJ prosecutor Jim Trusty reacts to Gov. Gavin Newsom's plan to commute hundreds of death sentences, criticism from victims' families and questions about the decision's timing. He also weighs in on the federal investigations into Rep. Ilhan Omar's fraud allegeations. At least a dozen California district attorneys are publicly condemning Gov. Gavin Newsom’s plan to commute all 548 death sentences in the state, arguing the sweeping move overrides juries, disregards victims’ families and defies the will of state voters. Newsom announced the plan Thursday, saying state-sanctioned killing is incompatible with California’s values. The move would convert the sentences to life without parole, though 382 cases still require approval from at least four California Supreme Court justices, according to the Associated Press. In response, prosecuting attorneys across California have raised concerns about victims’ rights, the governor’s constitutional authority and the role of the California Supreme Court in reviewing hundreds of the commutations. "Justice requires case-by-case consideration, not one-size-fits-all decisions," Sacramento County District Attorney Thien Ho said in response to Newsom's action. A table fitted with restraints holds down death row prisoners while they are given a lethal injection at Huntsville Unit (Walls Unit) in Huntsville, Texas. (Greg Smith/CORBIS/Corbis via Getty Images) Orange County District Attorney Todd Spitzer described the move as "mercy for the wolves" that inflicts "the ultimate act of cruelty on the sheep." Spitzer noted that regulations implemented by California’s Board of Parole Hearings on Oct. 1 allow thousands of prisoners serving life without parole to become eligible for parole, arguing that Newsom's latest death row commutations could put these inmates "one step closer" to release. Newsom’s office says, however, that the affected prisoners will remain in prison and are not eligible for release. "The Governor is attempting to appear courageous with this decision. He is not courageous. His commutations are solely based upon power and political aspirations," added San Bernardino County District Attorney Jason Anderson, who accused Newsom of caring more about politics than people. "Courage would require speaking with crime victims and the surviving family members of the people murdered by these death row inmates."</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>The Pentagon’s Best Space Weapon Isn’t a Program — It’s a Prize</h4>
+                <p>For the development of military capabilities in space, contests beat contracts.</p>
+                <p class="source-credit">— National Review</p>
+            </div>
+            <div class="story-minor">
+                <h4>Rubio Defends Trump’s Iran Call By Reminding Americans Why They Elected Him</h4>
+                <p>"It would have been very easy to do what multiple presidents before him have done, which is to ignore the Iran thing." In the aftermath of the bruising midterm elections, Secretary of State Marco Rubio took a moment on Friday to remind voters why they had elected President Donald Trump two years earlier. Rubio, began with a light-hearted crack about the multiple jobs he holds within the Trump administration — currently serving as National Security Adviser in addition to his duties at the State Department — and attributed at least a portion of the damage wrought in Tuesday’s elections to President Trump’s willingness to make tough decisions, even when they might not give him any political advantage.</p>
+                <p class="source-credit">— Daily Wire</p>
+            </div>
+            <div class="story-minor">
+                <h4>Hawaii resort city issues dire warning over exploding feral animal population: ‘cannot tackle alone’</h4>
+                <p>Honolulu officials are begging residents and tourists alike to stop feeding the island’s out-of-control feral chicken population as the feathered pests destroy property and create a health hazard as they leave their poop all over the place. City and County officials say the birds have become a major nuisance across Oahu, crowing at all hours, tearing through residential areas, damaging yards and gardens and even agitating household pets. There’s now a public education campaign, with signs posted at parks and on public transportation warning people: “Do Not Feed Feral Chicken.” Officials have also released an animated public service announcement explaining the problem and deployed traps in an effort to capture the birds.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2025/05/931/523/uae-arrival-scaled.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Top Gulf official offers glimmer of hope on Trump-Iran nuclear talks as threat of war hangs over region</h3>
+                <p class="lead-summary"><strong class="drop-cap">R</strong>eporting from Dubai, Fox News Digital examines how the UAE is balancing hopes for a diplomatic breakthrough with preparations for escalation, as Emirati officials and experts warn of Iran's threats to regional security and the global economy. DUBAI, United Arab Emirates — A senior United Arab Emirates official says he is cautiously optimistic about negotiations between the United States and Iran, citing progress through Qatari mediation over the past days, even as fears of renewed military confrontation continue to grip the Middle East. "We see some progress. … We hope that both sides will be able to reach a point where they will start building trust and engaging in a way to avoid the war, to find a political solution. … I am a little bit optimistic, but I don't exclude the other option," Dr. Ali Rashid Al Nuaimi, chairman of the Defense, Interior and Foreign Affairs Committee of the UAE's Federal National Council, told Fox News Digital in an exclusive interview. His remarks came as Reuters reported on Nov. 5 that Iran had submitted a new nuclear proposal to Washington through Qatar. Tehran, however, continued to insist that the U.S. meet seven conditions before negotiations could proceed, including sanctions relief and an end to the American naval blockade.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>New Zealand’s election results are too close to call</h4>
+                <p>Both Christopher Luxon of the National Party and Chris Hipkins of the opposition Labour Party admitted it was not yet clear who New Zealand's next leader would be.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Despite midterm rebuke of Trump, allies see U.S. turning further away</h4>
+                <p>U.S. allies are not celebrating Trump's midterm defeat, viewing the election results instead as another worrisome sign of a fickle electorate and unreliable partner.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Why Bolsonaro says U.S. took him in: Trump ‘convinced’ Brazil is no longer a democracy</h4>
+                <p>After losing an election, sneaking to Miami and proclaiming himself rightful president, Flávio Bolsonaro says in an interview that the U.S. is a refuge where “institutions still work.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F11%2Fcrop-41623204.jpg?quality%3D90%26strip%3Dall" alt="Lead Story Image" class="news-photo">
+                <h3>Fanatics Sportsbook promo code NYPOST350: Bet $20, get $350 in FanCash for Oregon vs. Ohio State</h3>
+                <p class="lead-summary"><strong class="drop-cap">N</strong>ew players at Fanatics Sportsbook can apply the Fanatics Sportsbook promo code NYPOST350 to bet $20, get $350 in FanCash for a huge showdown between Oregon and Ohio State on Saturday. The Buckeyes are now down to No. 11 in the latest AP Poll after a loss to USC on the road in Week 9. Oregon needs this win to keep its slim playoff hopes alive. With Fanatics Sportsbook promo code NYPOST350, new users will be able to bet $20, get $350 in FanCash upon registration for any of the featured markets on the sportsbook. This offer is available in the following states: Arizona, Colorado, Connecticut, Iowa, Illinois, Indiana, Kansas, Kentucky, Louisiana, Massachusetts, Maryland, Michigan, Missouri, North Carolina, New Jersey, Ohio, Pennsylvania, Tennessee, Virginia, Vermont, Washington D.C., West Virginia, and Wyoming. The Buckeyes just couldn’t overcome the injury to quarterback Julian Sayin, which has put their season on thin ice. New customers in AZ, CO, CT, DC, IA, IL, IN, KS, KY, LA, MA, MD, MI, MO, NC, NJ, OH, PA, TN, VA, VT, WV, WY. Must toggle on this promotion in your bet slip and wager $20+ cash on any market (min. odds -500) within 7 days of account opening to receive $50 in FanCash each day for your first 7 days. Must opt in each day to claim FanCash. FanCash issued in connection with this Promotion expire 24 hours from issuance. Terms apply-see Fanatics Sportsbook app. Michael Leboff is a long-suffering Islanders fan, but a long-profiting sports bettor with 10 years of experience in the gambling industry. He loves using game theory to help punters win bracket pools, find long shots, and learn how to beat the market in mainstream and niche sports.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Brady Returns: The Top 5 Tom Brady-Rob Gronkowski Plays At Gillette Stadium</h4>
+                <p>Sunday's Green Bay Packers-New England Patriots game will not only serve as a homecoming for one GOAT, but it will also be a special day for another. As Tom Brady is set to call his first game at Gillette Stadium, Rob Gronkowski will be inducted into the Patriots Hall of Fame over the weekend. Gronkowski arguably became the greatest tight end in NFL history during his nine seasons in New England, winning three Super Bowls, being named a Pro Bowler five times and setting numerous records at the position.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>bet365 bonus code: Bet $10, get $200 in bonus bets for Missouri vs. Texas</h4>
+                <p>The college football season begins to hit its crescendo with Week 10 on Saturday, and the bet365 bonus code allows you to bet $10 and get $200 in bonus bets win or lose, for any game, including Missouri vs. Texas. The Longhorns are back on track after wins over Ole Miss and Mississippi State, but another tough SEC foe awaits them this weekend. The bet365 bonus code is used when signing up for bet365 for college football Week 10, NFL Week 9, or any other market on the sportsbook. After making a qualifying deposit and placing a $10 wager, users will receive $365 in bonus bets, regardless of whether their first bet wins or loses.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Sean McVay Gives Myles Garrett Update For Rams; Superstar Poised To Return?</h4>
+                <p>Los Angeles Rams head coach Sean McVay expressed in a press conference on Friday afternoon that the team expects to activate superstar linebacker Myles Garrett from injured reserve for their Week 9 road tilt against the Washington Commanders (Sunday at 1 p.m. ET on FOX) "barring any sort of setbacks."</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/10/931/523/markle.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Meghan Markle's estrangement from father Thomas Markle: From royal wedding fallout to his arrest</h3>
+                <p class="lead-summary"><strong class="drop-cap">F</strong>ox News correspondent Danamarie McNicholl reports on the arrest of Meghan Markle's estranged father, Thomas Markle Sr., in Florida amid a federal investigation into alleged child sexual abuse material. Meghan Markle's father, Thomas Markle Sr., has spent years in the public eye following his highly publicized falling-out with the Duchess of Sussex ahead of her 2018 royal wedding. Now, the former Hollywood lighting director is facing an entirely separate legal battle after being arrested and charged with possession of child sexual abuse material. Here's a look at the key moments in the Markle family's public history, from Meghan and her father's estrangement to the criminal investigation that led to Thomas' arrest. Meghan Markle’s relationship with her father, Thomas Markle Sr., deteriorated publicly shortly before her 2018 wedding to Prince Harry. (Getty Images) Meghan's relationship with her father deteriorated publicly in May 2018, as she was set to marry Prince Harry. Just days before the royal wedding, he became embroiled in a controversy involving staged paparazzi photographs.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Oscar-winning director Sebastián Lelio found dead at 52 by actress partner: ‘Profound grief’</h4>
+                <p>Sebastián Lelio, the Oscar-winning Chilean director behind “A Fantastic Woman,” has died at 52 after succumbing to “health complications.” The director was found dead at his home in Santiago, Chile, around midday Friday by his longtime partner, actress Amalia Kassai, who called the cops after making the devastating discovery, local outlet Emol reported. “With great sadness, we announce the death, following health complications, of Chilean filmmaker Sebastián Lelio,” his family wrote in a statement. “We are going through a time of profound grief, and his memory will remain with us forever. He was a wonderful person who made significant contributions to Chilean culture at important moments in its history. As a family, we ask for privacy and consideration during these difficult times.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Russell Brand police interrogation video emerges as new rape investigations loom after conviction</h4>
+                <p>Metropolitan Police release footage of Russell Brand's interviews from 2023, 2024 and 2025 after his conviction on one count of rape and three counts of sexual assault. Russell Brand insisted he had never engaged in non-consensual sexual activity as he faced rape and sexual assault allegations that would ultimately lead to his conviction.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Bill Paxton's son takes on Western role late father never got to play: 'I could literally hear my dad'</h4>
+                <p>"Last Train to Fortune" star James Paxton tells Fox News Digital how playing a Western role originally intended for his late father became a deeply personal way to reconnect with the "Twister" star. Bill Paxton's son, James Paxton, is carrying on his late father's legacy by taking on a Western role that the "Twister" star was originally set to play more than 30 years ago.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/11/931/523/2-Chainsaw-robot-looks-terrifying-but-has-a-real-job.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Chainsaw robot looks terrifying but has a real job</h3>
+                <p class="lead-summary"><strong class="drop-cap">H</strong>umanoid robots, showcased at Chicago's Automate Show, demonstrate advancements in AI and robotics. Jeff Burnstein, President of the Association for Advancing Automation, explains AI's role in enabling diverse tasks in hospitals, factories, and warehouses. He emphasizes that robotics boosts competitiveness, leading to job creation. If you saw a humanoid robot holding a chainsaw next to train tracks, you'd probably do a double take. I know I would. But that's exactly what's happening in Japan, where a towering chainsaw robot is cutting back branches that could interfere with passing trains. It's a little intimidating to watch, especially when you see how high this machine can reach. Still, there's a pretty good reason railway crews are putting it to work. Japan's JR East railway company is using the chainsaw robot to handle dangerous maintenance jobs that would normally require workers to operate heavy cutting equipment high above the ground. The robot does the physical work while a person controls its movements from a safer location. I find that reassuring, especially when a chainsaw is involved. So how does this unusual machine actually work, and could it change the way dangerous maintenance jobs get done? Missed CyberGuy LIVE? Watch the replay and discover five ways to travel smarter and save money. Our free CyberGuy LIVE class, 5 Ways to Travel Smarter and Save Money, has ended, but you can still watch the full replay. Kurt "CyberGuy" Knutsson walks you through five practical ways to protect your phone and personal information, avoid common travel scams, find better deals, save money on bookings and use technology to make your travels easier and less stressful. No technical experience is needed. A humanoid robot equipped with a chainsaw trims overgrown branches along a railway line in Japan, allowing maintenance crews to work from a safer distance. (Kurt "CyberGuy" Knutsson) The robot has been put to work along JR East's Koumi Line in central Japan, where overgrown branches can create problems for passing trains. What's interesting is how the machine actually handles the cutting. One mechanical arm grips a branch while the other operates the chainsaw. The robot's upper body extends from a boom mounted on a specialized maintenance vehicle, allowing it to reach high above the tracks. That means workers can tackle branches that would normally require someone to operate cutting equipment at height.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Men see more career advancement in jobs with AI, as women lose ground</h4>
+                <p>New research examines how exposure to artificial intelligence influences the gender gap at work.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>The tech billionaires who fled California are facing a new blue Texas</h4>
+                <p>The tech elite flocked to the state for its business-friendly politics. A Democratic wave is testing whether the state remains their political safe haven.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Homeland Security data leak exposes 41K workers</h4>
+                <p>The Department of Homeland Security is investigating a massive data leak reportedly exposing the personal information of roughly 40,000 employees, including thousands of ICE and Border Patrol personnel and several undercover agents. You might think an employee directory sounds pretty harmless. After all, most workplaces keep lists of names and phone numbers so people can reach one another. But what happens when that information belongs to thousands of federal agents, including people connected to undercover investigations?</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
