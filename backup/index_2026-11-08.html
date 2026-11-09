@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>SUNDAY, NOVEMBER 08, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F11%2Fnewspress-collage-nl9wv7q57-1794150833595.jpg?quality%3D90%26strip%3Dall%261794132870" alt="Lead Story Image" class="news-photo">
+                <h3>Joe Burrow’s rumored girlfriend Olivia Ponton shows off Spain adventures as Bengals face Falcons in Madrid</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>he 24-year-old model shared various Instagram stories, showing she took the flight to Madrid as her rumored boyfriend and Bengals quarterback Joe Burrow takes on the Falcons at Bernabéu Stadium on Sunday morning. Ponton shared an image of Puerta de Alcalá — the city’s most famous arch located in the Plaza de la Independencia next to El Retiro Park. She also shared a picture of herself at Italian restaurant Bel Mondo, holding up a Aperol spritz and pasta dish. She also detailed that she got a matcha from Jade and churros while on her trip. Despite neither of them publicly addressing their relationship status, Burrow and Ponton have been linked since December 2024, when the model reported a break-in while staying at the three-time Pro Bowler’s Ohio home. “So obviously everybody has heard what has happened,” the 29-year-old said in a statement after the break-in at a Bengals press conference, but did not mention Ponton by name. “I feel like my privacy has been violated in more ways than one. And way more is already out there than I would want out there and that I care to share, so that’s all I got to say about that.” However, since then the two have been spotted publicly together including at a Bengals practice in August. The rumored couple attended the Fanatics Flag Football Classic party hosted by Tom Brady in March this year. They also made appearances at a pool party in L.A. that same month and were seen at a Met Gala after-party together in May. The Bengals (5-2) were pushing to get on a four-game win streak against the Falcons (3-5). Burrow started the game 16-for-18 with 194 yards, two passing touchdowns and a rushing touchdown with roughly four minutes left in the second quarter.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Free-Range Parenting Means Independence, Not This</h4>
+                <p>There’s an enormous difference between giving children independence and giving them responsibilities they aren’t equipped to handle. Like every other 10-year-old girl in 1996, I was an aspiring gymnast after the Atlanta Olympic Games. The American team had taken gold, and I was certain I’d be on the team by the next games. After coming home from school one day that fall, I decided to practice my beam routine. Unfortunately, my balance beam (also known as the arm of my couch) sat next to my mother’s new glass coffee table, which she had always wanted to buy but held off on because having a glass table around a toddler seemed like asking for trouble.</p>
+                <p class="source-credit">— Daily Wire</p>
+            </div>
+            <div class="story-minor">
+                <h4>Dave Chappelle Claims to 'Feel Better' Remembering the Assassination of Charlie Kirk</h4>
+                <p>Dave Chappelle, one of the most famous comedians in the world, is coming under fire after joking about how he “feels better” following the assassination of Turning Point USA founder Charlie Kirk. DAVE CHAPPELLE: “Ever since that guy Charlie Kirk got murdered, and I shouldn’t say this publicly but…. I feel better.” Sick. https://t.co/3gp7eE8aS5 "I'm so happy Charlie Kirk was killed. I can't help it, it's involuntary." -Dave Chappelle tonight at Madison Square Garden “Ever since that guy, Charlie Kirk got murdered, and I shouldn’t say this publicly, but I feel better,” Chappelle told the laughing crowd.</p>
+                <p class="source-credit">— Townhall</p>
+            </div>
+            <div class="story-minor">
+                <h4>Is ‘Marshals’ On Tonight? Here’s When ‘Marshals’ Returns To CBS With New Episodes</h4>
+                <p>Stream It Or Skip It: ‘Holiday Touchdown: A Bears Love Story’ on Hallmark, Another Solid Christmas Collab Between the NFL and Hallmark Where Was the ‘Love Of Your Life’ Movie Filmed?</p>
+                <p class="source-credit">— Https://decider</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/07/931/523/israeli-president-isaac-herzog-fox-news-digital-interview.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Israeli president taps Netanyahu rival to form government as coalition battle looms</h3>
+                <p class="lead-summary"><strong class="drop-cap">C</strong>hief correspondent Jonathan Hunt reports from Tel Aviv, Israel, on deadlocked coalition negotiations as political factions meet with President Isaac Herzog. Following the elections, Benjamin Netanyahu and political rival Gadi Eisenkot make bids to secure the recommendations needed to form a government. Israeli President Isaac Herzog announced Saturday that he has chosen opposition leader Gadi Eisenkot to form the country's next government, handing Prime Minister Benjamin Netanyahu's chief rival the first opportunity to build a coalition following an inconclusive national election. Herzog announced his decision on Nov. 7, but the formal presentation of the mandate is scheduled for Sunday, Nov. 8, at 5 p.m. Israeli time. Eisenkot will then have 28 days to assemble a government, with a possible 14-day extension. The decision could mark a significant step toward ending Netanyahu’s tenure, but it would also launch a difficult round of coalition negotiations, with deep disagreements among parties seeking to replace him. Gadi Eisenkot, leader of the Yashar ("Straight") party, waves an Israeli flag onstage following the release of the first exit poll results, in Tel Aviv, Oct. 28, 2026.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>A short primer guide to Diwali and those who celebrate it</h4>
+                <p>The festival of lights is a multi-faith celebration embraced by millions around the globe.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Paris agitators defy police orders, renew nationwide protests centered in Paris</h4>
+                <p>Thousands of French citizens protested across the country with protests centered in Paris as cost of living and student protests entered their fourth straight week. French authorities dispatched 70,000 officers across the country. Credit: Reuters. Protesters in France are continuing to demonstrate in Paris and across the nation despite police prohibitions on gatherings in the capital.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Mass shooter kills six in Poland, and three bodies are found at suspect’s home</h4>
+                <p>Authorities said that the gunman opened fire in Krakow’s Old Town, and that the suspect was “fascinated by far-right ideologies.” Fifteen others were injured.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/statics.foxsports.com/www.foxsports.com/content/uploads/2026/11/931/523/3b869057bf8838fe5926c23244029eb2159f07781b66e7a2011c8755401a0f6c.png?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>How to Watch Lions vs. Dolphins: TV Channel, Live Stream, Time</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>he Detroit Lions and Miami Dolphins meet in the 2026 NFL regular season on Sunday, November 8, 2026 at 1:00 p.m. ET at Hard Rock Stadium in Miami Gardens, FL. Miami enters Week 10 at 1-5 and sits fourth in the AFC East. The Dolphins have scored 98 points through six games and allowed 157. Their offense has leaned on the run game at 132 rushing yards per game, a top 10 mark, while the passing game has produced 162 passing yards per game and 4 passing touchdowns. Detroit brings a 5-2 record into this matchup and has won 3 straight games. The Lions are second in the NFC North and have scored 203 points through seven games. Their offense is averaging 29.0 points per game, No. 3 in the NFL, and 264 passing yards per game, tied for No. 5. Miami has nine sacks, tied for the fewest in the NFL, which gives Jared Goff room to operate. He has 1,964 passing yards, 15 touchdowns and one interception, and Detroit's passing offense ranks fourth at 264.0 yards per game. The Lions rarely hand the ball away. Watch whether the pocket stays clean through the first half. A quiet front gives Detroit the early lead it wants and lets the offense settle into rhythm throws. Jahmyr Gibbs has 773 rushing yards on 157 carries, 4.9 per attempt, with eight touchdowns, and he faces a Miami defense that allows 25.9 points per game. The Dolphins give Detroit plenty of chances to score, and Gibbs is the back who usually finishes them.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Fanatics Sportsbook promo code NYPOST350: Bet $20, get $350 in FanCash for Lions vs. Dolphins</h4>
+                <p>The Fanatics Sportsbook promo code NYPOST350 is available for new users to bet $20, get $350 in FanCash for Lions vs. Dolphins. Detroit heads to Miami on Sunday riding a three-game winning streak, while the 1-6 Dolphins are looking to rebound from a loss to New England after their surprising upset of the Jets. The Lions are seven-point road favorites at Fanatics Sportsbook despite a 1-2 record away from home, although Miami has yet to win at Hard Rock Stadium in three games there this season. The Fanatics Sportsbook promo code NYPOST350 will enable a welcome offer that lets you bet $20 to get $350 in FanCash.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>How to Watch Rams vs. Commanders: TV Channel, Live Stream, Time</h4>
+                <p>The Los Angeles Rams visit the Washington Commanders in the 2026 NFL regular season, with this Week 9 matchup set for Sunday, November 8, 2026 at 1:00 p.m. ET at Northwest Stadium in Landover, MD. Washington enters at 1-4-1 and sits fourth in the NFC East. The Commanders have scored 22.0 points per game, and their turnover margin is plus-6, a No. 3 mark in the league. That ball security has helped steady an offense that also brings 125 rushing yards per game, a top 10 figure, into this home date. Los Angeles comes in at 4-4 and has won 2 straight games. The Rams are averaging 274 passing yards per game, a No. 2 mark in the NFL, and they have converted 44.7 percent of their third downs, which ranks No. 5. That profile has helped keep them in the middle of the NFC West race entering Week 9.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>BetMGM bonus code POSTBET: Get up to $1,500 back in bonus bets for Jets vs. Chiefs</h4>
+                <p>Jets vs. Chiefs bettors can use the BetMGM bonus code POSTBET for $1,500 in bonus bets if their first bet doesn’t win. The Chiefs return to Arrowhead Stadium on Sunday looking to halt a two-game skid after a 5-0 start, while the Jets have dropped three straight to fall to 2-6. Kansas City, which has covered in only three of its eight games, is favored by 9.5 points. BetMGM is offering up to $1,500 in bonus bets back to your account for use on NFL Week 9 action. This means first-time users can place an initial bet between $10 and $1,500 and get a full refund of that wager if it loses. This offer is available in Arizona, Colorado, Iowa, Illinois, Indiana, Louisiana, Kansas, Kentucky, Maryland, North Carolina, Ohio, Tennessee, Virginia, Washington D.C., and Wyoming.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F11%2Fnewspress-collage-65vnq23x5-1794096749251.jpg?quality%3D90%26strip%3Dall%261794078783" alt="Lead Story Image" class="news-photo">
+                <h3>Bill Maher drops truth bomb about LA voters’ options for mayor: ‘Two choices’</h3>
+                <p class="lead-summary"><strong class="drop-cap">B</strong>ill Maher had a blunt take on Los Angeles’ political future after voters handed the mayor’s office to a Democratic Socialist. The talk-show host took aim at the city’s two choices in Tuesday’s election, which saw City Councilwoman Nithya Raman defeat incumbent Karen Bass. “Yes, we have a new mayor in L.A.,” Maher told his two guests on Friday night’s show, before delivering a punchline that drew laughs from the audience. Maher echoed the sentiment of many Angelenos who felt their final two options came down to who was the least worst option. Both general election candidates had been dogged by questionable track records. One of Maher’s guests, Coleman Hughes, ripped further into the mayor-elect’s ideology. Both candidates are Democrats, but Raman is a member of the Democratic Socialists of America. “Look, my issues are high rents and crime. Socialists don’t tend to be good on those issues because they institute policies like rent control, which sounds good but end up increasing the rents in the long run,” Hughes said. Hughes, an American writer and podcaster who is a former fellow at the Manhattan Institute for Policy Research, also pushed back against younger Americans who view socialism as a fresh solution to the country’s problems. California Post News: Facebook, Instagram, TikTok, X, YouTube, WhatsApp, LinkedInCalifornia Post Sports Facebook, Instagram, TikTok, YouTube, XCalifornia Post  Opinion California Post Newsletters: Sign up here!California Post App: Download here!Home delivery: Sign up here!Page Six Hollywood: Sign up here!</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Pierce Brosnan backs 'Fantastic Beasts' star for next James Bond, predicts fans will be 'blown away'</h4>
+                <p>Former Bond girl Alison Papworth shares why she wants the next 007 to stay true to the books as speculation swirls over the role. Pierce Brosnan is throwing in his two cents into the conversation regarding who should be chosen to play the next James Bond, nearly 25 years after he last played the iconic character.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>‘Jersey Shore’ star Ronnie Ortiz-Magro is 4-months sober — reveals the drug cocktail behind his rock bottom</h4>
+                <p>“Jersey Shore: Family Vacation” star Ronnie Ortiz-Magro is four months sober after hitting rock bottom during the April press tour for the series’ final season, where he made headlines for appearing to be back on drugs. The 40-year-old reality star told The Post that it was the prescription drug Seroquel, which he takes at night for insomnia and bipolar disorder, that caused him to nod off during his now-infamous SiriusXM interview. “Everyone’s like, ‘Oh, he’s on fentanyl, he’s on opiates.’ And it’s like, ‘F–k, I’ve never done any of that in my life.’ And I’ve always been open about what my substance of choice has been,” he said.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>King Charles' 'short fuse' on display in viral downpour as Queen Camilla gets umbrella first: expert</h4>
+                <p>The monarch got soaked during a celebration of Antigua and Barbuda’s 45th anniversary of independence at Sir Vivian Richards Stadium. Copyright: Thomson Reuters. Courtesy of ABS TV Radio. King Charles III was left royally soaked — and his patience appeared to dry up faster than his suit.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/11/931/523/tesla-cybertrucks-starbase-texas.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Tesla plans to wind down Cybertruck production after sales slump</h3>
+                <p class="lead-summary"><strong class="drop-cap">E</strong>lon Musk takes aim at Waymo over animal collisions and touts a Tesla robotaxi update to detect pets at night during a Tesla Owners of Silicon Valley livestream. Credit: Tesla Owners of Silicon Valley You have to give Tesla credit for one thing. The Cybertruck certainly got people talking. With its sharp angles and stainless steel body, it looked unlike anything else pulling into a supermarket parking lot. Some people loved it. Others couldn't understand why anyone would want one. Either way, you couldn't miss it. Now, the truck that Elon Musk once promoted as the future of pickup trucks appears to be heading toward an early retirement. On November 6, 2026, Musk announced plans to wind down Tesla Cybertruck production at its Texas factory around the middle of 2027. The reason? Tesla wants to make more Cybercabs, its self-driving taxis. For a vehicle that arrived with enormous expectations, that's quite a turnaround. And if you already own a Cybertruck, you may be wondering what this means for your investment. Missed CyberGuy LIVE? Watch the replay and discover 5 ways to travel smarter and save money. Our free CyberGuy LIVE class, 5 Ways to Travel Smarter and Save Money, has ended, but you can still watch the full replay. Kurt "CyberGuy" Knutsson walks you through five practical ways to protect your phone and personal information, avoid common travel scams, find better deals, save money on bookings and use technology to make your travels easier and less stressful. No technical experience is needed. Tesla's Cybertruck made a bold entrance with its stainless steel body and angular design, but disappointing sales are now threatening its future. (Reginald Mathalone/NurPhoto via Getty Images) Musk made the announcement in a post on X, explaining that Tesla plans to use more of its Texas factory for Cybercab production. The move signals a major change in direction for a company that once expected the Cybertruck to become a significant part of its vehicle lineup. However, there's an important detail worth pointing out. Musk specifically discussed winding down production at Gigafactory Texas. Tesla has not confirmed whether it will move Cybertruck manufacturing elsewhere or discontinue the vehicle entirely. Texas is currently the only known Tesla factory equipped to manufacture its specialized stainless steel body components.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>The only town in the U.S. that said yes to data centers</h4>
+                <p>On Election Day, much of the country turned against the massive projects that power AI. Here’s why one place didn’t.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Americans are anxious about the AI boom going bust</h4>
+                <p>There’s one more thing to fear in the economy, according to a new survey.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Is someone already using your identity? Check these 8 places</h4>
+                <p>Kurt 'CyberGuy' Knutsson joins 'Fox & Friends First' to discuss the threat of rogue artificial intelligence agents targeting bank accounts. When people think about identity theft, they often start with a credit report or bank statement. Those are important places to look, but they are not the only ones. Someone using your identity may be trying to open a phone line, start utility service, use medical benefits or create a payment plan that never appears on your usual accounts.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
