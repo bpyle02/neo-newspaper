@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>WEDNESDAY, NOVEMBER 11, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://pagesix.com/wp-content%2Fuploads%2Fsites%2F3%2F2026%2F11%2F148272546.jpg?quality%3D90%26strip%3Dall" alt="Lead Story Image" class="news-photo">
+                <h3>Dave Portnoy eviscerates Sofia Franklyn in withering takedown, accuses her of masterminding sexual misconduct claims against him</h3>
+                <p class="lead-summary"><strong class="drop-cap">S</strong>ofia Franklyn has shared her side of the story in her bitter feud with former “Call Her Daddy” podcast co-host Alex Cooper, and now, her former boss Dave Portnoy is finally speaking out. Portnoy discussed his own personal fallout with Franklyn on “The Toast” podcast with Claudia and Jackie Oshry after the release of her book, “Daddy Issues.” Claudia gasped at the Barstool Sports founder’s response as Jackie asked Portnoy when his hatred for Franklyn started. “When she connected a girl who accused me of sexual assault in Business Insider, which was a total lie and made up,” Portnoy explained. In November 2021, Business Insider published an investigative report involving multiple women accusing Portnoy of performing violent sexual acts during intercourse. He was also accused of filming some of them. A second story was published in February 2022. Portnoy denied all of the allegations, claiming the encounters were consensual. He sued the media outlet for defamation and the lawsuit was ultimately dismissed. Claudia explained how Franklyn discussed the Business Insider situation in her new memoir, “Daddy Issues,” which was released on Nov. 10. Claudia then asked Portnoy if he was aware that the author shared messages she had received about him. Jackie added, “She said, when she was like at war with you, people reached out to her. When Business Insider reached out to her, she directed them that way.” “Yeah, so I mean, when she was mad, she was, for like a week or two straight, on her Instagram story was basically saying, ‘If you have any dirt on Dave Portnoy, contact me,'” Portnoy said, explaining that Franklyn would then delete her social media stories shortly after posting. Portnoy admitted to Claudia and Jackie that the one girl he did hook up with ended up dating Cooper’s childhood best friend. The woman from the hook up ended up revealing on a podcast that Franklyn assisted her in going to Business Insider about Portnoy. “I know that’s the star,” Portnoy said of the person he admitted to hooking up with. “Well, that’s also the star person in the story. Like, it came from Sofia Franklyn. There’s no backstory to ‘Hey, it’s somebody who hated your guts who made up a story.’ The girl, by the way, they use is like, on record as saying she’s a pathological liar, and like, it’s all lies. “Daddy Issues” is the first time Franklyn has detailed her feud with Cooper, who she co-hosted the “Call Her Daddy” podcast with until 2020. Contract negotiations between the women led to their fallout and Cooper co-hosting the podcast alone.</p>
+                <p class="source-credit">— Https://pagesix</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>‘The Lord of the Rings: The Rings of Power’ Star Charlie Vickers Reveals “Sauron’s Biggest Fear” in Season 3</h4>
+                <p>Stream It Or Skip It: ‘Holiday Touchdown: A Bears Love Story’ on Hallmark, Another Solid Christmas Collab Between the NFL and Hallmark Where Was the ‘Love Of Your Life’ Movie Filmed?</p>
+                <p class="source-credit">— Https://decider</p>
+            </div>
+            <div class="story-minor">
+                <h4>Another Week, Another CFP Ranking That Has Everyone Scratching Their Heads</h4>
+                <p>This article was written by Gus Wilson and published on Sport & State, a new media company founded by Clay Travis that is built around sports, culture, original voices, and live conversation. Another Tuesday, another College Football Playoff ranking that has college football fans questioning what exactly the selection committee is doing. Following one of the most consequential weekends of the season, the committee released its second top 25 Tuesday night, with plenty of movement throughout the rankings. Tuesday night’s show flew by as the network squeezed the reveal between the Champions Classic, featuring Duke-Michigan State and Kentucky-Kansas to kick off the college basketball season.</p>
+                <p class="source-credit">— Daily Wire</p>
+            </div>
+            <div class="story-minor">
+                <h4>Abdul El-Sayed Takes a Jab at Trump, Offers to Rename ‘Medicare for All’ ‘Trumpcare for All’</h4>
+                <p>Michigan Senator-elect Abdul El-Sayed took a jab at President Trump on Tuesday, telling CNN he would happily rename Medicare-for-All “Trumpcare-for-All” if it would persuade the president to sign the bill into law. It might sound like a joke, but El-Sayed assured CNN’s Kaitlan Collins that he was entirely serious. His reasoning was simple. President Trump likes putting his name on things. And El-Sayed apparently doesn’t care whose name is on the program, as long as he can make American taxpayers foot the bill for government-run healthcare. 🇺🇸 El-Sayed offers to put TRUMP'S NAME on Medicare for All if he backs it "Donald, if you're watching, we can put your name on it. I know you like to put your name on stuff." Trumpcare? Writer: Marie https://t.</p>
+                <p class="source-credit">— Townhall</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/11/931/523/Holocaust_dubai.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Inside Holocaust memorial in heart of Arab world as founder reveals what changed everything</h3>
+                <p class="lead-summary"><strong class="drop-cap">R</strong>eporting from Dubai, Fox News Digital visits one of the Arab world's first permanent Holocaust exhibitions and speaks with its founder. DUBAI, United Arab Emirates — In a historic house near Dubai Creek, a small gallery commemorating the six million Jews murdered in the Holocaust stands alongside collections exploring Islamic civilization, Emirati heritage and the history of Palestine and the Holy Land. The Holocaust exhibition at the privately owned Crossroads of Civilizations Museum is among the first permanent displays of its kind in the Arab world. Opened in May 2021, less than a year after the UAE normalized relations with Israel through the Abraham Accords, it has become a symbol of the Emirates' approach to religious coexistence. During a recent visit to the museum, Fox News Digital saw displays documenting Nazi persecution, including a life-size image of the boy from the famous Warsaw Ghetto photograph, his hands raised in surrender. The gallery also tells the stories of Muslims who rescued Jews during the Holocaust, including Egyptian physician Mohammed Helmy, who sheltered Jews from Nazi persecution in Berlin.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Russia and Ukraine agree to prisoner swap, but little else, in U.S.-mediated talks</h4>
+                <p>The two-day talks in Abu Dhabi exposed a deepening split between the U.S. and European visions of how to approach Russia.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Three men backed by Iran plotted to attack British air base, U.S. says</h4>
+                <p>One of the men passed messages from jail to attempt an attack on an air base in England used by U.S. forces, the Justice Department said.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>US evacuates 13 military aircraft from second UK base as new Iran threat raises alarm</h4>
+                <p>Secretary of State Marco Rubio said Tuesday after the G7 Foreign Ministers' meeting in Paris, that "bad things are happening to the Iranian economy and it's unfortunate." The U.S. Air Force abruptly relocated more than a dozen aircraft from RAF Mildenhall in eastern England amid an emerging security threat, U.S. officials confirmed Tuesday.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F11%2Fnewspress-collage-srrjpz9y7-1794411100559.jpg?quality%3D90%26strip%3Dall%261794393116" alt="Lead Story Image" class="news-photo">
+                <h3>Kirk Cousins’ wife Julie hints at true feelings about Raiders exit after Vikings trade</h3>
+                <p class="lead-summary"><strong class="drop-cap">I</strong>t isn’t just Kirk Cousins who has to uproot his life in Las Vegas after being traded to the Minnesota Vikings on Tuesday. His whole family, which includes his wife Julie and their two sons, will also be leaving Sin City, which they had appeared to be enjoying. The good news is that the Cousins clan knows what to expect in Minnesota, as they spent six seasons there during Kirk’s first Vikings stint. Julie appears excited to return, as she made an Instagram story post on Tuesday that showed a photo of her husband wearing a Vikings jersey with the caption, “Another adventure awaits…” Choosing a song by Diddy is already interesting, but the song’s title and the first lyrics — “Back where I belong” — seem to hint at how she feels about returning to Minnesota. Granted, these were not her actual words about the move back to the Vikings. But her choice does suggest she received news of this trade warmly. There’s nothing to suggest that any members of the Cousins family didn’t enjoy their time with the Raiders. But the fact that Julie seems to feel that Minnesota is “home” speaks volumes, and suggests that Kirk could thrive being back with the Vikings.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Brad Ausmus bolting Yankees to become Astros’ new manager</h4>
+                <p>Brad Ausmus is leaving Aaron Boone’s staff to become the new Astros manager, The Post confirmed on Wednesday, creating a vacancy they will now have to fill. Join Post Sports+ for exciting subscriber-only features, including real-time texting with Greg Joyce about the inside buzz on the Yankees. Ausmus, who served as Boone’s right-hand man for the last three seasons, interviewed with the Astros this offseason for both their GM and manager job, Brian Cashman acknowledged Tuesday. The GM job ultimately went to Randy Flores before the Astros landed on Ausmus as their next manager. The 57-year-old spent 10 seasons as the Astros’ catcher during his 18-year playing career and remained close with former teammate Jeff Bagwell, who is now a senior advisor to owner Jim Crane.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Craig Carton slams Dianna Russini for ‘brain-dead decision’ as new show launches</h4>
+                <p>Craig Carton — who knows a thing or two about questionable decisions — has some doubts about Dianna Russini’s thought process amid her return media Wednesday. The WFAN host ripped Russini on Tuesday for opting to partner with offshore sportsbook BetUS for her return after resigning from The Athletic amid allegations she had an affair with Patriots coach Mike Vrabel, along with her polarizing route to avoid addressing the purported dalliance. “…Which just fascinates me how she continues to make bad decisions after bad decisions,” Carton said on his self-named show. “She partnered with BetUS. BetUS doesn’t have any operations in the U.S. BetUS is an illegal sportsbook in Curacao. Yes, it is not regulated or licensed in a single state in this country. It’s not illegal to be with them, but if you do you’re never going to see your money.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Blue Jays emerge as Tarik Skubal suitor as Mets’ competition grows — with mystery teams lurking</h4>
+                <p>LAS VEGAS — The big-market Blue Jays are a player in the sweepstakes for superstar free agent Tarik Skubal, and they are expected to join the Mets, Padres and Dodgers in meeting with the two-time Cy Young winner in California next week, sources tell The Post. The Jays will of course face some very strong competition for the left-hander Skubal, who’s being pursued by a few mystery teams in addition to the Mets, Padres and Dodgers. At least two other unknown teams are expected to get meetings in Orange County, Calif., next week with Skubal, who’s arguably baseball’s best pitcher. Don’t miss Mike Puma’s text messages from Queens and beyond — he’s giving Sports+ subscribers the inside buzz on the Mets.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F11%2FDeacon-Frey.jpg?quality%3D90%26strip%3Dall" alt="Lead Story Image" class="news-photo">
+                <h3>The Eagles return to Las Vegas Sphere this week. Get last-minute tickets</h3>
+                <p class="lead-summary"><strong class="drop-cap">A</strong>fter two months away from the Entertainment Capital of the World, the Rock Hall of Famers are returning to Las Vegas Sphere. Deacon Frey, Don Henley, Joe Walsh, Timothy B. Schmit, Vince Gill and co. resume their record-breaking residency at the visually-spectacular venue this week. Their shows take place: If you’d like to be there to see the Rock Hall of Famers live, tickets are available for both concerts. At the time of publication, the lowest price we could find on seats for either show was $621 including fees on Vivid Seats. In the event that’s a bit too rich for your blood, we recommend holding out a few weeks. That includes timeless FM radio staples like “Life In The Fast Lane,” “One of These Nights,” “New Kid In Town,” “Desperado” and, of course, “Hotel California” as well as cuts from Henley and Walsh’s projects outside The Eagles (think “Boys of Summer” and “Rocky Mountain Way”). “During the performance [of Walsh’s “In The City”], visuals of a hash urban cityscape rose up all around the Sphere, twisting and turning as it seemingly stretched into the sky,” Ultimate Classic Rock reported after attending a February 2026 show. “By the song’s conclusion, the stunning visual had shifted, as the audience was transported above the gritty scene to see that it was surrounded by beauty and nature.” For more information, our team has everything you need to know and more about seeing The Eagles at Las Vegas Sphere below.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Antonio Sabato Jr and Virginia Madsen's son arrested in fatal hit-and-run</h4>
+                <p>Virginia Madsen and Antonio Sabato Jr.'s son, Jack, was arrested in a fatal hit-and-run. (Getty Images) Antonio Sabato Jr. and Virginia Madsen’s son, Jack Sabato, has been arrested in connection with a fatal hit-and-run in Anchorage, Alaska, Fox News Digital has confirmed.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>What time does ‘Rivals’ come out? Here’s how to watch Season 2, Part 2 for free</h4>
+                <p>If you’ve been patiently waiting for more “Rivals” since the cliffhanger that Season 2, Part 1 ended on, you’re not alone. Luckily, the wait is almost over. “Rivals” returns to Hulu and Hulu on Disney+ on Nov. 11, with new episodes dropping at 3 a.m. ET. Set in the cutthroat world of British TV in the 1980s and inspired by the soapy novels by Dame Jilly Cooper, “Rivals” follows a battle over a regional TV franchise that turns ugly, dragging private feuds into public view with with illicit affairs and forbidden love adding even more complexity to the vicious power struggle. Season 2, Part 2 of “Rivals” will pick back up in the aftermath of the Season 2, Part 1 finale as the residents of Rutshire deal with the fallout from tragedy, scandal and betrayal.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Country star Craig Morgan says he's 'willing to die' for America after returning to military service</h4>
+                <p>The country singer re-signed up for the military three years ago told Fox News Digital that every other service member feels the same way. Country singer Craig Morgan, a U.S. Army Reserve warrant officer, says he is willing to die for his country to preserve America's freedoms.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/04/931/523/florida-social-media-kids-ban-fox-news.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Instagram's AI may catch teens lying about their age</h3>
+                <p class="lead-summary"><strong class="drop-cap">B</strong>ipartisan state coalition secures a historic agreement as Meta agrees to a landmark $16B+ social media addiction settlement. Claudia Cowan reports on the sweeping safety changes mandated the federal court. The social media giant must implement strict daily time limits, overnight blocks and robust age verification tools for teen users on Instagram and Facebook. My own niece has told me for years that she and her friends could get around age restrictions on Facebook and Instagram when they were younger. They knew how easy it was to make themselves appear older online. And I suspect plenty of parents have heard similar stories. So when I heard that Meta was expanding its AI technology to identify teens who lie about their age, my first thought was, it's about time. On November 9, Meta announced a worldwide expansion of its AI age-estimation technology. The system looks for accounts that may belong to teenagers, even when someone has entered an adult birthday. Meta says the expansion will place millions more young users into Instagram's built-in Teen Account protections. The move comes as lawsuits and growing public pressure push Meta to take greater responsibility for protecting young users. After years of concerns about children getting around social media age restrictions, this could be one of the company's most significant attempts yet to address the problem. But how does Instagram's AI figure out someone's age? And can parents trust it to get things right? Missed CyberGuy LIVE? Watch the replay and discover 5 ways to travel smarter and save money. Our free CyberGuy LIVE class, 5 Ways to Travel Smarter and Save Money, has ended, but you can still watch the full replay. Kurt "CyberGuy" Knutsson walks you through five practical ways to protect your phone and personal information, avoid common travel scams, find better deals, save money on bookings and use technology to make your travels easier and less stressful. No technical experience is needed. Meta is expanding AI age checks on Instagram to identify teens who may have entered an adult birthday to bypass safety restrictions.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>State Dept. official took Mediterranean trip paid for by tech billionaire</h4>
+                <p>Stripe’s Patrick Collison paid an estimated $11,900 for Sarah B. Rogers’s portion of an international vacation last year, according to a preliminary financial disclosure obtained by The Washington Post.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>The job market is tough for young people. Older workers are thriving.</h4>
+                <p>Millennials and Gen X are proving valuable as evidence suggests experience is an advantage in the era of artificial intelligence.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Health insurance scams to watch for during open enrollment</h4>
+                <p>CMS Administrator Dr. Mehmet Oz discusses his efforts to crack down on health and senior care fraud on ‘Hannity.’ If you've been shopping for health insurance lately, you've probably noticed the ads popping up everywhere. Some promise surprisingly low monthly payments. Others claim you'll qualify for generous benefits or even receive cash rewards for signing up. And with open enrollment underway, those offers can be awfully tempting. But here's what worries me. You could enroll in what looks like a great health insurance plan, only to discover that it barely covers your medical bills when you actually need care.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
