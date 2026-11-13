@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>THURSDAY, NOVEMBER 12, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/11/931/523/code-pink-congressman.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>WATCH: Socialist agitators lose it when cameras turn on them</h3>
+                <p class="lead-summary"><strong class="drop-cap">A</strong>ctivists from CodePink and other nonprofits funded by Shanghai-based communist tycoon Neville Roy Singham aggressively "bird dog" lawmakers on Capitol Hill but grow angry when Fox News Digital turns the cameras on them. WASHINGTON, D.C. — Far-left activists from the network funded by communist tech tycoon Neville Roy Singham can dish it out, but they can't take it. For years, CodePink activists, easily recognizable in hot pink T-shirts, have heckled lawmakers and officials in public settings with a tactic called "bird dogging," cornering targets, peppering them with hostile questions, like "Why do you support baby killers?" and shaming them on social media with tactics that amount to humiliation rituals. On Veterans Day, the agitators found themselves on the other side of the lens, and they didn't like it. For six hours on Wednesday, Fox News Digital followed members of CodePink, BreakThrough News, the People's Forum, the Party for Socialism and Liberation and allied groups in the Singham network through the halls of Congress during a lobbying event organizers called the "Taxpayer Uprising." But when the cameras turned on them, they angrily refused to answer questions and covered the camera lens, one time with a Palestinian keffiyeh scarf and another time with a backpack designed with the pattern of a watermelon, a symbol adopted by the Palestinian movement. Then, they responded with smears and ad hominem attacks. Finally, they published their footage of the confrontations, turning their objections to being filmed into content for their followers. One follower congratulated them on their success deploying "psychic militancy." Rania Khalek, a co-host of "BT Live" at BreakThrough News interviews a congressman while Code Pink co-founder Medea Benjamin films the interaction. (Asra Nomani/Fox News Digital) The day began just before 10 a.m. inside the Rayburn House Office Building, where activists in pink CodePink T-shirts and keffiyehs walked into a breakfast gathering of the U.S. House Bagel Caucus. At 9:59 a.m., they surrounded Rep. Dan Goldman, D-N.Y., and pointed their cameras at him. Medea Benjamin, co-founder of CodePink, wore a shirt emblazoned with the message "NO WAR ON IRAN" and pressed him on Section 219 of the National Defense Authorization Act, which she called a "merging" of the U.S. and Israeli militaries.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Trans Asylum Claim Has DHS Explaining How Hijacking Suspect Was ‘Gaming’ The System</h4>
+                <p>The Department of Homeland Security (DHS) is accusing the twice-deported migrant accused of trying to hijack a United Airlines flight this week of asylum fraud. Honduran migrant Rony Alexander Gomez-Alberto allegedly said he had a bomb and attempted to storm the cockpit of United Flight 2174 from Newark to New Orleans on Monday night. It was later revealed that he crossed the southern border illegally once in 2011 and again in 2014 and was deported each time. When he arrived at the border for the third time in 2019, he was allowed to enter after claiming he needed asylum and feared returning to his home country, where he said he faced persecution for being transgender, as first reported by The Daily Wire.</p>
+                <p class="source-credit">— Daily Wire</p>
+            </div>
+            <div class="story-minor">
+                <h4>Chris Harrison Feels “Fortunate” Shelved Taylor Frankie Paul ‘Bachelorette’ Season Is “Not [His] Mess”</h4>
+                <p>Stream It Or Skip It: ‘Holiday Touchdown: A Bears Love Story’ on Hallmark, Another Solid Christmas Collab Between the NFL and Hallmark Where Was the ‘Love Of Your Life’ Movie Filmed?</p>
+                <p class="source-credit">— Https://decider</p>
+            </div>
+            <div class="story-minor">
+                <h4>Duran Duran legend Roger Taylor, 77, retires from band amid declining health</h4>
+                <p>Duran Duran drummer Roger Taylor is retiring from the band due to the ringing in his ears growing “steadily worse.” The musician wrote that he has “reached the point” in his tinnitus battle “where [he] must now listen to [his] body and [his] doctors.” Taylor confessed, “This is one of the hardest decisions I’ve ever had to make. Playing drums in this band has been the joy of my life, and I’ll never be able to properly thank the fans for the love they’ve shown us over the years.” While “figuring out the timing” of his departure from the group “has not been easy,” Taylor gushed that he is “going out on a real high” and “couldn’t have asked for a better final chapter.</p>
+                <p class="source-credit">— Https://pagesix</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/01/931/523/iran-military-rally-001.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Iran's shadow operations stretch across Europe as chilling spy convictions expose Tehran's reach</h3>
+                <p class="lead-summary"><strong class="drop-cap">L</strong>isa Daftari says years of hacking, surveillance and threats have changed how she lives, warning that Iran’s intimidation tactics are designed to silence critics abroad. Two Iranian men were convicted in Britain on Thursday of spying on journalists and critics of Tehran, the latest case raising alarm over Iranian operations beyond the Middle East, as France accuses the IRGC of unprecedented cyberattacks and a senior UAE official warns of Iranian sleeper cells abroad. The developments come as the Trump administration continues its campaign of economic pressure against Tehran while leaving the door open to diplomatic negotiations, raising questions about how Iran's overseas intelligence networks and alleged covert activities might factor into any future agreement. A jury at Woolwich Crown Court in London found Mostafa Sepahvand, 41, and Farhad Javadi Manesh, 46, guilty of engaging in conduct likely to assist a foreign intelligence service after prosecutors said they carried out surveillance of journalists and other individuals critical of the Iranian government, according to Reuters.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>As deadly storms flood Gaza’s tent cities, the displaced fear a worse winter</h4>
+                <p>At least four people were killed when weekend storms triggered a landslide onto tent shelters, which are exposed to risks during severe weather.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>El Salvador-backed air assault destroys Haiti gang headquarters amid search for missing troops</h4>
+                <p>El Salvador’s president said the operation destroyed a major Haiti gang’s headquarters believed to be used for kidnappings, weapons trafficking and extortion. (@nayibbukele/X) El Salvador's president on Tuesday said the country's military helped deliver a devastating air assault against the headquarters of one of Haiti's most powerful criminal gangs, which has been linked to mass kidnappings, weapons trafficking and extortion.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>As Venezuelans protest blackouts, U.S.-backed leader declares early Christmas</h4>
+                <p>As the Trump administration seeks to manage Venezuela’s oil industry, residents are protesting at a pace not seen in years, mainly about the failing power grid.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F11%2Fnewspress-collage-9ufyfdbkg-1794498962961.jpg?quality%3D90%26strip%3Dall%261794481021" alt="Lead Story Image" class="news-photo">
+                <h3>Dan Hicks celebrated daughter’s marathon accomplishment in last social post before ‘sudden’ death</h3>
+                <p class="lead-summary"><strong class="drop-cap">L</strong>egendary sports broadcaster Dan Hicks, who died at the age of 64, celebrated one of his three daughters’ recent marathon achievement in his last Instagram post before his unexpected death. A three-slide post showed daughter Riley running in the Chicago Marathon last month, along with a photo of her and then a photo of Dan, Riley and fellow daughter Ellery. “Our girl did it again. 3rd major marathon in 18 months,” Dan wrote on Oct. 11. “Today she tackled Chicagp (sic) and we were there to marvel at her drive in hot weather and smashing her PR!” Dan, a longtime NBC announcer, died of an acute illness Wednesday in Connecticut, according to the Associated Press. “He was a devoted husband of over 30 years, loving father to our three daughters and cherished friend to so many. His loss is immeasurable,” Storm wrote in a social media post Thursday. “Dan was truly one of a kind and, quite simply, the person everyone wanted to be around. When he walked into a room, he brought the energy, the laughter and the people together. He was endlessly kind, thoughtful and funny, and he made everyone feel like they mattered. “Our three daughters and I are heartbroken. We are grateful for the love and support surrounding our family during this incredibly difficult time.” Dan, who narrated golfing events plus Notre Dame games, among other NBC duties, often posted family shots on social media of him and Storm, along with shots of his daughters.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>How to Watch Commanders vs. Giants: TV Channel, Live Stream, Time</h4>
+                <p>The Washington Commanders visit the New York Giants in Week 10 of the 2026 NFL season on Thursday, Nov. 12, 2026, at 8:15 p.m. ET from MetLife Stadium in East Rutherford, New Jersey. The Giants lead the NFC East by two games after a 19-11 win at Philadelphia on Nov. 8, their second straight victory, and they hold the NFC's No. 3 seed at 5-2-1. Washington has fallen three games behind New York after a 20-13 loss to the Rams on Nov. 8 left it at 2-5-1. A loss on a short week would drop the Commanders four games back of their division rival with eight games left, while a win would pull them within two.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Hannah Storm ‘heartbroken’ by husband Dan Hicks’ shocking death</h4>
+                <p>Hannah Storm and her three daughters are “heartbroken” over the loss of beloved husband and father Dan Hicks. Hicks, the legendary sports broadcaster and voice of golf for NBC Sports, died at the age of 64, Storm announced on Thursday. “Our family is heartbroken by the sudden and unexpected passing of Dan following an acute illness,” Storm wrote on X. “He was a devoted husband of over 30 years, loving father of our three daughters, and cherished friend to so many. His loss is immeasurable. “Dan was truly one of a kind and quite simply, the person everyone wanted to be around. When he walked into a room, he brought the energy, the laughter and the people together. He was endlessly kind, thoughtful and funny, and he made everyone feel like they mattered.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Tom Brady's NFL Power Rankings: Was Bills' Win Convincing Enough To Move To No. 1?</h4>
+                <p>Typically, Tom Brady doesn't change the No. 1 spot in his power rankings if the team won the week before. However, the results from Week 9 might cause the GOAT to crown a new No. 1 team. The Chicago Bears didn't have the best showing after earning the No. 1 spot in Brady's power rankings last week, needing a buzzer-beating field goal to take down the Tampa Bay Buccaneers. The Buffalo Bills and San Francisco 49ers, meanwhile, each picked up decisive wins, staking their claims to be the best team in the NFL.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/11/931/524/Anthony-Clark.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>'Yes, Dear' star Anthony Clark dead at 62</h3>
+                <p class="lead-summary"><strong class="drop-cap">A</strong>nthony Clark, best known for his role in the sitcom "Yes, Dear," has died. He was 62. "Anthony was one of the funniest and most talented comedian and actors I have ever had the pleasure of watching," his longtime manager, Barry Katz, told Fox News Digital. "It was an honor to represent him and he will be missed for the joy, happiness, and love he brought to everyone he worked with and the audiences that were blessed to see his undeniable performances. " "Anthony Clark died yesterday. He was a hilarious guy," his "Yes, Dear" co-star Mike O’Malley wrote on X. "When my wife Lisa and I were dating back in the mid-nineties, Anthony was already famous in Boston, regularly selling out comedy shows. The first time we saw him at The Comedy Connection, we laughed and laughed and laughed." Jean Louisa Kelly, Anthony Clark and Mike O'Malley appear in a promotional photo for the CBS sitcom "Yes, Dear," which premiered Oct. 2, 2000. (CBS via Getty Images) "He was so unique — one of those comics who is laughing along with you at the absurdity of his stories and observations. I was a fan before I was a friend. We spoke on the phone three weeks ago. He had us laughing loudly once again. Attached are some snapshots from our last episode of Yes Dear, which ended 20 years ago after 122 episodes. Rest in peace. Tony."</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Stray Kids announce 2027 world tour, MetLife concert. Get tickets</h4>
+                <p>Bang Chan, Changbin, Hyunjin, Han, Felix, Seungmin and I.N. — Lee Know is sitting out due to his mandatory South Korean military service — just announced their spring and summer 2027 RUN IT World Tour that will send them to stadiums all over the globe from May through July next year. To close the U.S. leg of the run, the beloved K-Pop group will headline at East Rutherford, NJ’s MetLife Stadium on Tuesday, June 29. All shows come in support of the octet’s recently-released “THIS & THAT,” which hit shelves on Aug. 7 and quickly became their ninth consecutive LP to reach No. 1 on the Billboard 200 album chart.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Bill Cosby accused of allegedly failing to pay $59M sexual assault damages: court docs</h4>
+                <p>Judith Huth says she’s "happy as can be" after jurors found Bill Cosby sexually abused her in 1975 at the Playboy mansion when she was a teen. A woman who accused Bill Cosby of sexual assault in 1972 was awarded $59 million earlier this year after a jury found the disgraced comedian liable for his actions.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Women are getting work done to fix their ‘Ozempic temples’ — including Melissa Rivers</h4>
+                <p>Joan Rivers would have loved Ozempic, according to her daughter, Melissa Rivers. Melissa would know — she’s been on a GLP-1 herself. After realizing her metabolism had slowed during menopause, the 58-year-old TV correspondent went on Mounjaro and lost 25 pounds over six months, she revealed to The Post. But there was one downside: She suddenly experienced temporal hollowing, also known as temporal wasting, in which rapid weight loss leads to a loss of volume in the temples, potentially aging the face. “I always had a close eye on my temples, even before the weight loss, because I’m narrow in that area naturally … but it just became a bigger issue afterwards,” Rivers said.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/11/931/523/drone-no-bug.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Nonprofit offers veterans second career through commercial drone pilot training</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>he nonprofit Vets to Drones helps veterans use their skills to become certified commercial pilots in the drone industry, allowing them to take up a second career after the military. NEW ORLEANS – Each year more than 200,000 service members leave active duty and return to civilian life, but the transition is not the easiest. Vets to Drones, a nonprofit that helps veterans gain training and experience in the drone industry, is trying to change that by helping veterans find a second career after leaving the military. Kickstarted by Marine Corps veteran Chris Lewis after a recent trip to California aiding in wildfire mitigation, Lewis knew what it was like to leave the military and search for a new path forward. "I ended up right back in the civilian world, searching for answers I guess," Lewis said. Lewis handled drones for a short time while deployed, but realized there's a bigger future with unmanned aircraft systems. He started Vets to Drones with a fellow Marine who died in 2022, which ultimately pushed him even harder to help other veterans through the organization. He believes the drone industry is a true fit for military members looking to enter the civilian workforce, adding that many of their field and infantry skills cross over seamlessly. Vets to Drones has become a pipeline for the drone workforce, while bringing a new sense of purpose and community to veterans. When Marine veteran Dusty Lopez left the military, he got into disaster recovery and insurance, then started his own business in insurance claims and assessment. Lopez came into contact with Vets to Drones at an event after clients asked him if he had drones to help with some of the jobs. That meeting led to a partnership with his company, Struction Solutions. "I still live by the Marine Corps motto: honor, courage, and commitment," Lopez said, adding that the branch helped him shape his career outside the military. Now, Lopez has nearly a dozen drones for different jobs. One hefty drone, typically used by law enforcement or first responders for security over watch, is tethered and can stay in the air for days at a time.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Jensen Huang resigns as Nvidia CEO after affair with alleged spy</h4>
+                <p>The company’s stock price was down 4 percent late Thursday morning after being down 9 percent in early trading. Colette Kress, current chief financial officer of Nvidia, will serve as interim CEO.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Cop fired over fake Facebook page targeting mom</h4>
+                <p>A Georgia deputy lost his job over a fake Facebook page targeting a mother he arrested. The woman says the page featured AI images and records involving her children. You come home with your kids after an afternoon at a trampoline park. A sheriff's deputy is waiting outside. He's investigating your adult son and later demands that everyone leave your house. You ask whether he has a search warrant. Minutes later, you're being arrested while your terrified children watch. That's how Georgia mom Natasha Lopez describes the police encounter that changed her family's life. But what happened afterward took an even more disturbing turn.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Trump says Apple’s Tim Cook should take over Nvidia</h4>
+                <p>There’s no indication that the company is considering Cook or that President Donald Trump has a say in the decision.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
