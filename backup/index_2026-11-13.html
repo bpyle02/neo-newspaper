@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>FRIDAY, NOVEMBER 13, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/11/931/523/donald-trump.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Trump's spy chiefs put Republican leaders on the clock over 'huge priority' as power shift looms over Congress</h3>
+                <p class="lead-summary"><strong class="drop-cap">F</strong>ox News chief congressional correspondent Chad Pergram reports on Congress failing to reach a deal on FISA Section 702, sparking warnings from lawmakers about national security vulnerabilities, on ‘Fox Report.’ EXCLUSIVE: President Donald Trump's top administration intelligence officials penned a letter to congressional leaders urging them to reauthorize the Foreign Intelligence Surveillance Act (FISA). An administration official told Fox News Digital the intel measure is at top of mind for the White House to get passed in the still-Republican-controlled Congress before Democrats take a majority on Capitol Hill in January. "This is going to be a huge priority and push by the administration, by the White House for the lame-duck Congress, because this really needs to get done," the administration source said. "Otherwise, we're kind of in trouble from a national security standpoint." They stressed that the White House is "fully on board" with the push by the intelligence agencies' leaders asking Congress to reauthorize the law, including the controversial Section 702. President Donald Trump arrives to deliver remarks during a campaign rally at the Rock Hill Sports and Event Center in Rock Hill, S.C., on Oct. 29, 2026. (Getty Images) CONGRESS RETURNS TO BRUTAL LAME-DUCK STRETCH WITH SHUTDOWN DEADLINE, LEADERSHIP RACES: 'CLOSET IS FULL OF S—' The letter, signed by Attorney General Todd Blanche, Director of National Intelligence Jay Clayton and CIA Director John Ratcliffe, set a deadline for Dec. 9, 2026, less than a month before the new Congress will be sworn into office. Clayton and Ratcliffe briefed the Gang of 8 — members of Congress who are legally apprised of classified national security matters and covert operations by the executive branch — earlier this week about the status of FISA. "Any delays beyond this date will risk this critical authority lapsing, putting the lives of both Americans in the homeland and our troops stationed abroad at risk in the heightened threat environment briefed to the Gang of 8 earlier this week," the letter says.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>The GOP Midterm Loss Is Not A Mandate For Amnesty</h4>
+                <p>Republicans want to use the midterms as a pretext for an ‘immigration deal’ that would reward big business with cheap foreign labor. In the wake of Republicans’ historic midterm wipeout, there’s a narrative push underway in Washington that it was Trump’s immigration policy, especially ICE deportations, that drove Latino voters who voted for Trump in 2024 to vote Democrat this time around. This narrative is demonstrably false, but it’s being pushed by Washington Republicans who want to return the GOP to its pre-Trump form once the president leaves office (which is a fantasy because the pre-Trump GOP is completely dead, never coming back). In the meantime, they’d like to cut an immigration deal with Democrats to grant amnesty to illegal immigrants — specifically, to illegals who work in certain industries.</p>
+                <p class="source-credit">— The Federalist</p>
+            </div>
+            <div class="story-minor">
+                <h4>The Censors Come for Michel Houellebecq</h4>
+                <p>As is so often the case, Vahaken Mouradian is on the case. His disquisition on the French novelist Michel Houellebecq’s torment at the hands of censorial French authorities is as enlightening as it is righteous in its revulsion. Blessedly, Mouradian and National Review are not alone in taking France to task over its harassment of the prolific author. The New York Post is on it. So, too, are the Daily Wire and the Washington Examiner. Unherd contributor Simon Heffer published a stirring condemnation of the ordeal to which Houellebecq has been consigned. Noah Rothman is a senior writer at National Review. His third book, Blood and Progress: A Century of Left-Wing Violence, was published by Hachette in May 2026.</p>
+                <p class="source-credit">— National Review</p>
+            </div>
+            <div class="story-minor">
+                <h4>Far-left Democrat announces his bid to dethrone Chuck Schumer</h4>
+                <p>Sen. Chris Van Hollen (D-Md.) announced Thursday that he will challenge Sen. Chuck Schumer (D-N.Y.) for Senate majority leader. Sen. Chris Van Hollen (D-Md.) announced his run for Senate majority leader against current Minority Leader Chuck Schumer (D-N.Y.) on Thursday. Schumer responded with a statement of his own, asserting that he has the votes to stay in charge and looks forward to being elected majority leader. 'It's now on us to meet this moment, and to do that we need new leadership' Several incoming and incumbent Senate Democrats, including Sen.-elect Abdul El-Sayed (D-Mich.), Sen. Elissa Slotkin (D-Mich.), and others want new leadership. Sen. Bernie Sanders (I-Vt.) joined calls to oust Schumer.</p>
+                <p class="source-credit">— The Blaze</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                
+                <h3>China pushes women toward the traditional roles it once rejected</h3>
+                <p class="lead-summary"><strong class="drop-cap">A</strong>s Xi Jinping’s China promotes family values and higher birthrates, women’s workforce participation is falling and a “manosphere” is emerging.</p>
+                <p class="source-credit">— Washington Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Zelensky says Starlink limits continued in the middle of his talks with U.S., Russia</h4>
+                <p>Ukraine’s Defense Ministry said it had reached out to SpaceX and the U.S. Defense Department to seek an explanation and resolve the situation.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Before he was Pope Leo, he was their bishop. Now he’s back home.</h4>
+                <p>Residents of Chiclayo, the Peruvian city that shaped Pope Leo XIV, welcomed his return with reverence for one of their own.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>U.S. managed $12 billion in Venezuelan oil revenue, State Department says</h4>
+                <p>Amid demands for transparency, the State Department released a report detailing the oil funds received by the United States and disbursed back to Venezuela.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F11%2Fcrop-41841559.jpg?quality%3D90%26strip%3Dall" alt="Lead Story Image" class="news-photo">
+                <h3>Commanders troll Giants for Jameis Winston’s ‘Who let the dogs out?’ failure</h3>
+                <p class="lead-summary"><strong class="drop-cap">J</strong>ameis Winston’s bizarre hard count on a fourth-and-1 Thursday night turned into social media fuel for the Commanders just over an hour later. With around 3:30 remaining in regulation, the Giants up by four and Winston in for the quarterback sneak from their own 11-yard line, the backup quarterback unveiled an unusual cadence — referencing a 2000 song from Baha Men — while trying to draw Washington offside. “Ready, get set, hut one, hut two, hut three,” Winston said. “Who let the dogs out? Who, who, who?” Then, after the Commanders’ 24-21 win over the Giants, they took a jab at Winston and the Giants. “WHO LET THE DOGS OUT,” Washington wrote in an X post that included a series of pictures from players in the locker room. When the Commanders didn’t jump offside, the Giants took a delay of game penalty, made it a fourth-and-5 and punted possession to the Commanders. “You gotta be kidding,” Prime Video play-by-play broadcaster Al Michaels said on the “Thursday Night Football” broadcast. Big Blue ultimately got the ball back four plays later when Ar’Darius Washington intercepted Jayden Daniels, but Winston’s unserious cadence aged poorly when the Giants blew their late lead and failed to take the season series from their NFC East rival. Winston, who mistakenly credited the Baha Men’s hit to the Black Eyed Peas postgame, didn’t offer much reasoning behind the hard count outside of calling it a “good song, back in the early 2000s” and telling reporters “it just had a nice ring to it.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Should USA Fans Feel Jilted Over Pochettino's Exit To Manchester United?</h4>
+                <p>Manchester United is one of the biggest clubs in the world. The pressure of being manager at Old Trafford is immense, but if you succeed, then you can become a legend. So why shouldn't Mauricio Pochettino, who led the U.S. men's national team at the 2026 World Cup, take on that challenge? And should USMNT fans feel some type of way for him bolting? "This is not surprising," Alexi Lalas said on his "State of the Union with Alexi Lalas" podcast. "Anybody that feels jilted, I think you're being naive."</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Port Washington football breaks 50-year drought — and isn’t stopping there</h4>
+                <p>On Friday, Port Washington’s varsity football team won its first playoff game since Gerald Ford was president. The Vikings (7-2) routed Plainview-Old Bethpage 40-0 in the opening round, snapping a postseason drought dating to 1976 and advancing to the Nassau County semifinals. “We’re not satisfied just because we won a game,” senior right tackle Max Eynon, who protects his twin brother, QB Harry Eynon, told The Post. “There’s no surprise on this field, and with this team that we got here. This was the goal, and we’re still going.” The fourth seed has its toughest task yet waiting Saturday at Hofstra University: the undefeated and top-seeded Massapequa Chiefs, who snapped Garden City’s nation-leading 68-game win streak on the same field in September.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>A Season-Saving Win: 3 Takeaways From Commanders Dramatic Victory Over Giants</h4>
+                <p>METLIFE STADIUM (East Rutherford, N.J.) — The New York Giants haven’t won the NFC East in 15 years, and they had a golden opportunity to take a big step towards ending that drought on Thursday night. Despite leading the game with less than two minutes to go, they fell apart in crunch time as Jayden Daniels led the Washington Commanders on a late touchdown drive to pull out a dramatic 24-21 victory. They got the game-winning score on a laser pass through traffic from Daniels to Stefon Diggs that became a 32-yard touchdown with 57 seconds remaining.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F11%2Fnewspress-collage-2ciim81e9-1794514864592.jpg?quality%3D90%26strip%3Dall%261794496951" alt="Lead Story Image" class="news-photo">
+                <h3>Clueless DC Studios already blew its chance to be a true Marvel competitor</h3>
+                <p class="lead-summary"><strong class="drop-cap">D</strong>own-in-the-dumps DC Studios is going back to the drawing board with their comic book franchise. Again. Already! On Monday, Skydance — billionaire David Ellison’s company that recently completed its acquisition of Warner Bros. — announced that DC co-heads James Gunn and Peter Safran are getting the old heave-ho after just four years. Over the timespan of an undergrad degree, the pair released three films: “Superman” (itty bitty hit), “Supergirl” (floperoo) and last month’s “Clayface” (to be determined). They still have two more on the way: “Man of Tomorrow,” which Gunn recently wrapped production on, and “The Batman: Part II,” starring Robert Pattinson. But who knows how involved they’ll be on those going forward. Because on Dec. 1, the shoved-aside duo will be replaced by Jeremy Latcham, the man who helped Kevin Feige turn the Marvel Cinematic Universe into a box-office behemoth for Disney. Latcham is a good hire. Page Six Hollywood reports he’s uncommonly well-liked in the industry. And he understands and has proven success with congruity and mass appeal, whereas DC has for years been a temperamental roulette wheel of divergent styles that cater to the most unhinged of fandoms. There were Zack Snyder’s heinous marches through doom and gloom that wackos are so worrisomely passionate about, and Gunn’s reactionary cotton-candy pep that was fun, but didn’t make a splash. Meanwhile the universe-adjacent, Scorsese-inspired “Joker” movies with Joaquin Phoenix and the “Batman” crime noir series with Pattinson did whatever the hell they wanted, for better or worse.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Jim Caviezel says he’ll ‘always’ be disappointed he isn’t in ‘Passion’ follow-up, hasn’t talked to Mel Gibson</h4>
+                <p>The "Ghost Soldier" actor told Fox News Digital why he decided to play Jesus in 2004's "Passion of the Christ." Jim Caviezel said he’ll always be disappointed that he wasn’t able to return as Jesus Christ in Mel Gibson’s upcoming "Resurrection of the Christ." "Always will be disappointment with that one. Always will be, but I wouldn't have been able to do this film," he told Fox News Digital of his new movie "Ghost Soldier," which was released on Nov. 11.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>‘Ebenezer’ review: Johnny Depp’s Hollywood comeback after 8 years is far from a holiday classic</h4>
+                <p>It’s been eight years since the “Pirates of the Caribbean” star has been in a major Hollywood film. After ex Amber Heard’s abuse allegations and the ensuing Cirque du So Embarrassing that was their defamation trial, he made just two small movies (one was in French). And so, given the circumstances, it’s quite fitting that the first image of Depp that most fans will have seen on a cinema screen since 2018 is him grizzled, old, kooky and embittered. It’s practically realism. There really was no doubt in my mind that the actor would be solid as Ebenezer Scrooge, Charles Dickens’ redeemed crank who’s been a staple of Christmases for more than a century. The character is comfortably in line with the dark, pale and pinstriped Tim Burton side of his career — “Edward Scissorhands,” “Sweeney Todd,” “Charlie and the Chocolate Factory,” etc. And he’s never shied away from oversized and eccentric roles.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Duran Duran drummer Roger Taylor forced to retire as health battle threatens hearing</h4>
+                <p>Facing the possibility of losing his tongue, Poison drummer Rikki Rockett recorded messages for his kids. Now, he's celebrating 10 years cancer-free. Rockett is the author of a new memoir, "Ghost Notes: My Life in Poison." Duran Duran drummer Roger Taylor announced he is "retiring from playing the drums" and stepping away from the band due to health concerns.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/11/931/523/ai-shipping-costs.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Could AI reduce shipping costs and grocery bills?</h3>
+                <p class="lead-summary"><strong class="drop-cap">A</strong>I is transforming the multi-trillion dollar consumer packaged goods industry, and giving you more choices at the grocery store. You walk into the grocery store and notice that some of your favorite products cost more than they used to. Then you order something online and discover the delivery fee has gone up, too. It's frustrating, especially when it feels like you're paying more for the same things. Now, here's something you probably haven't considered. Part of what you pay for everyday products can be tied to delivery trucks sitting in long lines outside warehouses. Those trucks can burn expensive diesel while drivers wait to check in. Meanwhile, transportation companies face higher operating expenses that can eventually find their way into retail prices. According to the most recent update from the U.S. Energy Information Administration, the national average diesel price was $6.13 per gallon for the week of Nov. 9. That's still a significant expense for businesses moving products across the country. But what if artificial intelligence could help eliminate some of that waste? A company called EAIGLE says its AI-powered camera technology can reduce truck check-ins at distribution centers from roughly 10 minutes to under 30 seconds. That could save trucking companies money. And if those savings spread across supply chains, they could potentially help reduce some of the cost pressures behind your grocery bill. Missed CyberGuy LIVE? Watch the replay and discover 5 ways to travel smarter and save money. Our free CyberGuy LIVE class, 5 Ways to Travel Smarter and Save Money, has ended, but you can still watch the full replay. Kurt "CyberGuy" Knutsson walks you through five practical ways to protect your phone and personal information, avoid common travel scams, find better deals, save money on bookings and use technology to make your travels easier and less stressful. No technical experience is needed. A semi-truck passes through a freight facility where AI-powered gate automation could help reduce delays, fuel waste and shipping costs.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Microsoft email outages persist into second day as company scrambles for a fix</h4>
+                <p>The technology giant said it was seeing improvements in service availability.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Fox News AI Newsletter: 'Godfather of AI' resigns, testing American juggernaut</h4>
+                <p>After allegations of multiple affairs, one being with a suspected Chinese spy, Nvidia CEO Jensen Huang resigned as top of a company pivotal to the AI rollout. Nvidia CEO Jensen Huang has resigned following a reported affair with an alleged Chinese spy.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Why WiFi can still be so annoying — and how to fix it</h4>
+                <p>Experts offer tips on how to navigate reliability issues that persist with the ever-advancing wireless networking technology.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
