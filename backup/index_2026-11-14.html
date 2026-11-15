@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>SATURDAY, NOVEMBER 14, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F11%2Fnew-york-city-mayor-zohran-148686440-e1794667529964.jpg?quality%3D90%26strip%3Dall" alt="Lead Story Image" class="news-photo">
+                <h3>Mamdani’s test case for law-defying socialism</h3>
+                <p class="lead-summary"><strong class="drop-cap">M</strong>ayor Zohran Mamdani last week signed a law that serves as a test case of getting away with constitution-defying socialism. Passed quietly through the City Council, and watered down from an earlier version vetoed by Mayor Eric Adams, the Community Opportunity for Purchase Act still tramps all over property owners’ right to sell to a bidder of their choice. As only the second law Mamdani’s deigned to sign so far, it clearly carries great meaning for the mayor as both a policy win and an ideological keystone. Starting Jan. 1, it will stop the private owners of about 2,100 properties (rent-regulated buildings with sufficient code violations) from simply selling their properties on the open market: When they reach a price with any buyer, they must then give “qualified nonprofits” (essentially, ones run by Mamdani allies) 90 days to make an offer. That is, the landlord is required to sell to favored bidders if they match the price. Notice: This isn’t creating any opportunity for the community, as the law’s title pretends, but only for the interests that control the nonprofit. The shift won’t even benefit tenants — it doesn’t lower rents, only changes who collects them. And nonprofits have to cover the same costs as any other landlords, with any income over that going into the nonprofit’s hands even if it doesn’t get called a profit. As for the pretense that the new owners will be better custodians of the property, just consider the City Housing Authority’s near $100-billion repair backlog. Notice, too, that nonprofits are also struggling with the impact of the mayor’s rent freeze: They can’t get vital financing, either, because the math of rent-regulated owners meeting payments no longer adds up. Meanwhile, COPA directly reduces the value of the private buildings it targets: Not only does it at least delay any sale, it guarantees lower private-sector bids, which must include the risk that, even after you’ve done all the work to make a purchase, it’ll be transferred to someone else. And a less-valuable building will get less money invested in it by the current owner, hastening its deterioration: Everybody loses except City Hall’s “nonprofit” allies. The other way this serves the mayor’s movement is a test for whether they can get away with it  —  that is, do they control the courts? The Court of Appeals, New York’s highest, ruled in a landmark 1976 case over the city’s attempt to rezone private land in Tudor City, that municipalities must be “reasonable” when regulating the use of private property; that rule should strike down COPA — unless progressives’ prolonged drive to make the COA their puppet has succeeded.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>In Jim Jordan, The Freedom Caucus Finally Has An Ally In Leadership</h4>
+                <p>After years of battling with GOP House leadership over bloated budgets, conservative policy, and how the chamber is run, the House Freedom Caucus will have an ally in leadership when the new Congress kicks off in January. Earlier this week, House Republicans chose Rep. Jim Jordan (R-OH) to be their next leader as they enter minority status after a massive blue wave swept across the country. Despite the party’s weakened position, Jordan said he wants to go on the offensive against the newly empowered Democrat majority. An aggressive approach should play well with members of the conservative House Freedom Caucus, who for years have demanded more action from Republican leadership — whether that be defunding Planned Parenthood, repealing Obamacare, or stopping massive omnibus spending packages loaded with funding for woke pet projects.</p>
+                <p class="source-credit">— Daily Wire</p>
+            </div>
+            <div class="story-minor">
+                <h4>White evangelicals voted less, and less for the GOP, new analysis says</h4>
+                <p>In 343 counties dubbed evangelical hubs, turnout was 66 percent of what it was in 2024, according to a new analysis.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Ex-CIA Director John Brennan’s Son Arrested For Alleged Possession Of Child Sexual Abuse Material</h4>
+                <p>Editor’s note: This article addresses the alleged possession and distribution of sexually explicit images of children. The son of former CIA Director John Brennan was arrested Friday for alleged possession of child sexual abuse material, otherwise known as child pornography. The 40-year-old Kyle Brennan was arrested at his place of work in Virginia, and the FBI executed a search warrant on his cell phone, which allegedly contains “sexually explicit” materials of children. He is being charged with “transportation of child pornography.” Court documents allege his phone contained “approximately 88 images that appeared to depict minor girls, including prepubescent girls, engaged in sexually explicit conduct,” which included an explicit image of a toddler.</p>
+                <p class="source-credit">— The Federalist</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/11/931/523/pope_uae.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Inside Arab nation's battle against radicalism as top official warns of threat brewing on Europe's streets</h3>
+                <p class="lead-summary"><strong class="drop-cap">R</strong>eporting from Abu Dhabi, Fox News Digital speaks exclusively with officials about the UAE’s approach to preventing radicalization. ABU DHABI, United Arab Emirates — A senior Emirati official is warning that demonstrations in Europe have crossed a line from political expression into a national security threat, arguing that extremism must be confronted before it turns violent. "You can go demonstrate, talk, give a speech, but what [we] saw in the street in 11 cities in Europe is not freedom of speech. It is a threat to national security," Dr. Ali Rashid Al Nuaimi, chairman of the Defense, Interior and Foreign Affairs Committee of the UAE's Federal National Council, told Fox News Digital in an exclusive interview. The remarks come against a wider European debate over radicalization. On Nov. 3, Europol reported that authorities from 16 countries had referred more than 9,000 links to extremist and terrorist material appearing across 47 social media and gaming platforms. The operation targeted online role-playing content promoting jihadist, far-right, far-left and anarchist violence, including material that could draw minors toward extremist networks.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Middle East monarchies brace for Trump corruption scrutiny after blue wave</h4>
+                <p>Persian Gulf governments fear fallout as Democrats prepare to investigate the Trump family and follow the money, officials say.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>More than 1.5 million people welcome Pope Leo XIV in northern Peru</h4>
+                <p>“The pope is Chiclayan!” chanted the crowd in his adopted home city. “Chiclayo is with you!</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Ukraine critic injured in Moscow car bombing, Russia says</h4>
+                <p>Sergei Zavorotny, previously an aide to Ukrainian Prime Minister Mykola Azarov, became a pro-Kremlin commentator in Russia.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F11%2Fnewspress-collage-actt2kmj2-1794665896456.jpg?quality%3D90%26strip%3Dall%261794647917" alt="Lead Story Image" class="news-photo">
+                <h3>Colorado State held walkthrough on tarmac in viral scene during flights stoppage</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>he Colorado State football team conducted a workout Friday night on the airport tarmac while dealing with the fallout from the nationwide flight grounding. The team’s X account posted a collage showing the team working out in advance of traveling to Washington for Saturday’s 10:30 p.m. ET clash against Washington State, including several shots of a center preparing to snap the ball and a pair of coach Jim Mora making the rounds at Northern Colorado Regional Airport, according to The Spokesman-Review. Colorado State and plenty of other college football teams had their schedules affected Friday night, and the Pac-12 school offered a cool behind-the-scenes look at how they adjusted. Teams can conduct light walk-throughs the day before games, and obviously doing so on a tarmac called for extra caution. The variety of shows also showcased the complexity of the situation, with some featuring open skies and others showing the sun going down in Colorado. It appears the Rams took off at approximately 10 p.m., since the school posted at 9:56 p.m. a shot of Mora walking up stairs onto the plane with the caption: “Wheels up to Pullman 🛫.” Saturday’s game featuring the 3-6 Rams against the 1-8 Cougars is going on as scheduled, while others around the country have been delayed or postponed. Oklahoma’s athletic director notably ripped the SEC after the league postponed its home clash against Ole Miss from Saturday to Sunday due to travel issues the Rebels experienced.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Sean McVay Gives Injury Updates On Rams Stars Myles Garrett, Trent McDuffie</h4>
+                <p>Los Angeles Rams defensive end Myles Garrett expects to play Sunday despite missing practice, while cornerback Trent McDuffie is questionable for their game at the Arizona Cardinals. Garrett was held out of practice on Friday after being limited earlier in the week because of a knee injury that caused him to miss seven games before returning to make three sacks with a forced fumble in the Rams’ 20-13 win at the Washington Commanders on Sunday.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Brian Kelly interviews for Maryland job in Big Ten twist</h4>
+                <p>Less than a month after firing its coach, Maryland could be zeroing in on the next bench boss to lead the football program. Former Notre Dame and LSU head coach Brian Kelly has interviewed for the position, ON3 reported Saturday. The outlet added that he is considered a top name in the Terrapins’ search. Kelly has not been in the coaching ranks since last season, when he was fired by the Tigers after going 34-14 over his three-plus-year tenure. His ousting came with a reported $54 million buyout, and he was eventually replaced by Lane Kiffin. Maryland has been on the hunt for a new leader after head coach Mike Locksley stepped down in October in what was called a “mutual decision” after the team started 2-5.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Dutch Romp Greece, Germany Cruises In UEFA Nations League Action</h4>
+                <p>The Netherlands routed Greece 7-0 in a statement Nations League victory to stay unbeaten under new coach Xavi, while Jürgen Klopp's Germany cruised to a 3-1 win over Serbia on Friday. That now sets up a decider between the two big-name coaches for first place in their group.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F11%2Fradio.jpg?quality%3D90%26strip%3Dall" alt="Lead Story Image" class="news-photo">
+                <h3>Beloved California morning show host stepping down after 30 years on the air</h3>
+                <p class="lead-summary"><strong class="drop-cap">L</strong>ongtime Bay Area radio host Sarah Clark announced she was retiring after three decades behind the mic. The Alice 97.3 morning show host announced Friday that she’s stepping away from the “Sarah & Vinnie” show in early 2027, ending a three-decade run as one of the Bay Area’s most familiar on-air voices. “After 30 years of getting up at an ungodly hour, in the middle of the night, basically, I’ve decided I’m stepping away from the morning show,” Clark told listeners. “It’ll be exactly 30 years. That’s exactly half my life. Thirty years of sitting in that same disgusting chair.” Clark stressed the decision was entirely her own and didn’t give listeners an exact date for her final broadcast, calling Friday’s announcement an early heads-up. She and Vinnie Hasson joined San Francisco’s KLLC, better known as Alice 97.3, in February 1997 after working together at an alternative station in Philadelphia. Hasson left in 2002 and returned six years later, but Clark remained through the lineup changes.Her candid, conversational style helped make “Sarah & Vinnie” a longtime ratings hit. Listeners wasted little time weighing in after the announcement, with longtime fans flooding social media, including the San Francisco Chronicle’s Facebook page. Some called the show their “one constant” for more than 20 years, while others thanked Clark for decades of laughs. “Mornings will never be the same!” another added. “But we wish her well on this next new chapter of her life!</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Prince William, Kate Middleton get unexpected help enforcing strict rule for George at elite school: experts</h4>
+                <p>Royal author Hugo Vickers explains why Prince George could find freedom, privacy and a sense of normalcy at Eton College despite his future as Britain's king. Prince William and Kate Middleton are reportedly giving Eton College's smartphone ban the royal thumbs-up — especially for their eldest son, Prince George.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>‘Saved by the Bell’ star Tiffani Thiessen says she needs hip replacement at 52 after painful diagnosis</h4>
+                <p>Tiffani Thiessen revealed she had been diagnosed with hip dysplasia and a torn labrum, which caused significant hip pain. (Axelle Bauer-Griffin/FilmMagic) Tiffani Thiessen's active lifestyle hit a painful roadblock after the "Saved by the Bell" star learned she was dealing with more than just the usual aches and pains.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>'Hunting Wives’ star Malin Akerman ditches LA lifestyle for ‘dream’ of raising son like it’s the 1950s</h4>
+                <p>Malin Akerman has embraced a simpler life in Connecticut, where raising her son like it's the 1950s has become a dream come true. Akerman opened up about how her family's move to Connecticut from Los Angeles gave her 13-year-old son a childhood that feels like a step back in time – and why she wouldn't have it any other way.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/11/931/523/7e9eec51-news-image-fox-news_052.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Ford privacy promise raises questions about your car data</h3>
+                <p class="lead-summary"><strong class="drop-cap">F</strong>ox News chief national security correspondent Jennifer Griffin reports on Norway's confirmation that Chinese-owned rental cars recorded military data on 'Fox Report.' Your car probably knows more about you than you realize. It can track where you drive, how fast you go and whether something under the hood needs attention. Depending on the vehicle, that information may also travel back to the manufacturer. And chances are, you haven't spent much time thinking about who gets to see it. Now, Ford wants to put those privacy concerns in the spotlight. On Nov. 2, the automaker announced a new Ford privacy promise designed to give drivers more transparency and control over their personal information. The company also says it won't sell data about how customers drive to insurance companies or data brokers. That sounds encouraging. But there's a catch worth understanding. Turning off certain data-sharing settings could also mean losing some of the connected features you've come to rely on. So how much privacy can you get without giving up the technology you paid for? Missed CyberGuy LIVE? Watch the replay and discover 5 ways to travel smarter and save money. Our free CyberGuy LIVE class, 5 Ways to Travel Smarter and Save Money, has ended, but you can still watch the full replay. Kurt "CyberGuy" Knutsson walks you through five practical ways to protect your phone and personal information, avoid common travel scams, find better deals, save money on bookings and use technology to make your travels easier and less stressful. No technical experience is needed. Ford's new privacy promise gives drivers more information about how their vehicles collect and share personal data, but disabling certain settings could limit connected features. (Photo by Marcin Golba/NurPhoto via Getty Images) Ford says its new privacy initiative will make it easier for drivers to understand what information their vehicles collect and how the company uses it. The automaker has also launched a dedicated data and privacy website where owners can learn about their options. The announcement centers on several commitments. Ford says it designs its products with privacy in mind and wants customers to have clearer information about their choices. It also promises to respect the privacy settings drivers select. Perhaps the biggest commitment involves what happens to driving information. Ford specifically says it does not sell data about how customers drive to insurance companies or data brokers.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>A tech tip: Charge your phone with your laptop or tablet’s charger</h4>
+                <p>Many new phones no longer ship with power adapters, but the power brick from an older phone is likely to be your slowest option.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Microsoft says all services restored after global outage</h4>
+                <p>The tech giant said it had completed efforts to address an outage that affected communications at government services, hospitals, and police departments around the world.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Android TV box malware found in 1.3M devices</h4>
+                <p>Kurt "CyberGuy" Knutsson warned of worrying privacy clauses in smart devices in a recent episode of the "Beyond Connected" podcast. You buy a streaming box, plug it into your television and connect it to Wi-Fi. A few minutes later, you're watching your favorite show. Everything seems perfectly normal. But what if that little box has been secretly working for criminals since the day you brought it home?</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
