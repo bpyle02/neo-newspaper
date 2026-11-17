@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>MONDAY, NOVEMBER 16, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://media.townhall.com/cdn/hodl/2026/307/951618de-d57b-4e02-b0e0-e68ce0f519ff.jpg" alt="Lead Story Image" class="news-photo">
+                <h3>Democrats Will Control All Border States Next Year. Here's What They Have Planned</h3>
+                <p class="lead-summary"><strong class="drop-cap">D</strong>emocrats will control every House district touching Mexico and all four border state governorships after the 2026 midterm elections. The outcome of the midterms will undoubtedly have some serious ramifications for President Donald Trump’s immigration and border security agenda. Texas is the state that matters most. Gina Hinojosa will become the first Democrat governor since the 1990s when she takes office next year. She has already vowed to reconsider Gov. Greg Abbott’s Operation Lone Star, which was aimed at helping the White House secure the border and apprehend illegal aliens. “We need a review of Operation Lone Star.” She also told CNN: “We need secure borders, absolutely, but targeting hard-working long-standing members of our community is not making us more secure.” History was made last night.For months, we were saying that 2026 was the most consequential midterm election of our lifetimes.Unfortunately, we were right. Sometimes history is to be celebrated; other times, it is to be mourned. Always, it must be reckoned with.2026 was… Republicans in the state legislature are scrambling to limit the incoming governor’s administration before the lame duck session ends. State Rep. Brian Harrison urged Abbott to convene a special session to rein in the governor’s emergency powers. 🚨 I call on Gov. Abbott to IMMEDIATELY convene a special session to REIN IN EXECUTIVE EMERGENCY POWERS… before Gina Hinojosa is sworn in!Republicans lost last night, but Democrats were not sworn in.We still have total power in Texas, and we must act like it by using the… pic.twitter.com/T3DINhlLZa New Mexico Gov. Michelle Lujan Grishman declared that federal mass deportation efforts involving the military or National Guard are unconstitutional and said state authorities “aren’t going to cooperate.” California Gov.-elect Xavier Becerra has taken a hardline stance against the Trump administration’s immigration policies. He vowed to “police the immigration police” and seek prosecutions against Immigration and Customs Enforcement (ICE) agents if they violate state laws. Arizona Gov. Katie Hobbs has also criticized the Trump administration, accusing it of using heavy-handed tactics while carrying out enforcement operations. Editor's Note: Do you enjoy Townhall's conservative reporting exposing the radical left and woke media? Support our work so we can keep bringing you the truth.</p>
+                <p class="source-credit">— Townhall</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>These Republicans are holding up Trump's judicial appointments</h4>
+                <p>President Donald Trump made 234 judicial appointments in his first term, including three justices to the U.S. Supreme Court. So far into his second term, the Senate has confirmed only 58 of the president's judicial appointees. While keen to greatly add to this total before Democrats take over Congress in January, Trump has encountered an obstacle: Senate Republicans. Trump nominated U.S. District Judge Lee Rudofsky of Arkansas to the Eighth Circuit Court of Appeals in August. Rudofsky, the former solicitor general of Arkansas, enjoys significant conservative support and was touted as a "rock solid defender of the Constitution" by the president. However, Arkansas Sens. Tom Cotton and John Boozman reportedly threw cold water on the nomination along with departing Republican Sens. John Cornyn (Texas) and Thom Tillis (N.C.).</p>
+                <p class="source-credit">— The Blaze</p>
+            </div>
+            <div class="story-minor">
+                <h4>Trump floats meeting with Kim Jong Un while in Asia</h4>
+                <p>The president is already scheduled to meet with several world leaders this week to discuss nuclear disarmament.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Standing Athwart Pumpkin Tyranny</h4>
+                <p>Through October and November, this mediocre flavor and scent are in everything everywhere all the time. A display of Trader Joe’s pumpkin and fall-themed products at a grocery store in Lafayette, Calif., September 25, 2026. A pumpkin spice latte is on the menu at every coffee shop. Sometimes, the drink is served in a pumpkin-shaped mug. To lure in customers for brunch, quaint cafes serving pumpkin pancakes put a chalkboard sign on the sidewalk saying, “COME IN FOR GOURD VIBRATIONS!” Each bakery has pumpkin scones, pumpkin pie, pumpkin banana bread, and pumpkin coffee cake. An attempt to order an old fashioned will be met with an invitation from the demoralized bartender, “Do you want to try our pumpkin spice old fashioned?” The pen at the bank is topped with a rubber pumpkin; this way, customers know that all the money is kept safe. Little plastic pumpkins are in the windows displays at clothing shops, or beside the cashiers (who work in front of pumpkin-flavored nicotine patches). Squashes are piled high in cardboard bins by the entrance of every grocery store. I reach for what I think is my favorite chai tea blend on the shelves — but alas! It is now pumpkin chai with an orange label.</p>
+                <p class="source-credit">— National Review</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://static.foxnews.com/foxnews.com/content/uploads/2026/11/ukraine-russia-crisis-fire.gif" alt="Lead Story Image" class="news-photo">
+                <h3>Ukraine hits Putin's prized bridge in record drone blitz as Kremlin tells lawmakers to prepare for 'victory'</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>he upcoming trilateral summit in China between President Trump, Xi Jinping and Vladimir Putin faces critical global challenges. Alexandria Hoff reports on key agenda items, while retired Navy Captain Brent Sadler analyzes strategic threats from Iran. Discussions are expected to address nuclear talks, international trade and the potential inclusion of tech leaders. Ukraine launched what Russia described as the largest overnight drone attack of the war Monday, striking President Vladimir Putin's prized Crimea bridge and setting industrial facilities ablaze, as separate reports revealed a covert French military mission in Ukraine and preparations in Moscow for a possible return of Russian troops. The developments came days before President Donald Trump is expected to meet Putin and Chinese President Xi Jinping in China, amid renewed U.S.-brokered efforts to end the nearly five-year conflict. "The sheer scale and effectiveness of these drone attacks are remarkable," retired Air Force Lt. Gen. Richard Newton told Fox News Digital. "Ukraine has developed the capability to produce large numbers of drones and strike targets once considered a safe haven deep inside Russia."</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Critics blame U.S.-Iran war for crackdown on clerics in Bahrain</h4>
+                <p>Dozens of Shiite clerics were sentenced to life in prison for allegedly working with Iran to undermine Bahrain. Their supporters say they are being punished for their faith.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>A ‘miracle’ or Chicago grit? In South America, a post-op pope shows endurance.</h4>
+                <p>Pope Leo XIV’s surgery appeared to infuse him with a sense of urgency and even vitality for his travels through Uruguay, Argentina and Peru, enamoring the faithful.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Spain's Canary Islands flooded by thousands of migrants as country declares emergency</h4>
+                <p>Thousands of migrants flooded Spain's Canary Islands this weekend as the nation's government remains under a migration emergency. Thousands of migrants flooded Spain's Canary Islands this weekend as the nation's government remains under a migration emergency. The Canary Islands have received the brunt of migration from West Africa and Sub-Saharan Africa in recent months. Authorities there processed over 2,200 migrants in just two days, all arriving in dinghies and makeshift boats.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F11%2Fnewspress-collage-k2q63gj73-1794853010315.jpg?quality%3D90%26strip%3Dall%261794835028" alt="Lead Story Image" class="news-photo">
+                <h3>Rex Ryan, Michael Irvin rip Cowboys after 49ers’ ‘belt to ass’ beatdown</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>he San Francisco 49ers embarrassed the Dallas Cowboys’ defense on Sunday, totaling 46 points and a staggering 584 total yards in the win. Afterwards, San Francisco head coach Kyle Shanahan received a lot of praise for how he dominated Dallas’ defense. Meanwhile, several prominent football pundits put the Cowboys on blast on Monday morning, including legendary former Cowboys wide receiver Michael Irvin. “It was just a, it was a B.T.A. I’m talking about Kyle Shanahan putting on Christian Parker. It was B.T.A., straight Belt to Ass, and what he did to that defensive coordinator,” Irvin said on “First Take.” Former New York Jets and Buffalo Bills head coach Rex Ryan shredded the Cowboys’ defense on “Get Up”, saying, “This is the worst-coached defense I think I’ve ever seen. Period… [Christian Parker] has no feel. Number one, the guy has no feel for the game. He doesn’t know when to call things, when not to call things.” Ryan then explained how he would have always kept a defender on Christian McCaffrey (who had 223 total yards and three touchdowns in the game). “To me, absolute garbage. You can’t fire them all YET, but you damn sure better. And to me, it’s the whole defensive staff. It’s not just Christian Parker. It’s not. It’s every one of those coaches on defense,” Ryan added. And it’s hard to blame them, given what took place on their home field on Sunday.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Curt Cignetti weighs in on Lincoln Riley USC debate with ‘blind squirrel’ jab</h4>
+                <p>Riley’s five-season tenure as the USC Trojans’ football coach has not produced the success many imagined it would when he arrived in 2021. Frustration about this reached a new level after USC’s 27-13 loss to the defending national champion Indiana Hoosiers on Saturday. Hoosiers head coach Curt Cignetti has clearly heard the criticism of Riley after beating him on Saturday and fired off a defiant message about it early on Monday morning. “Lincoln Riley critics CLUELESS. Blind squirrel can see what he is building,” Cignetti wrote in an X post that nearly has a million views in less than six hours.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Female 49ers fan caught in brutal attack on Cowboys supporter at AT&T Stadium</h4>
+                <p>Multiple videos of San Francisco 49ers fans getting into fights have surfaced over the past two weekends. Most of these videos involve men fighting each other. But a video from Sunday’s 49ers game against the Dallas Cowboys showed two women having a go at it. The video was posted by the @dtxtvmedia Instagram account and started with the female 49ers fan (who was wearing a Joe Montana jersey) shoving a female fan’s face into the floor. After a while, the 49ers fan let go of the woman and stepped away while the Cowboys fan was helped up by others. After that, the former can be seen trying to calm down a man she was with, who was shirtless and looked to have just been in another brawl that took place off-screen.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>The four things we learned from Jets’ Week 10 loss: Woody Johnson has to be embarrassed</h4>
+                <p>The Jets lost 31-12 to the Bills on Sunday to drop to 2-8. Here are some thoughts and observations on the game: 1. It feels like the Jets are now numb to losing. Don’t get me wrong. Guys are frustrated, but there does not seem to be much anger there. They are almost accepting this is the way it is. Even Aaron Glenn does not seem all that bothered by the losing. I asked him after the game if he was pissed off because he seemed so calm in his postgame press conference. He said he was frustrated but he thought yelling in front of the media would not accomplish anything. Text with Brian Costello all season as he brings Sports+ subscribers the latest Jets intel from on the field and off.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://static.foxnews.com/foxnews.com/content/uploads/2024/01/robert-pattinson-batman-premiere.gif" alt="Lead Story Image" class="news-photo">
+                <h3>WHAT DO YOU THINK? New James Bond is Robert Pattinson</h3>
+                <p class="lead-summary"><strong class="drop-cap">G</strong>et a daily look at the top news in music, movies, television and more in the entertainment industry. By entering your email and clicking the Subscribe button, you agree to the Fox News 
+        Privacy Policy
+       and 
+        Terms of Use
+      , and
+      agree to receive content and promotional communications from Fox News. You understand that you can
+      opt-out at any time. This material may not be published, broadcast, rewritten, or redistributed. ©2026 FOX News Network, LLC. All rights reserved. Quotes displayed in real-time or delayed by at least 15 minutes. Market data provided by
+        Factset. Powered and implemented by
+        FactSet Digital Solutions.
+        Legal Statement. Mutual Fund and ETF data provided by
+        LSEG.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Gamers racing to pre-load ‘GTA VI’ shatter internet traffic records, cause slowdowns</h4>
+                <p>“Grand Theft Auto VI” is already breaking milestones before it even hits shelves, as gamers racing to pre-load the highly anticipated game set off record internet traffic across the globe. The preloads allow players who bought the game in advance to download the 212 gigabyte blockbuster title a week early, so that they could play it immediately upon its release on Nov. 19. The pre-load opened at midnight local time on Nov. 10 for PlayStation 5 owners, while Xbox players worldwide got the green light to start downloading hours earlier, at 7 p.m. Eastern time on Nov. 9. “In just the first 48 hours of pre-loads, GTA VI drove the largest standalone event in Comcast’s network history and two of its 10 busiest network days ever — before the game even launched,” the company wrote in a recent report.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Robert Pattinson named next James Bond</h4>
+                <p>Former Bond girl Alison Papworth shares why she wants the next 007 to stay true to the books as speculation swirls over the role. The "Batman" star has officially been cast as the next James Bond, taking over the iconic role from Daniel Craig as director Denis Villeneuve prepares to bring the British secret agent back to the big screen.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Robert Pattinson is the perfect James Bond for the 2020s</h4>
+                <p>Well, now he is. He’s also Edward Cullen in “Twilight” and Chris Hansen in “Primetime.” He played a consequential part in the “Harry Potter” franchise, and he’ll join the “Dune” trilogy next month. That heavy-hitting resume alone tells us that the seventh actor to play 007, announced on Monday as Robert Pattinson, will be a very different James Bond. The 40-year-old Englishman, born and raised in London, is, without question, the most famous person to ever win what is the most iconic role in all of cinema. In the early 1960s, Sean Connery was an up-and-comer with few credits to his name. Following in his formidable footsteps was George Lazenby, an Australian model with no acting experience who brazenly claimed otherwise during his pre-internet audition.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/11/931/524/Data-Breach-Photo-2.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Freeze, fraud alert or monitoring? What to do after a breach</h3>
+                <p class="lead-summary"><strong class="drop-cap">A</strong> credit freeze, fraud alert and identity monitoring service offer different protections against identity theft. Knowing how each works can help you respond to a data breach. (Morteza Nikoubazl/NurPhoto via Getty Images) A data breach notice can leave you with plenty of questions. Should you freeze your credit? Is a fraud alert enough? Do you need an identity monitoring service? The right response depends on what information was exposed and whether someone has already tried to use it. Here's the important distinction. A company saying your information was involved in a breach does not automatically mean someone has opened an account in your name. An unfamiliar credit inquiry deserves attention, but it does not always prove fraud occurred. However, once you confirm someone has used your information fraudulently, the situation becomes more urgent. So, which protection should you choose? Let's look at what each one actually does. Missed CyberGuy LIVE? Watch the replay and discover 5 ways to travel smarter and save money. Our free CyberGuy LIVE class, 5 Ways to Travel Smarter and Save Money, has ended, but you can still watch the full replay. Kurt "CyberGuy" Knutsson walks you through five practical ways to protect your phone and personal information, avoid common travel scams, find better deals, save money on bookings and use technology to make your travels easier and less stressful. No technical experience is needed. A credit freeze restricts access to your credit file. It makes it harder for someone to open a new credit account in your name because most lenders need to review your credit information before approving an application. Credit freezes are completely free. You must place one separately with each of the three major credit bureaus: A freeze stays in place until you remove it, and it does not affect your credit score. If you apply for a mortgage, car loan or credit card, you may need to temporarily lift the freeze so the lender can review your report. You can do that for free. Employment and tenant-screening checks follow different rules and generally are not blocked by a credit freeze. A freeze is a strong option if your Social Security number was exposed or you simply want to reduce the risk of someone opening new credit in your name. However, it cannot protect an existing bank account, stop a scam payment or remove a fraudulent account that was already opened.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Trump administration orders Commerce to close chip loophole at heart of Nvidia scandal</h4>
+                <p>The move comes as the scandal involving ex-Nvidia CEO Jensen Huang has highlighted gaps in U.S. export controls.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Nvidia not considering reinstating Huang, despite support from Trump, Musk</h4>
+                <p>President Donald Trump joined tech billionaire Elon Musk and thousands of others who support bringing back Huang as the chipmaker’s CEO.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>OpenAI child safety tools target AI-generated abuse</h4>
+                <p>OpenAI's new ChatGPT warnings explain why child sexual abuse material is prohibited and show a 24-hour account suspension for flagged activity. (OpenAI) A teenager posts a perfectly innocent photo online. Before long, someone uses artificial intelligence to turn it into a sexually explicit fake and shares it with classmates. It's disturbing to think that something as simple as sharing a photo could lead to this kind of abuse. And for the child involved, the damage can last long after the fake picture gets taken down.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
