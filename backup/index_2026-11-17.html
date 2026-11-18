@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>TUESDAY, NOVEMBER 17, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://thefederalist.com/wp-content/uploads/2026/11/Screenshot-2026-11-16-154857-1200x675.jpg" alt="Lead Story Image" class="news-photo">
+                <h3>Ex-CIA Spook Elissa Slotkin: We Need To ‘Trump-Proof’ The Deep State So Presidents Can No Longer Control It</h3>
+                <p class="lead-summary"><strong class="drop-cap">W</strong>hen the Democrats take back power, their goal will not just be to investigate and imprison conservatives, but to totally defang the executive branch and entrench the leftist deep state so elections will have zero consequences for its political agenda. Sen. Elissa Slotkin, D-Mich., just said as much out loud. Slotkin, the former CIA operative whose persistent lawfare threats against conservatives have become even more frequent in the last months, recently stated that “we need to make sure that a very un-sexy group of people are thinking very hard about how to Trump-proof the government going forward so that no leader can do this again.” She doubled down on the comments, suggesting Democrats need to fundamentally alter how the federal government operates and to “rebuild something new,” stating, “The truth is, it’s up to Democrats, other leaders. We’re going to need people thinking critically about what the federal government should look like after Trump, and that, to me, is where the next generation has a massive role to play.” Left-wing operatives have focused on increasing and wielding institutional power for more than 100 years, finding it easier and more effective to become faceless, nameless bureaucrats than win elections. Even though they have won elections over that course of time, deep state padding in the executive branch has made election losses relatively inconsequential to their long-term goals. As Claremont Institute Senior Fellow Dr. R.J. Pestritto observed, when President Ronald Reagan came into office, the expert-class bureaucracy already had a stranglehold on the administration. Reagan’s government attempted to roll back some automobile regulations, and argued that it had the mandate to do so since the American people elected Reagan the chief executive. The Supreme Court, however, rejected that argument, favoring the so-called “experts” above the will of the American people. “The aim of the Court was not to stand up for individual rights in an instance of democratic excess,” Pestritto wrote. “The guiding principle was neither republicanism nor liberalism, in other words, but the supremacy of agency expertise, and that principle of expertise has become the standard in these kinds of cases.” That kind of control sits well outside the American constitutional understanding of power, decision-making, and a republican representative government. It effectively nullifies elections, because the American people can no longer vote for change against the bulwark of “expert” policy choices of the bureaucrats.</p>
+                <p class="source-credit">— The Federalist</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Army’s New War Robot Rolls Out Of A Shipping Container With A Deadly Surprise</h4>
+                <p>Officials say the goal is “cheap, affordable, lethal options” that move risk away from American soldiers. At a live-fire showcase at Grafenwoehr Training Area in Bavaria, Germany, on November 12, an unmanned ground vehicle called the R3NEGADE rolled out of an ordinary 20-foot shipping container, then fired a pack of kamikaze drones from a launcher on its back. The Army’s official release didn’t say how many drones flew. Stars and Stripes reported that a ground vehicle fired a swarm of 18 drones after emerging from a pre-positioned shipping container. The show opened with a TRV-150, a hulking quadcopter normally used to haul supplies, dropping smoke to mark the target. Then came the swarm. Paratroopers from the 173rd Airborne Brigade added a strike of their own with a first-person-view drone. That’s a drone in which the pilot flies through a live camera feed.</p>
+                <p class="source-credit">— Daily Wire</p>
+            </div>
+            <div class="story-minor">
+                <h4>Let’s Stop Fighting Gravity in U.S.-Canada Trade</h4>
+                <p>Canada needs the United States. But the U.S. also needs, and greatly benefits from, its relationship with Canada in both trade and security. A transport truck drives towards Canada at the Canada-U.S. border crossing in Fort Erie Ontario, Canada, April 2, 2025. U.S.-Canada trade is a little like gravity. You can push against it, but the size and proximity of the U.S. economy and the convenience of a G-7 market like Canada always pull us back together. Trade negotiations between the two countries had been suspended, but the midterm results may be an opportunity to press forward as Democratic wins in both the House of Representatives and Senate shift the political calculus. President Donald Trump seemed to warm to the idea of a deal on the campaign trail. Some analysts are suggesting a deal is imminent, and Prime Minister Mark Carney said Canadian and U.S. teams would be working to deliver a deal “in the coming weeks” following a “good conversation” with Trump.</p>
+                <p class="source-credit">— National Review</p>
+            </div>
+            <div class="story-minor">
+                <h4>Antonio Sabàto Jr.’s son Jack bails himself out of jail under strict conditions after fatal hit-and-run arrest</h4>
+                <p>Antonio Sabàto Jr.’s son, Jack, bailed himself out of jail after being arrested in connection with a fatal hit-and-run in Alaska. A bond transaction of $5,000 was paid by Jack last Friday, according to court documents exclusively obtained by Page Six. A judge’s order authorizing his release was filed Monday. According to the docs, Jack was released under strict conditions prohibiting him from driving, sitting in the driver’s seat of a vehicle and possessing car keys. Jack also signed a $5,000 unsecured appearance bond, which he would only have to pay if he fails to show up for court. The son of Antonio and actress Virginia Madsen is scheduled to appear in court on Dec. 3.</p>
+                <p class="source-credit">— Https://pagesix</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://static.foxnews.com/foxnews.com/content/uploads/2026/11/ukraine-bridge.gif" alt="Lead Story Image" class="news-photo">
+                <h3>Ukraine releases video showing damage to Putin's prized bridge following 'unprecedented operation' in Crimea</h3>
+                <p class="lead-summary"><strong class="drop-cap">V</strong>ideos released by Ukraine show damage after forces struck the Kerch Strait bridge, which Volodymyr Zelenskyy described as the "main military crossing from Russian territory into our Ukrainian Crimea." (Credit: Security Service of Ukraine) The Security Service of Ukraine released two videos Tuesday showing the aftermath of a devastating drone attack on Russian President Vladimir Putin's prized Crimea bridge. Ukrainian President Volodymyr Zelenskyy said Monday's attack on the Kerch Strait bridge was part of an "unprecedented operation in response to Russian strikes on our infrastructure." "Today, everyone can see the consequences for the main military crossing from Russian territory into our Ukrainian Crimea," Zelenskky wrote on X. "This is the result of the seventh stage of an operation carried out over several weeks ... Our warriors gradually destroyed air defense systems, radars, electronic warfare equipment, and other designated targets on the way to the final objective. "Today, at the key stage, the 'Palianytsia' drones performed exceptionally well, striking the road section of the bridge, while 'Neptune' missiles, 'Ruta' drones, and FP-5 drones struck the railway section. Using 'Flamingo,' our warriors carried out a precision-guided strike – and the communications uplink worked flawlessly until the very last seconds," Zelenskyy added.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Trump arrives just as Southeast Asian summit is ending, but still looms over talks</h4>
+                <p>President Donald Trump's brief visit gave the appearance to some that the trip was little more than a stopover on his way to meet Chinese leader Xi Jinping and Russian President Vladimir Putin.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Netanyahu is pushing for new Iran attack in bid to stay in power, his rivals warn</h4>
+                <p>Before the Israeli election, Prime Minister Benjamin Netanyahu agitated for fresh strikes on Iran, four people with knowledge of the matter said. Opposition leaders remain alarmed.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>After UN peacekeeping mission ends, Morocco says Western Sahara dispute enters new phase</h4>
+                <p>Former State Department Foreign Service Officer Simon Hankinson joins 'Fox & Friends Weekend' to analyze dramatic footage of thousands of Moroccan migrants storming Spain's border in Ceuta. Hankinson explains how Morocco utilizes migrant surges as a hybrid threat to pressure Spain over political disputes. He details the geopolitical stakes as Spain deploys its military to secure the border.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F11%2Fnewspress-collage-4oh9wkdgb-1794934168682.jpg?quality%3D90%26strip%3Dall%261794916200" alt="Lead Story Image" class="news-photo">
+                <h3>Skip Bayless’ revealing Lakers rant about ex-teammates: ‘Not saying he hated LeBron’</h3>
+                <p class="lead-summary"><strong class="drop-cap">N</strong>obody expected Los Angeles to emerge as one of the top teams in the Western Conference, and yet, they are. Sports media personality Skip Bayless believes the Lakers’ recent success can be attributed to the departure of James. Bayless claims Doncic didn’t enjoy being teammates with the four-time NBA champion because it prevented the 27-year-old from showcasing his immense talent. “Luka is in a league of his own. They do not miss LeBron James because Luka just couldn’t stand it anymore. I’m not saying he hated LeBron, but he didn’t love him,” Bayless said on the Double Coverage Podcast. James informed the Lakers he would not return for the 2026-27 season in the offseason and entered free agency. The NBA’s all-time leading scorer dominated headlines as the league and fans alike waited for his decision. General manager Rob Pelinka orchestrated a massive roster overhaul this summer and many believed the new additions weren’t good enough to make up for the many free agent departures in LA, including James. Thus far, the Lakers have been able to make do largely because of Doncic’s leadership and talent on the court.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>White Sox Reportedly Sign Former Brewers Pitcher To $50 Million Deal</h4>
+                <p>Chicago has signed right-handed pitcher Dustin May to a three-year, $52.5 million deal, the New York Post reported on Tuesday morning; May helped the Milwaukee Brewers win their first-ever World Series last season after coming over in a trade deadline deal from the St. Louis Cardinals.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>NFL reporter opens up on ‘horror show’ after being part of Dianna Russini’s return</h4>
+                <p>Damon Amendolara has heard more chatter than he bargained for after his appearance on the inaugural “Russini Report” episode last week. Dianna Russini invited the sports radio host on for her first appearance back in sports media following an offseason scandal after Page Six released photographs of her and Patriots coach Mike Vrabel holding hands at an Arizona resort in March, which led to her departure from The Athletic. “Dianna asked me if I would be on her first show, and she said, ‘If it’s too much because of my reputation, don’t worry about it,’” Amendolara recalled, according to John Mamola of Barrett Media.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>College Basketball Catchup: Thriving UCLA, Bobcats Turnover, Moreno Does It All</h4>
+                <p>UCLA keeps pouring on the 100s. Kentucky bounces back thanks to a 7-footer. Michigan is going to be a problem. No. 7 UCLA is off to a great start this season, as the Bruins aren’t just winning in the early going but decimating opponents. The year began with a win against Arizona, and UCLA followed that ranked-ranked upset W with three-straight 100-plus point games, the latest a 105-66 win over Long Beach State on Monday.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/11/931/523/russell-brand-10.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Russell Brand sparks prison investigation after wife reads defiant message following rape conviction</h3>
+                <p class="lead-summary"><strong class="drop-cap">F</strong>ox News senior foreign affairs correspondent Greg Palkot reports on Russell Brand's 10-year sentencing after his conviction for raping one woman and sexually assaulting three others. The judge criticized Brand's conduct, while his attorneys are expected to appeal the verdict. Russell Brand's recent message from behind prison bars is being "urgently investigated" by authorities as the "appalling" move proves to have "broken the rules." On Sunday, Brand — who was sentenced to 10 years and six months in prison for rape and sexual assault — claimed he is "not guilty" in a message read by his wife, Laura Brand, during an episode of the couple's weekly Sunday Service YouTube vlog. Shortly after the message was shared publicly, a spokesperson for British Prime Minister Andy Burnham, said in a statement to Deadline: "This is clearly appalling and is being urgently investigated. We expect action to be taken if he’s found to have broken the rules." Russell Brand has been sentenced to 10 years and six months in prison for rape and sexual assault.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Stevie Wonder’s short tour starts this week. What do concert tickets cost?</h4>
+                <p>This week, Stevie Wonder kicks off the North American leg of his highly anticipated Songs In The Key of Life 50th Anniversary Tour. The 25-time Grammy winner has just four U.S. concerts celebrating his seminal 1976 record. They’re scheduled to take place at: Madison Square GardenNew York, NYThursday, Nov. 19United CenterChicago, ILSaturday, Nov. 21Capital One ArenaWashington, D.C.Monday, Nov. 23Intuit DomeInglewood, CASaturday, Dec. 19 If you’d like to see the timeless hitmaker deliver the songs you know and love live, last-minute tickets are still available. At the time of publication, the lowest price we could find on seats for any one show was $344 including fees on Vivid Seats.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Phil Collins says he relies on full-time nurse after ‘enforced’ time off in hospital</h4>
+                <p>Speaking at the 2026 Rock & Roll Hall of Fame induction ceremony, the music icon opens up about living on his own, spending "a lot of time in hospital," and working three times a week to stay mobile. English singer and drummer Phil Collins relies on a full-time nurse during his "enforced" time off from touring.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Your dream concert: Get tickets to see Paul McCartney, Ringo Starr and Joe Walsh</h4>
+                <p>The two surviving Beatles — Paul McCartney and Ringo Starr — were recently enlisted by Eagles singer and guitarist Joe Walsh to take part in his 2027 VetsAid benefit concert. They’ll be joined by The Killers, The War On Drugs, St. Vincent, Lucius and “more special surprise guests” at the one-off event, which is set to take place at Las Vegas’ MGM Grand Arena on Friday, Jan. 29, 2027. If you’d like to be there, tickets for the show of your dreams are officially available as of today. At the time of publication, the lowest price we could find on seats for the one-of-a-kind night was $679 including fees on Vivid Seats.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/04/931/523/wifi-data-privacy-1.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>The VPN setting that keeps your printer and apps working</h3>
+                <p class="lead-summary"><strong class="drop-cap">K</strong>urt "CyberGuy" Knutsson warned of worrying privacy clauses in smart devices in a recent episode of the "Beyond Connected" podcast. If you use a VPN, you've probably run into this at least once. You turn it on to protect your privacy, and suddenly something stops working. Maybe your printer won't connect. Maybe your banking app keeps asking you to verify your identity. Or perhaps a website refuses to load. So you do what a lot of us would do. You turn off the VPN to fix the problem. Everything starts working again, and you forget to turn the VPN back on. That's the problem. You've disabled a privacy tool because it was getting in your way. Fortunately, there's a setting that can help. It's called VPN split tunneling, and it lets you choose which apps use your VPN and which ones connect normally. There's also a separate setting worth checking if your printer stops working. Here's how both work and how to set them up with a VPN. Missed CyberGuy LIVE? Watch the replay and discover 5 ways to travel smarter and save money. Our free CyberGuy LIVE class, 5 Ways to Travel Smarter and Save Money, has ended, but you can still watch the full replay. Kurt "CyberGuy" Knutsson walks you through five practical ways to protect your phone and personal information, avoid common travel scams, find better deals, save money on bookings and use technology to make your travels easier and less stressful. No technical experience is needed. A VPN helps protect your online privacy, but certain settings can interfere with apps and devices you use every day. (Kurt "CyberGuy" Knutsson) A virtual private network, or VPN, encrypts your internet traffic between your device and the VPN server. It also hides your usual public IP address from the websites you visit. That added privacy can be especially useful on public Wi-Fi. However, some apps and websites don't always cooperate with VPN connections. When you connect through a VPN, your bank may see an IP address associated with a different location or one shared by other VPN users. That can trigger additional security checks. Your bank might ask you to verify your identity again, block a login attempt or temporarily restrict access. The bank is trying to protect your account. Still, those interruptions can get frustrating when you're simply trying to check your balance or pay a bill.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Jensen Huang says he’d be willing to return to Nvidia, in first remarks since exit</h4>
+                <p>The company’s founder said in a statement Tuesday that he has received an outpouring of support for his return. Its board said Monday that it was not considering the move.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Lawmakers set date for Nvidia CEO to testify</h4>
+                <p>The hearing will allow lawmakers to ask questions of former Nvidia CEO Jensen Huang in public, in real time.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Fake E-ZPass email threatens $100 fine over unpaid toll</h4>
+                <p>From voice cloning to fake arrests, cyber expert Morgan Wright breaks down how scammers use high-tech tools to exploit basic human fears. You open your email and see a warning from E-ZPass. Apparently, there's a problem with your toll account, and a payment didn't go through. Maybe you recently drove through a toll plaza. Maybe your credit card expired. Either way, it's the kind of message that makes you wonder whether you owe money. And that's exactly what scammers are counting on.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
