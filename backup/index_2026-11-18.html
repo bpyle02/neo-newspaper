@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>WEDNESDAY, NOVEMBER 18, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://twt-thumbs.washtimes.com/media/image/2025/08/28/Teixeira_Graduates_Baseball_54611_s1440x1014.jpg?78118c3acd6363d537562fe0547d4011f1bfacee" alt="Lead Story Image" class="news-photo">
+                <h3>Rep.-elect, ex-MLB star Mark Teixeira hits back at Congressional Baseball Game talk</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>exas GOP Rep.-elect Mark Teixeira says he hasn't thought much about the Congressional Baseball Game during his first week in Washington.</p>
+                <p class="source-credit">— Washington Times</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Backstreet Boys’ AJ McLean reconciles with estranged wife nearly 2 years after divorce announcement</h4>
+                <p>AJ McLean has reconciled with his estranged wife, Rochelle Karidis, nearly two years after announcing their divorce, Page Six can exclusively reveal. It’s unclear exactly when the two rekindled their romance, but they’ve been dropping hints on Instagram since last year. McLean referred to Karidis as “babe” in a supportive comment in January 2025. Six months later, she brought their daughters — Elliott, 13, and Lyric, 9 — to the Backstreet Boys’ opening night of their “Into the Millennium” residency at Las Vegas’ Sphere. “I love you all so much,” McLean, 48, gushed beneath a photo featuring the family of four. “It wouldn’t have been the same if my girls weren’t there to kick off this amazing residency!</p>
+                <p class="source-credit">— Https://pagesix</p>
+            </div>
+            <div class="story-minor">
+                <h4>When We Were Young Festival announces 2027 lineup: See Blink-182, Limp Bizkit</h4>
+                <p>The When We Were Young Festival just announced their 2027 lineup and it’s filled to the gills with anti-authority heroes from yesteryear. Just five of the most notable acts headed to the Las Vegas Festival Grounds next fall on Saturday, Oct. 16, 2027, include: Blink-182Sophomoric yet sophisticated punk legendsLimp BizkitNü metal royalty who brought the world “Nookie”Pierce The VeilPost-hardcore rockers with a penchant for pop melodiesThird Eye Blind’90s hitmakers behind timeless hits “Semi-Charmed Life” and “Jumper”The UsedUtah’s most beloved post-hardcore screamo band They’ll be joined by fan favorites Circa Survive, New Found Glory, Hot Mulligan, Simple Plan and Taking Back Sunday.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Ella Langley Deserves All The Grammys, Country Music Awards, And More</h4>
+                <p>She’s got her boots, she’s got her hat, and she’s bringing country back one catchy line dance song at a time. It’s awards season and country music sensation Ella Langley is expected to go home with her hands full. As she should. For the first time in years, a singer has managed to consistently top the charts and reach audiences beyond her genre without betraying the country music base. That, among many other reasons, is exactly why Langley is expected to essentially sweep the Country Music Awards on Wednesday. Langley also has some serious potential to go home a winner in February after earning seven separate Grammy nominations. If all goes right, the Alabama native could become the first country singer since Lady Antebellum in 2011 to secure the Grammy Award for Record of the Year.</p>
+                <p class="source-credit">— The Federalist</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/11/931/523/Iran-Abdanan-protests.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Rare anti-government protests erupt in Iran over workers' deaths</h3>
+                <p class="lead-summary"><strong class="drop-cap">I</strong>ranian protesters in the southern Iranian town of Abdanan chant 'death to the dictators!" during a protest after 13 oil refinery workers were killed in a road accident over the weekend. Credit: The Associated Press. Hundreds of Iranians took to the streets chanting "Death to the dictator!" and other anti-government messages in the wake of a deadly bus crash over the weekend that killed 13 employees of an oil refinery company, reports said. The rare display of anti-government anger unfolded Tuesday in Abdanan, a city in western Iran near the country's border with Iraq. Demonstrators called for the resignation of company officials blamed for the accident. "Those who seek to exploit this incident to disrupt public order and inflame people’s emotions will be dealt with decisively," local prosecutor Amrollah Meysaei was quoted by Iran's Mizan news agency as saying, according to Radio Free Europe. The outlet, citing Iran's Fars news agency, also reported that an estimated 1,000 people took part in the protests, making them the largest demonstrations since mass unrest swept across Iran at the beginning of this year. Some of the protesters reportedly tried to damage public property.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Six weeks after Trump’s Russian diesel deal, no tankers have reached the U.S.</h4>
+                <p>Two ships changed course, and another has halted hundreds of miles from the coast. Analysts say potential buyers probably are worried about the implications of accepting a Russian import.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Protesters call for regime change in Iran following deadly crash that killed 13 oil and gas workers</h4>
+                <p>Footage from western Iran shows demonstrators taking to the streets, chanting against the Islamic Republic and calling for the return of the Pahlavi monarchy after a crash killed 13 oil and gas workers. Hundreds of protesters poured into the streets of western Iran on Tuesday following a deadly bus crash that killed 13 oil and gas workers, with demonstrations quickly escalating into anti-government chants with some protesters calling for the return of the Pahlavi monarchy.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Muslims to outnumber Christians worldwide by 2035, study finds</h4>
+                <p>Demographic patterns suggest Christianity’s center will move to Africa, and America will no longer be majority-Christian, new research finds.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F11%2Ftroy-aikman-boomer-esiason.jpg?quality%3D90%26strip%3Dall%261794998841" alt="Lead Story Image" class="news-photo">
+                <h3>The ‘really weird, awkward spot’ awaiting Troy Aikman, Joe Buck in ESPN drama: Boomer Esiason</h3>
+                <p class="lead-summary"><strong class="drop-cap">A</strong>s the sun begins to set on ESPN’s lead color commentator’s contract, Esiason explained why he can relate to Aikman’s frustration as he appears headed for an exit from the Worldwide Leader but noted that there’s a bigger, much more awkward situation coming for the network. Esiason explained that ESPN will need to address this situation in some way during this year’s Super Bowl if Aikman is not re-signed since it will be his final day on the network’s airwaves. “Whether it’s Troy’s goodbye, whether they do a video tribute to Troy, that’s going to be a really weird, awkward spot,” Esiason said Tuesday morning on WFAN’s “Boomer & Gio.“ “Because if they don’t decide to keep him or extend him, then that will be the last time he’s on-air for ESPN. And I’ve been through this with them. It’s very interesting.” Esiason previously worked for ABC and handled “Monday Night Football” duties, providing color commentary duties alongside play-by-play man Al Michaels in 1998 and 1999 before being unceremoniously fired in March 2000 right after the Super Bowl. “I got steamrolled by Howard Katz, Bob Iger, and [Michael] Eisner,” Esiason recalled. “The three of them came in after the Super Bowl broadcast, ‘Great broadcast, great broadcast!’ And they ran right past me, and they went over and went over and slurped Al. And that’s when I walked out, and I said, ‘I know I’m done.’ It’s a triple-slurp spot. I’m done. I knew it. I felt it halfway through the season.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Who Are FIFA's Presidential Election Candidates To Replace Gianni Infantino?</h4>
+                <p>Gianni Infantino has the weight of history on his side trying to extend his 11-year presidency of soccer’s governing body to 2031, with a deadline of midnight Wednesday in Zurich (2300GMT) for challengers to enter the race. Infantino was expected to run unopposed until a global backlash sparked in July by media reports of his secretive plan to sell stakes in the World Cup to private investors. The March 18 vote is now turning into a three-way contest between Infantino and challengers from France and Japan.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>MLB insider reveals which teams Tarik Skubal will choose over the Dodgers</h4>
+                <p>According to ESPN insider Buster Olney, the highly-touted sweepstakes for the two-time Cy Young winner will ultimately be between the Mets and Blue Jays. “The expectation of some involved in the Tarik Skubal negotiations: in the end, the bidding will pit the Mets vs the Blue Jays,” Olney wrote in a post on X. All three teams have met with Skubal, but there are other organizations in the running for the ace. The Padres and two mystery teams are also reportedly in the mix. There is reason to believe the Dodgers won’t land Skubal, who spent the second half of the 2026 season in LA after a blockbuster trade at the deadline with the Tigers. For one, the juggernaut has voiced concerns about the upcoming CBA and the new restrictions it comes with.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Klatt’s CFP Takeaways: Alabama At No. 3 Is ‘Absurd,’ Big Ten Teams Are Lurking</h4>
+                <p>Joel Klatt thinks the College Football Playoff committee took a wrong turn with Alabama at No. 3, and he sees a Big 12 with a legitimate chance at multiple bids and a trio of Big Ten teams lurking. The committee left its top four unchanged in its third rankings Tuesday night, with Georgia at No. 1, followed by Utah, two-loss Alabama and undefeated UCLA.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F11%2FSteve-Martin-Martin-Short.jpg?quality%3D90%26strip%3Dall" alt="Lead Story Image" class="news-photo">
+                <h3>A new ‘Only Murders’ trailer dropped–See Steve Martin and Martin Short live</h3>
+                <p class="lead-summary"><strong class="drop-cap">S</strong>teve Martin and Martin Short won’t be spending much time in The Arconia this year and next. On Nov. 17, a trailer for Season 6 of “Only Murders” dropped online and revealed that Charles Haden-Savage (Martin) and Oliver Putnam (Short) are London-bound this time around to solve the murder of podcaster Cinda Canning (Tina Fey). Guest stars joining them when the new season debuts Dec. 8 on Hulu include old standbys Fey, Meryl Streep and Da’Vine Joy Randolph along with British newcomers Olivia Colman, David Tennant, Nicola Coughlan, Martin Freeman and Jodie Whittaker. Outside of the cliffhanger-heavy series, the longtime co-stars — who shared the screen in “Father of the Bride” and “Three Amigos” — are also midway through their The Best of Steve Martin and Martin Short Tour that will send them to resorts, performing arts centers, palaces, domes and auditoriums all over North America from December 2026 through April 2027. If you’d like to see the witty pair banter, play banjo and belt live, tickets are available for all eight remaining shows on their 2026-27 calendar. At the time of publication, the lowest price we could find on seats for any one gig was $90 including fees on Vivid Seats (for a show in Hollywood, FL on Jan. 15, 2027). Should you attend, expect “a variety show weaving together stand-up and conversation, music and song [and] affectionate insults,” The Guardian explains in a review of a March 2020 London performance.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>John Madden role pushes Nicolas Cage to dramatic physical transformation with ‘brutal’ diet, prosthetics</h4>
+                <p>Nicolas Cage discussed which one of his former roles was his favorite to play, listing Castor Troy in "Face/Off" as one of the top ones. Nicolas Cage's radical transformation to portray John Madden in the upcoming biopic about the NFL legend included packing on the pounds and the prosthetics.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>James Bond, Batman, Lakers star? Robert Pattinson is taking everyone’s jobs</h4>
+                <p>The 40-year-old actor’s reported casting as the next James Bond in director Denis Villeneuve’s upcoming 007 film has unleashed an internet meme frenzy, with social media users joking that Pattinson isn’t satisfied stealing every major role in Hollywood. Now he wants every job on the planet. Batman? Check. Twilight, Harry Potter and Dune? Been there, done that. Christopher Nolan’s Odyssey? Duh. James Bond? Add it to the résumé. “If you have job rn it’s because Robert Pattinson doesn’t want it,” one X user joked. Even KFC Spain joined the unemployment line, joking that Pattinson had taken every available position, including the person running its social media account.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>'The Vow' host Chris Harrison says young people are ditching dating apps, turning to church</h4>
+                <p>The host of "Chris Harrison's The Vow" told Fox News Digital why he believes younger generations are turning toward faith and seeking deeper connections as his new dating series premieres on Fox Nation. Chris Harrison believes young people are turning away from dating apps and looking toward faith as they search for meaningful relationships.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/11/931/523/ring-drone-camera-flying.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>What to know about Ring Drone Cam, which can patrol your home for $250</h3>
+                <p class="lead-summary"><strong class="drop-cap">R</strong>ing's $250 Drone Cam uses AI to fly through your home, investigate security alerts and stream live video. Kurt "Cyberguy" Knutsson breaks down what to expect from the new technology. Ever leave the house and suddenly wonder whether you closed the back door? You pull up your security camera, but it only shows the driveway. Not much help when you want to see what's happening inside. Well, Ring thinks it has an answer. And this one actually flies. Amazon-owned Ring has unveiled the Ring Drone Cam, a tiny $249.99 indoor security camera that flies from room to room. It can investigate security alerts, check specific areas of your home and send live video directly to your phone. Earlier this month, the company announced the new drone as part of its new Ring Robotics lineup. And thanks to artificial intelligence, it can navigate your home without someone steering it around. We also talked in depth about this new technology on "The CyberGuy Report Podcast," including what a flying camera could mean for home security. But before you get too excited about having your own miniature security patrol, there are some things worth knowing. Missed CyberGuy LIVE? Watch the replay and discover 5 ways to travel smarter and save money. Our free CyberGuy LIVE class, 5 Ways to Travel Smarter and Save Money, has ended, but you can still watch the full replay. Kurt "CyberGuy" Knutsson walks you through five practical ways to protect your phone and personal information, avoid common travel scams, find better deals, save money on bookings and use technology to make your travels easier and less stressful. No technical experience is needed. A mock-up shows how the Ring app lets you view live footage from the Drone Cam and send it to specific locations inside your home. (Ring) Traditional home security cameras have one obvious limitation. They only show what's in front of them. Ring wants to change that. The Ring Drone Cam uses a system called AI Pilot to learn the layout of your home. During the initial setup, you carry the drone through your space while it creates a digital floor plan. From there, the system identifies rooms and suggests places worth checking. For example, maybe you want to see whether a window is open. Or perhaps your security system detects movement near the back door. You can save those locations in the Ring app. Then, when you want a closer look, the drone can fly there automatically. You can also create customized routes and schedule patrols with a compatible Ring subscription.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Chatbots helped plan terrorist attacks in tests by congressional watchdog</h4>
+                <p>Four of the leading artificial intelligence chatbots shared information to help plot a terror attack in tests by the Government Accountability Office after auditors bypassed safeguards.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Almost nobody’s vying for an invite to Trump’s second meme coin dinner</h4>
+                <p>Guests paid $55,000 worth of coin holdings to attend the 2025 gala. This time a buyer is getting in for $518.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>States put speed-limiting devices in reckless drivers' cars</h4>
+                <p>A LifeSafer GPS-powered speed limiter displays a 35 mph limit and helps prevent the driver from accelerating beyond the posted speed limit. (LifeSafer ISA) We've all seen it. You're driving down the highway when someone flies past you at a ridiculous speed. Maybe they're weaving through traffic while everyone else tries to stay out of their way. Now, states are turning to speed-limiting devices that could stop some of the most dangerous drivers from doing it again.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
