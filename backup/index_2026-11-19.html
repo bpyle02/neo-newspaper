@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>THURSDAY, NOVEMBER 19, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/11/931/523/C-130-Hercules-aircraft-damage-at-Shannon-Airport.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Hometown of accused US military plane saboteur is a known magnet for anti-Israel activism</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>wo people were arrested by Irish police after agitators gathered at Trinity College Dublin while former President Joe Biden made a surprise visit on Tuesday (Credit: Credit: PA Media via Reuters). The European hometown of the man who single-handedly destroyed a U.S. military transport aircraft in an act of apparent protest has a rich history of pro-Palestinian support. This includes the town council for Cork, Ireland, barring Israeli Prime Minister Benjamin Netanyahu from entering its city limits, citing his "illegal occupation of Palestine and bordering countries" and the continuous pro-Palestinian protests taking place every Saturday since October 2023, organized by the Cork Palestine Solidarity Campaign (CPSC). Cork’s opposition to Israel adds context to the possible motives for why Daithí O’Corráin, an Irish national, allegedly destroyed a U.S. military C-130 Hercules aircraft in April. The incident also draws attention to several anti-Israel groups that have sprung up in Ireland in recent years. Pro-Palestinian activists from the Ireland Palestine Solidarity Campaign, supported by members of left-wing parties including People Before Profit and the Socialist Party and students, participate in the National March for Palestine from the Garden of Remembrance to O'Connell Street and Leinster House, on May 18, 2024, in Dublin, Ireland. (Artur Widak/NurPhoto via Getty Images) Ireland’s anti-Israel foothold became international news in April when O’Corráin, a Cork native, barricaded himself inside a C-130, a U.S. military transport plane. Once inside, he tore out critical wiring, destroyed gauges, contaminated fuel tanks and even poured corrosive chemicals into the aircraft, according to the U.S. Department of Justice. Although his motives remain unclear, several groups from Cork interpreted his actions as a form of resistance against Israel and U.S. military interventionism. In one such case, a Cork business owner named Tracey Ryan launched an initiative to raise €20,000 for O’Corráin's legal defense, praising his efforts to resist "the unwanted presence of U.S. military in Ireland in the face of their illegal war & support of Israel’s genocide."</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Absent Republicans are a problem for House leaders in the lame-duck session</h4>
+                <p>While addressing reporters Thursday, House Speaker Mike Johnson (R-Louisiana) lamented missed votes by members of his party.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>‘Furious’ Mila Kunis tried to stop Ashton Kutcher from investing in tech — now he’s set for billionaire status thanks to Anthropic IPO</h4>
+                <p>Mila Kunis admitted that she has repeatedly told her husband, Ashton Kutcher, not to invest in certain tech companies — including the ultra-successful Uber — as he is now set to reach billionaire status. In a resurfaced 2021 interview, Kunis shared that she and her venture capitalist husband often disagree about what companies are good ideas to invest in. “Early in our dating, two things came up. He was like, ‘Hey, there’s this company, it’s kind of a rideshare,'” Kunis recalled on “The Late Show with Stephen Colbert” of Kutcher first telling her about Uber. The “That ’70s Show” actress said that her father was a cab driver, and she knew many tips from the industry, which tainted her view of things.</p>
+                <p class="source-credit">— Https://pagesix</p>
+            </div>
+            <div class="story-minor">
+                <h4>Viral redheaded UCLA cheerleader reveals awkward encounter with LA actor: ‘I loved him’</h4>
+                <p>Several UCLA cheerleaders have become overnight celebrities after a video that was posted of them dancing last weekend received over 30 million views on social media. One of these cheerleaders was Sharlize True Trujillo, a 22-year-old redheaded cheerleader who was crowned Miss California 2026 in June and has over 430,000 Instagram followers. Trujillo was the guest on “two be continued…” podcast earlier this week and spoke about an encounter she has had with a male LA actor. Trujillo and her sister were speaking about having the courage to approach celebrities to take a photo when Trujillo said, “We’ve definitely got turned down by some people. And sometimes I meet someone, and I’m like, ‘Oh! I should have never met them.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/11/931/523/vladimir-putin-apec-press-conference-shenzhen.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Russia's Putin vows a response 'far more painful' after Ukraine attacks prized bridge in Crimea</h3>
+                <p class="lead-summary"><strong class="drop-cap">F</strong>ox News senior correspondent Benjamin Hall explains how President Donald Trump openly addressed Ukraine, Iran and nuclear arms control during the summit with Chinese President Xi Jinping and Russian President Vladimir Putin. Russian President Vladimir Putin vowed Thursday to respond to Ukraine in a "far more painful" manner after Volodymyr Zelenskyy's forces heavily damaged the Kerch Strait bridge that has become a symbol of Russia's annexation of Crimea. The warning was issued as Ukraine's president said he arrived in Berlin, Germany for talks with more than 40 partners aimed at ending the war, including with President Donald Trump's son-in-law and advisor Jared Kushner and U.S. Special Envoy Steve Witkoff. "We will respond to these strikes. And I want everyone to know this: I believe our response will be far more painful than what the Kyiv regime did to the bridge," Putin said after meeting with President Donald Trump and Chinese President Xi Jinping for trilateral talks on the sidelines of the Asia-Pacific Economic Cooperation (APEC) Summit in Shenzhen, China, according to Reuters.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Myanmar committed genocide against Rohingya minority, top U.N. court rules</h4>
+                <p>It is the first time the top court of the United Nations ruled a state violated the 1948 Genocide Convention.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Syria's Christian leaders warn of 'grave' threat to community's future amid wave of attacks</h4>
+                <p>Syrian President Ahmed al-Sharaa explains how his country is a 'geopolitical ally' with the U.S., addresses his past connections to al-Qaeda and more on 'Special Report.' The leaders of Syria’s oldest Christian denominations issued a dire warning about the intensified persecution of their communities and whether there is a future for them in the Middle Eastern nation.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Officials’ search for Nepal flood victims is over. Families are still looking.</h4>
+                <p>Family and friends of the thousands still missing are poring over satellite images, scouring databases of remains and organizing searches.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F11%2Fnewspress-collage-9w6wzlysi-1795108551048.jpg?quality%3D90%26strip%3Dall%261795090585" alt="Lead Story Image" class="news-photo">
+                <h3>Football, not futbol: Nick Bosa’s friendly reminder to Mexico fans</h3>
+                <p class="lead-summary"><strong class="drop-cap">N</strong>ick Bosa has one small request for the fans in Mexico City. If they could save a little of whatever they have in store for the 49ers until the other team has the ball, he’d be much obliged. In fact, if they want to make it impossible for the quarterback to hear himself think, Bosa is all for it. Bosa remembers what it sounded like when the 49ers played the Cardinals in Mexico City in 2022. “Yeah, I kind of want… I think we need some, like, information given to the fans so they know when to cheer. ’Cause, uh, they just chant the whole time,” Bosa said on Wednesday. “But yeah, if we could kind of teach them, no offense to them and their soccer cheering techniques, but if they could cheer when we’re on defense, that would be great.” You have to appreciate the diplomacy. Bosa got all the way to “soccer cheering techniques” in the course of politely asking a stadium full of people if they’d mind doing him a favor. And you can understand where he’s coming from. A good chant at a soccer match can survive a dozen changes of possession. Imagine having to stop singing every time somebody intercepted a pass. By the time you got going again, you’d have forgotten which verse you were on. Possession is a considerably bigger deal to a guy who makes his living chasing quarterbacks. If an offensive tackle has to turn his head to see the ball being snapped because he can’t hear the cadence, Bosa would gladly take whatever fraction of a second that buys him coming around the edge.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>College Basketball Catchup: Top-25 Upsets, A Triple-Double, Notre Dame's Star</h4>
+                <p>A pair of top-3 men's teams were upset on Wednesday. A TCU guard pulled off a triple-double. Notre Dame's Hannah Hidalgo has been relentless to begin her senior year. Ivan Kharchenkov is in his second collegiate season, but he’s played high-level basketball for longer than that, having also spent time in the EuroLeague with Bayern for two years. The 6-foot-7 forward has had an excellent start to his sophomore campaign with No. 12-ranked Arizona, and was the Wildcats' leading scorer against No. 3 UConn on Wednesday in an 85-79 upset win.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Rams captain has blunt message for LA’s defense before Packers showdown</h4>
+                <p>They signed an All-Pro cornerback in Trent McDuffie, acquired the reigning Defensive Player of the Year winner in Myles Garrett, and lured future Hall of Famer Aaron Donald out of retirement. Now, as they head into their bye week, just one week away from a primetime Thanksgiving Eve showdown with the Green Bay Packers, it would be a good time for that investment to start paying dividends. Against Green Bay, and with their playoff hopes potentially hanging in the balance, the Rams can’t afford to just stop Jordan Love and the Packers’ offense, they need to create turnovers and McDuffie knows it.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Browns QB Deshaun Watson Expresses Interest In Signing New Deal</h4>
+                <p>But, indeed, Deshaun Watson and the Cleveland Browns are 6-4 and in possession of the third AFC wild card seed, and the team's embattled starting quarterback is open to playing in Cleveland for the haul. "Yeah, of course," Watson said in a press conference on Wednesday afternoon when asked if he'd be open to signing a new deal with the Browns, according to 92.3 The Fan. "I want to continue to build on the legacy that I’m building, and again, ultimately, it’s up to the front office. It’s up to Jimmy and Dee [Haslam]; it’s up to [GM Andrew Berry]; it's up to Coach [Todd] Monken and the city.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F11%2Fpoehler-07.jpg?quality%3D90%26strip%3Dall" alt="Lead Story Image" class="news-photo">
+                <h3>Amy Poehler and Mike Schur’s new comedy ‘Dig’ unearths few laughs: review</h3>
+                <p class="lead-summary"><strong class="drop-cap">A</strong>my Poehler tries to dig up a few laughs on her newest comedy show, but doesn’t quite hit the mark. The “Saturday Night Live” alum reunites with “Parks and Recreation” creator Michael Schur for their new Peacock archaeology series, “Dig.” While the show isn’t groundbreaking or even uproariously hilarious like their previous collaboration, “Dig” offers an amusing, inoffensive comedy set in a colorful workplace, packed with kooky characters. It’s the kind of show that’s pleasant to watch while doing household chores, but considering the comedy giants involved, that’s not the level of quality it should be. Set in Greece and based on the novel “Excavations” by Kate Myers, “Dig” follows archaeologists on an excavation site. The team includes Elise (Poehler), whose mentor Neville (Hugh Laurie) wants her to be in charge, even as he refuses to step back. There’s also clueless undergraduate assistant Patty (Fina Strazza); scattered Dylan (Geraldine Viswanathan), who is trying to make amends after ditching her friends five years ago; and posh preservationist Clare (Antonia Thomas). There’s also a “who’s who” of character actors who show up seemingly just to have fun using goofy accents for a few scenes. Jason Mantzoukas, who pops up in most of Schur’s shows, wanders in with his best broad Greek accent to play a cheerful looter. “What We Do in the Shadows” star Kayvan Novak, meanwhile, shows up as the local mayor.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>CMA Awards pays tribute to Dolly Parton as Lainey Wilson calls her ‘our Tennessee angel’</h4>
+                <p>CMA Awards host Lainey Wilson and Vince Gill opened the show Wednesday evening with a moving tribute to Dolly Parton, less than three months after the icon’s death at 80 years old. Before the performance, Wilson said that it wasn’t just the country community missing the "Jolene" singer since her Aug. 25 death: "It is everybody. For she meant so much to people in our country and around the globe."</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Prime Video Black Friday streaming deals are some of the best I’ve seen — Up to 79% off</h4>
+                <p>You can already score savings on thousands of products ahead of the official big day on Nov. 27, but the deals don’t stop at physical products. Black Friday streaming deals are here and a number of  fantastic deals on Prime Video add-on subscriptions are now available. Right now, you can save up to 79% on all of the Prime Video add-on subscriptions listed below — bringing the price down to as low as $1.25/month. Subscriptions on Prime Video allow users to subscribe to additional streaming services within Prime Video. Instead of having tons of apps for every service you subscribe to, the content for all of your add-ons will be available right inside Prime Video and the Prime Video app.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>'JAG' actor Larry Poindexter dead at 66</h4>
+                <p>Larry Poindexter as Quinton Bosh and Simon Baker as Patrick Jane appear in a scene from an episode of "The Mentalist." (Sonja Flemming/CBS via Getty Images) Actor Larry Poindexter died Wednesday awaiting surgery days after being struck by a car in Los Angeles. He was 66.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/01/931/524/iphone-usage-photo-1.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Apple Photos AI watermark can tag your real pictures</h3>
+                <p class="lead-summary"><strong class="drop-cap">A</strong>pple's Clean Up, Extend and Reframe tools let you change photos using AI, with certain edits now receiving an invisible SynthID watermark. (Apple) You take a great family photo, but there's one problem. Someone you don't know walked into the background. So you open Apple Photos, use Clean Up to remove the person and save your picture. Problem solved, right? Well, there's something new happening behind the scenes. With iOS 27.2, Apple Photos can now add an invisible AI watermark to pictures you edit using certain Apple Intelligence tools. You won't see it on your screen. And if you share the photo, the person receiving it probably won't notice anything different either. But the watermark could still be there. Apple introduced the feature in its Oct. 26 update. It uses Google's SynthID technology to identify images created or modified with artificial intelligence. Even a photo you took yourself can receive this hidden marker after certain AI edits. So how does it work, and what does it mean for the photos you share? Missed CyberGuy LIVE? Watch the replay and discover 5 ways to travel smarter and save money. Our free CyberGuy LIVE class, 5 Ways to Travel Smarter and Save Money, has ended, but you can still watch the full replay. Kurt "CyberGuy" Knutsson walks you through five practical ways to protect your phone and personal information, avoid common travel scams, find better deals, save money on bookings and use technology to make your travels easier and less stressful. No technical experience is needed. AI photo editing has come a long way. What once required complicated software can now take a few taps on your phone. That's convenient when you want to improve a picture. However, it also makes it harder to tell what's real. Someone can remove an important detail from a photo without leaving an obvious trace. AI can even generate parts of a scene that the camera never captured. Apple's new watermarking feature gives people a way to tell when AI has been used to create or change an image. According to Apple's official support documentation, certain Apple Intelligence tools now add a hidden SynthID watermark when you create or edit images.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Anthropic shares soar in stock market debut</h4>
+                <p>Investors drove up the price of the newly listed company’s shares, valuing Anthropic at about $2 trillion.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Fake vacation rental sites use live chat to steal your data</h4>
+                <p>Travel expert and advisor Bobby Laurie explains when Europe's ETIAS travel authorization system is expected to launch, how the application process will work and what travelers should know about potential scams taking place right now. You're booking a vacation rental for the holidays when a message appears saying there's a problem with your reservation. Before you can figure out what's wrong, a customer support chat opens and offers to help. You're told your credit card won't be charged, but you'll need to enter the number to complete a security check. Sounds helpful, right? That's exactly what scammers want you to think.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>The outages keep coming. Some Americans are preparing for a collapse.</h4>
+                <p>With major systems failing and explanations scarce, some are stocking up and bracing for emergencies once considered unthinkable.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
