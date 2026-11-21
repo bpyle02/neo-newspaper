@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>FRIDAY, NOVEMBER 20, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://thefederalist.com/wp-content/uploads/2026/11/Screenshot-2026-11-20-at-11.02.38-AM-scaled-e1795190670651-1200x675.png" alt="Lead Story Image" class="news-photo">
+                <h3>Trump Is Right: Veering From MAGA Costs Republicans</h3>
+                <p class="lead-summary"><strong class="drop-cap">P</strong>resident Donald Trump said that people who veer from MAGA “don’t do very well,” and he’s right — Republicans lost both chambers of Congress in a massive blue sweep after Trump started a new war that caused gas prices to skyrocket while Americans at home struggled with affordability. The president was responding to Elon Musk, who said on Wednesday that he doesn’t consider himself “MAGA.” “I’m not MAGA … Well, at least I’m not like … I’m not sure what MAGA means,” Musk said “If that means sort of blind adherence to a set of policies by the Republican Party, then I certainly don’t have that.” Trump responded to the comments — which were made by Musk while he was traveling with the president — saying “He’s a friend of mine … there are a lot of definitions out there. MAGA, to me means something very specific, and when people veer from it, they don’t do very well.” As The Federalist CEO and co-founder Sean Davis said, “Trump is right. The election results prove it. When Republicans veer from MAGA, for example by starting new Middle East wars that jack up gas prices, Republicans get punished by voters.” Trump used his farewell address in 2021 to tout the peace deals his administration negotiated in the Middle East. “I am especially proud to be the first president in decades who has started no new wars,” the president said. Four years later, Trump was still making the case. In his 2024 victory speech, he recalled the warnings that he would start a new war during his first administration: “I’m not going to start a war,” he said. “I’m going to stop wars.” Trump allies who shared his opposition to new foreign wars feared in 2025 that the strikes against Iran that summer would turn into longer commitments in the region. But after months went on with no escalation, Trump was applauded for withstanding the pressure from the military-industrial complex and its adherents on both sides of the aisle. Then, in early 2026, pro-war factions lobbied Trump hard to reignite the conflict in Iran, with interventionists like the late Sen. Lindsey Graham and former George W. Bush speechwriter Marc Thiessen personally making the case to the president, as the Wall Street Journal reported. In the end, the neocons got the war they wanted, and American voters felt that the war dragged the Trump administration and its energy away from the MAGA priorities and promises they voted for in 2024.</p>
+                <p class="source-credit">— The Federalist</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>White House replaces top cybersecurity official after string of outages</h4>
+                <p>The departure of Sean Cairncross continues the ouster of aides associated with former chief of staff Susie Wiles.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Prince Harry chokes on early-morning whiskey shot during surprise talk show appearance</h4>
+                <p>The Duke of Sussex took a shot of whiskey during an appearance on the British talk show “This Morning” on Friday — but the moment didn’t go as planned, as he choked on the drink. The alcohol didn’t seem to go down smoothly, as he winced and dramatically shook his arm after slamming the shot glass back down on the table. “How much of that goes in there?” Prince Harry joked through coughs before pointing at the whiskey bottle. Harry appeared on the show for a live, Christmas-themed cooking segment with hosts Dermot O’Leary and Alison Hammond. He then joked that he thinks chef Phil Vickery, who was helping them whip up a Christmas cake, had been “drinking it all morning.</p>
+                <p class="source-credit">— Https://pagesix</p>
+            </div>
+            <div class="story-minor">
+                <h4>What The NSA Voicemail Told Staff As Its Classified Network Came Back Online</h4>
+                <p>The National Security Agency’s highly classified communications network is reportedly back up and running after going offline on Tuesday during what it called “scheduled routine maintenance.” “November 20, 2026, NSA Washington is operating under normal conditions with exceptions,” said an NSA voicemail according to CNN. “Personnel must follow their designating building opening times.” The NSA is still staggering employee start times to prevent the system from overloading as employees return back online. For three days, employees were not able to use the NSA’s internal communications, which allow them to securely send classified information to each other.</p>
+                <p class="source-credit">— Daily Wire</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/11/931/523/Russian_Attack_Kyiv_Nov_2026.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Putin launches Ukraine barrage hours after Trump meeting amid alleged Russian missile breach of NATO airspace</h3>
+                <p class="lead-summary"><strong class="drop-cap">V</strong>ideo from Lviv, Ukraine, captures the aftermath of Russian strikes hours after Putin met with Trump and Xi in China. (Video: East2West.) Just hours after Russian President Vladimir Putin stood alongside President Donald Trump and Chinese President Xi Jinping at a historic summit in China, Moscow unleashed one of its largest attacks on Ukraine, killing at least eight people, striking three major bridges in Kyiv and sending suspected Russian missiles and a drone into NATO-member Poland. The massive overnight assault Friday came as the Trump administration announced progress toward expanding peace negotiations with Russia, exposing the stark contrast between the diplomatic optimism emerging from Thursday's meetings and the escalating war on the ground. A European intelligence source told Fox News Digital that Putin is preparing an intensified winter military campaign and believes that a combination of sustained battlefield pressure and U.S.-led diplomatic negotiations could eventually force Ukraine to surrender additional territory. Smoke rises in the city during a Russian missile strike, amid Russia's attack on Ukraine, in Kyiv, Ukraine, Nov. 20, 2026.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Four men guilty of assaulting woman drugged and advertised for sex by husband</h4>
+                <p>Joanne Young said then-husband “betrayed” her “in the most horrific way.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>10 years on, Britain reopens the Brexit fight — this time embracing the E.U.</h4>
+                <p>Prime Minister Andy Burnham has signed the most concrete unwinding of the severance since 2016, as more Britons say leaving the European Union was a mistake.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Senate foreign relations chairman warns of 'horrific trend' as Christians killed in Ethiopia</h4>
+                <p>The former NFL player discusses ongoing violence against Christians in Nigeria, U.S. policy and why he believes Americans should pay more attention. The Republican chairman of the Senate Foreign Relations Committee has warned of an ongoing ‘horrific trend’ of Christians being killed in Africa.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F11%2Fnewspress-collage-7pu66ebj6-1795037710582.jpg?quality%3D90%26strip%3Dall%261795019853" alt="Lead Story Image" class="news-photo">
+                <h3>Meet the Ivy League social media sensation who’s changing the NFL</h3>
+                <p class="lead-summary"><strong class="drop-cap">H</strong>ave you ever watched the end of an NFL game and wondered if every team should hire a teenage video-gamer to manage the clock for its head coach? Super Bowl-winning research strategist Ryan Paganetti, whose groundbreaking X account (@RyanPaganetti) is already responsible this season for an NFL rulebook tweak and a wacky new offensive formation, doesn’t think the idea is as far-fetched as it sounds. “People joke about it, but all these coaches take five weeks off before training camp starts, and if I was an owner, I would strongly consider advocating to my head coach to play a few Madden games every day to actually get some reps on these situations,” Paganetti told The Post. “It’s unbelievable seeing some of these things come up on Sundays and they have no idea what to do.” Paganetti is a former Dartmouth running back and economics major who has worked in analytics under Chip Kelly and Doug Pederson (Eagles) and Pete Carroll (Raiders). Instead of joining another team this season, he brought his outside-the-box expertise and loophole knowledge to the public sphere, where he quickly gained traction as a must-follow for NFL diehards.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>College football Week 12 predictions: Best bets, picks against the spread</h4>
+                <p>Rivalry Week begins next week. The final set of conference championship games will follow. Then, the first round of the College Football Playoff. This week features no marquee matchups, but several teams will be fighting for their postseason lives — including the defending champions. Indiana (9-1) is still being treated as an outsider, sitting at No. 8 in the playoff rankings — behind two SEC teams with two losses — despite winning every game since debuting at No. 4 and suffering its only loss in a nail-biter against an Ohio State team that was still at full strength. However, the Hoosiers’ only win against a ranked team came last week against No. 18 USC (7-3).</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Dan Hicks’ daughters post heartbreaking tributes after broadcaster’s unexpected death</h4>
+                <p>Ellery Hicks, the daughter of late NBC Sports broadcaster Dan Hicks, posted a heartbreaking tribute to her father on Instagram after he passed away of multifocal pneumonia last week. “A week ago today we lost my incredible, brilliant, kind and gentle Father, suddenly and unexpectedly,” she wrote. “Anyone who knew my Dad can attest to how special of a human being he was. I am sitting here at 2am, unable to sleep because my heart is broken and I don’t know what I am going to do without you Dad. I can’t find any words to say right now, but thank you for being my biggest supporter and my best friend. I love you eternally Dad. I will miss you every single day with all of my heart.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Fan, 36, dies after violent 49ers, Cowboys brawls at AT&T Stadium</h4>
+                <p>A fan who attended the San Francisco 49ers vs. Dallas Cowboys game at AT&T Stadium this past weekend has passed away. The Independent reported on Friday that a 36-year-old fan named Mario Narro died in the hospital several days after getting into a fight with a fan during the 49ers-Cowboys game. The alleged fight took place around kickoff of the game. The man remained at the game but was complaining of pain. It’s unclear who the man was fighting, and whether the man was a fan of the 49ers or the Cowboys. A graphic paying tribute to the man was posted on social media that showed him wearing a CeeDee Lamb Cowboys jersey, but that is not confirmed.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F11%2Fnewspress-collage-zgdlwuexv-1795189342909.jpg?quality%3D90%26strip%3Dall%261795171368" alt="Lead Story Image" class="news-photo">
+                <h3>Here’s how to watch ‘Melania: The Series’ for free</h3>
+                <p class="lead-summary"><strong class="drop-cap">A</strong>fter partnering with Prime Video earlier this year to release the documentary “Melania,” Melania Trump is back with a follow up: “Melania: The Series.” Brett Ratner returned to direct the new installments, where were filmed in the days following President Trump’s Jan. 20, 2025 inauguration. It “takes audiences beyond what they have already seen, with content never before shared with the public,” per Prime Video’s release announcing the premiere. Episode 1, “Family and Trust,” sees the first lady “protect those closest to her while navigating the demands of power.” Episode 2, “Pride and Honor,” follows Melania as she “sets her mission in motion for the American people.” The Melania Trump series, “Melania: The Series,” was released on Prime Video today, Nov. 20, for all subscribers. “Melania: The Series” is only streaming on Amazon, so you’ll need a Prime Video membership to tune in. If you aren’t a Prime Video subscriber yet, you can get started with a 30-day Amazon Prime free trial, including Prime perks, such as the Prime Video streaming service, free two-day shipping, exclusive deals, and more. After the free trial, Amazon Prime costs $14.99/month or $139/year. All 18- to 24-year-olds, regardless of student status, are eligible for a discounted Prime for Young Adults membership with age verification. After six months at $0, you’ll pay 50% off the standard Prime monthly price of $14.99/month — just $7.49/month — for up to six years and get all the perks.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Darius Rucker says he used to drink a bottle of whiskey a day during wild Hootie & the Blowfish years</h4>
+                <p>Darius Rucker's meteoric rise to fame as the lead singer of Hootie & The Blowfish was captured in the latest Hulu documentary, "They Called Me Hootie." Breaking onto the scene in the early '90s, the group of college friends from South Carolina broke records with "Cracked Rear View" released in 1994, but fame and fortune came at a cost and Rucker soon spiraled into substance abuse and drinking issues at the peak of the band's popularity.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>‘Much Ado About Nothing’ review: Tom Hiddleston’s Shakespeare party is the most fun show on Broadway</h4>
+                <p>Whoop instead. Because Broadway has been hit by a wallop of fun — and an avalanche of confetti — courtesy of the preposterously enjoyable revival of “Much Ado About Nothing” that opened Thursday night at the Winter Garden Theatre. William Shakespeare’s comedy, which remarkably hasn’t been on Broadway since the mid-1980s, always ends with a wedding. But this raucous party of a production, starring Tom Hiddleston and Hayley Atwell, changes up the itinerary a tad: Boozy reception first, nuptials later. As audiences are filing in, a group of girls dance in the aisles to rev up the room as Playbill-wielding ushers dodge them like waiters at Per Se. “Pump Up the Jam” blares, and Mason Alexander Park, as the sassy Margaret, begins the play singing a ballad version of “Tell It To My Heart.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>'I Play Rocky' star Anthony Ippolito packed on weight with 'entire lifestyle shift' to play Sylvester Stallone</h4>
+                <p>Anthony Ippolito told Fox News Digital that he endured an "entire lifestyle" change to portray Sylvester Stallone in "I Play Rocky." Ippolito, 27, packed on the pounds and overhauled his diet to portray the heavyweight boxer in the Peter Farrelly-directed biopic about the making of the Academy Award-winning film, "Rocky."</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/11/931/523/person-types-laptop-manhattan-new-york.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Fox News AI Newsletter: AI platforms generated terror plans, feds find</h3>
+                <p class="lead-summary"><strong class="drop-cap">F</strong>ormer CISA executive director Bridget Bean explains how government testers bypassed safeguards on major artificial intelligence platforms to generate blueprints for explosive and electrical grid attacks in under 12 hours. She also calls for stricter pre-release AI safety standards and warns that cybercriminals and foreign adversaries are exploiting automated hacking tools to scan vulnerable computer networks around the clock. JUMPING THE GUARDRAILS: Federal investigators successfully bypassed safety safeguards on four major artificial intelligence platforms, obtaining detailed plans for potentially deadly terrorist attacks in less than 12 hours, according to a government watchdog report released Wednesday. ON CLAUDE NINE: Anthropic made its stock market debut on Thursday in a record-setting IPO amid strong investor demand for the company behind the Claude AI tool. RED INTERFERENCE: As President Donald Trump attends the 49th ASEAN Summit in the Philippines, American communist and far-left organizations are mobilizing internationally against an American initiative designed to reduce reliance on China. Anthropic CEO Dario Amodei speaks on the day Anthropic holds its initial public offering at the Nasdaq MarketSite in New York City, on Nov. 19, 2026. (Brendan McDermid/Reuters) DIGITAL DOMINOES: When Microsoft 365 went down on Thursday, Nov. 12, the public explanation arrived in pieces: "elevated load," then servers "unexpectedly unavailable," then an overwhelmed process for "establishing secure connections." Each update was accurate. None of them, on its own, told the story. OPINION: America is in a race with China to lead the world in artificial intelligence (AI), and under President Donald Trump, America has every opportunity to win. AI will shape the global economy, strengthen our national security and determine which nations set the rules for the next generation of technology. We cannot afford to let China get ahead. But winning that race will require more than developing the world’s most advanced technology. It will require the confidence and trust of the American people.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Using AI, mathematician claims to have solved one of math’s great mysteries</h4>
+                <p>AI may have cracked the Riemann hypothesis, one of math’s most cherished mysteries. For mathematicians, the breakthrough brings both wonder and loss.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>The three ways to protect yourself amid all these cyber outages</h4>
+                <p>You can limit how much damage these system failures inflict while waiting for professionals to fix the problem.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Hackers use Microsoft Outlook security flaw to steal your login data</h4>
+                <p>Cybersecurity researchers warn a fake Microsoft update site uses a look-alike URL and a familiar download button to deliver data-stealing malware. (Michael Nagle/Bloomberg via Getty Images) You probably know better than to enter your password on a suspicious website. But what if hackers could steal information tied to your Windows login without ever asking for your password? That's the concern behind a Microsoft Outlook security flaw that hackers are already exploiting. Attackers can trick someone into opening a malicious Outlook file that quietly exposes Windows authentication information. That information could help a criminal impersonate you and potentially gain access to systems you use.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
