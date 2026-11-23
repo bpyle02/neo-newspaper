@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>SUNDAY, NOVEMBER 22, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://media.townhall.com/cdn/hodl/2018/284/40809de7-d9eb-4456-91f8-649ba03ac62b.jpg" alt="Lead Story Image" class="news-photo">
+                <h3>FAA Issues Ground Stop After Major Airline Suffers Outage</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>he FAA on Sunday morning issued a ground stop at Atlanta’s Hartsfield-Jackson International Airport for Delta after the airline’s ALIS (Automated Load Instruction System) — the program that calculates and monitors an airplane’s weight and balance — went down. The ground stop was later downgraded to a ground delay at around 8:40 AM, meaning that flights going to Atlanta could take off. WSBTV Atlanta reported that the issue is expected to cause several thousand delays, and that Delta is resorting to manual calculations in the meantime. “Delta teams are using manual workarounds this morning to safely get flights departed while work continues to restore automation,” Delta said in a statement to the local news outlet. “We thank our customers for their patience and our people for their professionalism.” This ground stop/ground delay has had a ripple effect, delaying 423 flights at Hartsfield-Jackson as of early Sunday morning, according to FlightAware. Social media was flooded with reports from passengers either on or about to board delayed flights. Heads up if you’re flying Delta. A reported outage affecting the airline’s weight and balance system is holding up baggage loading on my flight at DJT. We’ve been on board waiting to take off for 2 hours. I’m told the outage is affecting Delta systemwide. @CBS12 https://t.co/WeAxhKGMQK The automated weight and balance system used by @Delta is down This same thing happened to @united last week Delta's ALIS outage arrived at nearly the worst possible time, as Americans begin traveling for the Thanksgiving holiday. According to AAA, nearly six million Americans are set to fly this week, paying 17 percent more on average than last year for a round trip. This outage follows several weeks of allegedly unrelated system outages and hacks — the FAA outage that caused a nationwide ground stop; the Microsoft outage; the outage of the National Security Agency’s internal communications system; major bank outages; the FBI NCIC hack, the USDA hack, and others. Editor's Note: Do you enjoy Townhall's conservative reporting that takes on the radical Left and woke media? Support our work so that we can continue to bring you the truth.</p>
+                <p class="source-credit">— Townhall</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Billy Ray, fiancée Elizabeth Hurley attend Miley Cyrus’ lavish wedding to Maxx Morando after estrangement</h4>
+                <p>Billy Ray Cyrus and his fiancée, Elizabeth Hurley, attended the musician’s daughter Miley Cyrus’ wedding to Maxx Morando after their estrangement. According to photos obtained by Page Six, the “Achy Breaky Heart” singer and the “Austin Powers: International Man of Mystery” actress posed alongside the newlyweds and Hurley’s son, Damian, at the lavish Palm Springs, California, nuptials Saturday. Billy Ray, 65, looked dapper in all black for the ceremony, while Hurley, 61, stunned in a low-cut black dress that featured a high slit. The “Party in the U.S.A.” singer and Billy Ray’s sweet wedding moment comes after years of family drama.</p>
+                <p class="source-credit">— Https://pagesix</p>
+            </div>
+            <div class="story-minor">
+                <h4>Inside the scandalous romance between teenage Bo Derek and married director, 46 — that left his wife ‘devastated’</h4>
+                <p>Bo Derek believes “it all worked out” when it comes to her marriage to John Derek, the director who was 46 and married when she met him as a 16-year-old up-and-coming actress. She spoke about their relationship — as did John’s former wife, “Dynasty” star Linda Evans — in a new profile for The Hollywood Reporter. John, best known for appearing alongside Charlton Heston in “The Ten Commandments,” had shifted into filmmaking later in his career. In the early 1970s, he’d set out to cast a movie he’d written, “Fantasies,” about a relationship between a teenage girl and her adoptive brother. Bo, who went by her birth name, Mary Cathleen Collins, at the time, auditioned and was given the part. The film was shot in Greece, but John asked Evans to give Bo acting lessons before they departed.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Welcome to the simulation. Your soul is not included.</h4>
+                <p>Claude may seem omniscient and GTA VI may feel inexhaustible, but neither can reproduce the spiritual life behind human experience, writes James Poulos. Five years ago, the leading venture capitalist Marc Andreessen made what was then the strongest, most unapologetic case for living at least a big chunk of your life in the virtual, digital world. “A small percent of people live in a real-world environment that is rich, even overflowing, with glorious substance, beautiful settings, plentiful stimulation, and many fascinating people to talk to, and to work with, and to date,” he wrote. “Everyone else, the vast majority of humanity, lacks Reality Privilege — their online world is, or will be, immeasurably richer and more fulfilling than most of the physical and social environment around them in the quote-unquote real world.</p>
+                <p class="source-credit">— The Blaze</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/11/931/523/flavio-bolsonaro.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Flavio Bolsonaro claims judge ordered passports seized just 7 minutes after Brazil election loss</h3>
+                <p class="lead-summary"><strong class="drop-cap">B</strong>razilian Sen. Flavio Bolsonaro tells Fox News Digital why he fled to the US after his election defeat and accuses Brazil’s judicial establishment of political persecution. Brazilian Sen. Flavio Bolsonaro accused his country's political and judicial establishment of engineering his presidential election defeat, telling Fox News Digital in an exclusive interview that he fled to the United States amid what he described as a campaign of political persecution — and insisting he lost not to President Luiz Inacio Lula da Silva, but to "the system." Following a razor-thin election, in which incumbent Lula da Silva won 51.8% to 48.2%, the Brazilian Supreme Court immediately canceled Bolsonaro's passports, prompting the senator and his family to flee the country in dramatic fashion, crossing the border into Argentina and flying into Miami, where President Donald Trump granted them political asylum. Bolsonaro said that he fled for the sake of Brazil, to continue the fight against Alexandre de Moraes and the Brazilian Supreme Court, and alleging both election interference and political persecution.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Mark Carney brings Trump impersonator onstage to joke about U.S.-Canada ties</h4>
+                <p>The Trump impersonator appeared at an annual press dinner where the Canadian prime minister typically delivers a roast.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Indonesia candy factory fire leaves multiple dead, dozens missing</h4>
+                <p>Indonesian search and rescue teams walk through the smoldering, twisted remains of the PT Fonusa Agung Mulia candy factory in Serang on Sunday, Nov. 22, 2026, after a deadly fire killed leaves 50 missing. (BASARNAS/AP) A massive fire tore through a three-story candy factory in Indonesia's Banten province, killing at least three workers and likely more, and leaving dozens of others unaccounted for as emergency crews fought persistent hotspots into Sunday.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Ukrainian city moves to remote learning as Russian strikes disrupt utilities</h4>
+                <p>The southern Odesa region has suffered the most extensive damage to its energy infrastructure amid a wave of recent Russian airstrikes.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/statics.foxsports.com/www.foxsports.com/content/uploads/2026/11/1200/675/harbugh.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>'I'll Cut Off My Right Arm': Inside Jim Harbaugh's Obsession With Beating Ohio State</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>here weren't many things former Michigan quarterback and head coach Jim Harbaugh valued more than beating Ohio State. If anyone needed a reminder of just how seriously he took the rivalry, one team meeting made that abundantly clear. "We're in this meeting, and he said, 'I'll cut off my right arm to beat Ohio State,'" former Michigan running back Blake Corum recalled in a first-look teaser for FOX Sports' upcoming two-part documentary, "The Team: Michigan Football." "Some guys might have chuckled or laughed, but the look in his eyes, he wasn't smirking, he wasn't laughing, he was dead serious." The short teaser, which was released during Saturday's airing of "Big Noon Kickoff," features footage of Harbaugh addressing the media. The preview then takes viewers through the history of "The Game," showcasing some of the rivalry's most memorable moments, from coaching showdowns between Woody Hayes and Bo Schembechler to the more recent chapters featuring Harbaugh and Ohio State head coach Ryan Day. The clip closes with one final reminder of how much this rivalry means to the Wolverines: "There's one thing we need to do. Prepare so we can beat Ohio State."</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Tom Jackson, former Broncos star and ESPN legend, dead at 75</h4>
+                <p>Broncos legend and former ESPN voice, Tom Jackson, died on Friday at 75, Adam Schefter reported Sunday morning. The Hall of Fame broadcaster’s family informed ESPN of his death and no cause has been revealed. Jackson, a fourth-round pick by the Broncos in the 1973 draft out of Louisville, became a fixture of the Denver defense. However, his post-NFL career as a broadcaster is how most know him. The three-time Pro Bowler went on a 29-year run with the Worldwide Leader and was a staple alongside Chris Berman, who announced his death during “Sunday NFL Countdown.” “All of us are stunned,” Berman said in a statement. “I’m stunned, we’re stunned and you’re stunned. We’ve lost one of the best human beings ever to walk the planet, Tom Jackson. I was fortunate to work side by side with Tom for 30 years, primarily on NFL Primetime and Sunday NFL Countdown. It was a labor of love for our whole team, both in front of the camera and behind it. We always hoped our viewers enjoyed the shows as much as we did bringing it to them every week.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>'Big Noon Kickoff' Crew Predicts Conference Championship Matchups And Winners</h4>
+                <p>A familiar face on top in the Big Ten. Revenge in the SEC. A first-time playoff berth in the Big 12. A stunner in the ACC. FOX Sports' Urban Meyer, Chris "The Bear" Fallica, Brady Quinn and Matt Leinart gave their picks to win the Power Four conference championship games on "Big Noon Kickoff."</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Polymarket promo code NYPMAX1: Deposit $10, get $25 for Buccaneers vs. Lions</h4>
+                <p>New prediction market traders can use the Polymarket promo code NYPMAX1 to deposit $10 to get a $25 trading bonus for Sunday’s NFL Week 11 slate. In Week 11, the Lions look to push their win streak to six games, when they host the Buccaneers in Detroit. Enter the Polymarket promo code NYPMAX1 when you sign up and deposit $10 to receive a $25 trading bonus. New users can use their $25 bonus to trade on Sunday’s NFL games or any other market on the day’s sports schedule. You can gain instant access to the Polymarket mobile app by using the Polymarket promo code NYPMAX1: The Polymarket promo is available to eligible new users who reside in Alaska, Alabama, Arkansas, California, Colorado, Connecticut, District of Columbia, Delaware, Florida, Georgia, Hawaii, Iowa, Idaho, Indiana, Kansas, Kentucky, Louisiana, Maine, Minnesota, Missouri, Mississippi, North Carolina, North Dakota, Nebraska, New Hampshire, New Jersey, New Mexico, New York, Oklahoma, Oregon, Pennsylvania, Rhode Island, South Carolina, South Dakota, Tennessee, Texas, Utah, Virginia, Vermont, Wisconsin, West Virginia, and Wyoming.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F11%2Fcrop-42037232.jpg?quality%3D90%26strip%3Dall" alt="Lead Story Image" class="news-photo">
+                <h3>Motorcycle gifted to Billy Joel by MSG for 150th sold-out show fetches $577,000 at auction</h3>
+                <p class="lead-summary"><strong class="drop-cap">A</strong> customized motorcycle that Madison Square Garden owner James Dolan gifted Billy Joel in 2024 for playing his 150th sold-out show at the World’s Most Famous Arena fetched a whopping $577,000 Saturday on the auction block. The beloved 1978 Triumph Bonneville T140 custom motorcycle was among 66 motorcycles and three cars the “Piano Man” put up for sale during Gooding Christie’s auction at Manhattan’s Javits Center – raking in more than $2 million that will go to support his philanthropic organization, The Joel Foundation. The custom blue bike was estimated to be worth $10,000 to $15,000. Opening bids started at $60,000. “The Triumph was custom-painted especially for Mr. Joel, featuring a piano theme on the gas tank, along with a custom-inscribed gas cap,” the bike’s listing noted. “It is accompanied by a matching helmet, bearing the dates of every show he performed at Madison Square Garden. This is a remarkable piece of history and pays tribute to one of the most extraordinary relationships between an artist and a venue in the history of popular music. “By the conclusion of his historic residency in 2024, Billy Joel had performed more concerts at Madison Square Garden than any other artist.” Joel’s love for two-wheelers is noted in his 1980 hit, “You May Be Right,” which was famously inspired by his first wife, Elizabeth Weber, warning him about riding his motorcycle home in the rain.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Famed NYC restaurateur Keith McNally hospitalized after getting caught in France protest chaos</h4>
+                <p>Violent clashes heat up between police and protesters in Paris, France. Former Black Hawk helicopter pilot Lieutenant Colonel Darin Gaub discusses the high-intensity footage showing officers deploying tear gas as crowds demonstrate in the streets. Keith McNally — a New York restaurateur known for "inventing downtown" with hotspots such as Balthazar and Pastis — claimed he suffered severe injuries after his involvement in the Paris protests.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>NJ native Mia Knight makes The Voice’s Top 10 and impresses fellow Jersey girl Queen Latifah</h4>
+                <p>Mia Knight is wowing the superstar coaches on “The Voice” — and shocking some of her Holmdel High School teachers. “When they saw me on the show, they were like, ‘What? You never even told us this!'” Knight, 17, told The Post. Knight’s show-stopping performances on Season 30 of the NBC series have earned her a spot in its Top 10 — and the praise of coach and fellow New Jerseyan Queen Latifah. During Knight’s blind audition, the Newark-born superstar used her only “first-in button” to claim Knight for her team — and was elated to learn of her Garden State roots. The pair have since bonded over their love for their state’s musical treasure, Jon Bon Jovi, after a contestant, Big Country, sang “It’s My Life.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Robert Pattinson becomes seventh actor to play James Bond in franchise's 60-year history</h4>
+                <p>Amazon founder Jeff Bezos said the team was "slightly biased a little against" Robert Pattinson because of his fame before screen tests made it "so obvious." Robert Pattinson officially stepped into cinema’s most famous tuxedo as the seventh actor to play James Bond, joining a group of Hollywood legends who defined 007 for generations.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/04/931/523/social-security-fraud-001.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>What really happens when you need help restoring your identity</h3>
+                <p class="lead-summary"><strong class="drop-cap">M</strong>organ Wright, former State Department antiterror advisor, joins the broadcast to analyze a massive cybersecurity breach affecting Chase, Visa and Mastercard. Wright explains how customer data was exposed in the leak and outlines critical safety measures individuals must take to protect their financial information amid a period of unprecedented global technology turmoil. Identity theft restoration takes more than one phone call. It often means securing accounts, documenting fraudulent activity and working with several companies to correct inaccurate records. The term "identity restoration" can sound complicated until you suddenly need it. Maybe someone opened a credit card in your name, took over your bank account or used your personal information to get medical care. Now you're dealing with unfamiliar charges, paperwork and companies that all seem to have different requirements. Fortunately, knowing what happens during recovery can make the process easier to manage. Here's how identity restoration typically works, what you may need to do yourself and where professional help can make a difference. Missed CyberGuy LIVE? Watch the replay and discover 5 ways to travel smarter and save money. Our free CyberGuy LIVE class, 5 Ways to Travel Smarter and Save Money, has ended, but you can still watch the full replay. Kurt "CyberGuy" Knutsson walks you through five practical ways to protect your phone and personal information, avoid common travel scams, find better deals, save money on bookings and use technology to make your travels easier and less stressful. No technical experience is needed. Discovering suspicious activity on your accounts can be stressful, but knowing the steps to restore your identity can help you take control of the situation. (Kurt "CyberGuy" Knutsson) Identity restoration usually starts with understanding the problem. A specialist may ask when you first noticed suspicious activity, which accounts someone accessed and whether you lost money or personal information. These details help identify the type of identity theft involved. Someone opening a credit card in your name requires a different response than a criminal taking over your phone number or using your medical information. A restoration specialist can help you separate confirmed fraud from suspicious activity that still needs investigation. As a result, you can focus on the companies and accounts that need attention first.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>MAHA champions promote dubious products, Post investigation finds</h4>
+                <p>Some of the movement’s influencers are advertising more than ever, building businesses that could outlast the political moment.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Inside an AI prophet’s secretive visions for humanity’s future</h4>
+                <p>Anthropic is worth more than $1 trillion. CEO Dario Amodei also wants to sell the world on his philosophy of the future.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
