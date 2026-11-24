@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>MONDAY, NOVEMBER 23, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://pagesix.com/wp-content%2Fuploads%2Fsites%2F3%2F2026%2F11%2F149848590.jpg?quality%3D90%26strip%3Dall" alt="Lead Story Image" class="news-photo">
+                <h3>‘Below Deck’ brings back divisive former star in shock Season 13 twist</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>he original series in the popular Bravo franchise is bringing back controversial former cast member Jess Theron in a shock midseason move. In a new teaser trailer for the second half of Season 13, which was obtained by People, Capt. Kerry Titheradge tells the crew, “We have a new teammate joining us.” Theron, who originally featured in Season 12 of the series, then announces her return to the cameras, proclaiming: “I’m back!” It remains to be seen how the other stars will react to her arrival. Over the summer, news surfaced that “Below Deck Mediterranean” star Nathan Gallagher was arrested in December 2025 for choking a woman, who was later revealed to be his then-girlfriend and co-star, Gael Cameron. Gallagher allegedly attacked her at an apartment complex in Sydney, Australia, per a police report obtained by Rolling Stone. Due to the arrest and allegations, Bravo severed ties with Gallagher. In another shock blow to the franchise, alum João Franco and his brother, Karlos Franco, were arrested in Turkey earlier this month following a fistfight that left a 17-year-old dead. João appeared in 64 episodes across two series in the “Below Deck” franchise between 2018 and 2026. Page Six exclusively reported that the former Bravolebrity and his brother — who are currently sitting in an “overcrowded” Turkish jail — could face up to life in prison for the deadly brawl. Despite the controversies, “Below Deck” is reportedly returning for three new series next year in the Caribbean, Australia and the Mediterranean, according to The US Sun. “’Below Deck’ fans have plenty to look forward to next year, with three series already commissioned,” a source told the outlet. “There are plans to take viewers to some incredible destinations, with familiar captains returning to the helm.” Reports show that new seasons of both “Below Deck Mediterranean” and “Below Deck Down Under” were given the green light before the controversies were made public. As for the original series in the franchise, a source told Page Six that Bravo traditionally does not renew shows while they are still airing their current seasons — as “Below Deck” is. “Below Deck” airs Mondays at 8 p.m. ET on Bravo and streams the next day on Peacock. If you or someone you know is affected by any of the issues raised in this story, call the National Domestic Violence Hotline at 1-800-799-SAFE (7233) or text START to 88788.</p>
+                <p class="source-credit">— Https://pagesix</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Justice Alito offers dire outlook on the Supreme Court</h4>
+                <p>Justice Samuel Alito warned last week that the U.S. Supreme Court faces a threat that may leave it "fundamentally" and perhaps even "permanently" changed The 76-year-old conservative justice spoke at the American Enterprise Institute's annual dinner last Monday, when he was presented with the 2026 Irving Kristol Award. In his remarks, Alito not only provided a status report regarding originalism and textualism on the high court but an assessment of the threat landscape. After highlighting the court's work in recent years to protect religious liberty, freedom of speech, the Second Amendment, and a colorblind meritocracy, Alito discussed the persistence of a "fourth branch" of government "consisting of independent agencies headed by experts who were not answerable to the president."</p>
+                <p class="source-credit">— The Blaze</p>
+            </div>
+            <div class="story-minor">
+                <h4>Hakeem Jeffries Is Already Talking About Shutting Down The Government</h4>
+                <p>Speaker-designate Hakeem Jeffries hasn’t taken control of the gavel yet, but he’s already signaling a willingness to shut down the government if it suits the Democrats’ political agenda. Jeffries, who sat for an interview with The New York Times’ Lulu Garcia-Navarro just days after coasting to victory in the Democrat Party’s congressional leadership vote, declined to say whether he would support a shutdown to secure his party’s spending priorities. “I know Democrats are currently wrestling with whether to demand limits to funding the war in order to vote to fund the government and avoid a shutdown,” Garcia-Navarro began. “That’s happening in this Congress. Where is your head on that right now?</p>
+                <p class="source-credit">— Daily Wire</p>
+            </div>
+            <div class="story-minor">
+                <h4>States rally behind Catholic church in first-of-its-kind Supreme Court fight over prayer shrine</h4>
+                <p>First Liberty senior counsel Ryan Gardner explains to Fox News Digital why the Kentucky dispute could shape religious land-use protections nationwide. FIRST ON FOX: A Catholic religious community's plans to build a small shrine to the Virgin Mary on its own property have triggered a years-long legal battle with two neighbors, drawing a coalition of state attorneys general into a potential landmark religious liberty showdown before the U.S. Supreme Court.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/04/931/523/russia-space-nuclear-weapon-satellite-threat-us-warning-001.jpeg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Russia could launch nuclear-capable satellite within weeks, Western intelligence warns: report</h3>
+                <p class="lead-summary"><strong class="drop-cap">C</strong>hief national security correspondent Jennifer Griffin joins ‘The Faulkner Focus’ to discuss the growing threat of orbital warfare after the U.S. confirmed it has deployed weapons in orbit. She examines the security implications as concerns over China and Russia’s space capabilities continue to mount. Russia could launch a nuclear-armed satellite into orbit within less than 60 days according to new Western intelligence assessments reported Monday, raising fears that Moscow is preparing to deploy a weapon capable of crippling thousands of satellites used by the United States and its allies. The intelligence reports emerged just four days after President Donald Trump met with Russian President Vladimir Putin and Chinese President Xi Jinping at a high-profile summit in Shenzhen, China, where nuclear arms control was a central topic. The three leaders issued a joint declaration affirming that nuclear war should never be fought, but stopped short of announcing binding arms-control commitments.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>NATO calls urgent meeting as string of incidents escalates Russia tensions</h4>
+                <p>“We are not in war, but we are certainly not in peace anymore, either,” Germany’s foreign minister said after Russian missiles crashed onto Polish territory.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Ukraine says it sank Russian warship off coast of Libya, far from front line</h4>
+                <p>Kyiv has regularly carried out attacks on Moscow’s military and shadow fleet, though most have taken place in the immediate waters of the Black and Azov seas.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Captain who abandoned passengers on sinking Costa Concordia cruise ship released early from prison</h4>
+                <p>Francesco Schettino, the former captain of the Costa Concordia, which shipwrecked off the coast of Italy, has been released from prison early after serving 9 years of a 16-year sentence for manslaughter. After nine years in a Rome prison, the captain of the Costa Concordia, Francesco Schettino, was released early from prison. Italian newspaper Quotidiano Nazionale reports he will serve the remaining 7 years of his 16-year sentence for manslaughter on supervised probation.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F11%2Fnewspress-collage-ymd4z2gzm-1795454404276.jpg?quality%3D90%26strip%3Dall%261795436501" alt="Lead Story Image" class="news-photo">
+                <h3>Mike Evans needs just 8 words to sum up who is clear NFL MVP after thrashing Vikings</h3>
+                <p class="lead-summary"><strong class="drop-cap">M</strong>EXICO CITY – Brock Purdy went straight back to his days as Jimmy Garoppolo’s backup Sunday night, trying to explain how he went from there to becoming one of the NFL’s best quarterbacks and an MVP favorite. For Purdy, it probably would be. Give the man a chance to talk about himself after throwing three touchdown passes against the best defense in football, and he’ll find a way to bring the backup quarterback’s old job description into the conversation. Good thing the 49ers had enough players willing to speak on his behalf after their 35-10 win over the Vikings. Somebody ought to get a word in before Kyle Shanahan gets handed the Madden controller again. You know how this one goes. Shanahan picks a play, pushes a button, and out comes a completion. Sweet arrangement for the guy collecting an NFL quarterback’s paycheck. Although somebody might want to ask George Kittle how much time Shanahan spent this week working on the Purdy throw that hit Kittle square on the face. “I mean, that second touchdown he threw to me, I caught it with my chin,” the 49ers tight end said. “Did not see that coming at all. There’s a whole quarterback evaluation in there somewhere. Kittle knew the play. Knew where he was supposed to be. And the quarterback delivering the football still beat him to the spot. Imagine how the poor soul assigned to cover him felt about it. Purdy completed 21 of 26 passes for 255 yards, three touchdowns, and no interceptions. His passer rating was 146.0. He came to Mexico City trailing only Joe Burrow in passer rating and QBR, then drew a Minnesota defense that had been giving up a league-low 14 points a game.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Details of Tom Jackson’s sudden death emerge</h4>
+                <p>The ESPN icon’s death was reported to the Hamilton County Coroner’s Office over the weekend and an autopsy was performed on Monday, spokespeople for the department confirmed to the California Post. They added that Jackson was officially pronounced dead at 4:15 p.m. on Nov. 20 at Christ Hospital in Cincinnati. Further details regarding the 75-year-old’s passing were not made immediately available, as the Hamilton County Coroner’s Office reps said autopsy results are still pending. Jackson’s longtime friend and broadcast partner Chris Berman initially announced the heartbreaking news on “Sunday NFL Countdown,” calling the death “unexpected” and “a shock.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Polymarket promo code NYPMAX1: Deposit $10, get $25 for Bengals vs. Commanders</h4>
+                <p>New prediction market traders can use the Polymarket promo code NYPMAX1 to deposit $10 to get a $25 trading bonus for Monday’s NFL Week 11 capper. The Bengals take on the Commanders on “Monday Night Football” to close out the week in a game that has explosive potential. Enter the Polymarket promo code NYPMAX1 when you sign up and deposit $10 to receive a $25 trading bonus. New users can use their $25 bonus to trade on “Monday Night Football” or any other market on the day’s sports schedule. You can gain instant access to the Polymarket mobile app by using the Polymarket promo code NYPMAX1: The Polymarket promo is available to eligible new users who reside in Alaska, Alabama, Arkansas, California, Colorado, Connecticut, District of Columbia, Delaware, Florida, Georgia, Hawaii, Iowa, Idaho, Indiana, Kansas, Kentucky, Louisiana, Maine, Minnesota, Missouri, Mississippi, North Carolina, North Dakota, Nebraska, New Hampshire, New Jersey, New Mexico, New York, Oklahoma, Oregon, Pennsylvania, Rhode Island, South Carolina, South Dakota, Tennessee, Texas, Utah, Virginia, Vermont, Wisconsin, West Virginia, and Wyoming.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Inside final hectic hours of the Tarik Skubal negotations — what got Mets to the finish line</h4>
+                <p>Sure, the Mets were perceived as the favorite from the start to sign superstar starter Tarik Skubal by anyone doing a perfunctory check of ownership bank accounts and team needs. But the reality is this: The team from Queens was in for a battle from the beginning for MLB’s top free agent. Yes, the game Blue Jays were right there with them until almost the moment of the historic agreement of $450M over nine years. Ultimately, Mets owner Steve Cohen, understanding the necessity to add an ace starter and blown away by the meeting with the ultra-competitive Skubal, outbid the Blue Jays. But it was a real competition from the start, with the teams neck and neck until nearly the very end.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F11%2Fnewspress-collage-ncdgj2vsp-1795463937973.jpg?quality%3D90%26strip%3Dall%261795446234" alt="Lead Story Image" class="news-photo">
+                <h3>Peacock’s Black Friday deal is back—Get up to $60 off a year</h3>
+                <p class="lead-summary"><strong class="drop-cap">S</strong>treaming deals are getting started early this year, and starting today, Nov. 23, you can take advantage of not one, but two different deals from Peacock. The Peacock Black Friday deal will save you up to 66% on up to one year. Regularly $8.99/month, you can get three months of Peacock Select (includes current NBC and Bravo; no originals, live sports or movies) for just $2.99/month or get for an entire year for $29.99 (regularly $89.99). If you want more than Select has to offer, you also have the option to subscribe to Peacock Premium with three months for $8.99/month (down from $12.99/month) or a whole year for $89.99 (normally $129.99). If you’re a sports fan, Peacock may just become one of your go-to streamers. The streamer practically owns Sunday nights, with Sunday Night Football rolling into Sunday Night Basketball rolling into Sunday Night Baseball. You can also stream Big Ten and Notre Dame. It’s also the exclusive home of the Premier League in the United States and many Olympic sports. Peacock is also an incredibly valuable streamer for anyone who lives and breathes reality TV, with all things Bravo, from Housewives to Vanderpump. Currently-airing shows drop new episodes on Peacock the day after airing on Bravo. Of course, the NBC streamer also has NBC shows old and new. You’ll get next-day streaming for all of NBC’s current programming including my current TV obsession “Line of Fire,” the “Chicago” universe and “Law and Order: SVU.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Billy Bob Thornton says he’s a holiday ‘purist’ as he brings back ‘traditional’ Thanksgiving at home</h4>
+                <p>"The Mayflower" host Billy Bob Thornton tells Fox News Digital why eating out on Thanksgiving just doesn’t hit the same. Billy Bob Thornton tried to have Thanksgiving dinner at a restaurant in the past, and he'll never do it again. During an interview with Fox News Digital about his new Fox Nation series, "The Mayflower," Thornton opened up about his own Thanksgiving traditions and how his newest gig shows the actual events that unfolded in 1621, not what is taught in schools.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>‘Focker In-Law’ review: Ben Stiller is an unpleasant jerk in awful, laughless sequel</h4>
+                <p>I think it was when Ariana Grande performed the Heimlich maneuver on a choking Skyler Gisondo, and a piece of masticated steak flew into Robert De Niro’s open mouth, that I prayed the Fockers would finally divorce and end my misery. But it seems the best I can hope for is “A Very Focker Funeral,” because this wrung-out, 26-year-old, four-film franchise shows no signs of letting up. The gross “baby birding” moment arrives midway through “Focker In-Law,” which is basically “Father of the Bride” only set during the lead-up to a wedding engagement. The old “bumbling dad almost ruins son’s relationship” story is very retro, just like the entire sorry “Fockers” series at this point.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>'Platoon' star Tom Berenger disses Hollywood as a 'company town,' praises Florida life</h4>
+                <p>The "Platoon" actor spoke to Fox News Digital about his new docuseries "Ronin 3: The Battle for Sangin." Tom Berenger said he never liked the idea of living in Hollywood because he always felt that it was like a "company" town where everyone had the same job and talked shop constantly.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/11/931/523/google-pixel-blood-pressure.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Google AI smartwatch could flag high blood pressure</h3>
+                <p class="lead-summary"><strong class="drop-cap">E</strong>ko Health co-founder and CEO Connor Landgraf discusses how their AI-powered stethoscope is revolutionizing cardiac care and improving patient outcomes. This innovative device amplifies heart and lung sounds, analyzes them in real-time and detects early signs of heart disease and arrhythmias in just 15 seconds. The technology offers physicians consistent, reliable insights, enhancing early diagnosis and intervention. When was the last time you checked your blood pressure? If you're like a lot of people, it probably happened during your last doctor's appointment. And if you feel perfectly healthy, you may not give it another thought. That's what makes high blood pressure so concerning. You can have it for years without noticing anything wrong. Now, Google researchers are exploring a way to uncover that hidden danger using something many of us already wear on our wrists. In a new study recently published in Nature, researchers demonstrated an artificial intelligence system that can identify signs of hypertension using standard smartwatch sensors. It works in the background without requiring calibration with a traditional blood pressure cuff. The technology uses sensors that already exist in consumer smartwatches. That could make early detection much more accessible. However, the research also reveals a limitation that anyone relying on a smartwatch for health information should understand. Missed CyberGuy LIVE? Watch the replay and discover 5 ways to travel smarter and save money. Our free CyberGuy LIVE class, 5 Ways to Travel Smarter and Save Money, has ended, but you can still watch the full replay. Kurt "CyberGuy" Knutsson walks you through five practical ways to protect your phone and personal information, avoid common travel scams, find better deals, save money on bookings and use technology to make your travels easier and less stressful. No technical experience is needed. Google's Health Guardian feature tracks blood pressure trends over time and can flag potentially elevated levels without providing actual blood pressure readings.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Nvidia reinstates Jensen Huang after Trump speaks ‘directly’ to board</h4>
+                <p>The turnaround comes after the board “received input from senior levels of the United States government,” the company said in a statement Monday.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>FBI warns AI hackers can breach systems in under 3 hours</h4>
+                <p>James Gagliano, retired FBI supervisory special agent, warns about the rising threat of artificial intelligence in global cyberattacks. This follows a string of disruptive tech outages impacting major financial institutions including Chase and Bank of America. Your bank could spend millions protecting its computer systems. Your employer might have an entire cybersecurity team watching for suspicious activity. Yet hackers now have an AI-powered tool that can help them break into some organizations in less than three hours.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Jensen Huang went to war with Washington — and won a path to China</h4>
+                <p>The Nvidia founder wooed the president and pushed back against lawmakers as the company sought a foothold in the vast Chinese market. The tactics left a trail of mistrust.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
