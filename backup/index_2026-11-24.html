@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>TUESDAY, NOVEMBER 24, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/08/931/523/hhs-secretary-robert-r-kennedy-jr.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Biden admin weighed quitting Twitter after Elon Musk purchase, new HHS doc drop reveals</h3>
+                <p class="lead-summary"><strong class="drop-cap">H</strong>ealth and Human Services Secretary Robert F. Kennedy Jr. and Medicare Chief Dr. Mehmet Oz announce the first 15 organizations receiving federal funding to combat chronic disease through nutrition and lifestyle care. Amid a push to bolster transparency, the Department of Health and Human Services (HHS) launched a searchable trove of public records, including previously unreleased memos from the Biden administration and Secretary Robert F. Kennedy Jr.’s calendars. While the website will be updated over time, the initial drop includes a Biden-era memo detailing how the National Institutes of Health (NIH) considered no longer having a presence on Twitter after billionaire Elon Musk acquired the platform in October 2022, renamed it X and promised to scale back moderation amid free expression concerns. Also included within the department's so-called Radical Transparency dashboard are Kennedy’s calendars, which reporters have previously requested and have not been publicly disclosed before now. Secretary Robert F. Kennedy Jr. delivers remarks during an event at HHS headquarters Aug. 10, 2026, in Washington, D.C. (Win McNamee/Getty Images) "When President Trump asked me to lead HHS, I promised to bring transparency back to the American health agencies," Kennedy said in a video announcing the launch of the website. "If the government makes decisions that affect your health, you deserve to see the evidence behind them. Not simply to be told, ‘trust the science.’" Kennedy claims that HHS’ previous method of presenting public records was disorganized and confusing to use. He said public accountability would be aided by consolidating the documents in one simplified dashboard. The Cabinet secretary noted that his department plans to upload more documents to the website during his tenure and the first drop includes previously available documents that are now easier to search and locate. Though many on the political right are likely to hail the move as HHS’ increasing transparency efforts, Democrats have criticized the agency for lacking transparency under Kennedy's leadership.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Trump awards Rudy Giuliani the Presidential Medal of Freedom</h4>
+                <p>President Donald Trump awarded the Presidential Medal of Freedom on Tuesday to Rudy Giuliani, his longtime friend and former lawyer.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Buc-ee's has fresh food, spotless bathrooms, and everything else a traveler could want. I hated it.</h4>
+                <p>I went looking for the soul of the American roadside. Instead, I found a giant gift shop selling beaver pajamas. You might have heard of “Paris syndrome.” It’s a psychological condition that occurs when Japanese tourists visit Paris and are shocked and dismayed by what they encounter. These poor Japanese visitors were expecting beautiful architecture and stylish French women sipping espressos. And what they get is ... well ... not that. Why weren’t there hunting knives? Dudes who have been driving all day love to stare at hunting knives. The resulting trauma Japanese travelers experience has been written about and studied. They have a hotline for sufferers at the Japanese embassy. Physical symptoms of Paris syndrome include: delusional states, hallucinations, feelings of persecution, anxiety, and dizziness.</p>
+                <p class="source-credit">— The Blaze</p>
+            </div>
+            <div class="story-minor">
+                <h4>Jax Taylor reacts to backlash over cancer diagnosis after ex Stassi Schroeder’s shady reaction</h4>
+                <p>Jax Taylor is asking for grace to “demonstrate growth and change” amid his medical issues, following a shady reaction to his cancer diagnosis from ex-girlfriend Stassi Schroeder. “Jax is aware of the noise online but is choosing to tune it out and focus on his health, his son and the people who have shown up for him,” a source close to the “Vanderpump Rules” alum — who shares 5-year-old Cruz with estranged wife Brittany Cartwright — told Page Six exclusively. “Jax is fully aware that his past has given people reasons to question him,” our insider continued. “But mocking someone’s cancer diagnosis says far more about the character of those doing it than it does about him.</p>
+                <p class="source-credit">— Https://pagesix</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/11/931/523/Prosecuter_General_Ukraine.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Ex- Ukraine prosecutor general accuses Zelenskyy's office of interfering in anti-corruption investigation</h3>
+                <p class="lead-summary"><strong class="drop-cap">F</strong>ox News correspondent Stephanie Bennett reports on the Trump administration’s push for a deal between Russia and Ukraine on ‘Fox Report.’ Ukraine's former prosecutor general is accusing President Volodymyr Zelenskyy's administration of interfering in a criminal investigation involving the head of the country's anti-corruption bureau after the president demanded his removal from office in September. In an extensive interview with Fox News Digital, Ruslan Kravchenko alleged that Zelenskyy's decision to remove him came under pressure from the National Anti-Corruption Bureau of Ukraine (NABU) and the Specialized Anti-Corruption Prosecutor's Office (SAPO), whose officials he said his office had been investigating. "The signature on the resignation letter was mine. The decision was his," Kravchenko said. "You do not have to put handcuffs on the president himself to tie his hands. It is enough to put the people he relies on at risk." Former Prosecutor General of Ukraine Ruslan Kravchenko attends a press conference in Kyiv, Ukraine July 23, 2025.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Israel kills Hamas internal security chief in Gaza</h4>
+                <p>Attacks in Gaza continue under Israeli Prime Minister Benjamin Netanyahu’s caretaker government as former army chief Gadi Eisenkot tries to form a new one.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Two men arrested in suspected burglary at Prince William’s country home</h4>
+                <p>The property on the Sandringham Estate was unoccupied at the time of the incident, U.K. police said.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Former Florida mayor urges American Jews to fight back against rising antisemitism</h4>
+                <p>Hunter College was the site of a protest after the school’s student government canceled an event that involved a Jewish organization. As antisemitism surges across the United States and around the world in the wake of Hamas’ Oct. 7, 2023, massacre, policy strategist and public speaker Gabe Groisman is urging American Jews to stand their ground and fight for the future of their community — and the soul of the nation.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/statics.foxsports.com/www.foxsports.com/content/uploads/2026/11/931/523/parsonsh1.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>All-Pro Edge Rusher Micah Parsons Cleared To Return For Packers Against Rams</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>he Green Bay Packers are finally getting an All-Pro defender back, as Micah Parsons was fully cleared to return from the knee injuries that have cost him nearly a year, per NFL Network. Parsons had stopped short Monday of declaring himself good to go for the Green Bay Packers' Wednesday night matchup with the Los Angeles Rams, but the All-Pro edge rusher said he believes he’s done "everything I possibly could" to return. Parsons had said during a post-practice media session Monday that he still needed to speak with Dr. Neal ElAttrache, who performed the Dec. 29 surgery to repair a torn ACL and torn meniscus in his left knee. After receiving the final medical clearance in that meeting, Parsons said he is eager to play in his first game since he was injured in a Dec. 14 loss at Denver. The Packers didn't win another game the rest of last season, finishing on a five-game skid that included an NFC wild card playoff meltdown against the Chicago Bears. With his team at 6-4 and fighting for an NFC playoff spot entering the final seven games of the season, Parsons knows how critical the game is.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Dodgers newcomer Royce Lewis draws bold prediction about a career first</h4>
+                <p>While this wasn’t the move everyone expected Los Angeles to make, there are already talks Lewis could emerge as an All-Star in his inaugural season with the Dodgers. MLB insider Jon Morosi explained why he thinks the infielder’s career could reach new heights in Hollywood. “Doesn’t this feel like Royce Lewis is going to be an All-Star for the Dodgers?” Morosi said on MLB Network. “I think there’s a lot of upside here. This guy can really play, and you’re right, Lauren, outstanding chemistry and clubhouse presence. “I believe that for a lot of players the Dodgers are like baseball PhD graduate school. And when they go there, they get better because the environment is so great. Royce Lewis, to me, is one of those players.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>How to Watch Nebraska vs. Purdue Volleyball: TV Channel, Live Stream, Time</h4>
+                <p>The No. 1 Nebraska Cornhuskers and No. 13 Purdue Boilermakers meet on Tuesday, Nov. 24, 2026, at 6 p.m. ET at Fishers Event Center in Fishers, Indiana, in the semifinals of the Big Ten Tournament. Nebraska is 29-0 after a 3-0 sweep of Indiana in the quarterfinals on Nov. 22 and beat Purdue 3-1 in Lincoln on Oct. 17. Purdue is 20-8 after sweeping Michigan on Nov. 21 and Oregon on Nov. 22.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Jalen Brunson ‘can’t believe’ he has to try to end Taylor Swift-Knicks controversy</h4>
+                <p>Five months after the mega-pop star’s Game 4 NBA Finals appearance and weeks following Tyler Kolek’s jab, the Knicks star and Finals MVP told Us Magazine that Swift is “obviously” welcome at Madison Square Garden. “I can’t believe I have to say this,” he said. “But I didn’t say what was said. Being one of the leaders of the team — the captain of the team — I guess I now have to help somebody out. Yes, she’s a member of the Knicks fandom. Yes, she is.” Debate over Swift’s NBA loyalty began when she was spotted at Game 3 of the Eastern Conference finals in Cleveland alongside her Ohio-born husband, Travis Kelce.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/11/931/523/drake-white-ryman-auditorium-benefit.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Country singer Drake White admits he still fears another stroke seven years after nearly dying</h3>
+                <p class="lead-summary"><strong class="drop-cap">S</strong>even years after suffering a hemorrhagic stroke that nearly killed him in 2019, country music star Drake White admits he still lives with the lingering fear of suffering another medical emergency. Speaking exclusively to Fox News Digital at the third-annual Benefit For The Brain event in Nashville, the 43-year-old singer opened up about the lasting physical and mental toll of his health battle — and how he has learned to channel that anxiety into purpose. "The fear of having another stroke is always there," White said. "Once your nervous system goes through that, it’s imprinted on it. You can work yourself into a tizzy, you can work yourself into anxiety attacks, and your heart rate gets up, your blood pressure gets going. So, it's about learning how to deal with that and breathe through it." COUNTRY SINGER DRAKE WHITE DESCRIBES ‘GUNSHOT’ MOMENT HIS BRAIN RUPTURED MID-CONCERT: ‘I KNEW I WAS DYING’ Drake White attended a benefit for the brain at Ryman Auditorium in Nashville, Tenn., on Nov. 16, 2026. (Getty Images) White credited both his background as an athlete and the support of friends — including several Navy SEALs in attendance at the benefit — with teaching him how to manage anxiety and high-stress situations.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Disney+ Hulu Black Friday deal bundles both streamers for $5/month for a year</h4>
+                <p>The only thing better than a deal on one streaming service is a deal on two. As news that the Disney+ and Hulu apps will be merged in December comes out, Disney+ and Hulu’s Black Friday deal has landed ahead of Nov. 27, when it will officially be Black Friday. No matter where you’re streaming it, be it the Disney+ app or the soon-to-be defunct Hulu app, all you need to know is this: you’re saving a ton of money by subscribing to this Black Friday bundle. How much money, exactly? $96! Think of everything you can do with the $96 you just saved by subscribing. Regularly priced at $12.99/month, the Disney+ and Hulu bundle is already a great value on any given day. Right now, though, new and eligible returning subscribers can get an entire year of the Disney+ Hulu bundle for just $4.99/month.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Intruders break into Prince William and Kate Middleton’s country home in royal security breach</h4>
+                <p>Police are investigating a security breach at Prince William and Kate Middleton’s country home in England after intruders broke into the property on Monday night. On Tuesday, Norfolk Constabulary confirmed that two men were arrested on suspicion of burglary and trespass in connection with the incident at Anmer Hall, which is located on King Charles’ Sandringham Estate.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Peacock’s Black Friday deal is back—Get up to $60 off a year subscription</h4>
+                <p>Streaming deals are getting started early this year, and starting today, Nov. 23, you can take advantage of not one, but two different deals from Peacock. The Peacock Black Friday deal will save you up to 66% on up to one year. Regularly $8.99/month, you can get three months of Peacock Select (includes current NBC and Bravo; no originals, live sports or movies) for just $2.99/month or get for an entire year for $29.99 (regularly $89.99). If you want more than Select has to offer, you also have the option to subscribe to Peacock Premium with three months for $8.99/month (down from $12.99/month) or a whole year for $89.99 (normally $129.99).</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/02/931/523/united-airlines-flight-passenger-boards-wrong-flight-fox-news.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>What United Airlines banning AI agents from booking flights means for your travel plans</h3>
+                <p class="lead-summary"><strong class="drop-cap">K</strong>urt 'CyberGuy' Knutsson joins 'Fox & Friends First' to discuss the threat of rogue artificial intelligence agents targeting bank accounts. Knutsson shares safety tips to protect personal finances from unauthorized transactions and addresses AI-enabled romance scams, detailing a case where a woman was defrauded of $10,000 by a scammer posing as Jon Bon Jovi. Wouldn't it be nice to tell an AI assistant to find the cheapest flight to your destination and book your favorite seat while you do something else? That kind of convenience is getting closer. But United Airlines wants to make sure an unauthorized AI assistant never gets that far. The airline is restricting third-party AI agents from accessing its booking systems without permission. United says these tools could expose sensitive customer information and make purchases travelers never intended to authorize. The concern also extends to MileagePlus accounts, where an automated mistake could put valuable airline miles at risk. The decision comes as AI assistants become increasingly capable of taking action on our behalf. While that sounds convenient, United is raising questions about how much control we should give software over our travel plans. Here's where United draws the line and what you need to know before letting AI handle your next flight booking. Missed CyberGuy LIVE? Watch the replay and discover 5 ways to travel smarter and save money. Our free CyberGuy LIVE class, 5 Ways to Travel Smarter and Save Money, has ended, but you can still watch the full replay. Kurt "CyberGuy" Knutsson walks you through five practical ways to protect your phone and personal information, avoid common travel scams, find better deals, save money on bookings and use technology to make your travels easier and less stressful. No technical experience is needed. FORMER ANTHROPIC SECURITY LEADER WARNS AI AGENTS ARE BECOMING TOO AUTONOMOUS FOR HUMANS TO KEEP THEM IN CHECK United Airlines is restricting unauthorized AI agents from accessing its booking systems, citing concerns about customer security and unwanted transactions.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>U.S. futures, European markets fade following Nvidia rally</h4>
+                <p>Asian stock markets gained ground on Tuesday, but U.S. futures markets traded lower, as investors digested the implications of Jensen Huang’s return to Nvidia.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Apple tightens Mac security as AI agents seek your files</h4>
+                <p>Reviewing your Mac's privacy settings can help you identify apps with unnecessary access to your personal files and revoke permissions you no longer need. (REUTERS/Norbert von der Groeben) Ever download an app on your Mac and click through the permission requests without giving them much thought? You're certainly not alone. But what if one of those approvals gave an AI assistant access to your private messages, financial documents or even files you thought were protected?</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>I tested a solar-powered scooter you rarely have to charge</h4>
+                <p>An electric two-wheeler covered in solar panels provides mobility that recharges itself from the sun, reducing the need to plug in.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
