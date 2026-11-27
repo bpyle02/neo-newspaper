@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>THURSDAY, NOVEMBER 26, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/11/931/523/Capitol-Turkeys.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>2026's biggest political turkeys: Scandals, gaffes and other memorable unfortunate moments from this year</h3>
+                <p class="lead-summary"><strong class="drop-cap">F</strong>rom Eric Swalwell to Tim Walz, several political figures are looking back on 2026 with regret after making the list of biggest political turkeys. As 2026 comes to a close, several political blunders, missteps, and serious allegations have left prominent politicians and notable figures presumably looking back with regret. Here are the top political turkeys who made headlines for unfortunate reasons this year. Heading into 2026, Eric Swalwell was a well-known member of Congress and the leading Democratic contender in the race for governor of California. By March, he had become the frontrunner in the race and looked poised to take control of the nation’s largest economy in a state where Democrats rarely lose in statewide general elections. Shortly after, that all changed when allegations of sexual assault and other misconduct surfaced in April, prompting prominent Democrats to swiftly withdraw their endorsements and call for Swalwell to abandon his gubernatorial bid. Several prominent political figures faced controversy, public missteps and serious allegations throughout 2026, landing them on this year's list of political turkeys. (Kevin Carter/Getty Images; Drew Angerer/Getty Images) Swalwell denied the sexual assault allegations, but within days he suspended his campaign and resigned from Congress amid bipartisan calls for his ouster, which effectively ended his political career and put him in potential legal jeopardy. Swalwell faces a federal investigation and separate probes in New York and Los Angeles into sexual assault allegations, which he denies. FBI agents seized his electronic devices and searched his Washington home in August, and in October searched a Beverly Hills mansion where he had stayed. No criminal charges have been filed. In 2024, Walz was elevated to the top of the national scene when he was chosen by former Vice President Kamala Harris to be her running mate for president. Since then, Walz’s political fortunes have taken a downward turn after the Harris-Walz ticket lost the presidential election, leading some pundits to criticize the decision to add him to the ticket.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>If You Don’t Know Why You Should Be Grateful, Ask A Farmer</h4>
+                <p>The harvest is completely dependent on our work ethic, learning from experience, and Almighty God’s protection and care. At a central Wisconsin free u-pick this harvest season, the bean and cabbage fields looked like flowers swarming with human bees, all eagerly doing work we’re told “Americans don’t do.” “Look how many beans I have already,” a preschooler told his toddler sister. He turned to his mother, who picked in a flowered purple nursing dress as the baby sat nearby, sucking her lip in a wagon. “Mommy, look how many beans I have.” “We’re going to do a lot of freezing this year, ’cause you love beans in the winter time, don’t you?” his mother replied. Twenty feet away, their pigtailed big sister picked in pink shorts and a Daisies Girl Scout vest. The vest must have been new, because it was blank and crisp.</p>
+                <p class="source-credit">— The Federalist</p>
+            </div>
+            <div class="story-minor">
+                <h4>Gary Sanchez gets $6 million deal after winning World Series</h4>
+                <p>Miami gains a veteran catcher to help them to contend next season with the 33-year-old who won a World Series title with the Brewers last season. Last season, Sánchez had a .771 OPS with 12 home runs and 38 RBIs across 86 games. During the playoff run, he appeared in three games and recorded one walk. He mostly served as a backup to star catcher William Contreras but also saw time at DH and first base. Sánchez, who debuted in the league in pinstripes dating in 2015, spent seven of his 12-year career with the Yankees until 2021. He won both of his All-Star awards while in New York, in addition to his Silver Slugger win in 2017 and he was the runner-up for Rookie of the Year the season prior.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>TURKEY TV: 8 classic Thanksgiving sitcom episodes worth revisiting</h4>
+                <p>From the Bankses to the Bundys, these holiday classics deliver disastrous dinners, family feuds, and turkeys that can't fly. There was a time when the family sitcom was one of the safest bets on television. Shows like "Full House," "The Cosby Show," "Everybody Loves Raymond," and "The Fresh Prince of Bel-Air" brought families into American living rooms every week, while shows like "Seinfeld" and "Married ... with Children" pushed the form in stranger and occasionally edgier directions. Christmas and Halloween episodes tend to get most of the attention, but some of the funniest sitcom installments of the era involved ruined dinners, feuding relatives, disastrous turkeys, and one very unfortunate Macy's parade balloon.</p>
+                <p class="source-credit">— The Blaze</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/11/931/523/Bangkok_fir3.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Bangkok oil refinery explosion injures at least 9, Thailand company monitoring air quality</h3>
+                <p class="lead-summary"><strong class="drop-cap">A</strong>n explosion at an oil refinery in Thailand's capital Bangkok send giant smoke plumes into the sky. Bangchak Corporation, which owns the facility, said the fire was extinguished within 30 minutes of the explosion. Credit: Reuters. At least nine people have been injured in an oil refinery explosion in Bangkok, Thailand, on Thursday, with three in critical condition. The explosion occurred at a Bangchak Corporation-owned facility, the company confirmed in a statement posted to Facebook. The company also claimed it was able to control and extinguish a large blaze caused by the explosion within 30 minutes of the blast. Smoke and flames rise from the Bangchak oil refinery following an explosion in Bangkok, Thailand, Nov. 26, 2026, in this screen grab taken from a video. (Nattawut Wonghirunkonchai/Handout via Reuters) "Since the incident occurred, the company has continuously monitored air quality in real time using automatic ambient air quality monitoring (AQM) stations, which the company has installed in the Phra Khanong, Bang Na, and Bang Nam Phueng areas to measure air quality around the refinery resulting from operations," the company wrote.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>As he races to unseat Netanyahu, Eisenkot reaches deal with left-wing party</h4>
+                <p>Gadi Eisenkot's Yashar party and its presumed partners now hold 48 of the Knesset’s 120 seats — still short of the 61 needed for a majority and and the ouster of Benjamin Netanyahu.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Egypt detains driver suspected of causing Cairo fuel tanker crash and inferno that left 31 dead</h4>
+                <p>Footage captures deadly inferno along Cairo's Ring Road on Wednesday, Nov. 25, 2026, that left 31 people dead, officials said. (Credit: AP/UGC) Egyptian authorities said Thursday that a driver suspected of causing a fuel tanker crash in Cairo — sparking a massive inferno described by a witness as "God’s hellfire" and leaving 31 dead — has been taken into custody.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Two Italians killed in Kuwait as a strained Iran ramps up attacks</h4>
+                <p>The workers were technicians for Rheinmetall, a Germany defense company. Bahrain and Kuwait in recent weeks have borne the brunt of Iranian strikes.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/statics.foxsports.com/www.foxsports.com/content/uploads/2026/11/931/523/67711a5022a70f31e5f35466e7240202962e031272370f381e1ff9ec6cc5be43.png?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>How to Watch Eagles vs. Cowboys: TV Channel, Live Stream, Time</h3>
+                <p class="lead-summary"><strong class="drop-cap">T</strong>he Philadelphia Eagles visit the Dallas Cowboys in Week 12 of the 2026 NFL season on Thursday, Nov. 26, 2026, at 4:30 p.m. ET from AT&T Stadium in Arlington, Texas. Dallas enters at 5-6 after winning two of its past three games. Philadelphia sits at 3-7 after snapping a seven-game losing streak in Week 11. The Eagles beat the Steelers 19-16 in Week 11 behind four field goals from Jake Elliott. The Cowboys rolled past the Titans 51-30 in their last outing, with Javonte Williams scoring twice. Two starts, 310 passing yards, zero touchdowns and zero interceptions define Joe Milton's early run under center for Philadelphia. He completed 11 of 21 passes for 141 yards against Pittsburgh in Week 11, directing 12 of those throws to DeVonta Smith, and he faces a Dallas team he appeared in four games for last season. The Cowboys allow 237.9 passing yards per game, giving Milton a softer secondary than he saw against Pittsburgh. Turning his clean ball security into Philadelphia's first real downfield passing production would open up the entire Eagles offense. Cleared from the Week 12 injury report, Saquon Barkley carries the workload for a Philadelphia offense averaging 16.7 points per game. He ran 17 times for 75 yards and a touchdown against the Steelers, bringing his season totals to 371 rushing yards and four touchdowns on 86 carries. Dallas surrenders 151.5 rushing yards per game, a soft spot the Eagles can attack early on a short week. Sustained drives on the ground give Philadelphia its best chance to chew clock and keep the Cowboys offense off the field.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Novig promo code NYPOST: Deposit $10, get $50 in trade credits for Chiefs vs. Bills</h4>
+                <p>NFL‘s Thanksgiving Day slate comes with the Novig promo code NYPOST, which allows new traders to claim $50 in trade credits. Buffalo hosts its first Thanksgiving Day game with an opportunity to create some separation atop the AFC, while Kansas City is still jockeying with Denver for the AFC West lead. The Bills are three-point favorites, having covered in four of five home games this season compared to the Chiefs’ 2-3 ATS road record. Newcomers to prediction markets can get $50 in trade credits by entering Novig promo code NYPOST when signing up and depositing $10. Novig was the talk of the fall with its “Just Sports” ad campaign featuring actress Sydney Sweeney. Rather than accept a conventional paid endorsement, Sweeney reportedly approached Novig co-founder and CEO Jacob Fortinsky herself to pursue an ownership stake.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Tom Brady's NFL Power Rankings: Which QB Is Playing At 2.0x Podcast Speed Right Now?</h4>
+                <p>Tom Brady has dropped all sorts of fun quips in his NFL on FOX broadcasts this season. And as a Thanksgiving treat, Brady dropped another fun quote when he revealed his power rankings. Brady said that there's one quarterback in the league who is not only playing efficiently, but he's doing it so quickly that it's like listening to a podcast at 2.0x speed. He didn't say that about Josh Allen, Joe Burrow or Patrick Mahomes, though. Rather, Brady said Brock Purdy's the one who's playing the quickest and most efficient football.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>WWE legends tragically announce death of 3-year-old grandson</h4>
+                <p>Former WWE stars Terri Runnels and Dustin Rhodes shared “the tragic news” that their 3-year-old grandson Rowan died in social media posts on Wednesday. Rowan is the son of Terri and Dustin’s daughter, Dakota Runnels, an AEW photographer, and her husband, Bleau. “On behalf of Dakota, Bleau, and their families, we share the tragic news of the untimely passing of their sweet beautiful boy, Rowan Dane Oney,” Terri, 60, shared in a Facebook post. “We ask that you respect their privacy at this time. Please no calls or visits. We will post more details soon. Please be in prayer for our family.” Dustin asked for prayers in a post on X, adding that he was with Dakota on Wednesday.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/11/931/523/veruschka-studio-portrait-pale-green-dress.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Veruschka, supermodel in 'Casino Royale' and 'Blow-Up,' dead at 87</h3>
+                <p class="lead-summary"><strong class="drop-cap">G</strong>erman supermodel Veruschka, who appeared in 'Casino Royale' and 'Blow-Up,' has died. She was 87. (This video contains AI-assisted content.) Veruschka, the striking German supermodel who rose to fame in the 1960s and '70s with roles in "Casino Royale" and "Blow-Up," has died. She was 87. A family member confirmed her death to the German newspaper Bild, noting she died at home surrounded by family and friends. On Instagram, her former partner and photographer, Franco Rubartelli, paid tribute to her legacy, writing that "she wasn’t just a great model. She was an elegant woman, sensitive, brave, with a beauty that did not stay in the camera, it would get into the soul of whoever watched her." "She had a way of being in the world that you don’t learn; you take in. People like Veruschka don’t go away at all. They stay in a picture, in a perfume, in a song, in a way of smiling," he added. Throughout her career, Veruschka graced the covers of Vogue and top international magazines throughout the ’60s and ’70s, becoming a muse for designers such as Karl Lagerfeld, Yves Saint Laurent and Valentino.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Thanksgiving treats and turkeys: Best and worst of season’s movies</h4>
+                <p>Fifty years ago, a small-budget movie about an underdog boxer from Philly, written by and starring a totally unknown 30-year-old New Yorker, became an unlikely triumph. Now, a new film about a totally unknown Sylvester Stallone’s fight to make and be the leading man in it, called “I Play Rocky,” is stirring, inspiring, surprisingly funny and easy to love. We meet the excellent actor Anthony Ippolito as Sly. At the start, you have to get used to a very distinctive voice, to say the least, coming out of another man’s mouth. However, Ippolito’s per-formance is not a skit’s caricature. Never over the top, he captures a tenderhearted, well-read, hard-working dreamer who just so happens to have a gym rat’s body. And importantly, Ippolito radiates a movie star’s energy.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Jack Nicholson’s son Ray admits he and his reclusive dad ‘can’t talk about a lot’</h4>
+                <p>"Friday Night Lights" author Buzz Bissinger praises Ray Nicholson, Bill Skarsgård, Tom Francis and Nicholas Galitzine for honoring the real-life WWII Marine athletes in the new Netflix drama based on his book "The Mosquito Bowl." Jack Nicholson’s son Ray admitted recently that he and his famous dad can’t talk about much.</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>French actor Gérard Depardieu loses appeal, will stand trial for rape charges</h4>
+                <p>Gérard Depardieu, for decades one of France’s most celebrated actors, has been ordered to stand trial on charges of raping and sexually assaulting a young actress, authorities said Thursday, less than two weeks after the cinema star abandoned his appeal of a sexual assault conviction in a separate case. Actress Charlotte Arnould was 22 when she accused Depardieu in 2018 of raping her at his Paris home. Eight years later, the Paris Court of Appeal ruled that the actor should face trial over allegations of rape and sexual assault on Aug. 7, 2018, while dismissing allegations relating to a second incident six days later.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/11/931/523/ai-generated-house-photos-001.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Housefishing could fool you with AI real estate photos</h3>
+                <p class="lead-summary"><strong class="drop-cap">B</strong>ilt Rewards founder and CEO Ankur Jain joins 'The Claman Countdown' to discuss how mortgage rates are affecting the housing market. Jain also discusses the launch of a new AI-driven Neighborhood OS platform. You find a beautiful house online. The driveway looks brand new, and the landscaping could be straight out of a home magazine. You get excited, schedule a showing and start thinking about where your furniture might go. Then you pull up to the address and wonder whether you're looking at the same house. That's the growing concern behind housefishing, a term for real estate listings that use digitally altered or AI-generated photos to make properties look better than they actually are. A recent report highlighted complaints from homebuyers and renters who described misleading property pictures as "false advertising." With AI tools becoming more convincing, it's getting harder to know whether you're looking at a home's actual condition or a digital makeover. So how can you tell whether a listing photo shows the home you're actually getting, and what should you check before scheduling a tour? Missed CyberGuy LIVE? Watch the replay and discover 5 ways to travel smarter and save money. Our free CyberGuy LIVE class, 5 Ways to Travel Smarter and Save Money, has ended, but you can still watch the full replay. Kurt "CyberGuy" Knutsson walks you through five practical ways to protect your phone and personal information, avoid common travel scams, find better deals, save money on bookings and use technology to make your travels easier and less stressful. No technical experience is needed. A real estate agent reviews property information with prospective buyers as concerns grow over AI-altered listing photos that may misrepresent homes. (Kurt "CyberGuy" Knutsson) Housefishing happens when property photos create an unrealistic impression of a home. AI can make an outdated property appear freshly renovated without anyone doing the actual work. For instance, two photos can show the same two-story house, but create very different impressions.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>FCC approves 1 million SpaceX data centers in space. Astronomers are dismayed.</h4>
+                <p>Putting data centers in space has long been the goal of SpaceX CEO Elon Musk. Some scientists are skeptical about the reality.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>How Elon Musk paved the way for Jensen Huang’s return</h4>
+                <p>The billionaire Tesla CEO once endured similar calls for his job after a string of scandals, including allegedly misleading investors.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Your holiday shopping data needs a cleanup before Black Friday</h4>
+                <p>University at Buffalo marketing professor Dinesh Gauri shares his tips for scoring the best Black Friday prices, from researching deals ahead of time to taking advantage of online shopping and in-store pickup options. Your phone buzzes: "USPS: Your package could not be delivered due to an incomplete address. Update your details within 12 hours." You did order something last week. Probably several things. So your thumb hovers over the link. That's the whole trick.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
