@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo News</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=UnifrakturMaguntia&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f4ebd0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @page {
+            margin: 0;
+        }
+
+        body {
+            background-color: #c8c0a8;
+            color: var(--ink);
+            font-family: 'PT Serif', Georgia, serif;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--paper);
+            padding: 20px 28px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 5px double var(--ink);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+        .masthead {
+            font-family: 'UnifrakturMaguntia', cursive, serif;
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            line-height: 1;
+        }
+        .tagline {
+            font-family: 'PT Serif', serif;
+            font-style: italic;
+            font-size: 0.82rem;
+            margin: 6px 0 4px;
+        }
+        .meta-bar {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .front-page-columns {
+            column-count: 3;
+            column-gap: 0;
+            column-rule: 1px solid var(--ink);
+        }
+        
+        @media (max-width: 600px)  { .front-page-columns { column-count: 1; } }
+        @media (max-width: 900px)  { .front-page-columns { column-count: 2; } }
+
+        .news-section {
+            break-inside: avoid-column;
+            border-top: 2px solid var(--ink);
+            padding: 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-fullwidth {
+            column-span: all;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 10px 0 16px;
+        }
+        @media (min-width: 700px) {
+            .section-fullwidth {
+                grid-template-columns: 1.6fr 1fr;
+                align-items: start;
+            }
+            .section-fullwidth .section-banner {
+                grid-column: 1 / -1;
+            }
+            .section-fullwidth .minor-stories-container {
+                border-top: none;
+                border-left: 1px solid var(--ink);
+                padding: 0 0 0 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .section-banner {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-lead h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 6px 0 5px;
+        }
+        .lead-summary {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            text-align: justify;
+            hyphens: auto;
+        }
+        .drop-cap {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            float: left;
+            line-height: 1;
+            padding-right: 5px;
+            padding-top: 3px;
+        }
+
+        .minor-stories-container {
+            border-top: 1px dashed var(--ink);
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .story-minor {
+            padding: 6px 0;
+            border-bottom: 1px dotted #999;
+        }
+        .story-minor:last-child { border-bottom: none; padding-bottom: 0; }
+        .story-minor h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+        .story-minor p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .source-credit {
+            font-size: 0.67rem !important;
+            font-style: italic;
+            text-align: right !important;
+            color: #444;
+            margin-top: 4px;
+        }
+        .news-photo {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.35) brightness(0.9) sepia(25%);
+            mix-blend-mode: multiply;
+            border: 2px double var(--ink);
+            display: block;
+        }
+
+        @media print {
+            body { background: var(--paper); padding: 0;
+                    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .newspaper-container { box-shadow: none; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper-container">
+    <header>
+        <h1 class="masthead">The Neo News</h1>
+        <div class="tagline">"Keeping You Informed the Old-Fashioned Way"</div>
+        <div class="meta-bar">
+            <span>VOL. CXXIV · No. 42,110</span>
+            <span>FRIDAY, NOVEMBER 27, 2026</span>
+            <span>PRICE 25 CENTS</span>
+        </div>
+    </header>
+    <main class="front-page-columns">
+        
+        <section class="news-section section-US section-fullwidth">
+            <div class="section-banner">US</div>
+            <article class="story-lead">
+                <img src="https://www.theblaze.com/media-library/cross-dressing-teacher-who-wore-massive-fake-breasts-to-school-gets-payday-for-discrimination.jpg?id=68785615&width=980" alt="Lead Story Image" class="news-photo">
+                <h3>Cross-dressing teacher who wore massive fake breasts to school gets payday for 'discrimination'</h3>
+                <p class="lead-summary"><strong class="drop-cap">A</strong> labor arbitrator ordered an Ontario school district to pay damages for keeping parents apprised of the public attention surrounding the new hire. The Canadian teacher who made parents and students uncomfortable with his decision to wear a pair of gigantic fake breasts to school has secured a payday for so-called discrimination. Shop teacher Kerry Lemieux started off the 2022-23 school year at Oakville Trafalgar High School dressed in a blond wig and revealing women's clothing. Lemieux, who had recently started referring to himself as "Kayla," also wore a pair of gargantuan prosthetic breasts, which he told the New York Post were "real" breasts and the product of a condition called gigantomastia. The male teacher's hypersexualized costume — which a neighbor claimed Lemieux wore "extremely infrequently" while outside school — prompted protests as well as pushback from parents as well as from government officials. Ontario's then-Education Minister Stephen Lecce, for example, told the Toronto Star in early 2023 that "Halton parents are rightfully outraged at what's taking place" and accused the Halton District School Board of abdicating its responsibility "for not defending and upholding the interests of children." In February 2023, Lemieux was placed on paid leave, the Hamilton Spectator reported. However, that same spring, he secured a full-time position working at Nora Frances Henderson Secondary School, which is overseen by the Hamilton-Wentworth District School Board. The HWDSB sent a letter to parents on Aug. 24, 2023, informing them of the possibility that their kids' school could soon face heightened public interest and protests as the result of the hiring of a new teacher who was "the subject of public attention, pertaining to their gender expression." The letter, which did not identify Lemieux by name, also detailed various new safety measures that were being implemented. Arbitration records show that the aim of this communication was to "turn down the volume" on the scandal ahead of the school year. The woke Ontario Secondary School Teachers' Federation filed a grievance over the seemingly innocuous letter on Lemieux's behalf, demanding $75,000 in damages and a declaration that the HWDSB violated the teacher's rights. In his Nov. 19 decision, labor arbitrator Mark Hart declared that by sending the August 2023 letter to parents and "effectively identifying and outing the Grievor with express reference to his gender expression," the board "discriminated against the Grievor because of his gender identity and gender expression" in violation of provincial human rights law.</p>
+                <p class="source-credit">— The Blaze</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>GOP senator shares tragic update about husband's death</h4>
+                <p>Sen. Deb Fischer, R-Neb., being sworn into office by then-Vice President Mike Pence alongside her husband, Bruce Fischer, who died on Sunday. (Sen. Deb Fischer; Facebook) This story discusses suicide. If you or someone you know is having thoughts of suicide, please contact the National Suicide Prevention Lifeline at 988 or 1-800-273-TALK (8255).</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Jennie Garth reveals lingering resentment over Brian Austin Green’s ‘Beverly Hills, 90210’ deal</h4>
+                <p>Jennie Garth is still irked that Brian Austin Green scored a producer credit on “Beverly Hills, 90210” before she did. During a recent episode of her “90210MG” podcast, the actress, 54, welcomed her longtime manager, Randy James, to break down the Season 9 episode “You Say Goodbye, I Say Hello.” However, before diving into the episode, Garth brought up a decades-old grievance that resurfaced while watching the opening credits. “I have a question, Randy. Maybe you know the answer to this. I’m really hoping you do,” she said. “Why, when I watched the opening credits of the show — this is the second time I’ve seen it now — Brian Green is listed as a producer?</p>
+                <p class="source-credit">— Https://pagesix</p>
+            </div>
+            <div class="story-minor">
+                <h4>A Hack May Have Put U.S. Military Secrets At Risk</h4>
+                <p>Hackers breached the United States Air Force’s flagship Cloud One computing platform, potentially exposing sensitive military logistics data to hostile actors. Sources speaking on condition of anonymity told Reuters the breach occurred in the past month, amid a string of other outages and suspected hostile hacks affecting systems, including at the CIA and FBI. Cloud One’s platform integrates systems from Amazon, Microsoft, Oracle, and Alphabet, allows the Air Force to analyze live data streams from around the globe, and helps coordinate air defense systems. Depending on which vulnerabilities were exploited and what hackers accessed, they could have seized sensitive information on munition locations and quantities, aircraft activity, and other sensitive and mission-relevant data. The hack occurred just as the United States remains involved in the Iran War, the Russia-Ukraine war, and increased tensions with China.</p>
+                <p class="source-credit">— Daily Wire</p>
+            </div></div>
+        </section>
+        <section class="news-section section-World">
+            <div class="section-banner">World</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/11/931/523/crimea-blackout-putin.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Putin's grip on Crimea tested amid major blackout as Zelenskyy warns of looming Russian strike</h3>
+                <p class="lead-summary"><strong class="drop-cap">F</strong>ox News senior correspondent Benjamin Hall reports on Ukraine's major strike on the Kerch Bridge in Crimea. Hall details Ukrainian President Volodymyr Zelenskyy's warning to Russia and reports on upcoming peace negotiations led by top Trump aides Steve Witkoff and Jared Kushner. Russian President Vladimir Putin's control over Crimea faced renewed pressure Thursday as a massive blackout crippled the Russian-occupied peninsula, disrupting public transport and leaving people without heat, according to reports. The blackout came after Ukrainian strikes had damaged the Kerch Strait Bridge last week, disrupting a key Russian military supply route, and as Ukrainian President Volodymyr Zelenskyy warned that Moscow was preparing another large-scale attack on Ukraine. Russian-controlled utilities blamed the Crimea blackout on an accident at energy facilities outside the region, after reports of explosions and air raid sirens sounded across the Black Sea peninsula, according to the Kyiv Post.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>How Israel’s odd-couple politics could be close to toppling Netanyahu</h4>
+                <p>Alliances that seemed unthinkable before the Oct. 27 election are now possible or even likely, as campaign trail taboos give way to realpolitik coalition talks.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Political novice turns kingmaker after New Zealand’s deadlocked election</h4>
+                <p>A former consultant who answered a job advertisement to lead a political party has secured a powerful position in an extremely close election race.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Iran accuses Zelenskyy of 'false flag' Kuwait drone strike op to get Trump's attention</h4>
+                <p>Ret. Navy Vice Adm. Kevin Donegan, former Navy 5th Fleet commander, says the Middle East’s actors have changed ‘dramatically’ since he held command on ‘The Story.’ A former adviser to Iran's nuclear negotiating team accused Ukraine on Thursday of orchestrating a deadly drone attack in Kuwait to prove its worth to President Donald Trump, as Tehran continued to deny responsibility.</p>
+                <p class="source-credit">— Fox News</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Sports">
+            <div class="section-banner">Sports</div>
+            <article class="story-lead">
+                <img src="https://nypost.com/wp-content%2Fuploads%2Fsites%2F2%2F2026%2F11%2Fnewspress-collage-jyxjlxv32-1795802336035.jpg?quality%3D90%26strip%3Dall%261795784373" alt="Lead Story Image" class="news-photo">
+                <h3>Bears stuck in injury purgatory as Colston Loveland awaits second opinion</h3>
+                <p class="lead-summary"><strong class="drop-cap">C</strong>hicago lost tight end Colston Loveland in the first quarter of its thrilling 39-35 win over the Lions on Thanksgiving, and it appears he’ll be sidelined for a while. Loveland, 22, is dealing with a knee sprain and is considered week-to-week as he awaits a second opinion, according to ESPN. The team will reportedly wait to make a decision regarding injured reserve, which would take him out of action for four weeks, at minimum. There is optimism he’ll be back before the season is over and be back for the playoffs — with the NFC East-leading Bears (9-2) having a 95% probability of making the postseason. He’s become a reliable target for quarterback Caleb Williams, hauling in 40 catches for 393 yards and three touchdowns on the season. Loveland’s injury further stresses a thinned-out tight end room in Chicago, which already lost Cole Kmet to a season-ending knee injury in Week 7. That leaves bigger duties to rookie Sam Roush and Stephen Carlson, who saw his first NFL game action in six seasons after getting called up from the practice squad earlier this month. Roush caught all five of his career-high five targets for 31 yards, while Carlson had two first-down catches on Chicago’s first scoring drive. “They did a phenomenal job,” Johnson said. “Seeing them just continue to get better and better and better, [Roush] had a little hiccups there earlier in the season, and now he’s really smoothed out and he’s only going to continue to ascend. I mean, I’ve got a lot of confidence in him as a blocker. We saw him — we threw to him, I think he had five catches this game, and so he’s become the security blanket there for our quarterback as well. We’ll see if he needs to have a bigger role here going forward.</p>
+                <p class="source-credit">— New York Post</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>Luka Doncic versus Victor Wembanyama: Buckle up for the MVP race</h4>
+                <p>In one corner, there’s the 6-foot-8 Slovenian superstar Luka Doncic who recently surpassed Michael Jordan for the best start in modern NBA history. In the other, there’s the 7-foot-4 Victor Wembanyama who’s doing things on a basketball court that have never been done. It’s Luka Magic versus The Alien. It’s offensive wizardry versus an inhuman skill set. It’s a guy who uses pace and brakes to make himself unguardable versus a guy who seemingly flies above his competition. And they’re about to meet for the first time this season when the Lakers play the Spurs in San Antonio on Friday night. In tight MVP races, head-to-head contests are heavily weighed. This is a measuring stick game. There are implications that could resonate months later when awards voters make their decisions.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Shohei Ohtani gets real on two-way status for Dodgers in Japanese interview</h4>
+                <p>The Dodgers have ideas on how Shohei Ohtani could navigate next season as a two-way player. While Ohtani indicated the two sides wouldn’t settle on a plan for him until baseball’s upcoming lockout is over, he said they have agreed that his regular-season usage should be determined with one primary objective in mind. “What we’re most aligned on is [the idea that] I have to go into October in solid condition,” Ohtani said in Japanese. “Without a doubt, this is something that has been decided.” More than six weeks after the Dodgers’ season was ended by the Brewers, Ohtani addressed his anticipated mound return on Wednesday in a 19-minute video conference with Japanese reporters.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Omar Cooper’s Jets return comes into focus with receiver set to miss Dolphins matchup</h4>
+                <p>Jets receiver Omar Cooper Jr. will be sidelined again for Sunday’s game in Miami, but coach Aaron Glenn is hopeful that the first-round pick will return for the team’s next game (Dec. 13 vs. Denver), following the Jets’ Week 13 bye.Cooper (ankle/groin), who will miss his seventh game of the season, hasn’t suited up since getting hurt on the first play of the Nov. 15 loss against Buffalo. “When you have a guy that’s somewhat close, you really wanna give him enough time to get himself back healthy,” Glenn said Friday morning. “That bye week comes at the right time. Having this week and going into the bye will give him the amount of time to get ready to play next week.</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-Entertainment">
+            <div class="section-banner">Entertainment</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/11/931/523/lisa-whelchel-kelly-clarkson-show.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>'Facts of Life' star Lisa Whelchel, 63, vows she'll never repeat ayahuasca trip after frog venom ordeal</h3>
+                <p class="lead-summary"><strong class="drop-cap">L</strong>isa Whelchel dishes on what it was like working with the future "Sexiest Man Alive" and filming the new season of "Collector's Call." A spiritual retreat in Peru turned into a physical ordeal for "The Facts of Life" star Lisa Whelchel, who endured burned skin, frog venom and violent illness during an ayahuasca trip she says she would never repeat. "Could you ever imagine Blair Warner drinking ayahuasca and puking her brains out? Or even little miss goody-two-shoes Lisa Whelchel? Well, that’s what I did," she revealed in an Instagram video. "And I’m back with all the gory details." Whelchel explained she was a part of a group of 19 who traveled into the jungles of Peru for the ayahuasca experience. The 63-year-old actress claimed 17 of those people had a "phenomenal life-changing experience." However, she was not one of them. "The Facts of Life" star Lisa Whelchel revealed she endured burned skin, frog venom and violent illness during a spiritual ayahuasca retreat in Peru that she said she would never repeat. (Weiss Eubanks/NBCUniversal) "Now, here's the thing, I don't regret it," Whelchel clarified. "And if I had it to do over again, I wouldn't do it. It was a lot, but both things are true. And I’m ready to share all of it with you. The funny parts, the terrifying parts, the vulnerable parts that I didn’t think I would ever share, and the parts that are not flattering at all."</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>I track streaming subscriptions all year —These Black Friday deals are the best</h4>
+                <p>It’s almost Black Friday and the deals are in full swing. They don’t stop at physical products, either; the Black Friday streaming deals are some of the best this year. From a year of HBO Max for 50% off and up to 75% off Prime Video add-ons to an entire year of Disney+ and Hulu for just $60, there’s no limit to all of the amazing shows and movies you’ll find by giving some new services a try. Below, we’ve rounded up a variety of different services offering great deals this year for Black Friday. All of these deals are available for a limited time only (most end by midnight PST Nov. 30), so don’t let them pass you by.</p>
+                <p class="source-credit">— New York Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Country star Craig Morgan's off-the-grid life in Alaska, where his closest neighbor is 7 miles away</h4>
+                <p>Craig Morgan and his family spend their winters off the grid in Alaska, where their nearest neighbor is seven miles away. "We go up after Christmas and we like to try to stay till March," the country singer told Fox News Digital. "Now, sometimes we'll leave and come back home, depending if I have something to do — If I have a show or a speaking engagement or anything like that. But generally, we try to stay for a couple months."</p>
+                <p class="source-credit">— Fox News</p>
+            </div>
+            <div class="story-minor">
+                <h4>Watch ‘Tulsa King,’ ‘MobLand,’ more for less with the Paramount+ Black Friday deal</h4>
+                <p>The big day of deals is finally here, and with it, sales on streaming with low prices you likely won’t see again for another year. This year’s Paramount+ Black Friday deal will save you up to 79% on up to one year if you choose its ad-free plan (but the deal price is the same either way, so why not have it all?). Regularly $8.99/month, you can get two months of Paramount+ Essential (includes the whole Paramount+ catalog with ads, limited live sports) for just $2.99/month. If you want more than Essential has to offer, you also have the option to subscribe to Paramount+ Premium with three months for the same $2.99/month price (down from $13.99/month).</p>
+                <p class="source-credit">— New York Post</p>
+            </div></div>
+        </section>
+        <section class="news-section section-ScienceTech section-fullwidth">
+            <div class="section-banner">Science & Tech</div>
+            <article class="story-lead">
+                <img src="https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2026/07/931/523/Gemini-App.jpg?ve=1&tl=1" alt="Lead Story Image" class="news-photo">
+                <h3>Google Gemini may expose private emails to reviewers</h3>
+                <p class="lead-summary"><strong class="drop-cap">C</strong>ybersecurity threats escalate as Leah Siskind analyzes Google’s warning about hackers using AI to automate cyberattacks against companies. Discussing the battle between defenders and attackers with John Roberts, the FDD AI Research fellow references Anthropic’s release of advanced models months ago. Siskin warns that super advanced AI models now have the dangerous ‘ability to detect vulnerabilities’ in software systems. Think about everything sitting in your Gmail inbox right now. Maybe there's a conversation with your doctor, a recent bank statement or a personal message you never intended anyone else to read. Your Google Drive may hold years of private documents. You probably don't spend much time thinking about who might see that information beyond the people you share it with. But what happens when you connect those services to Google's Gemini AI assistant? An independent researcher has raised concerns about how Gemini handles information retrieved from connected Gmail and Google Drive accounts. The findings prompted questions about whether some private content could end up in conversations reviewed by humans. We contacted Google, and the company confirmed that some information retrieved from connected Gmail and Drive accounts may be seen by human reviewers under certain circumstances. Google stressed that these connections are off by default. Here's what you should know before giving Gemini access to your personal information. Missed CyberGuy LIVE? Watch the replay and discover 5 ways to travel smarter and save money. Our free CyberGuy LIVE class, 5 Ways to Travel Smarter and Save Money, has ended, but you can still watch the full replay. Kurt "CyberGuy" Knutsson walks you through five practical ways to protect your phone and personal information, avoid common travel scams, find better deals, save money on bookings and use technology to make your travels easier and less stressful. No technical experience is needed. Google's Gemini assistant can retrieve information from connected Gmail accounts to answer questions, raising concerns about how private emails may be handled.</p>
+                <p class="source-credit">— Fox News</p>
+            </article>
+            <div class="minor-stories-container">
+            <div class="story-minor">
+                <h4>What Jensen Huang does next could shape the global race for AI dominance</h4>
+                <p>Nvidia’s CEO is back in charge. But the company and the world it operates in have changed.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>The single worst mistake to avoid with your email account</h4>
+                <p>It's shocking that so many people still seem to ignore a basic piece of advice when it comes to making sure your email — and life — is secure online.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div>
+            <div class="story-minor">
+                <h4>Why commuting to the office still feels like remote work</h4>
+                <p>One study shows employees spend half their in-office days on video calls or doing solo work.</p>
+                <p class="source-credit">— Washington Post</p>
+            </div></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
